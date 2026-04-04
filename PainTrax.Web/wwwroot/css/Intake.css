@@ -1,0 +1,161 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    padding: 15px;
+}
+
+.medical-form {
+    background: #fff;
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+h2, h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: larger;
+}
+
+.section {
+    margin-bottom: 25px;
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+    font-size: 15px !important
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 2px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+    outline: none;
+    font-size: 14px !important;
+}
+
+    input:focus,
+    textarea:focus {
+        border-bottom: 2px solid #0d6efd; /* change color if needed */
+    }
+
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.wrap {
+    flex-wrap: wrap;
+}
+
+.inline {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    font-size: 15px !important
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 15px !important
+}
+
+
+button {
+    background: #007bff;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+    button:hover {
+        background: #0056b3;
+    }
+
+.inline-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 15px !important
+}
+
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2px;
+}
+
+.inline-option input[type="checkbox"],
+.inline-option input[type="radio"] {
+    margin: 0; /* REMOVE browser default margin */
+    width: 20px;
+}
+
+.form-select {
+    display: block;
+    width: 100%;
+    padding: .375rem 2.25rem .375rem .75rem;
+    -moz-padding-start: calc(0.75rem - 3px);
+    font-size: 15px !important;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e);
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    border: none;
+    border-bottom: 1px solid #ced4da;
+    border-radius: 0;
+    transition: border-color .15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+    .form-select:focus {
+        border-bottom: 2px solid #0d6efd; /* Bootstrap primary */
+        box-shadow: none;
+    }
+
+.inline label {
+    font-weight: 400
+}
+
+.grid label {
+    font-weight: 400
+}
+
+
+@media (max-width: 600px) {
+    .inline {
+        flex-direction: column;
+    }
+}

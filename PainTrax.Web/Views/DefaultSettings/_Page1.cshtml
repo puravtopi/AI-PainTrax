@@ -1,0 +1,386 @@
+﻿@model PainTrax.Web.Models.tbl_ie_page1_default
+<br />
+
+<div class="col-lg-12">
+    <input type="hidden" id="txtId_P1" value="@Model.id" />
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            History
+        </label>
+        <div class="col-sm-10">
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtHistory">@Model.history</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Vital
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="vital" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            PMH
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="pmh" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            PSH
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="psh" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Allergies
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="allergies" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Medication
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="medication" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Social History
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="social_history" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Family History
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="family_history" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Degree of Disability
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="dd" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Occupation
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="occupation" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Work Status
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="work_status" />
+        </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            CE
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtCC">@Model.cc</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            PE
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="pe" />
+            <div id="div_pe_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPE">@Model.pe</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3" style="display:none">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            ROM
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            <input type="hidden" asp-for="rom" />
+            <div id="div_rom_desc">
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Diagnoses
+            <br />
+            <a href=# style="color:blue;font-size:small" onclick="fndefaultDiagnoses()">Click for Default</a>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtDaignosis">@Model.daignosis_desc</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3" style="display:none">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Assessment
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="daignosis_desc" />
+
+            <div id="div_daignosis_desc">
+            </div>*@
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtAssessment">@Model.assessment</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Plan
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="daignosis_desc" />
+
+            <div id="div_daignosis_desc">
+            </div>*@
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPlan">@Model.plan</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="daignoCodeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl" id="modelDaignoCode">
+    </div>
+</div><!-- End Large Modal-->
+
+
+
+
+<script>
+
+
+    var ckDaignosis, ckCC, ckPE, ckAssessment, ckPlan, ckHistory;
+
+
+    $(document).ready(function () {
+
+        ClassicEditor.create(document.querySelector('#txtHistory'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckHistory = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtDaignosis'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckDaignosis = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtCC'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getCCFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckCC = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPE'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getPEFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckPE = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtAssessment'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckAssessment = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPlan'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckPlan = editor;
+        })
+            .catch(handleSampleError);
+
+
+
+
+    });
+
+
+
+
+
+    function isPage1Valid() {
+        var result = true;
+        result = requirValidation("history");
+
+        return result;
+    }
+
+    function fnPage1Save(t) {
+
+
+        //if (isPage1Valid()) {
+        var url = '@Url.Action("SavePage1","DefaultSettings")';
+
+
+        var myContentDaignosis = ckDaignosis.getData()
+
+        var model = {
+            "id": $("#txtId_P1").val(),
+            "history": ckHistory.getData(),
+            "vital": $("#vital").val(),
+            "pmh": $("#pmh").val(),
+            "psh": $("#psh").val(),
+            "allergies": $("#allergies").val(),
+            "medication": $("#medication").val(),
+            "family_history": $("#family_history").val(),
+            "social_history": $("#social_history").val(),
+            "cc": ckCC.getData(),
+            "pe": ckPE.getData(),
+            "assessment": ckAssessment.getData(),
+            "plan": ckPlan.getData(),
+            "rom": "",
+           
+            
+            "daignosis_desc": myContentDaignosis,
+            "daignosis_delimit": myContentDaignosis,
+            "dd": $("#dd").val(),
+            "work_status": $("#work_status").val(),
+            "occupation": $("#occupation").val(),
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                   
+
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+    }
+
+
+
+</script>

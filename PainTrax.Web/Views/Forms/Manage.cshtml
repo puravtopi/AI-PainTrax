@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Download Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var filesByFolder = ViewBag.FilesByFolder as Dictionary<string, List<string>>;
+    var folderNames = ViewBag.FolderNames as List<string>;
+}
+
+<h2>PDF Files by Folder</h2>
+
+<!-- Display message from TempData -->
+
+<style>
+     .folder-bar{
+        padding: 0 18px;
+     
+        background-color: #f1f1f1;
+     }
+
+     .folder-section{
+        padding: 0 28px;
+     }
+     
+</style>
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Download forms</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+        <a asp-action="Index" asp-controller="Forms" class="btn btn-outline-secondary">List</a>
+    </div><!-- End Page Title -->
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-info">
+            @TempData["Message"]
+        </div>
+    }
+    <section class="section">
+        <h5>New Folder</h5>
+        <div class="row">
+<!-- Create Folder Form -->
+<form asp-action="CreateFolder" method="post" class="form-inline">
+    <div class="row">
+        <div class="col-2" style="text-align:right;vertical-align:bottom"><label style="vertical-align:bottom" for="folderName">Folder Name:</label>  </div>
+        <div class="col-8">         <input type="text" class="form-control" id="folderName" name="folderName" required> </div>
+        <div class="col-2">     <button type="submit" class="btn btn-primary">Create Folder</button> </div>
+ </div>
+  
+
+</form>
+
+<br />
+<br />
+             <h5>Upload Pdf</h5>
+            <!-- Upload File Form -->
+            <form asp-action="UploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                <div class="row">
+
+                    <div class="col-2" style="text-align:right;vertical-align:bottom">
+                        <label for="folderNameSelect" class="mr-2">Upload to Folder:</label>
+                    </div>
+                    <div class="col-4">
+                    <select class="form-control" id="folderNameSelect" name="folderName" required>
+                        @foreach (var folderName in folderNames)
+                        {
+                            <option value="@folderName">@folderName</option>
+                        }
+                    </select>
+                    </div>
+
+                    <div class="col-4">
+                        <input type="file" class="form-control-file" id="file" name="file" accept=".pdf" required />
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-primary">Upload File</button>
+                    </div>
+                </div>
+
+            </form>
+            <br />
+            <h5>Folders</h5>
+@foreach (var folder in filesByFolder)
+{
+    <div class="folder-section">
+        
+                    <h6 class="d-flex justify-content-between align-items-center folder-bar" >
+                        <span>@folder.Key</span>
+                        <form asp-action="DeleteFolder" method="post" class="form-inline d-inline" onsubmit="return true;">
+                            <input type="hidden" name="folderName" value="@folder.Key" />
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </button>
+                        </form>
+                    </h6>
+        
+        <div class="pdf-files row">
+            @foreach (var pdf in folder.Value)
+            {
+                <div class="col-4" >
+                   @pdf
+                </div>
+            }
+        </div>
+
+   
+    </div>
+}
+
+    </section>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>

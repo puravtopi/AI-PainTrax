@@ -1,0 +1,130 @@
+﻿@model PainTrax.Web.ViewModel.MDTImportReportVM
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>MDT Import List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">MDT Import Report</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="MDTImportReport" asp-controller="Report" id="frmPOC">
+                            <br />
+                            <div class="row mb-3">
+                                <div class="col-md-3 col-lg-3">
+
+                                    <label class="col-md-12 col-lg-12 col-form-label">FromDate</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="fdate" class="form-control">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">ToDate</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="tdate" class="form-control">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <br />
+                            <div class="col-md-12 col-lg-12">
+
+
+
+                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToMDTImport" asp-controller="Report">Export</a>
+                                <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
+                                <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
+
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
+                        <br />
+                        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">doe</th>
+                                    <th scope="col">PatientIE_ID</th>
+                                    <th scope="col">lname</th>
+                                    <th scope="col">fname</th>
+                                    <th scope="col">mname</th>
+                                    <th scope="col">gender</th>
+                                    <th scope="col">dob</th>
+                                    <th scope="col">address</th>
+                                    <th scope="col">city</th>
+                                    <th scope="col">state</th>
+                                    <th scope="col">zip</th>
+                                    <th scope="col">home_ph</th>
+                                    <th scope="col">mobile</th>
+                                    <th scope="col">location</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.lstMDTImportReport.Count > 0)
+                                {
+                                    @foreach (var item in Model.lstMDTImportReport)
+                                    {
+                                        <tr>
+                                            <td>@(item.doe == null ? "" : item.doe.Value.ToString("MM/dd/yyyy"))</td>
+                                            <td>@item.PatientIE_ID</td>
+                                            <td>@item.lname</td>
+                                            <td>@item.fname</td>
+                                            <td>@item.mname</td>
+                                            <td>@item.gender</td>
+                                            <td>@item.dob</td>
+                                            <td>@item.address</td>
+                                            <td>@item.city</td>
+                                            <td>@item.state</td>
+                                            <td>@item.zip</td>
+                                            <td>@item.home_ph</td>
+                                            <td>@item.mobile</td>
+                                            <td>@item.location</td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="12"><p>No data found</p></td></tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+
+    function fnReset() {
+        $('#frmPOC').trigger("reset");
+        $("#frmPOC")[0].reset();
+        window.location = '@Url.Action("MDTImportReport", "Report")';
+    }
+</script>

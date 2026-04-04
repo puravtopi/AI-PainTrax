@@ -1,0 +1,702 @@
+﻿@model MS.Models.tbl_ie_page1
+<br />
+
+
+<style>
+    .ck-editor__editable_inline p {
+        margin: 0;
+    }
+</style>
+
+<style>
+    .clsSmallCK .ck-editor__editable_inline p {
+        margin: 0;
+    }
+
+    .clsSmallCK .ck.ck-reset.ck-editor.ck-rounded-corners {
+        max-height: 250px;
+        margin-bottom: 10px;
+        overflow-y: scroll
+    }
+</style>
+
+<div class="col-lg-12">
+    <input type="hidden" id="txtId_P1" value="@Model.id" />
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#bodypart">
+            Body Parts
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtbodypart" style="width:100%" value="@Model.bodypart" data-role="tagsinput" />
+            <input type="hidden" id="hdbodyparts" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Reason">
+            Reason For Appointment
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsSmallCK" style="height: fit-content;">
+                <textarea id="txtReason">@Model.appt_reason</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#history">
+            History
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+      
+          
+            <div class="col-sm-10" style="height: fit-content;">
+              
+                @{
+                    var hst = Model.history;
+                    if (Model.cmp_id == 13)
+                        hst = Model.history ?? "The patient presents today for follow up with continued pain in the ______ and for evaluation of pain in the _____.";
+                }
+                <textarea id="txtHistory">@hst</textarea>                 
+        </div>
+     
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Vital">
+            Vital
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="vital" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#DD">
+            Degree of Disability
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" asp-for="dd" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Occupation">
+            Occupation
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" asp-for="occupation" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#WorkStatus">
+            Work Status
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" asp-for="work_status" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastMedicalHistory">
+            PMH
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="pmh" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastSurgicalHistory">
+            PSH
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="psh" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Allergies">
+            Allergies
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="allergies" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastMedications">
+            Medication
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="medication" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#SocialHistory">
+            Social History
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="social_history" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#FamilyHistory">
+            Family History
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="family_history" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#IR">
+            Impairment Rating/Tylenol
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="impairment_rating" />
+        </div>
+
+    </div>
+    
+    @* <div class="row mb-3">
+
+        <div class="col-sm-10" id="divdaigo">
+            @Html.Raw(ViewBag.DaignoLink)
+        </div>
+
+    </div> *@
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CC">
+            CC
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtCC">@Model.cc</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PE">
+            PE
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="pe" />
+            <div id="div_pe_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPE">@Model.pe</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3" style="display:none">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            ROM
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            <input type="hidden" asp-for="rom" />
+            <div id="div_rom_desc">
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3" style="display:none">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Diagnoses
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+            @*   <br />
+            <a href=# style="color:blue;font-size:small" onclick="fndefaultDiagnoses()">Click for Default</a> *@
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtDaignosis">@Model.daignosis_desc</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Diagnoses">
+            Assessment
+            <br />
+            <div class="col-sm-10" id="divdaigo">
+                @Html.Raw(ViewBag.DaignoLink)
+                <br />
+               
+            </div>
+            <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="daignosis_desc" />
+
+            <div id="div_daignosis_desc">
+            </div>*@
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtAssessment">@Model.assessment</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PoPlan">
+            Poc Assessment
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="daignosis_desc" />
+
+            <div id="div_daignosis_desc">
+            </div>*@
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPocAssessment">@Model.poc_assesment</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PoPlan">
+            Po-Plan
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="daignosis_desc" />
+
+            <div id="div_daignosis_desc">
+            </div>*@
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPlan">@Model.plan</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="daignoCodeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl" id="modelDaignoCode">
+    </div>
+</div><!-- End Large Modal-->
+
+
+
+
+<script src="~/assets/dist/bootstrap-tagsinput.min.js" asp-append-version="true"></script>
+<script src="~/assets/dist/bootstrap-tagsinput/bootstrap-tagsinput-angular.min.js" asp-append-version="true"></script>
+
+<script>
+
+
+    var ckDaignosis, ckCC, ckPE, ckAssessment, ckPlan, ckHistory, ckPOCAssestence;
+
+
+
+    var body = '@Model.bodypart';
+
+    $(document).ready(function () {
+
+
+        ClassicEditor.create(document.querySelector('#txtHistory'), {
+            toolbar: {
+                items: [
+                    'bold', 'italic', 'underline', '|', 'dictationButton'
+                ]
+            },
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckHistory = editor;
+        }).catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtReason'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckReason = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtDaignosis'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckDaignosis = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtCC'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getCCFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckCC = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPE'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getPEFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckPE = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtAssessment'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckAssessment = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPlan'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckPlan = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtPocAssessment'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckPOCAssestence = editor;
+        })
+            .catch(handleSampleError);
+
+    });
+
+    $('#txtbodypart').on('itemAdded', function (event) {
+
+        var item = event.item.toLowerCase(); // normalize case
+       
+            try {
+                var cc = ckCC.getData();
+                var pe = ckPE.getData();
+                var assessment = ckAssessment.getData();
+                //var rom = quillROM.root.innerHTML;
+                var daig = ckDaignosis.getData();
+
+                var url = '@Url.Action("GetMacroDetails", "Visit")';
+
+                var model = {
+                    "bodyName": item
+                }
+
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    data: model,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
+
+                        if (data.result === 1) {
+                            cc = cc + "<p>" + data.data[0].cc_desc + "</p>";
+                            pe = pe + "<p>" + data.data[0].pe_desc + "</p>";
+                            //assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
+                            if (data.data[0].a_desc) {
+                                assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
+                            }
+                        }
+
+
+                        $('#cc').val(cc);
+                        ckCC.data.set(cc);
+
+
+                        $('#pe').val(pe);
+                        ckPE.data.set(pe);
+
+                        $('#assessment').val(assessment);
+                        ckAssessment.data.set(assessment);
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
+
+
+                var linkbody = item.replace(" ", "_");
+
+                daig = "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
+
+                $('#divdaigo').append(daig);
+            }
+            catch (err) {
+            }
+  
+    });
+
+
+    $('#txtbodypart').on('beforeItemRemove', function (event) {
+        var tag = event.item;
+
+        var strBody = $("#txtbodypart").val().replace(tag, "");
+
+        const myArray = strBody.split(",");
+
+        var daig = '';
+
+        myArray.forEach(function (item) {
+            if (item != '') {
+                var linkbody = item.replace(" ", "_");
+
+                daig = daig + "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>;";
+            }
+        });
+
+        $('#divdaigo').html(daig);
+    });
+
+
+    function openDaignoModel(body) {
+
+
+
+        $('#modeltitle').text("Add Daignosis");
+
+        var url = '@Url.Action("GetDaignoCodeList", "FUVisit")?bodyparts=' + body+'&fuId='+ $("#hdFUId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $('#modelDaignoCode').html(data);
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+        $('#daignoCodeModal').modal('show');
+        return false;
+    }
+
+    function isPage1Valid() {
+        var result = true;
+        result = requirValidation("history");
+
+        return result;
+    }
+
+    function fnPage1Save(t) {
+        // First trigger the button click
+    $("#btnDaignoCode").trigger("click");
+
+        //if (isPage1Valid()) {
+        var url = '@Url.Action("SavePage1", "FUVisit")';
+
+
+        var myContentDaignosis = ckDaignosis.getData()
+
+        var model = {
+            "id": $("#txtId_P1").val(),
+            "cc": ckCC.getData(),
+            "pe": ckPE.getData(),
+            "assessment": ckAssessment.getData(),
+            "plan": ckPlan.getData(),
+            "rom": "",
+            "ie_id": $("#id").val(),
+            "patient_id": $("#hdIEId").val(),
+            "fu_id": $("#hdFUId").val(),
+            "bodypart": $("#txtbodypart").val(),
+            "daignosis_desc": myContentDaignosis,
+            "daignosis_delimit": myContentDaignosis,
+            "dd": $("#dd").val(),
+            "work_status": $("#work_status").val(),
+            "occupation": $("#occupation").val(),
+            "history": ckHistory.getData(),
+            "psh": $("#psh").val(),
+            "pmh": $("#pmh").val(),
+            "allergies": $("#allergies").val(),
+            "medication": $("#medication").val(),
+            "family_history": $("#family_history").val(),
+            "social_history": $("#social_history").val(),
+            "appt_reason": ckReason.getData(),
+            "impairment_rating": $('#impairment_rating').val(),
+            "vital": $("#vital").val(),
+            "poc_assesment": ckPOCAssestence.getData()
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    $("#txtId_P1").val(data);
+                    autoclosepopup();
+                    fnShowPOC();
+
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+        //}
+    }
+
+    function fndefaultDiagnoses() {
+
+
+        var url = '@Url.Action("GetDefultDaignoCodeList", "Visit")?bodyparts=' + $("#txtbodypart").val() + '';
+
+        $.ajax({
+            type: "Post",
+            url: url,
+
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                var daignoCodeDetails = "<ul>";
+
+
+                var myContentDaignosis = ckDaignosis.getData();
+
+                data.forEach(function (i) {
+
+
+                    if (i.isSelect) {
+                        if (myContentDaignosis.indexOf(i.diagCode) < 0) {
+
+                            daignoCodeDetails += "<li>" + i.diagCode;
+                            daignoCodeDetails += " - " + i.description;
+                            daignoCodeDetails += "</li>";
+                        }
+                    }
+                });
+
+                var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ul>";
+                ckDaignosis.data.set(htmlDaignosis);
+
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+
+        return false;
+    }
+
+</script>

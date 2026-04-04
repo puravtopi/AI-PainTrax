@@ -1,0 +1,1451 @@
+﻿@using PainTrax.Web.Helper;
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<style>
+
+    input:read-only {
+        background-color: #d4d4d4;
+    }
+
+</style>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+
+
+
+                        @Html.Raw(ViewBag.content)
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<input type="hidden" id="dov" />
+<input type="hidden" id="HasSides" />
+<input type="hidden" id="ProcedureDetailId" />
+<input type="hidden" id="ProcedureId" />
+<input type="hidden" id="Hasposition" />
+<input type="hidden" id="HasbodyPart" />
+<input type="hidden" id="Haslevel" />
+<input type="hidden" id="Hasmuscle" />
+<input type="hidden" id="HasMedication" />
+<input type="hidden" id="HasSubcode" />
+<input type="hidden" id="inhouseproc" />
+<input type="hidden" id="PPID" />
+<input type="hidden" runat="server" id="BodyPartID" />
+<input type="hidden" runat="server" id="BodyPartval" />
+<input type="hidden" runat="server" id="positionVal" />
+<input type="hidden" id="SubCodeVal" />
+<input type="hidden" id="LevelVal" />
+<input type="hidden" id="SideVal" />
+<input type="hidden" id="MuscleVal" />
+<input type="hidden" id="Position" />
+<input type="hidden" id="MedicationVal" />
+<input type="hidden" id="DateVal" />
+<input type="hidden" id="NewProc" />
+<input id="hfPatientIE_ID" type="hidden" />
+<input id="hfPatientFU_ID" type="hidden" />
+<input type="hidden" id="hfLevelsDefault" />
+<input type="hidden" id="hfSidesDefault" />
+<input type="hidden" id="hfEditProc" />
+<input type="hidden" id="hfExecute" />
+
+<div class="modal fade" id="SelectPopup" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <b id="CatHeading"></b>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <div class="modal-body">
+                <form id="MedForm" class="">
+
+                    <div class="row mb-3" style="display:none">
+
+                        <label id="Positionlbl" class="col-sm-2 col-form-label">Position </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="PositionValue" readonly="readonly" />
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3" id="divLevel">
+                        <label id="Levellbl" class="col-sm-2 col-form-label">Level</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" value="" id="Level" />
+                        </div>
+                    </div>
+                    @{
+                        var sideCase = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionSideCase);
+                    }
+
+                    <div class="row mb-3" id="divSide">
+                        <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
+                        <div class="col-sm-4">
+                            <select id="Side" class="form-control">
+                                @if (sideCase == "U")
+                                {
+                                    <option value=" ">--Select--</option>
+                                    <option value="LEFT">LEFT</option>
+                                    <option value="RIGHT">RIGHT</option>
+                                    <option value="BILATERAL">BILATERAL</option>
+                                }
+                                else if (sideCase == "M")
+                                {
+                                    <option value=" ">--Select--</option>
+                                    <option value="Left">Left</option>
+                                    <option value="Right">Right</option>
+                                    <option value="Bilateral">Bilateral</option>
+
+                                }
+                                else
+                                {
+                                    <option value=" ">--Select--</option>
+                                    <option value="left">left</option>
+                                    <option value="right">right</option>
+                                    <option value="bilateral">bilateral</option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+                    @*  <div class="row mb-3" id="divSide">
+                    <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
+                    <div class="col-sm-4">
+                    <select id="Side" class="form-control">
+                    <option value=" ">--Select--</option>
+                    <option value="Left">LEFT</option>
+                    <option value="Right">RIGHT</option>
+                    <option value="Bilateral">BILATERAL</option>
+                    </select>
+                    </div>
+                    </div> *@
+
+                    <div class="row mb-3" id="divMuscle">
+                        <label id="Musclelbl" class="col-sm-2 col-form-label">Muscle</label>
+                        <div class="col-sm-4">
+                            <select id="Muscle" name="Muscle" class="multiselect form-control ddlpackage" multiple="multiple">
+                                <option value="">--Select--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3" id="divMedication">
+                        <label id="Medicationlbl" class="col-sm-2 col-form-label">Medication</label>
+                        <div class="col-sm-4">
+                            <select id="Medication" class="multiselect form-control ddlpackage" multiple="multiple">
+                                <option value="">--Select--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3" id="divSubProcedure">
+                        <label id="SubProcedurelbl" class="col-sm-2 col-form-label">SubProcedure</label>
+                        <div class="col-sm-4">
+                            <select id="SubProcedure" class="form-control">
+                                <option value="">--Select--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3" id="divDate">
+                        <label id="Date" class="col-sm-2 col-form-label">Date</label>
+                        <div class="col-sm-4">
+                            <input type="date" id="pocdate" class="form-control date" />
+                        </div>
+                    </div>
+                    <br />
+                    <div id="McCaseIns">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="row mb-3">
+                                    <label id="MClbl" class="align boldertext col-sm-5 col-form-label">MC </label>
+                                    <div class="col-sm-7">
+                                        <select id="McType" class="form-control" onchange="fnshowMC(this)">
+                                            <option value="False">No</option>
+                                            <option value="True">Yes</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="McOpt" style="visibility: collapse">
+                                    <div id="McDatediv">
+                                        <div class="row mb-3">
+                                            <label id="ScDate" class="align boldertext col-sm-5 col-form-label">MC Date</label>
+                                            <div class="col-sm-7">
+                                                <input type="date" id="McDate" class="date form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label id="ObReport" class="align boldertext col-sm-5 col-form-label">Obtain Reports</label>
+                                        <div class="col-sm-7">
+                                            <select id="McStatus" class="form-control" onchange="fnshowReports(this)">
+                                                <option value="Pending">Pending</option>
+                                                <option value="Received">Received</option>
+                                                <option value="Denied">Denied</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="Obreport" style="visibility: collapse">
+                                        <div class="row mb-3">
+                                            <label id="Notelbl" class="align boldertext col-sm-5 col-form-label">Note</label>
+                                            <div class="col-sm-7">
+                                                <textarea id="McNote" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div id="ReDate" class="row mb-3">
+                                            <label id="ReDateLbl" class="align boldertext col-sm-5 col-form-label">Reschedule Date</label>
+                                            <div class="col-sm-7">
+                                                <input type="date" id="McReDate" class="date form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="Auth" class="col-md-4">
+
+
+                                <div id="CtDatediv" class="row mb-3">
+                                    <label id="ctDate" class="align boldertext col-sm-5 col-form-label">WC auth Date</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="CtDate" class="date" style="margin-left: 15px;width:100px" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label id="AuthSub" class="align boldertext col-sm-5 col-form-label">Auth Status</label>
+                                    <div class="col-sm-7">
+                                        <select id="CtStatus" style="margin-left: 15px;width:100px" onchange="showAuth(this)">
+                                            <option value="Pending">Pending</option>
+                                            <option value="Received">Received</option>
+                                            <option value="Denied">Denied</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="AuthCal" style="visibility: collapse">
+
+                                    <div class="row mb-3">
+                                        <label id="ANotelbl" class="align boldertext col-sm-5 col-form-label">Note</label>
+                                        <div class="col-sm-7">
+                                            <textarea id="CtNote" style="width:215px;height:100px"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3" id="AuthDate">
+                                        <label id="ReDate" class="align boldertext col-sm-5 col-form-label">Reschedule Date</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" id="CtReDate" class="date" style="margin-left: 5px;width:100px" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="Ins" class="col-md-4">
+                                <div class="row mb-3">
+                                    <label id="InsVerLbl" class="align boldertext col-sm-5 col-form-label">Ins Verification</label>
+                                    <div class="col-sm-7">
+                                        <select id="InsVerCmb" class="form-control" onchange="fnshowIns(this)">
+                                            <option value="True">Yes</option>
+                                            <option value="False">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="InsVer" style="visibility:collapse">
+
+                                    <div class="row mb-3">
+                                        <label id="InsVerCon" class="align boldertext col-sm-5 col-form-label">Backup Lien</label>
+                                        <div class="col-sm-7">
+                                            <select id="InsVerCof" class="form-control">
+                                                <option value="Pending">Pending</option>
+                                                <option value="Received">Received</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label id="INotelbl" class="align boldertext col-sm-5 col-form-label">Note</label>
+                                        <div class="col-sm-7">
+                                            <textarea id="InsNote" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="Vac" class="col-md-4">
+                                <div class="row mb-3">
+                                    <label id="VacLbl" class="align boldertext col-sm-5 col-form-label">Vacinated</label>
+                                    <div class="col-sm-7">
+                                        <select id="VacCmb" class="form-control" onchange="fnshowVac(this)">
+                                            <option value="True">Yes</option>
+                                            <option value="False" selected="selected">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="VacStatus" style="visibility:collapse">
+                                    <div class="row mb-3">
+                                        <label id="VacStatusLbl" class="align boldertext col-sm-5 col-form-label">Status</label>
+                                        <div class="col-sm-7">
+                                            <select id="VacStatusCmb" class="form-control">
+                                                <option value="Pending">Pending</option>
+                                                <option value="Received">Received</option>
+                                                <option value="N/A">N/A</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label id="VacNotelbl" class="align boldertext col-sm-5 col-form-label">Note</label>
+                                        <div class="col-sm-7">
+                                            <textarea id="VacNote" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="fnSave()" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="EditPopuprec" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to edit or create procedure ?</p>
+            </div>
+            <div class="modal-footer" style="margin-right: 18px">
+                <button type="button" onclick="CreateProc()" class="btn btn-default" data-dismiss="modal">Create New Procedure</button>
+                <button type="button" onclick="EditProc()" class="btn btn-primary">Edit Procedure</button>
+                <button type="button" onclick="RemoveProc()" class="btn btn-danger">Delete Procedure</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ExtralargeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Extra Large Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Non omnis incidunt qui sed occaecati magni asperiores est mollitia. Soluta at et reprehenderit. Placeat autem numquam et fuga numquam. Tempora in facere consequatur sit dolor ipsum. Consequatur nemo amet incidunt est facilis. Dolorem neque recusandae quo sit molestias sint dignissimos.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        //tableTransform($("#neck_tbl"));
+        tableTransform($(".tblpoc"));
+    });
+
+    $('.dateval').keyup(function () {
+        if (!this.value) {
+            $('.dateval').blur();
+            $('.dateval').datepicker("hide")
+            if (confirm('Do you want to delete?')) {
+                ;
+                var ProcedureDetailIDfordelete = $('#ProcedureDetailId').val();
+                if (ProcedureDetailIDfordelete == undefined) { ProcedureDetailIDfordelete = 0 }
+                var ajaxdatadel = "{ ProcedureDetailID:'" + ProcedureDetailIDfordelete +
+                    "',ProcedureMasterID:'" + $('#ProcedureId').val() +
+                    "',Position:'" + $('#PositionValue').val() +
+                    "',req:'" + $("#positionVal").val() +
+                    "'}";
+                ;
+                $.ajax({
+                    type: "POST",
+                    url: "POC.aspx/Delete",
+                    data: ajaxdatadel,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function () {
+                        debugger
+                        $('#SelectPopup').modal('hide');
+                        location.reload();
+                    },
+                    failure: function (response) {
+                        alert("Invalid Details...")
+                    }
+                });
+            }
+        }
+
+    });
+
+    function tableTransform(objTable) {
+
+        objTable.each(function () {
+            var $this = $(this);
+            var newrows = [];
+            $this.find("tbody tr, thead tr").each(function () {
+                var i = 0;
+                $(this).find("td, th").each(function () {
+                    i++;
+                    if (newrows[i] === undefined) {
+                        newrows[i] = $("<tr></tr>");
+                    }
+                    newrows[i].append($(this));
+                });
+            });
+            $this.find("tr").remove();
+            $.each(newrows, function () {
+                $this.append(this);
+            });
+        });
+
+        return false;
+    }
+
+    function Popup(t) {
+
+
+        // Close all jQuery UI dialogs
+        $('.modal').modal('hide');
+        $('.modal-backdrop').remove();   // remove black background
+        $('body').removeClass('modal-open');
+
+        if (t[0].dataset.position == "Execute") {
+            $("#McCaseIns").css("visibility", "collapse");
+        } else {
+            $("#McCaseIns").css("visibility", "visible");
+        }
+        if ($("#CTLbl").val() == "WC" && t[0].dataset.position != "Execute") {
+            $("#Auth").show();
+        } else {
+            $("#Auth").hide();
+            $("#CtDate").val('')
+            $("#CtStatus").val('')
+            $("#CTNote").val('')
+            $("#CTReDate").val('')
+
+        }
+        var retVal = true;
+        if (t[0].dataset.position == "Schedule") {
+
+            var mcode = t[0].dataset.mcode;
+            var idID = $("#hfPatientIE_ID.ClientID").val();
+            var BPart = t[0].dataset.body;
+
+            var checkdata = "{MCode:'" + mcode + "',BodyPart:'" + BPart + "',PatientIEID:'" + idID + "'}";
+
+        }
+        if (t[0].dataset.procedure_detail_id == '0') {
+            //setDefault();
+        }
+
+        if (retVal) {
+            $('#NewProc').val('1')
+            $('#ProcedureDetailId').val(t[0].dataset.procedure_detail_id);
+            $('#ProcedureId').val(t[0].dataset.pid);
+            $('#HasMedication').val(t[0].dataset.medication);
+            $('#Hasmuscle').val(t[0].dataset.muscle);
+            $('#Haslevel').val(t[0].dataset.haslevel);
+            $('#HasSides').val(t[0].dataset.hassides);
+            $("#positionVal").val(t[0].dataset.position);
+            $("#BodyPartID").val(t[0].dataset.bodyid);
+            $("#BodyPartval").val(t[0].dataset.body);
+            $('#PPID').val(t[0].dataset.ppid);
+            $('#HasSubcode').val(t[0].dataset.subcode);
+            $('#SubCodeVal').val(t[0].dataset.subpid);
+            $('#CatHeading').text(t[0].dataset.position);
+            $('#SubCode').html('');
+            $('#Level').html('');
+            $('#Muscle').html('');
+            $('#Medication').html('');
+            $('#Level').html('');
+
+            $('#pocdate').html($('#dov').val());
+            $('#PositionValue').val(t[0].dataset.pos);
+            $('#PositionValue').show();
+            $('#Positionlbl').show();
+
+            var dos = $('#dos').val();
+
+            if (dos != '' && dos != undefined)
+                $("#pocdate").val(new Date(dos).toLocaleDateString('en-CA'));
+            else
+                $("#pocdate").val(new Date().toLocaleDateString('en-CA'));
+
+            var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
+
+            if (t[0].dataset.subcode == "1") {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (output) {
+                        //;
+                        $('#patientIEId').html('');
+                        var json = output;
+                        $.each(json, function (index, value) {
+                            $('#SubProcedure').append($('<option>').text(value.SubCode).attr('value', value.SubCode));
+                        });
+                    }
+                });
+                $('#SubProcedure').show();
+                $('#SubProcedurelbl').show();
+            }
+
+
+
+            if (t[0].dataset.muscle == "1") {
+
+
+                var url = '@Url.Action("GetMuscleFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    // data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (output) {
+                        ////;
+                        $('#Muscle').html('');
+                        var json = output;
+                        $.each(json, function (index, value) {
+                            $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
+                        });
+                    }
+                });
+                $('#Muscle').show();
+                $('#Musclelbl').show();
+            }
+
+            if (t[0].dataset.medication == "1") {
+
+                var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (output) {
+                        ////;
+                        $('#Medication').html('');
+                        var json = output;
+                        $.each(json, function (index, value) {
+                            $('#Medication').append($('<option>').text(value.Medicaton).attr('value', value.Medicaton));
+                        });
+                        $('#Medication').val($('#MedicationVal').val());
+                    }
+                });
+
+                $('#Medication').show();
+                $('#Medicationlbl').show();
+            }
+
+            if (t[0].dataset.haslevel != "1") {
+                $('#Level').hide();
+                $('#Levellbl').hide();
+                $('#divLevel').hide();
+            }
+            else {
+                $('#Level').val(t[0].dataset.levelsdefault);
+                $('#Level').show();
+                $('#Levellbl').show();
+                $('#divLevel').show();
+            }
+            if (t[0].dataset.hassides != "1") {
+                $('#Side').hide();
+                $('#Sidelbl').hide();
+                $('#divSide').hide();
+            }
+            else {
+                $('#Side').val(t[0].dataset.sidesdefault);
+                $('#Side').show();
+                $('#Sidelbl').show();
+                $('#divSide').show();
+            }
+            if (t[0].dataset.medication != "1") {
+                $('#Medication').hide();
+                $('#Medicationlbl').hide();
+                $('#divMedication').hide();
+            }
+            else {
+                $('#Medication').show();
+                $('#Medicationlbl').show();
+                $('#divMedication').show();
+            }
+            if (t[0].dataset.muscle != "1") {
+                $('#Muscle').hide();
+                $('#Musclelbl').hide();
+                $('#divMuscle').hide();
+            }
+            else {
+
+                $('#Muscle').show();
+                $('#Musclelbl').show();
+                $('#divMuscle').show();
+            }
+            if (t[0].dataset.subcode != "1") {
+                $('#SubProcedure').hide();
+                $('#SubProcedurelbl').hide();
+                $('#divSubProcedure').hide();
+            }
+            else {
+
+                $('#SubProcedure').show();
+                $('#SubProcedurelbl').show();
+                $('#divSubProcedure').show();
+            }
+
+            $('#SelectPopup').modal('show');
+        }
+    }
+
+    function PopupNE(t) {
+
+        // Close all jQuery UI dialogs
+        $('.modal').modal('hide');
+        $('.modal-backdrop').remove();   // remove black background
+        $('body').removeClass('modal-open');
+
+        $('#MuscleVal').val(t[0].dataset.musc);
+
+
+
+        if (t[0].dataset.position == "Execute") {
+            $("#McCaseIns").css("visibility", "collapse");
+        } else {
+            $("#McCaseIns").css("visibility", "visible");
+        }
+        if ($("#CTLbl").val() == "WC" && t[0].dataset.position != "Execute") {
+            $("#Auth").show();
+        } else {
+            $("#Auth").hide();
+            $("#CtDate").val('')
+            $("#CtStatus").val('')
+            $("#CTNote").val('')
+            $("#CTReDate").val('')
+
+        }
+
+
+
+        if (t[0].dataset.haslevel != "1") {
+            $('#Level').hide();
+            $('#Levellbl').hide();
+            $('#divLevel').hide();
+        }
+        else {
+            $('#Level').val(t[0].dataset.levelsdefault);
+            $('#Level').show();
+            $('#Levellbl').show();
+            $('#divLevel').show();
+        }
+        if (t[0].dataset.hassides != "1") {
+            $('#Side').hide();
+            $('#Sidelbl').hide();
+            $('#divSide').hide();
+        }
+        else {
+            $('#Side').val(t[0].dataset.sidesdefault);
+            $('#Side').show();
+            $('#Sidelbl').show();
+            $('#divSide').show();
+        }
+        if (t[0].dataset.medication != "1") {
+            $('#Medication').hide();
+            $('#Medicationlbl').hide();
+            $('#divMedication').hide();
+        }
+        else {
+            $('#Medication').show();
+            $('#Medicationlbl').show();
+            $('#divMedication').show();
+        }
+        if (t[0].dataset.muscle != "1") {
+            $('#Muscle').hide();
+            $('#Musclelbl').hide();
+            $('#divMuscle').hide();
+        }
+        else {
+
+            var url = '@Url.Action("GetMuscleFromDB", "Visit")?patientIEID=' + t[0].dataset.pid;
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                // data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (output) {
+                    ////;
+                    $('#Muscle').html('');
+                    var json = output;
+                    $.each(json, function (index, value) {
+                        $('#Muscle').append($('<option>').text(value.Muscle.trim()).attr('value', value.Muscle.trim()));
+                    });
+
+                    var str = $('#MuscleVal').val();
+
+                    debugger
+
+                    if (str != "")
+                        if (str.indexOf('~') != -1) {
+                            var selectedOptions = str.split("~");
+
+                            for (var i in selectedOptions) {
+                                $('#Muscle option[value="' + selectedOptions[i].trim() + '"]').prop('selected', true);
+
+                            }
+                        }
+                }
+            });
+            $('#Muscle').show();
+            $('#Musclelbl').show();
+
+            $('#Muscle').show();
+            $('#Musclelbl').show();
+            $('#divMuscle').show();
+        }
+        if (t[0].dataset.subcode != "1") {
+            $('#SubProcedure').hide();
+            $('#SubProcedurelbl').hide();
+            $('#divSubProcedure').hide();
+        }
+        else {
+
+            $('#SubProcedure').show();
+            $('#SubProcedurelbl').show();
+            $('#divSubProcedure').show();
+        }
+
+
+
+        $('#ProcedureDetailId').val(t[0].dataset.procedure_detail_id);
+        $('#hidSign').val(t[0].dataset.signpath);
+        $('#ProcedureId').val(t[0].dataset.pid);
+        $('#HasMedication').val(t[0].dataset.medication);
+        $('#Hasmuscle').val(t[0].dataset.muscle);
+        $("#positionVal").val(t[0].dataset.position);
+        $("#BodyPartID").val(t[0].dataset.bodyid);
+        $("#BodyPartval").val(t[0].dataset.body);
+
+        $('#SubCodeVal').val(t[0].dataset.subpid);
+        $('#PPID').val(t[0].dataset.ppid);
+        $('#HasSubcode').val(t[0].dataset.subcode);
+        $('#PPID').val(t[0].dataset.ppid);
+        $('#Hasposition').val(t[0].dataset.pos);
+
+        $('#PositionValue').val(t[0].dataset.reqpos);
+        $('#CatHeading').val(t[0].dataset.position);
+        $('#Haslevel').val(t[0].dataset.haslevel);
+        $('#HasSides').val(t[0].dataset.hassides);
+        $('#MedicationVal').val(t[0].dataset.medi);
+
+        $('#DateVal').val(t[0].dataset.date);
+        $('#LevelVal').val(t[0].dataset.level);
+        $('#SideVal').val(t[0].dataset.sides);
+        $('#hfLevelsDefault').val(t[0].dataset.levelsdefault);
+        $('#hfSidesDefault').val(t[0].dataset.sidesdefault);
+
+        if (t[0].dataset.position == "Execute") {
+            document.getElementById('hfExecute').value = 'Execute';
+        } else {
+            document.getElementById('hfExecute').value = '';
+        }
+
+
+        $('#EditPopuprec').modal('show');
+    }
+
+    function CreateProc() {
+
+        $('#NewProc').val('1');
+        $('#SubCode').html('');
+        $('#Level').html('');
+        $('#Muscle').html('');
+        $('#Medication').html('');
+        $('#Level').val('');
+        //$('#pocdate').html($('#dov').val());
+        $("#pocdate").val(new Date($('#dov').val()).toLocaleDateString('en-CA'));//YYYY-MM-dd
+
+        $('#CatHeading').text($("#positionVal").val());
+
+        $('#PositionValue').show($('#Hasposition').val());
+        $('#PositionVal').show();
+        $('#Positionlbl').show();
+
+        $('#signEdit').hide();
+
+        if ($('#Haslevel').val() != "1") {
+            $('#Level').hide();
+            $('#Levellbl').hide();
+        }
+        else {
+            $('#Level').val($('#hfLevelsDefault').val());
+            $('#Level').show();
+            $('#Levellbl').show();
+        }
+
+        if ($('#HasSides').val() != "1") {
+            $('#Side').hide();
+            $('#Sidelbl').hide();
+        }
+        else {
+            $('#Side').val($('#hfSidesDefault').val());
+            $('#Side').show();
+            $('#Sidelbl').show();
+        }
+
+
+        if ($('#HasSubcode').val() != "1") {
+            $('#SubProcedure').hide();
+            $('#SubProcedurelbl').hide();
+        }
+        else {
+
+            var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (output) {
+                    $('#SubProcedure').html('');
+                    var json = output;
+                    $.each(json, function (index, value) {
+                        $('#SubProcedure').append($('<option>').text(value.SubCode).attr('value', value.SubCode));
+                    });
+                    $('#SubProcedure').val($('#SubCodeVal').val());
+                }
+            });
+
+            $('#SubProcedure').show();
+            $('#SubProcedurelbl').show();
+        }
+
+
+
+        if ($('#HasMedication').val() != "1") {
+            $('#Medication').hide();
+            $('#Medicationlbl').hide();
+        }
+        else {
+
+            var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (output) {
+
+                    $('#Medication').html('');
+                    var json = output;
+                    $.each(json, function (index, value) {
+                        $('#Medication').append($('<option>').text(value.Medicaton).attr('value', value.Medicaton));
+                    });
+                    $('#Medication').val($('#MedicationVal').val());
+                }
+            });
+
+
+            $('#Medication').show();
+            $('#Medicationlbl').show();
+        }
+        if ($('#Hasmuscle').val() != "1") {
+            $('#Muscle').hide();
+            $('#Musclelbl').hide();
+        }
+        else {
+
+            var url = '@Url.Action("GetMuscleFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                // data: "{'patientIEID':'" + $('#ProcedureId').val() + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (output) {
+
+                    $('#Muscle').html('');
+                    var json = output;
+                    $.each(json, function (index, value) {
+                        $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
+                    });
+                }
+            });
+            $('#Muscle').show();
+            $('#Musclelbl').show();
+        }
+
+
+        var dos = $('#dos').val();
+
+        if (dos != '' && dos != undefined)
+            $("#pocdate").val(new Date(dos).toLocaleDateString('en-CA'));
+        else
+            $("#pocdate").val(new Date().toLocaleDateString('en-CA'));
+
+        $('#EditPopuprec').modal('hide');
+        $('#SelectPopup').modal('show');
+    }
+
+    function EditProc() {
+
+
+        $('#NewProc').val('0');
+        $('#EditPopuprec').modal('hide');
+        $('#SubCode').html('');
+        $('#Level').html('');
+        $('#Muscle').html('');
+        $('#Medication').html('');
+
+        
+        $('#CatHeading').text($("#positionVal").val());
+
+        if ($('#PPID').val() != "0") {
+
+            $('#PositionVal').val($("#positionVal").val());
+            $('#PositionValue').show($('#Hasposition').val());
+            $('#Positionlbl').show();
+
+
+            if ($('#Haslevel').val() != "1") {
+                $('#Level').hide();
+                $('#Levellbl').hide();
+            }
+            else {
+                $('#Level').val($('#LevelVal').val());
+                $('#Level').show();
+                $('#Levellbl').show();
+            }
+
+            if ($('#HasSides').val() != "1") {
+                $('#Side').hide();
+                $('#Sidelbl').hide();
+            }
+            else {
+                $('#Side').val($('#SideVal').val());
+                $('#Side').show();
+                $('#Sidelbl').show();
+            }
+
+            if ($('#HasSubcode').val() != "1") {
+                $('#SubProcedure').hide();
+                $('#SubProcedurelbl').hide();
+            }
+            else {
+
+                var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+                $.ajax({
+                    type: "POST",
+                    //url: "POC.aspx/GetSubCodeFromDB",
+                    //data: "{'SubCode':'" + t[0].dataset.pid + "'}",
+                    url: url,
+
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+
+                    success: function (output) {
+                        ////;
+                        $('#SubProcedure').html('');
+                        var json = output;
+                        $.each(json, function (index, value) {
+                            ////;
+                            $('#SubProcedure').append($('<option>').text(value.SubCode).attr('value', value.SubCode));
+                        });
+                        var str = $('#SubCodeVal').val();
+                        if (str != "")
+                            $("#SubProcedure").find("option[value=" + str + "]").prop("selected", "selected");
+                    }
+                });
+
+                $('#SubProcedure').show();
+                $('#SubProcedurelbl').show();
+            }
+
+            if ($('#HasMedication').val() != "1") {
+                $('#Medication').hide();
+                $('#Medicationlbl').hide();
+            }
+            else {
+
+                var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (output) {
+                        ////;
+                        $('#Medication').html('');
+                        var json = output;
+                        $.each(json, function (index, value) {
+                            ////;
+                            $('#Medication').append($('<option>').text(value.Medicaton).attr('value', value.Medicaton));
+                        });
+                        var str = $('#MedicationVal').val();
+                        if (str != "")
+                            if (str.indexOf('~') != -1) {
+                                var selectedOptions = str.split("~");
+                                for (var i in selectedOptions) {
+                                    $("#Medication option").filter('[value="' + selectedOptions[i] + '"]').prop('selected', true);
+                                }
+                            }
+                    }
+                });
+
+                $('#Medication').show();
+                $('#Medicationlbl').show();
+            }
+
+            
+
+            if ($('#Hasmuscle').val() != "1") {
+                $('#Muscle').hide();
+                $('#Musclelbl').hide();
+            }
+            else {
+
+                var url = '@Url.Action("GetMuscleFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (output) {
+                        debugger
+                        $('#Muscle').html('');
+                        // var json = JSON.parse(output.d);
+                        var json = output;
+                        $.each(json, function (index, value) {
+                            $('#Muscle').append($('<option>').text(value.Muscle.trim()).attr('value', value.Muscle.trim()));
+                        });
+                        var str = $('#MuscleVal').val();
+                        if (str != "")
+                            if (str.indexOf('~') != -1) {
+                                var selectedOptions = str.split("~");
+                                for (var i in selectedOptions) {
+                                    $('#Muscle option[value="' + selectedOptions[i].trim() + '"]').prop('selected', true);
+                                }
+                            }
+                    }
+                });
+                $('#Muscle').show();
+                $('#Musclelbl').show();
+            }
+        }
+        if ($('#DateVal').val() != '' && $('#DateVal').val() != undefined) {
+            $("#pocdate").val(new Date($('#DateVal').val()).toLocaleDateString('en-CA'));//YYYY-MM-dd
+
+        }
+
+        if ($('#hfExecute').val()) {
+            $("#McCaseIns").css("visibility", "collapse");
+            //closeAll();
+        }
+        else {
+
+            var url = '@Url.Action("GetProcDetail", "visit")?ProcedureDetailID=' + $('#ProcedureDetailId').val();
+
+            $("#McCaseIns").css("visibility", "visible");
+            $.ajax({
+                type: "POST",
+                //url: "POC.aspx/GetSubCodeFromDB",
+                //data: "{'SubCode':'" + t[0].dataset.pid + "'}",
+                url: url,
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (output) {
+
+                    data = output;
+                    $('#McType').val(data.MC_Type);
+                    if (data.MC_Report_Status) $('#McStatus').val(data.MC_Report_Status);
+                    if (data.MC_Date) $('#McDate').val(new Date(data.MC_Date).toLocaleDateString("en-CA"));
+                    $('#McNote').val(data.MC_Note);
+                    if (data.MC_ReSche_Date) $('#McReDate').val(new Date(data.MC_ReSche_Date).toLocaleDateString("en-CA"));
+                    if (data.CT_AUTH_Date) $('#CtDate').val(new Date(data.CT_AUTH_Date).toLocaleDateString("en-CA"));
+                    if (data.CT_Report_Status) $('#CtStatus').val(data.CT_Report_Status);
+                    $('#CtNote').val(data.CT_Note);
+                    if (data.CT_ReSche_Date) $('#CtReDate').val(new Date(data.CT_ReSche_Date).toLocaleDateString("en-CA"));
+                    if (data.Ins_Ver_Status == 1)
+                        $('#InsVerCmb').val('True');
+                    else
+                        $('#InsVerCmb').val('False');
+                    if (data.Backup_Line) $('#InsVerCof').val(data.Backup_Line);
+                    $('#InsNote').val(data.Ins_Note);
+                    if (data.IsVaccinated == 1)
+                        $('#VacCmb').val('True');
+                    else
+                        $('#VacCmb').val('False');
+                    if (data.Vac_Status) $('#VacStatusCmb').val(data.Vac_Status);
+                    $('#VacNote').val(data.Vac_Note);
+
+                    $('#hfEditProc').val(1);
+
+
+
+                    fnshowMC(document.getElementById('McType'));
+                    fnshowReports(document.getElementById('McStatus'));
+                    fnshowAuth(document.getElementById('CtStatus'));
+                    fnshowIns(document.getElementById('InsVerCmb'));
+                    fnshowVac(document.getElementById('VacCmb'));
+                }
+            });
+        }
+        //var MCDate = $('#McDate').val();
+        //var MCStatus =$('#McStatus').val();
+        //var MCNote = $('#McNote').val();
+        //var MCReDate = $('#McReDate').val();
+        //var CTDate = $('#CtDate').val();
+        //var CTStatus = $('#CtStatus').val();
+        //var CTNote = $('#CtNote').val();
+        //var CTReDate = $('#CtReDate').val();
+        //var InsStatus =  $('#InsVerCmb').val();
+        //var Backup_Line = $('#InsVerCof').val();
+        //var Ins_Note = $('#InsNotef').val();
+        $('#SelectPopup').modal('show');
+
+    }
+
+    function RemoveProc() {
+
+        var ProcedureDetailIDfordelete = $('#ProcedureDetailId').val();
+
+        var url = '@Url.Action("Delete", "Visit")?ProcedureDetailID=' + ProcedureDetailIDfordelete + '&IeId=' + $("#hdIEId").val();
+
+        if (confirm('Do u want to delete?')) {
+         
+            if (ProcedureDetailIDfordelete == undefined) { ProcedureDetailIDfordelete = 0 }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    // if (data) {
+                    $('#SelectPopup').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $('body').css('overflow', 'auto');
+                    ckPlan.data.set(data);
+                    fnReLoadPOC();
+
+
+                    // }
+                },
+                failure: function (response) {
+                    alert("Invalid Details...")
+                }
+            });
+        }
+    }
+
+    function fnSave() {
+
+        var url = '@Url.Action("SavePOC", "Visit")';
+        var PositionValue = $('#PositionValue').val();
+
+        var blobstr = "";
+
+        var Muscle = $('#Muscle').val();
+        var Medication = $('#Medication').val();
+        var date = $('#pocdate').val();
+        var procDetailId = $('#ProcedureDetailId').val();
+
+        var procId = $('#ProcedureId').val();
+        var IeId = $("#hdIEId").val();
+        var FUId = 0;
+        var BPart = $("#BodyPartID").val();
+        var BodyPart = $("#BodyPartval").val();
+        var MuscleStr = "";
+        var MedicationStr = "";
+        var IsFromNew = "";
+        if (Muscle != null) {
+            if (Muscle.length > 0) {
+                for (var i = 0; i < Muscle.length; i++) {
+                    MuscleStr += Muscle[i] + '~';
+                }
+            }
+        }
+
+        if (Medication != null) {
+            if (Medication.length > 0) {
+                for (var i = 0; i < Medication.length; i++) {
+                    MedicationStr += Medication[i] + '~';
+                }
+            }
+        }
+
+
+        var ctreeportstatus = !($("#ctl00_CTLbl").html() == "WC") ? "" : $('#CtStatus').val()
+
+
+        if ($('#NewProc').val() === '1') {
+            var procid = 0;
+            IsFromNew = 1;
+            var model = {
+                "ProcedureDetailID": procDetailId,
+                "ProcedureMasterID": procId,
+                "PatientIEID": $("#hdIEId").val(),
+                "PatientFuID": FUId,
+                "SubProcedureID": $('#SubProcedure').val(),
+                "BodyPart": BodyPart,
+                "ProcedureID": procId,
+                "Medication": MedicationStr,
+                "Muscle": MuscleStr,
+                "Level": $('#Level').val(),
+                "Position": $('#PositionValue').val(),
+                "pocdate": $('#pocdate').val(),
+                "req": $("#positionVal").val(),
+                "BodyPartID": 0,
+                "IsFromNew": IsFromNew,
+                "PatientProcedureID": procid,
+                "IsConsidered": 0,
+                "Side": $('#Side').val(),
+                "BlobStr": blobstr,
+                "MC_Type": $('#McType').val(),
+                "MC_Date": $('#McDate').val(),
+                "MC_Report_Status": $('#McStatus').val(),
+                "MC_Note": $('#McNote').val(),
+                "MC_ReSche_Date": $('#McReDate').val(),
+                "CT_AUTH_Date": $('#CtDate').val(),
+                "CT_Report_Status": ctreeportstatus,
+                "CT_Note": $('#CtNote').val(),
+                "CT_ReSche_Date": $('#CtReDate').val(),
+                "Ins_Ver_Status": $('#InsVerCmb').val(),
+                "Backup_Line": $('#InsVerCof').val(),
+                "Ins_Note": $('#InsNote').val(),
+                "IsVaccinated": $('#VacCmb').val(),
+                "Vac_Status": $('#VacStatusCmb').val(),
+                "Vac_Note": $('#VacNote').val()
+            }
+
+        } else {
+            IsFromNew = 0;
+            var model = {
+                "ProcedureDetailID": procDetailId,
+                "ProcedureMasterID": procId,
+                "PatientIEID": $("#hdIEId").val(),
+                "PatientFuID": FUId,
+                "SubProcedureID": $('#SubProcedure').val(),
+                "BodyPart": BodyPart,
+                "ProcedureID": procId,
+                "Medication": MedicationStr,
+                "Muscle": MuscleStr,
+                "Level": $('#Level').val(),
+                "Position": $('#PositionValue').val(),
+                "pocdate": $('#pocdate').val(),
+                "req": $("#positionVal").val(),
+                "BodyPartID": 0,
+                "IsFromNew": IsFromNew,
+                "PatientProcedureID": $('#PPID').val(),
+                "IsConsidered": 0,
+                "Side": $('#Side').val(),
+                "BlobStr": blobstr,
+                "MC_Type": $('#McType').val(),
+                "MC_Date": $('#McDate').val(),
+                "MC_Report_Status": $('#McStatus').val(),
+                "MC_Note": $('#McNote').val(),
+                "MC_ReSche_Date": $('#McReDate').val(),
+                "CT_AUTH_Date": $('#CtDate').val(),
+                "CT_Report_Status": ctreeportstatus,
+                "CT_Note": $('#CtNote').val(),
+                "CT_ReSche_Date": $('#CtReDate').val(),
+                "Ins_Ver_Status": $('#InsVerCmb').val(),
+                "Backup_Line": $('#InsVerCof').val(),
+                "Ins_Note": $('#InsNote').val(),
+                "IsVaccinated": $('#VacCmb').val(),
+                "Vac_Status": $('#VacStatusCmb').val(),
+                "Vac_Note": $('#VacNote').val()
+            }
+
+        }
+
+        $("hfEditProc").val(0);
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+
+                $('#SelectPopup').modal('hide');
+
+                
+                var targetId = BodyPart.toLowerCase()+"_Colps";
+
+                if ($('#PositionValue').val()!='' && $('#PositionValue').val()!='0')
+                    targetId = $('#PositionValue').val().toLowerCase()+"_"+BodyPart.toLowerCase()+"_Colps";
+
+                fnReLoadPOC(targetId);
+                fnShowPOCSummary();
+                ckPlan.data.set(data.strPoc);
+
+
+
+
+                // ckCC.data.set(data.strCCDesc);
+                // ckPE.data.set(data.strPEDesc);
+                // ckAssessment.data.set(data.strADesc);
+
+
+            },
+            failure: function (response) {
+                alert("Invalid Details...")
+            }
+        });
+
+
+    }
+
+    function fnReLoadPOC(targetId) {
+        var url = '@Url.Action("GetPOC", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPOC").html(data);
+                // Close all
+                $('.accordion .accordion-collapse').collapse('hide');
+
+                // alert("Procedure details saved successfully.");
+
+                // Open the selected one
+                $('#' + targetId).collapse('show');
+                $('.modal').modal('hide');
+                $('.modal-backdrop').remove();   // remove black background
+                $('body').removeClass('modal-open');
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function CountPopup(t) {
+
+        $('#ProcedureId').val(t[0].dataset.pid);
+
+        var url = '@Url.Action("GetProcedureCountDetail", "Visit")?ProcedureID=' + t[0].dataset.pid + '&PatientIEID=' + $("#hdIEId").val();
+
+        //$('#PPID').val(t[0].dataset.PatientIEID);
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (output) {
+                debugger
+
+                $('#' + t[0].dataset.div).html('');
+                $('#' + t[0].dataset.div).append(output);
+                tableTransform($('#countbl'));
+            }
+        });
+    }
+
+
+    function fnshowMC(obj) {
+
+        if (obj.value == "True") {
+            $("#McOpt").css("visibility", "visible");
+        } else {
+            $("#McOpt").css("visibility", "collapse");
+            $("#Obreport").css("visibility", "collapse");
+        }
+
+    }
+
+    function fnshowReports(obj) {
+
+        if (obj.value == "Denied") {
+            $("#Obreport").css("visibility", "visible");
+        } else {
+            $("#Obreport").css("visibility", "collapse");
+        }
+
+    }
+
+    function fnshowIns(obj) {
+
+        if (obj.value == "False") {
+            $("#InsVer").css("visibility", "visible");
+        } else {
+            $("#InsVer").css("visibility", "collapse");
+        }
+
+    }
+
+    function fnshowVac(obj) {
+
+        if (obj.value == "True") {
+            $("#VacStatus").css("visibility", "visible");
+        } else {
+            $("#VacStatus").css("visibility", "collapse");
+        }
+
+    }
+
+    function fnshowAuth(obj) {
+        if ($("#CTLbl").html() == "WC") {
+            $("#Auth").css("visibility", "visible");
+        } else {
+            $("#Auth").css("visibility", "collapse");
+            $("#CtDate").val('')
+            $("#CtStatus").val('')
+            $("#CTNote").val('')
+            $("#CTReDate").val('')
+        }
+
+        if (obj.value == "Denied") {
+            $("#AuthCal").css("visibility", "visible");
+        } else {
+            $("#AuthCal").css("visibility", "collapse");
+        }
+
+    }
+
+</script>

@@ -1,0 +1,930 @@
+﻿@using PainTrax.Web.Helper;
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PainTrax</title>
+
+
+    <link href="~/assets/img/favicon.png" rel="icon">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/assets/vendor/quill/quill.snow.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet" asp-append-version="true">
+    <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet" asp-append-version="true">
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" asp-append-version="true">
+
+    <!-- Template Main CSS File -->
+    <link href="~/assets/css/style.css" rel="stylesheet" asp-append-version="true">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    
+
+    <style>
+
+        .errorSpan {
+            color: red;
+        }
+
+        .ck-editor__editable_inline {
+            min-height: 400px;
+        }
+
+        .nav-item:hover {
+            cursor: pointer !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 0.2rem !important;
+        }
+
+        .modal-footer button {
+            float: right !important;
+            margin-left: 10px;
+        }
+    </style>
+
+
+    <style>
+        @@media only screen and (min-width : 960px) {
+
+
+
+            .dataTables_length {
+                float: right;
+                position: relative;
+                left: 100%;
+            }
+
+            .dataTables_filter {
+                float: left;
+                position: relative;
+                left: -100%;
+            }
+        }
+    </style>
+
+
+    <style>
+
+        #overlay {
+            position: fixed;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background: rgba(0,0,0,0.6);
+        }
+
+        .cv-spinner {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px #ddd solid;
+            border-top: 4px #2e93e6 solid;
+            border-radius: 50%;
+            animation: sp-anime 0.8s infinite linear;
+        }
+
+        @@keyframes sp-anime {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .is-hide {
+            display: none;
+        }
+    </style>
+
+    @*    <environment include="Development">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+    asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>*@
+</head>
+<body>
+
+
+    <div id="overlay">
+        <div class="cv-spinner">
+            <span class="spinner"></span>
+        </div>
+    </div>
+    @{
+       var clientCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+    }
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a asp-action="Index" asp-controller="Home" class="logo d-flex align-items-center">
+                <img src="~/assets/img/logo.png" alt="">
+                <span class="d-none d-lg-block">PainTrax - @clientCode</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div><!-- End Logo -->
+
+        <div class="search-bar" style="display:none">
+            <form class="search-form d-flex align-items-center" method="POST" action="#">
+                <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+            </form>
+        </div><!-- End Search Bar -->
+
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+
+                <li class="nav-item d-block d-lg-none" style="display:none">
+                    <a class="nav-link nav-icon search-bar-toggle " href="#">
+                        <i class="bi bi-search"></i>
+                    </a>
+                </li><!-- End Search Icon-->
+
+                <li class="nav-item dropdown" style="display:none">
+
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell"></i>
+                        <span class="badge bg-primary badge-number">4</span>
+                    </a><!-- End Notification Icon -->
+
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                        <li class="dropdown-header">
+                            You have 4 new notifications
+                            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="notification-item">
+                            <i class="bi bi-exclamation-circle text-warning"></i>
+                            <div>
+                                <h4>Lorem Ipsum</h4>
+                                <p>Quae dolorem earum veritatis oditseno</p>
+                                <p>30 min. ago</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="notification-item">
+                            <i class="bi bi-x-circle text-danger"></i>
+                            <div>
+                                <h4>Atque rerum nesciunt</h4>
+                                <p>Quae dolorem earum veritatis oditseno</p>
+                                <p>1 hr. ago</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="notification-item">
+                            <i class="bi bi-check-circle text-success"></i>
+                            <div>
+                                <h4>Sit rerum fuga</h4>
+                                <p>Quae dolorem earum veritatis oditseno</p>
+                                <p>2 hrs. ago</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="notification-item">
+                            <i class="bi bi-info-circle text-primary"></i>
+                            <div>
+                                <h4>Dicta reprehenderit</h4>
+                                <p>Quae dolorem earum veritatis oditseno</p>
+                                <p>4 hrs. ago</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-footer">
+                            <a href="#">Show all notifications</a>
+                        </li>
+
+                    </ul><!-- End Notification Dropdown Items -->
+
+                </li><!-- End Notification Nav -->
+
+                <li class="nav-item dropdown" style="display:none">
+
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-chat-left-text"></i>
+                        <span class="badge bg-success badge-number">3</span>
+                    </a><!-- End Messages Icon -->
+
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                        <li class="dropdown-header">
+                            You have 3 new messages
+                            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="message-item">
+                            <a href="#">
+                                <img src="~/assets/img/messages-1.jpg" alt="" class="rounded-circle">
+                                <div>
+                                    <h4>Maria Hudson</h4>
+                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                    <p>4 hrs. ago</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="message-item">
+                            <a href="#">
+                                <img src="~/assets/img/messages-2.jpg" alt="" class="rounded-circle">
+                                <div>
+                                    <h4>Anna Nelson</h4>
+                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                    <p>6 hrs. ago</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="message-item">
+                            <a href="#">
+                                <img src="~/assets/img/messages-3.jpg" alt="" class="rounded-circle">
+                                <div>
+                                    <h4>David Muldon</h4>
+                                    <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                    <p>8 hrs. ago</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="dropdown-footer">
+                            <a href="#">Show all messages</a>
+                        </li>
+
+                    </ul><!-- End Messages Dropdown Items -->
+
+                </li><!-- End Messages Nav -->
+
+                <li class="nav-item dropdown pe-3">
+                    <div class="d-flex justify-content-end">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown" style="margin-right: 0px;">
+                            <img src="~/assets/img/profile-img1.png" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+                            <span class="d-none d-md-block dropdown-toggle ps-2">@HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionUserName)</span>
+                        </a><!-- End Profile Iamge Icon -->
+
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                            <li class="dropdown-header">
+                                <h4>@HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionUserName)</h4>
+                                <span>@HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation)</span>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" asp-action="EditUserProfile" asp-controller="User">
+                                    <i class="bi bi-person"></i>
+                                    <span>My Profile</span>
+                                </a>
+                            </li>
+                            @* <li class="nav-item">
+                            <a class="nav-link" asp-action="Edit" asp-controller="User">
+                            <i class="bi bi-person"></i>
+                            <span>MyProfile</span>
+                            </a>
+                            </li> *@
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            @*   <li>
+                            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                            <i class="bi bi-gear"></i>
+                            <span>Account Settings</span>
+                            </a>
+                            </li>
+                            <li>
+                            <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                            <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                            <i class="bi bi-question-circle"></i>
+                            <span>Need Help?</span>
+                            </a>
+                            </li>
+                            <li>
+                            <hr class="dropdown-divider">
+                            </li> *@
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" asp-action="Logout" asp-controller="Home">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Sign Out</span>
+                                </a>
+                            </li>
+                        </ul><!-- End Profile Dropdown Items -->
+                    </div>
+                </li><!-- End Profile Nav -->
+            </ul>
+        </nav><!-- End Icons Navigation -->
+
+    </header><!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+        @{
+            var pageAccess = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPagesAccess);
+        }
+        <ul class="sidebar-nav" id="sidebar-nav">
+            
+            <li class="nav-item">
+                <a class="nav-link " asp-action="GetProvider" asp-controller="Home">
+                    <i class="bi bi-grid"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " asp-action="Index" asp-controller="Home">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " asp-action="Index" asp-controller="PatientRequest">
+                    <i class="bi bi-grid"></i>
+                    <span>Patient Request</span>
+                </a>
+            </li>
+            <!-- End Dashboard Nav -->
+            @{
+                if (pageAccess.ToLower().Contains("patient"))
+                {
+                    <li>
+                        <a class="nav-link " asp-action="Index" asp-controller="Visit">
+                            <i class="bi bi-grid"></i>
+                            <span>Patient List</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link " asp-action="Create" asp-controller="Visit" asp-route-id="">
+                            <i class="bi bi-grid"></i>
+                            <span>New Visit</span>
+                        </a>
+                    </li>
+                }
+            }
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Master</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
+                <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    @{
+                        if (pageAccess.ToLower().Contains("accident type"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="AccidentType">
+                                    <i class="bi bi-circle"></i><span>AccidentType</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("adjuster"))
+                        {
+                                     <li style="display:none">
+                                <a asp-action="Index" asp-controller="Adjuster">
+                                    <i class="bi bi-circle"></i><span>Adjuster</span>
+                                </a>
+                            </li>
+                        }
+                        // <li>
+                        //     <a asp-action="Index" asp-controller="AppStatus">
+                        //         <i class="bi bi-circle"></i><span>Appointment Status</span>
+                        //     </a>
+                        // </li>
+                        // <li>
+                        //     <a asp-action="Index" asp-controller="AppProvider">
+                        //         <i class="bi bi-circle"></i><span>Appointment Provider</span>
+                        //     </a>
+                        // </li>
+                        if (pageAccess.ToLower().Contains("attorney"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Attorneys">
+                                    <i class="bi bi-circle"></i><span>Attorney</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("case type"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="CaseType">
+                                    <i class="bi bi-circle"></i><span>Case Type</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("designation"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Designation">
+                                    <i class="bi bi-circle"></i><span>Designation</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("diag codes"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Diagcode">
+                                    <i class="bi bi-circle"></i><span>Diag Codes</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("groups"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Group">
+                                    <i class="bi bi-circle"></i><span>Groups</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("ins co."))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Inscos">
+                                    <i class="bi bi-circle"></i><span>Ins Co.</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("locations"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Location">
+                                    <i class="bi bi-circle"></i><span>Locations</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("log"))
+                        {
+                            <li style="display:none">
+                                <a asp-action="Index" asp-controller="Log">
+                                    <i class="bi bi-circle"></i><span>Log</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("macros"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Macros">
+                                    <i class="bi bi-circle"></i><span>Macros</span>
+                                </a>
+                            </li>
+                        }
+
+                        if (pageAccess.ToLower().Contains("map pdf"))
+                        {
+                             <li style="display:none">
+                                <a asp-action="Index" asp-controller="MapPdf">
+                                    <i class="bi bi-circle"></i><span>Map Pdf</span>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a asp-action="Index" asp-controller="Patient">
+                                <i class="bi bi-circle"></i><span>Patients</span>
+                            </a>
+                        </li>
+                        if (pageAccess.ToLower().Contains("procedure"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Procedure">
+                                    <i class="bi bi-circle"></i><span>Procedure</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("provider"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Provider">
+                                    <i class="bi bi-circle"></i><span>Provider</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("referring physician"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="ReferringPhysician">
+                                    <i class="bi bi-circle"></i><span>Referring Physician</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("state"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="State">
+                                    <i class="bi bi-circle"></i><span>State</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("surgerycenter"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="SurgeryCenter">
+                                    <i class="bi bi-circle"></i><span>SurgeryCenter</span>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a asp-action="Index" asp-controller="Tags">
+                                <i class="bi bi-circle"></i><span>Tags</span>
+                            </a>
+                        </li>
+                        if (pageAccess.ToLower().Contains("treatment master"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="Treatment">
+                                    <i class="bi bi-circle"></i><span>Treatment Master</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("website macros"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="WebsiteMacros">
+                                    <i class="bi bi-circle"></i><span>Website Macros</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("users"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="User">
+                                    <i class="bi bi-circle"></i><span>Users</span>
+                                </a>
+
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("poc report field config"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="POCConfig">
+                                    <i class="bi bi-circle"></i><span>POC Field Config</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("poc status config"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="PocStatus">
+                                    <i class="bi bi-circle"></i><span>Poc Status Config</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("insurance status config"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="InsuranceStatus">
+                                    <i class="bi bi-circle"></i><span>Insurance Status Config</span>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a asp-action="Index" asp-controller="VisitType">
+                                <i class="bi bi-circle"></i><spana>Visit Type</spana>
+                            </a>
+
+                        </li>
+                    }
+                </ul>
+            </li><!-- End Components Nav -->
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" asp-action="Index" asp-controller="Forms">
+                    <i class="bi bi-person"></i>
+                    <span>Forms</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" asp-action="Index" asp-controller="SignInSheet">
+                    <i class="bi bi-person"></i>
+                    <span>Sign-in Sheet</span>
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-bar-chart"></i><span>Reports</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a class="nav-link collapsed" asp-action="POCReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>POC Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="MDTImportReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>MDT Import Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="IVFRReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>IVFR Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="ProSXReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>ProSX Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="ProBSReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>ProBS Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="ProSXDetailsReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>ProSX Details Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="DailyCountReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>Daily Count Report</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="nav-link collapsed" asp-action="PtsIEReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>Pts IE Report</span>
+                        </a>
+                    </li>
+
+
+
+                </ul>
+            </li><!-- End Charts Nav -->
+
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#setting-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-sliders2-vertical"></i><span>Settings</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="setting-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-action="Index" asp-controller="Settings">
+                            <i class="bi bi-circle"></i><span>Settings</span>
+                        </a>
+                    </li>
+                    @* <li>
+                    <a asp-action="Index" asp-controller="PrintSetting">
+                    <i class="bi bi-circle"></i><span>Print Settings</span>
+                    </a>
+                    </li>*@
+                    <li>
+                        <a asp-action="Templates" asp-controller="PrintSetting">
+                            <i class="bi bi-circle"></i><span>Manage Template</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="DefaultSettings">
+                            <i class="bi bi-circle"></i><span>Default Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="IETOFU" asp-controller="ForwardSetting">
+                            <i class="bi bi-circle"></i><span>Forward Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-action="Index" asp-controller="Appointment">
+                    <i class="bi bi-person"></i>
+                    <span>Appointments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-action="EditUserProfile" asp-controller="User">
+                    <i class="bi bi-person"></i>
+                    <span>EditUserProfile</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#utility-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-bar-chart"></i><span>Utility</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="utility-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a class="nav-link collapsed" asp-action="UploadSign" asp-controller="Utility">
+                            <i class="bi bi-circle"></i><span>Upload Sign</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="UploadDocuments" asp-controller="Utility">
+                            <i class="bi bi-circle"></i><span>Upload Documents</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="UploadPatient" asp-controller="Utility">
+                            <i class="bi bi-circle"></i><span>Upload Patients</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="Index" asp-controller="ImportDoc">
+                            <i class="bi bi-circle"></i><span>Import Patients</span>
+                        </a>
+                    </li>
+                     <li>
+                        <a class="nav-link collapsed" asp-action="Index" asp-controller="TransferDoc">
+                            <i class="bi bi-circle"></i><span>Transfer Documents</span>
+                        </a>
+                    </li>
+                      <li>
+                        <a class="nav-link collapsed" asp-action="Index" asp-controller="ImportPDF">
+                            <i class="bi bi-circle"></i><span>Import PDF</span>
+                        </a>
+                    </li>
+                    @* <li>
+                    <a href="charts-apexcharts.html">
+                    <i class="bi bi-circle"></i><span>Pro / SX Report</span>
+                    </a>
+                    </li>
+                    <li>
+                    <a href="charts-echarts.html">
+                    <i class="bi bi-circle"></i><span>Daily Count</span>
+                    </a>
+                    </li> *@
+                </ul>
+            </li><!-- End Charts Nav -->
+        </ul>
+
+    </aside><!-- End Sidebar-->
+    @RenderBody()
+
+
+    <footer id="footer" class="footer" style="margin-left:0px !important">
+        <div class="copyright">
+            &copy; Copyright <strong><span>PainTrax</span></strong>. All Rights Reserved
+        </div>
+        <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+            Designed by <a href="https://www.paintrax.com/v2">PainTrax</a>
+        </div>
+    </footer><!-- End Footer --><!-- End Footer -->
+    @* @section Scripts {
+        <script>
+            window.addEventListener('DOMContentLoaded', function () {
+                window.convaiSettings = {
+                    agentId: "agent_4401k9eqdcgdf9k99t0xd3qh98va",
+                    theme: {
+                        color: "#0056D2",
+                        launcher: "floating"
+                    },
+                    enableMic: true
+                };
+
+                const script = document.createElement("script");
+                script.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
+                script.async = true;
+                document.body.appendChild(script);
+            });
+        </script>
+    } *@
+
+    
+
+
+    <div id="myModalMessage" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title">PainTrax</h4>
+                    <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                </div>
+                <div class="modal-body" id="messBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+
+    <!-- Session Expired Modal -->
+    <div id="sessionExpiredModal" class="modal" tabindex="-1" role="dialog" style="display:none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Session Expired</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Your session has expired. Please log in again.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="redirectToLogin()">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirectToLogin() {
+            window.location.href = '@Url.Action("Login", "Home")'; // Change to your login page
+        }
+    </script>
+
+
+
+    <script>
+        function checkSession() {
+            var url = '@Url.Action("CheckSession", "Home")';
+            fetch(url) // Change to your controller path
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sessionExpired) {
+                        showSessionExpiredPopup();
+                    }
+                });
+        }
+
+        function showSessionExpiredPopup() {
+            document.getElementById('sessionExpiredModal').style.display = 'block';
+        }
+
+        // Check session every 1 minute
+        setInterval(checkSession, 1 * 60 * 1000);
+    </script>
+
+ @*    <script src="~/assets/vendor/apexcharts/apexcharts.min.js" asp-append-version="true"></script> *@
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/assets/vendor/chart.js/chart.umd.js" asp-append-version="true"></script>
+    <script src="~/assets/vendor/echarts/echarts.min.js" asp-append-version="true"></script>
+    <script src="~/assets/vendor/quill/quill.min.js" asp-append-version="true"></script>
+    <script src="~/assets/vendor/simple-datatables/simple-datatables.js" asp-append-version="true"></script>
+    <script src="~/assets/vendor/tinymce/tinymce.min.js" asp-append-version="true"></script>
+@*     <script src="~/assets/vendor/php-email-form/validate.js" asp-append-version="true"></script> *@
+    <script src="~/assets/vendor/bootbox/bootbox.js" asp-append-version="true"></script>
+    <script src="~/assets/js/main.js" asp-append-version="true"></script>
+
+
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" asp-append-version="true"></script>
+   @*  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

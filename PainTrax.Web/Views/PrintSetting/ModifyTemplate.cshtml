@@ -1,0 +1,108 @@
+﻿@model PainTrax.Web.Models.tbl_template
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Template</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Templates" asp-controller="PrintSetting">List</a></li>
+                <li class="breadcrumb-item active">Create</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Manage Template</h5>
+                            </div>
+                            <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+
+                                <a class="btn btn-primary" onclick="fnSave()">Save</a>
+                                <a class="btn btn-default" asp-action="Templates" asp-controller="PrintSetting">Back</a>
+                            </div>
+                        </div>
+                        @*<h5 class="card-title">Add Designation</h5>*@
+                        <div class="row">
+                            <input type="hidden" value="@Model.type"  id="type"/>
+                            <input type="hidden" value="@Model.id" id="id"/>
+                            <div class="col-lg-12">
+                                <div class="row mb-3">
+
+                                    <div class="col-md-12 col-lg-12">
+                                        <textarea id="txtTemplate" name="txtTemplate">@Model.content</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+
+<script src="~/ckeditor/sample/script.js"></script>
+
+<script src="~/ckeditor/build/ckeditor.js"></script>
+
+
+<script>
+    var ckTemplate;
+
+
+    $(document).ready(function () {
+
+        ClassicEditor.create(document.querySelector('#txtTemplate')).then(editor => {
+
+            window.editor = editor;
+            ckTemplate = editor;
+        })
+            .catch(handleSampleError);
+    });
+
+    function fnSave()
+    {
+        var url = '@Url.Action("SaveTemplate","PrintSetting")';
+
+
+        var model = {  
+            "type": $("#type").val(),
+            "id": $("#id").val(),
+            "content": ckTemplate.getData(),
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Template save successfully.</p>');
+                  
+                }
+                else
+                    alert("Error in Data Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+</script>

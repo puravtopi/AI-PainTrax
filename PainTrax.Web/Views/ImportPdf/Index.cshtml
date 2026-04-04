@@ -1,0 +1,163 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@{
+    ViewData["Title"] = "Import Document";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var clientCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Transfer Document</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">Import From PDF</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <br />
+                        @if (clientCode.ToLower() == "njosmi")
+                        {
+                            <h5>Import Pdf</h5>
+                            <!-- Upload File Form -->
+
+                            <form asp-action="Index" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <select name="provider" class="form-select">
+                                            @foreach (var item in ViewBag.providerList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#location">
+                                        Location <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select class="form-select" name="locationid" asp-items="@ViewBag.locList"></select>
+                                        <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
+                                    </div>
+                                </div>
+                                <br /><br />
+                                <div class="row">
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".pdf" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary" style="width:200px">Import PDF</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
+                        @if (clientCode.ToLower() == "qmppc")
+                        {
+                            <h5>Import Pdf</h5>
+                            <!-- Upload File Form -->
+
+                            <form asp-action="QMPPC" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+                                    @*     <div class="col-sm-4">
+                                <select name="provider" class="form-select">
+                                @foreach (var item in ViewBag.providerList)
+                                {
+                                <option value="@item.Value">@item.Text</option>
+                                }
+                                </select>
+                                </div> *@
+                                    <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#location">
+                                        Location <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select class="form-select" name="locationid" asp-items="@ViewBag.locList"></select>
+                                        <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
+                                    </div>
+                                </div>
+                                <br /><br />
+                                <div class="row">
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".pdf" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary" style="width:200px">Import PDF</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
+
+                        <div class="row">
+                            @if (TempData["Message"] != null)
+                            {
+                                <div class="@TempData["alert"]">
+                                    @Html.Raw(TempData["Message"])
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    @*   @if (TempData["data"] != null)
+                    {
+                    <div>
+                    @Html.Raw(TempData["data"])
+                    </div>
+                    }  *@
+                    @*                      @using Newtonsoft.Json
+                    @{
+                    var json = TempData["pdfdata"] as string;
+                    var pdfData = new List<KeyValuePair<string, string>>();
+
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                    pdfData = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(json);
+                    }
+                    }
+
+                    @if (pdfData.Any())
+                    {
+                    <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in pdfData)
+                    {
+                    <tr>
+                    <td>@item.Key</td>
+                    <td>@item.Value</td>
+                    </tr>
+                    }
+                    </tbody>
+                    </table>
+                    }
+                    else
+                    {
+                    <p>No data found.</p>
+                    }
+                    *@
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

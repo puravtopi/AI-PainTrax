@@ -1,0 +1,115 @@
+﻿@model PainTrax.Web.ViewModel.DailyCountReportVM
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Daily Count Report</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">Daily Count Report</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="DailyCountReport" asp-controller="Report" id="frmPOC">
+                            <br />
+                            <div class="row mb-3">
+                                <div class="col-md-3 col-lg-3">
+
+                                    <label class="col-md-12 col-lg-12 col-form-label">FromDate</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="fdate" class="form-control">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">ToDate</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="tdate" class="form-control">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <br />
+                            <div class="col-md-12 col-lg-12">
+
+
+
+                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcelDailyCount" asp-controller="Report">Export</a>
+                                <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
+                                <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
+
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
+                        <br />
+                        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">DOE</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">WC</th>
+                                    <th scope="col">NF</th>
+                                    <th scope="col">LIEN</th>
+                                    <th scope="col">NoOFIE</th>
+                                    <th scope="col">NoOFFU</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.lstDailyCountReport.Count > 0)
+                                {
+                                    @foreach (var item in Model.lstDailyCountReport)
+                                    {
+                                        <tr>
+                                            <td>@(item.doe == null ? "" : item.doe.Value.ToString("MM/dd/yyyy"))</td>
+                                            <td>@item.location</td>
+                                            <td>@item.WC</td>
+                                            <td>@item.NF</td>
+                                            <td>@item.LIEN</td>
+                                            <td>@item.NoOFIE</td>
+                                            <td>@item.NoOFFU</td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="12"><p>No data found</p></td></tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+
+    function fnReset() {
+        $('#frmPOC').trigger("reset");
+        $("#frmPOC")[0].reset();
+        window.location = '@Url.Action("DailyCountReport", "Report")';
+    }
+</script>

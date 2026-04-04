@@ -1,0 +1,174 @@
+﻿@model MS.Models.tbl_ie_ne_default
+<br />
+<div class="col-lg-12">
+    <input type="hidden" id="txtId_Ne" value="@Model.id" />
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Neurological Exam
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            <textarea id="txtNE">@Model.neurological_exam</textarea>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            DTR
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            <textarea id="txtOtherContent">@Model.other_content</textarea>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Sensory
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            <textarea id="txtSE">@Model.sensory</textarea>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Manual Muscle Strength Testing
+        </label>
+
+        <div class="col-sm-10" style="height: fit-content;">
+
+            <textarea id="txtMMST">@Model.manual_muscle_strength_testing</textarea>
+        </div>
+
+
+    </div>
+
+</div>
+
+<script>
+
+    var ckNE, ckSE, ckMMST, chkOther;
+
+    $(document).ready(function () {
+
+        ClassicEditor.create(document.querySelector('#txtNE'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckNE = editor;
+        })
+            .catch(handleSampleError);
+        
+
+        ClassicEditor.create(document.querySelector('#txtOtherContent'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            chkOther = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtSE'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckSE = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtMMST'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckMMST = editor;
+        })
+            .catch(handleSampleError);
+
+    });
+  
+    function fnNESave(t) {
+
+
+        var url = '@Url.Action("SaveNE", "DefaultSettings")';
+
+        var model = {
+            "id": $("#txtId_Ne").val(),
+            "neurological_exam": ckNE.getData(),
+            "sensory": ckSE.getData(),
+            "manual_muscle_strength_testing": ckMMST.getData(),
+            "other_content": chkOther.getData(),
+            "ie_id": $("#id").val(),
+            "patient_id": $("#patientid").val(),
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+    }
+
+
+</script>

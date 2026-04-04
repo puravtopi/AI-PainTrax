@@ -1,0 +1,211 @@
+﻿@model PainTrax.Web.Models.tbl_pocconfig
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage POC config</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="POCConfig">List</a></li>
+                <li class="breadcrumb-item active">Edit</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        @*<h5 class="card-title">Add Designation</h5>*@
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Manage POC Fields</h5>
+                            </div>
+                            @*   <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+
+                            <a class="btn btn-primary" asp-action="Index" asp-controller="Group">Cancel</a>
+
+                            </div> *@
+                        </div>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="ExportEdit" asp-controller="POCConfig" id="frmEdit">
+
+                            @*  <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="CreatedBy" />
+                            <input type="hidden" asp-for="CreatedDate" />
+                            <input type="hidden" asp-for="cmp_id" /> *@
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="export_Columns" class="col-md-4 col-lg-3 col-form-label">Export Columns</label>
+                                        <div class="row mb-9">
+
+                                            <div class="col-md-3 col-lg-3">
+
+                                                <div class="form-check">
+
+                                                    <input class="form-check-input" type="checkbox" id="chkall_location">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            @{
+                                                var i = 0;
+                                                var chk = "";
+                                                var itemname = "";
+
+                                            }
+                                            @foreach (var item in Model.Listcolumns)
+                                            {
+                                                { chk = item.IsChecked ? "checked" : "";
+                                                  itemname = item.Item != null ? item.Item : "";
+                                                }
+
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Id" id="id_l_@i">
+                                                        <input class="form-check-input clslocation" name="@itemname" type="checkbox" id="chk_l_@i" value="@item.IsChecked" @chk>
+                                                        <label class="form-check-label" for="@item.Id" id="item_l_@i">@item.Item</label>
+                                                    </div>
+                                                </div>
+                                                i++;
+                                            }
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row mb-3">
+
+                                        <div class="col-sm-10">
+                                            <button type="button" onclick="fnSave()" class="btn btn-primary">Save</button>
+                                            <a class="btn btn-primary" asp-action="Index" asp-controller="POCConfig">Back</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+
+    var cntLoc = '@Model.Listcolumns.Count()';
+
+    function fnSave() {
+
+        var url = $("#frmEdit").attr("action");
+        var redirecturl = '@Url.Action("Index", "pocconfig")';
+
+        var listLocation = [];
+
+        for (var i = 0; i < parseInt(cntLoc); i++) {
+            var data = {};
+            data.Id = $("#id_l_" + i).val();
+            data.Item = $("#item_l_" + i).text();
+            data.IsChecked = $("#chk_l_" + i).prop('checked');
+
+            listLocation.push(data);
+        }
+
+
+        var checkboxes = $('.pdfCheckbox');
+        checkboxes.each(function (index, checkbox) {
+            // Do something with the checkbox element
+            var isChecked = $(checkbox).prop('checked');
+
+            if (isChecked) {
+
+                var data = {};
+                data.Id = $(checkbox).val();
+                data.Item = $(checkbox).val();
+                data.IsChecked = isChecked;
+
+                listForms.push(data);
+            }
+        })
+
+        var model = {
+
+            "Listcolumns": listLocation,
+
+            "Id": listLocation
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+
+
+                if (data === 1) {
+                    window.location = redirecturl;
+                }
+                else
+                    alert("Error in Data Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+
+    function checkAllForm(val) {
+
+        var cntrlId = 'chkall_' + val;
+
+        if ($('#' + cntrlId).prop('checked')) {
+            $('.chk_' + val).prop('checked', true);
+        }
+        else {
+            $('.chk_' + val).prop('checked', false);
+        }
+    }
+
+    $('#chkall_location').change(function () {
+        $('.clslocation').prop('checked', this.checked);
+    });
+
+
+
+
+    function toggleContent(contentClass) {
+        var content = document.querySelector('.' + contentClass + '-content');
+        var sign = document.getElementById(contentClass + '-sign');
+        if (content.style.display === "block") {
+            content.style.display = "none";
+            sign.innerText = "+";
+        } else {
+            content.style.display = "block";
+            sign.innerText = "-";
+        }
+    }
+</script>
+
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

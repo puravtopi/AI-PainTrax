@@ -1,0 +1,139 @@
+﻿@* @model PainTrax.Web.ViewModel.MDTImportReportVM *@
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Sign In Sheet Report List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active"> Download Sign In Sheet Report</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h6> Date: @ViewBag.SelectedDate </h6>  <h6> 123 -  @ViewBag.SelectedLocation </h6>
+
+                        <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToSISheetReport" asp-controller="SignInSheet">Export</a>
+                        <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToSISheetReportPdf" asp-controller="SignInSheet">Export PDF</a>
+                        <a class="btn bi-skip-backward-btn" style="float:right; margin-left:10px;" asp-action="Index" asp-controller="SignInSheet">Back</a>
+                        <br />
+
+                        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sr No.</th>
+                                    <th scope="col">Name - Acct#</th>
+                                    <th scope="col">Case Type</th>
+                                    <th scope="col">Visit Details</th>
+                                    @* <th scope="col">Doa</th> *@
+                                    <th scope="col">Proc FU Date</th>
+                                    <th scope="col">InHouse Proc</th>
+                                    <th scope="col">Doe</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Insurance</th>
+                                    <th scope="col">Procedure Requested</th>
+                                    <th scope="col">Procedure Scheduled</th>
+                                    <th scope="col">Alert</th>
+                                   
+                                    @* <th scope="col">Next Visit</th> *@
+                                    @*   <th style="width:5%">Action</th> *@
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+@* <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> *@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+<script>
+
+
+
+    $(document).ready(function () {
+        bindList();
+    });
+
+    function bindList() {
+        var url = '@Url.Action("SISheetReport1", "SignInSheet")';
+
+        $("#tbl").DataTable({
+            "lengthMenu": [[25, 50, 100], [25, 50, 100]],
+            "pageLength": 25,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            "ajax": {
+                "url": url,
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                {
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { "data": "name", "name": "name", "autoWidth": true },
+                // { "data": "lname", "lname": "lname", "autoWidth": true },
+                { "data": "casetype", "casetype": "casetype", "autoWidth": true },
+                { "data": "visitiefu", "visitiefu": "visitiefu", "autoWidth": true },
+                // { "data": "doa", "doa": "doa", "autoWidth": true },
+                { "data": "followupdate", "followupdate": "followupdate", "autoWidth": true },
+                { "data": "inhouse", "inhouse": "inhouse", "autoWidth": true },
+                
+                {
+                    "data": "doe", "autoWidth": true,
+                    "type": "date ",
+                    "render": function (value) {
+
+                        if (value === null) return "";
+
+                        var date = new Date(value);
+                        var month = date.getMonth() + 1;
+                        var formattedDate = date.getDate().toString().length > 1 ? date.getDate() : "0" + date.getDate();
+                        return (month.toString().length > 1 ? month : "0" + month) + "/" + formattedDate + "/" + date.getFullYear();
+                    }
+                },
+                { "data": "location", "location": "location", "autoWidth": true },
+                 { "data": "insuranceCompany", "insuranceCompany": "insuranceCompany", "autoWidth": true },
+                { "data": "requested", "requested": "requested", "autoWidth": true },
+                { "data": "scheduled", "scheduled": "scheduled", "autoWidth": true },
+                { "data": "alert", "alert": "alert", "autoWidth": true },
+               
+            ]
+        });
+    }
+
+
+    function fnReset() {
+        $('#frmPOC').trigger("reset");
+        $("#frmPOC")[0].reset();
+        window.location = '@Url.Action("SISheetReport", "SignInSheet")';
+    }
+</script>

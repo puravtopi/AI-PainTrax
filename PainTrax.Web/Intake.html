@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Medical History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #fff;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        th {
+            background: #eaeaea;
+        }
+
+        button {
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+        }
+
+        .modal-content {
+            background: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 85%;
+            overflow: auto;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Complete Medical History</h2>
+
+    <table>
+        <tr><th>Category</th><th>Action</th></tr>
+
+        <tr>
+            <td>Medications / Vitamins</td>
+            <td>
+                <label><input type="checkbox"> None</label>
+                <button onclick="openModal('medicationsModal')">Fill / Select</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Allergies</td>
+            <td>
+                <button onclick="openModal('allergyModal')">Go to Allergies</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Past Medical History</td>
+            <td>
+                <label><input type="checkbox"> None</label>
+                <button onclick="openModal('pmhModal')">Fill / Select</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Past Surgical History</td>
+            <td>
+                <button onclick="openModal('surgeryModal')">Go to Surgery</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Review of Systems</td>
+            <td>
+                <label><input type="checkbox"> None</label>
+                <button onclick="openModal('rosModal')">Fill / Select</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Social History</td>
+            <td>
+                <label><input type="checkbox"> None Significant</label>
+                <button onclick="openModal('socialModal')">Fill / Select</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Family History</td>
+            <td>
+                <label><input type="checkbox"> None</label>
+                <button onclick="openModal('familyModal')">Fill / Select</button>
+            </td>
+        </tr>
+    </table>
+
+    <div id="socialModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('socialModal')">&times;</span>
+
+            <h3>Social History</h3>
+
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Never</th>
+                    <th>History</th>
+                    <th>Current</th>
+                    <th>Quit (Years Ago)</th>
+                </tr>
+
+                <tr>
+                    <td>Smoking</td>
+                    <td><input type="radio" name="smoking"></td>
+                    <td><input type="radio" name="smoking"></td>
+                    <td><input type="radio" name="smoking"></td>
+                    <td><input type="text"></td>
+                </tr>
+
+                <tr>
+                    <td>Drinking</td>
+                    <td><input type="radio" name="drink"></td>
+                    <td><input type="radio" name="drink"></td>
+                    <td><input type="radio" name="drink"></td>
+                    <td><input type="text"></td>
+                </tr>
+
+                <tr>
+                    <td>Marijuana</td>
+                    <td><input type="radio" name="mj"></td>
+                    <td><input type="radio" name="mj"></td>
+                    <td><input type="radio" name="mj"></td>
+                    <td><input type="text"></td>
+                </tr>
+
+                <tr>
+                    <td>Exercise</td>
+                    <td>Never <input type="radio" name="ex"></td>
+                    <td>1x/week <input type="radio" name="ex"></td>
+                    <td>1–3x/week <input type="radio" name="ex"></td>
+                    <td>5+x/week <input type="radio" name="ex"></td>
+                </tr>
+            </table>
+
+            <button onclick="closeModal('socialModal')">Save</button>
+        </div>
+    </div>
+
+    <div id="familyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('familyModal')">&times;</span>
+
+            <h3>Family History</h3>
+
+            <label>
+                <input type="checkbox"> I have no significant family medical history
+            </label>
+
+            <table>
+                <tr>
+                    <th>Condition</th>
+                    <th>Dad</th>
+                    <th>Mom</th>
+                    <th>Sibling</th>
+                    <th>Grandparents</th>
+                </tr>
+
+                <tr>
+                    <td>Diabetes</td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                </tr>
+
+                <tr>
+                    <td>Heart Disease</td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                </tr>
+
+                <tr>
+                    <td>Cancer</td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                </tr>
+            </table>
+
+            <label>Details:</label>
+<textarea rows="3" style="width:100%"></textarea>
+
+            <button onclick="closeModal('familyModal')">Save</button>
+        </div>
+    </div>
+
+    <div id="allergyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('allergyModal')">&times;</span>
+
+            <h3>Allergies</h3>
+
+            <label><input type="checkbox"> No Known Drug Allergy (NDKA)</label>
+
+            <h4>Common Allergens</h4>
+            <label><input type="checkbox"> Latex</label>
+            <label><input type="checkbox"> Iodine</label>
+            <label><input type="checkbox"> IV Contrast</label>
+            <label><input type="checkbox"> Tape</label>
+            <label><input type="checkbox"> Seafood</label>
+            <label><input type="checkbox"> Shellfish</label>
+
+            <h4>Medication & Reaction</h4>
+<textarea rows="5" style="width:100%" placeholder="1) Penicillin - Rash"></textarea>
+
+            <button onclick="closeModal('allergyModal')">Save</button>
+        </div>
+    </div>
+    <script>
+        function openModal(id) {
+            document.getElementById(id).style.display = "block";
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+    </script>
+
+
+</body>
+</html>

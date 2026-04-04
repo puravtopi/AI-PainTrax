@@ -1,0 +1,213 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@{
+    ViewData["Title"] = "Bulk Pdf";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Map Pdf</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+<section class="section">
+
+    <div class="card">
+        <div class="card-body mt-4" >
+            <div class="row">
+                    <div class="col-md-6">
+
+                        <label>Columns</label><br />
+                        <input type="text" id="colsearch" class="form-control" placeholder="Search" onkeyup="searchFunction(this,'col')" />
+                        @{
+                            var dataTable = ViewBag.ViewStructure as System.Data.DataTable;
+                        }
+                        <select size="16" class="form-control" id="columns">
+                            @if (dataTable != null)
+                            {
+                                @foreach (System.Data.DataRow row in dataTable.Rows)
+                                {
+                                    <option value="@row[0]">@row[0]</option>
+                                }
+                            }
+                        </select>
+                        
+                    </div>
+
+                <div class="col-md-6">
+                    <lable>Select Pdf </lable><br />
+                       
+                        <div class="row">
+                            <form action="SetPdf" method="post" class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                            <select id="folderlist" name="folderName" class="form-control"></select>
+
+                                    </div>
+                                    <div class="col-md-5">
+                                            <select id="pdflist" name="pdfName" class="form-control"> </select>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                            <input type="submit" class="btn btn-primary" value="Set" />
+                                    </div>
+                                </div>
+                            </form>
+                            <form action="ClearMapPdf" method="post" class="col-md-2">
+                                <div >
+                                    <input type="submit" class="btn btn-primary" value="Clear" />
+                                </div>
+                            </form>
+                        </div>
+                        
+
+                        <lable>Selected Pdf :  @ViewBag.pdfFile</lable><br />
+                        <lable>TextBoxes</lable><br />
+                         <input type="text" id=pdfsearch" class="form-control" placeholder="Search" onkeyup="searchFunction(this,'pdf')" />
+                                <select size="12" class="form-control" id="text">
+                                    @if (ViewBag.Fields != null)
+                                    {
+                                        foreach (string f in ViewBag.Fields)
+                                        {
+                                            <option>@f</option>
+                                        }
+                                    }
+                                </select>
+                </div>
+                
+            </div>
+                
+                <div class="row mt-2">
+                    <form class="col-md-1" action="SaveMapPdf" method="post" >
+                        <input type="submit" class="btn btn-primary" value="Save" />
+                    </form>
+                    <div class="col-md-1">
+                        <input type="button" id="btnMap" class="btn btn-primary" value="Map " />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="button" id="btnMapClear" class="btn btn-primary" value="Map & Clear Text" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="button" id="btnClear" class="btn btn-primary" value="Clear Text" />
+                    </div>
+                    <div class="col-md-1">
+                        <input type="button" id="btnSetText" class="btn btn-primary" value="Set Text" />
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" id="settext" name="valuefield" class="form-control" />
+                    </div>
+
+
+                </div>
+            </div>
+    </div>
+    </section>
+</main>
+<script>
+    document.getElementById("btnMap").addEventListener("click",function () {
+        debugger
+        MapTran("Map");   
+    });
+    document.getElementById("btnMapClear").addEventListener("click",function () {
+        MapTran("MapClear");
+    });
+    document.getElementById("btnClear").addEventListener("click",function () {
+        MapTran("Clear");   
+    });
+    document.getElementById("btnSetText").addEventListener("click",function () {
+        MapTran("SetText");
+    });
+
+    function MapTran(type)
+    {
+
+        let col = document.getElementById("columns").value;
+        let text = document.getElementById("text").value;
+        let settext = document.getElementById("settext").value;
+
+        if (!col || !text) {
+             alert("Please select both Excel column and PDF field");
+             return;
+         }
+
+        fetch('/Pdf/MapTran', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken':
+                    document.querySelector('input[name="__RequestVerificationToken"]')?.value
+            },
+            body: `col=${encodeURIComponent(col)}&text=${encodeURIComponent(text)}&type=${encodeURIComponent(type)}&settext=${encodeURIComponent(settext)}`
+        })
+        .then(res => res.json())
+        .then(data =>{ alert(data.message); window.location.reload();})
+        .catch(err => console.error(err));
+
+    }
+</script>
+
+<script>
+    function searchFunction(input,list) {
+        var input, filter, ul, li, a, i, txtValue;
+           //input = document.getElementById("<%=txtSearchText.ClientID%>");
+           //alert("test");
+           filter = input.value.toUpperCase();
+           var select = null;
+           if(list=="col")
+               select = document.getElementById("columns");
+           if (list== "pdf")
+               select = document.getElementById("text");
+
+           if (select) {
+
+               opt = select.getElementsByTagName("option");
+               for (i = 0; i < opt.length; i++) {
+                   //alert(opt[i].value);
+                   if (opt[i].value.toUpperCase().indexOf(filter) > -1) {
+                       opt[i].style.display = "";
+                   } else {
+                       opt[i].style.display = "none";
+                   }
+               }
+           }
+    }
+</script>
+<script>
+     var filesByFolder = @Html.Raw(
+                System.Text.Json.JsonSerializer.Serialize(ViewBag.FilesByFolder)
+        );
+    const folderSelect = document.getElementById("folderlist");
+    const pdfSelect = document.getElementById("pdflist");
+    folderSelect.innerHTML = '<option value="">-- Select PDF --</option>';
+    // Populate Folder Dropdown
+    for (let folder in filesByFolder) {
+        let option = document.createElement("option");
+        option.value = folder;
+        option.text = folder;
+        folderSelect.appendChild(option);
+    }
+
+    // On Folder Change
+    folderSelect.addEventListener("change", function () {
+        pdfSelect.innerHTML = '<option value="">-- Select PDF --</option>';
+        debugger
+        let selectedFolder = this.value;
+        if (!selectedFolder) return;
+
+        let pdfs = filesByFolder[selectedFolder];
+
+        pdfs.forEach(function (pdf) {
+            let option = document.createElement("option");
+            option.value = pdf;
+            option.text = pdf;
+            pdfSelect.appendChild(option);
+        });
+    });
+</script>

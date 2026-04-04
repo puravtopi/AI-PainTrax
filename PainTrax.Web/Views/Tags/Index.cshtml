@@ -1,0 +1,83 @@
+﻿@model IEnumerable<PainTrax.Web.Models.tbl_state> 
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Tag List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">  
+                       
+
+                        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                                                    
+                                    <th scope="col">Tag</th>
+                                    <th scope="col">Description</th>
+                                  
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+
+  
+  <script>
+    $(document).ready(function () {
+        bindList();
+    });
+
+    function bindList() {
+        var url = '@Url.Action("List", "Tags")';
+        
+       // alert('1');
+        $("#tbl").DataTable({
+            //"processing": true,
+            "serverSide": true,
+            "filter": true,
+            "orderMulti": false,
+            "ajax": {
+                "url": url,
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+               
+                { "data": "tag", "tag": "tag", "autoWidth": true },
+                { "data": "desc", "desc": "desc", "autoWidth": true },
+                
+            ]
+        });
+    }
+
+   
+</script> 
+
+    
+</main><!-- End #main -->
+
+
+

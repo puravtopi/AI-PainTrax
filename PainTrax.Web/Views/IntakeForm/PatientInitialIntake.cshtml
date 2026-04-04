@@ -1,0 +1,653 @@
+﻿<link href="~/assets/img/favicon.png" rel="icon">
+<link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+@{
+    Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
+}
+<style>
+    input.form-control.d-inline,
+    select.form-select.d-inline,
+    textarea.form-control.d-inline {
+        border: none;
+        border-bottom: 1px solid black;
+        border-radius: 0;
+        padding: 2px 5px;
+    }
+
+    .mic-btn {
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+        color: #007bff;
+    }
+
+</style>
+<main id="main" class="main" style="margin-left:0px!important">
+
+    <section class="section">
+        <div class="col-lg-12">
+
+            <div class="row">
+                <!-- LEFT: FORM -->
+                @if (ViewBag.IsSubmited)
+                {
+                    <div  class="alert alert-success">
+                        <div class="container my-4">
+
+                            <div class="text-center mb-4">
+                                Your have already submitted this Intakeform.
+                            </div>
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    <div id="successMessage" class="alert alert-success" style="display:none">
+                        <div class="container my-4">
+
+                            <div class="text-center mb-4">
+                                Your IntakeForm has been successfully submitted.
+                                <br />
+                                The IntakeForm has been recorded in our system.
+                            </div>
+                        </div>
+                    </div>
+                    <div id="failMessage" class="alert alert-danger" style="display:none">
+                        <div class="container my-4">
+
+                            <div class="text-center mb-4">
+                                Unable to submit the IntakeForm at the moment.
+                                <br />
+                                Please try again or contact the office if the issue continues.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-12" id="formSection" name="formSection">
+                        <button id="openPreview"
+                                class="btn btn-sm btn-outline-primary mt-3"
+                                style="display:none;">
+                            Show Preview
+                        </button>
+                        <form method="post" id="patientForm" name="patientForm" class="container my-4">
+                            <input type="hidden" id="hdId" name="hdId" value="@ViewBag.Id" />
+                            <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
+                            <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" />
+                            <h4 class="text-center mb-4 fw-bold">Patient Request Form</h4>
+
+                            <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white">
+
+
+                                <!-- Patient Info -->
+                                <p>
+                                    Patient LName:
+                                    <input id="LN" name="LN" class="form-control d-inline" style="width:150px;" />
+                                    FName:
+                                    <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" />
+                                    @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
+                                    Gender
+                                    <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+                                        <option value="male">M</option>
+                                        <option value="female">F</option>
+                                    </select>
+                                    &nbsp;&nbsp;
+                                    handed:
+                                    <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+                                        <option value="right-handed">R</option>
+                                        <option value="left-handed">L</option>
+                                    </select>
+
+                                    &nbsp;&nbsp;
+                                    Location: &nbsp;&nbsp;
+                                    <span id="lblLocation">
+                                        @ViewBag.LocName
+                                    </span>
+                                </p>
+
+                                <p>
+                                    DOB:
+                                    <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    Age:
+                                    <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    Height:
+                                    <input id="Height" name="Height" class="form-control d-inline" style="width:150px" />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i>
+                                    Weight:
+                                    <input id="Weight" name="Weight" class="form-control d-inline" style="width:150px" />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i>
+                                    lbs.
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    DOA:
+                                    <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+                                </p>
+
+                                <!-- Work -->
+                                <p>
+                                    Currently working:
+                                    <input type="radio" name="IsWorking" value="The patient is currently working." /> Yes
+                                    <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." /> No
+                                    <br />
+                                    Job title:
+                                    <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:90%;" />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i>
+                                </p>
+
+                                <p>
+                                    If not working, stopped immediately after accident:
+                                    <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
+                                    <input type="radio" name="StoppedAfterAccident" value="No" /> No
+                                    <br />
+                                    Reason:
+                                    <textarea id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
+                                </p>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-3 w-100">Submit</button>
+
+                        </form>
+                    </div>
+                    <!-- RIGHT: PREVIEW -->
+                    <div class="col-md-5 col-12" id="previewSection" name="previewSection" style="display:none">
+                        <div class="container my-4">
+                            <h4 class="text-center mb-4 fw-bold">
+                                Live Report Preview
+                            </h4>
+
+                            <div class="d-flex justify-content-end mb-2">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Export
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="fnExportDOC()">Export as DOC</a></li>
+                                        <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white" id="previewBox">
+                                <!-- ❌ CLOSE ICON -->
+                                <span id="closePreview"
+                                      style="position:absolute; top:8px; right:12px; cursor:pointer; font-size:18px;">
+                                    ❌
+                                </span>
+                                <p id="previewText">
+                                    Patient report will appear here...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+<script>
+        var docTemplate = null;
+        var formData = null;
+        // Path to your saved template file (relative to this HTML file).
+        // (The DOCX is stored alongside this page.)
+        var templateUrlDocx = '@ViewBag.TemplateDOCURL';
+        var templateUrl = '@ViewBag.TemplateURL';
+
+        var recognition;
+        var isRecording = false;
+
+        function safeParse(json) {
+            if (typeof json !== "string") return json;
+
+            try {
+                json = json.trim();
+                json = json.replace(/^\uFEFF/, '');
+                json = json.replace(/&quot;/g, '"');
+                return JSON.parse(json);
+            } catch (e) {
+                console.error("Invalid JSON:", json);
+                throw e;
+            }
+        }
+        function startVoice(icon, ctrl) {
+
+        var input = $('#' + ctrl);
+
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Voice recognition not supported in this browser");
+            return;
+        }
+
+        // 👉 STOP if already recording
+        if (isRecording) {
+            recognition.stop();
+            isRecording = false;
+            $(icon).css("color", "#007bff");
+            $(icon).attr("title", "Start Recording");
+            return;
+        }
+
+        // 👉 START recording
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;   // 🔥 IMPORTANT
+        recognition.interimResults = false;
+        recognition.lang = "en-US";
+
+        recognition.start();
+        isRecording = true;
+
+        $(icon).css("color", "red");
+         $(icon).attr("title", "Stop Recording");
+
+        recognition.onresult = function (event) {
+
+            var transcript = convertPunctuation(
+                event.results[event.results.length - 1][0].transcript
+            );
+
+            if (transcript.toLowerCase() === "clear all") {
+                if (confirm("Clear all text?")) {
+                    input.val('');
+                }
+            } else {
+                var currentText = input.val() || "";
+                input.val((currentText + "" + transcript).trim());
+            }
+
+            updatePreview();
+        };
+
+        recognition.onend = function () {
+            isRecording = false;
+            $(icon).css("color", "#007bff");
+          $(icon).attr("title", "Stop Recording");
+        };
+    }
+
+
+        function convertPunctuation(text) {
+            return text
+                .replace(/\bfull stop\b/gi, ".")
+                .replace(/\bstop\b/gi, ".")
+                .replace(/\bdot\b/gi, ".")
+                .replace(/\bcomma\b/gi, ",")
+                .replace(/\bquestion mark\b/gi, "?")
+                .replace(/\bexclamation mark\b/gi, "!")
+                .replace(/\bcolon\b/gi, ":")
+                .replace(/\bsemicolon\b/gi, ";")
+                .replace(/\bnew line\b/gi, "\n")
+                .replace(/\bnext line\b/gi, "\n");
+        }
+
+
+        function fnShowPresentComplain(cntrl, divCC, divPE) {
+            if ($(cntrl).is(":checked")) {
+                $("#" + divCC).slideDown();
+                $("#" + divPE).slideDown();
+            } else {
+                $("#" + divCC).slideUp();
+                $("#" + divPE).slideUp();
+
+                // OPTIONAL: clear values when unchecked
+                $("#" + divCC).find("input").prop("checked", false).val("");
+                $("#" + divPE).find("input").prop("checked", false).val("");
+            }
+        }
+
+        // CLOSE (❌)
+        $("#closePreview").click(function () {
+
+            $("#previewSection").hide();
+
+            // Expand form to full width
+            $("#formSection")
+                .removeClass("col-md-6")
+                .addClass("col-md-12");
+
+            // Show open button
+            $("#openPreview").show();
+        });
+
+        // OPEN AGAIN
+        $("#openPreview").click(function () {
+
+            $("#previewSection").show();
+
+            // Back to split layout
+            $("#formSection")
+                .removeClass("col-md-12")
+                .addClass("col-md-6");
+
+            $(this).hide();
+        });
+
+
+        function loadTemplate() {
+            // Try loading a DOCX template first; fall back to plain text.
+            loadDocxTemplate(templateUrlDocx)
+                .catch(function () {
+                    return loadTextTemplate(templateUrl);
+                })
+                .then(function () {
+                    updatePreview();
+                });
+        }
+
+        function loadDocxTemplate(url) {
+            return fetch(url)
+                .then(function (res) {
+                    if (!res.ok) throw new Error("Failed to load DOCX template");
+                    return res.arrayBuffer();
+                })
+                .then(function (arrayBuffer) {
+                    return mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+                })
+                .then(function (result) {
+                    // Convert to HTML so formatting (bold, line breaks, etc.) is preserved.
+                    docTemplate = result.value;
+                });
+        }
+
+        function loadTextTemplate(url) {
+            return fetch(url)
+                .then(function (res) {
+                    if (!res.ok) throw new Error("Failed to load text template");
+                    return res.text();
+                })
+                .then(function (text) {
+                    docTemplate = text;
+                });
+        }
+
+        function applyTemplate(template, values) {
+            return template.replace(/{{\s*([^}]+)\s*}}/g, function (_, key) {
+                return values[key] || "";
+            });
+        }
+
+        function updatePreview() {
+
+            var values = {};
+
+            $('#patientForm').find('input, select, textarea').each(function () {
+                var key = $(this).attr('name') || $(this).attr('id');
+                var cls = $(this).attr('class');
+                if (!key) return;
+
+                var type = $(this).attr('type');
+
+                if (type === 'radio') {
+                    if ($(this).is(':checked')) {
+                        values[key] = $(this).val();
+                    }
+                }
+                else if (type === 'checkbox') {
+
+                    // 🔹 Special handling for Complaints (multi-checkbox)
+                    if (cls === "chkMulti") {
+                        if (!values[key]) values[key] = [];
+                        if ($(this).is(':checked')) {
+                            values[key].push($(this).val());
+                        }
+                    }
+                    else {
+                        // normal checkbox (true/false)
+                        values[key] = $(this).is(':checked');
+                    }
+                }
+                else {
+                    values[key] = $(this).val() || "";
+                }
+            });
+
+           values["Id"]= $("#hdId").val();
+
+
+            if ($("#DOB").val() != '')
+                values["DOB"] = formatDate($("#DOB").val());
+
+            if ($("#DOA").val() != '') {
+                values["DOA"] = formatDate($("#DOA").val());
+            }
+            debugger
+            formData = values;
+
+            var template = docTemplate ||
+                "Patient {{PatientName}} ({{Gender}}), dominant hand {{DominantHand}},\n" +
+                "reports that on {{DOA}}, while working as {{JobTitle}},\n" +
+                "they sustained an injury when {{Incident}}.\n\n" +
+                "The incident occurred {{IncidentTypes}} and involved {{BodyPart}}.\n" +
+                "Since the incident, symptoms have been persistent and\n" +
+                "interfere with daily activities.";
+
+            var output = applyTemplate(template, values);
+            $("#previewText").html(output);
+
+            processTemplate(values)
+        }
+
+        // Trigger on all inputs
+        // $(document).on("keyup change", "#patientForm input, #patientForm select, .incident-type-option, #patientForm textarea", function () {
+        //     updatePreview();
+        // });
+            $(document).on("input", "#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option", function () {
+        updatePreview();
+    });
+
+        function processTemplate(data) {
+            let html = $('#previewText').html();
+
+            // Replace placeholders
+            Object.keys(data).forEach(key => {
+                let regex = new RegExp('{{' + key + '}}', 'g');
+                html = html.replace(regex, data[key]);
+            });
+
+
+
+
+               if (data.InjuryType === "work-related") {
+                    $("#divWC").show();
+                           html = html.replace('[WC_START]', '').replace('[WC_END]', '');
+                    html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+                }
+                else if (data.InjuryType === "motor vehicle") {
+                    // Keep MVA, remove WC
+                    html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
+                    html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+                    $("#divWC").hide();
+                }
+                else {
+                    // Remove both
+                    html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+                    html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+                    $("#divWC").hide();
+                }
+
+                $('#previewText').html(html);
+        }
+
+        $(document).ready(function () {
+            // Load template and initialize preview
+            var today = new Date().toISOString().split('T')[0];
+
+            loadTemplate();
+            if ('@ViewBag.FormData' != '') {
+                bindForm('@ViewBag.FormData');
+            }
+            $('#patientForm').on('submit', function (e) {
+                e.preventDefault(); // Stop page reload
+
+
+                // Serialize form data
+                var url = '@Url.Action("SavePatientForm", "IntakeForm")';
+               // var indexurl = '@Url.Action("Index", "Visit")';
+                var data = JSON.stringify(formData);
+
+                $.ajax({
+                    url: url, // Update with your Controller/Action
+                    type: 'POST',
+                    contentType: "application/json",
+                    data: data,
+                    success: function (response) {
+                        if (response.success) {
+                             $('#formSection').hide();
+                             $('#successMessage').show();
+                        } else {
+                             $('#formSection').hide();
+                             $('#failMessage').show();
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while saving data.");
+                    }
+                });
+            });
+
+            $(document).on('change', 'input[name="Complaints"]', function () {
+
+                var section = $(this).data('section');
+                var pe = $(this).data('pe');
+
+                fnShowPresentComplain(this, section, pe);
+            });
+
+            $('#DOB').on('change', function () {
+                var dob = $(this).val(); // format: yyyy-mm-dd
+                var age = calculateAge(dob);
+                $('#Age').val(age);
+            });
+        });
+
+        function fnExportDOC() {
+            var htmlContent = $('#previewText').html();
+            var url = '@Url.Action("ExportWord", "IntakeForm")';
+            var form = $('<form method="post" action="' + url + '"></form>');
+
+            form.append('<input type="hidden" name="htmlContent" value="'
+                + $('<div>').text(htmlContent).html() + '">');
+
+            $('body').append(form);
+            form.submit();
+        }
+
+        function bindForm(val) {
+            // var cleaned = val
+            //     .replace(/&quot;/g, '"')   // decode HTML quotes
+            //     .trim();
+
+            // cleaned=cleaned.replace(/"/g, '\\"');
+
+            // debugger
+            var data = safeParse(val);
+
+            $('#patientForm').find('input, select, textarea').each(function () {
+
+                var key = $(this).attr('name') || $(this).attr('id');
+                if (!key || data[key] === undefined || data[key] === null) return;
+
+                var type = $(this).attr('type');
+                var value = data[key];
+
+                 // 🔹 Fix DATE format
+    if (type === 'date') {
+        value = formatToISODate(value);
+    }
+
+                if (type === 'radio') {
+                    if ($(this).val() == value) {
+                        $(this).prop("checked", true);
+                    }
+                }
+                else if (type === 'checkbox') {
+
+                    // 🔹 Handle multi-checkbox (like Complaints array)
+                    if (Array.isArray(value)) {
+                        if (value.includes($(this).val())) {
+                            $(this).prop("checked", true);
+                        } else {
+                            $(this).prop("checked", false);
+                        }
+                    }
+                    else {
+                        // normal checkbox (true/false)
+                        $(this).prop("checked", value === true || value === "true");
+                    }
+                }
+                else {
+                    $(this).val(value);
+                }
+
+            });
+
+
+           $("#hdId").val('@ViewBag.Id');
+
+
+            setTimeout(function () {
+                $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
+                updatePreview();
+            }, 1000);
+        }
+
+        function formatDate(inputDate) {
+
+            var date = inputDate.split('-');
+
+            // Extract date components
+            var month = parseInt(date[1]); // Months are zero based
+            var day = parseInt(date[2])
+            var year = date[0];
+
+            // Pad single digit month and day with leading zeros
+            if (month < 10) {
+                month = "0" + month;
+            }
+            if (day < 10) {
+                day = "0" + day;
+            }
+
+            // Return formatted date
+            return month + "/" + day + "/" + year;
+        }
+
+            function formatToISODate(dateStr) {
+                if (!dateStr) return "";
+
+        // Already correct
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+
+        let date = new Date(dateStr);
+
+        if (isNaN(date)) return "";
+
+        let year = date.getFullYear();
+        let month = String(date.getMonth() + 1).padStart(2, '0');
+        let day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
+        function calculateAge(dob) {
+            var birthDate = new Date(dob);
+            var today = new Date();
+
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var monthDiff = today.getMonth() - birthDate.getMonth();
+
+            // Adjust if birthday hasn't occurred yet this year
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            return age;
+        }
+</script>

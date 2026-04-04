@@ -1,0 +1,345 @@
+﻿@model MS.Models.tbl_post
+<br />
+
+
+<style>
+    .clsPreop .ck-editor__editable_inline p {
+        margin: 0;
+    }
+
+    .clsPreop .ck.ck-reset.ck-editor.ck-rounded-corners {
+        max-height: 250px;
+        margin-bottom: 10px;
+        overflow-y: scroll
+    }
+</style>
+
+
+<div class="col-lg-12">
+
+
+    <input class="form-check-input " type="checkbox" id="chkLeftShoulder1" onclick="fnBodyPart('LeftShoulderPostOP');" name="Left Shoulder" value="Left Shoulder" checked=@Convert.ToBoolean(Model.chkLeftShoulder) />
+    <label for="chkLeftShoulder"> Left Shoulder </label>
+
+
+    <input class="form-check-input " type="checkbox" id="chkRightShoulder1" onclick="fnBodyPart('RightShoulderPostOP');" name="Right Shoulder" value="Right Shoulder" checked=@Convert.ToBoolean(Model.chkRightShoulder) />
+    <label for="chkRightShoulder"> Right Shoulder </label>
+
+
+    <input class="form-check-input " type="checkbox" id="chkLeftKnee1" onclick="fnBodyPart('LeftKneePostOP');" name="Left Knee" value="Left Knee" checked=@Convert.ToBoolean(Model.chkLeftKnee) />
+    <label for="chkLeftKnee"> Left Knee </label>
+
+
+    <input class="form-check-input " type="checkbox" id="chkRightKnee1" onclick="fnBodyPart('RightKneePostOP');" name="Right Knee" value="Right Knee" checked=@Convert.ToBoolean(Model.chkRightKnee) />
+    <label for="chkRightKnee"> Right Knee </label>
+
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CHIEFCOMPLAINT">
+            CHIEF COMPLAINT :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+               @*  <textarea id="txtHistoryPresentillness">@Model.txtHistoryPresentillness</textarea> *@
+                <textarea id="txtHistoryPresentillness1">@Model.txtHistoryPresentillness</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PhysicalExamination">
+            Physical Examination:
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                @* <textarea id="txtPhysicalExamination">@Model.txtPhysicalExamination</textarea> *@
+                <textarea id="txtPhysicalExamination1">@Model.txtPhysicalExamination</textarea>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PROPOSEDTREATMENT">
+            PROPOSED TREATMENT:
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+               @*  <textarea id="txtExaminedResult">@Model.txtExaminedResult</textarea> *@
+                <textarea id="txtExaminedResult1">@Model.txtExaminedResult</textarea>
+            </div>
+        </div>
+    </div>
+
+
+
+    <input type="hidden" id="txtId_P1" value="@Model.id" />
+    <input type="hidden" id="hdnisfirst" />
+    <input type="hidden" id="SelectedBodyParthidden" />
+
+</div>
+
+
+<!-- End Large Modal-->
+
+<script src="~/ckeditor/sample/script.js"></script>
+
+<script src="~/ckeditor/build/ckeditor.js"></script>
+<script src="~/assets/dist/bootstrap-tagsinput.min.js" asp-append-version="true"></script>
+<script src="~/assets/dist/bootstrap-tagsinput/bootstrap-tagsinput-angular.min.js" asp-append-version="true"></script>
+
+
+
+
+<script>
+
+    var cktHistoryPresentillness, ckPhysicalExamination, ckExaminedResult;
+
+
+
+    $(document).ready(function () {
+
+
+        ClassicEditor.create(document.querySelector('#txtHistoryPresentillness1'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            cktHistoryPresentillness = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPhysicalExamination1'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            ckPhysicalExamination = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+
+
+        ClassicEditor.create(document.querySelector('#txtExaminedResult1'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            ckExaminedResult = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+    });
+
+
+
+
+    function fnBodyPart(cntrl) {
+        debugger;
+        var SelectedBodyPart = "";
+
+        if ($("#chkLeftShoulder1").prop("checked")) {
+            SelectedBodyPart += $("#chkLeftShoulder1").val().replace(/\s+/g, '').toLowerCase() + ', ';
+        }
+        else { SelectedBodyPart = SelectedBodyPart.replace($("#chkLeftShoulder1").val().replace(/\s+/g, '').toLowerCase() + ', ', ''); }
+
+
+        if ($("#chkRightShoulder1").prop("checked")) {
+            SelectedBodyPart += $("#chkRightShoulder1").val().replace(/\s+/g, '').toLowerCase() + ', ';
+        }
+        else { SelectedBodyPart = SelectedBodyPart.replace($("#chkRightShoulder1").val().replace(/\s+/g, '').toLowerCase() + ', ', ''); }
+
+
+        if ($("#chkLeftKnee1").prop("checked")) {
+            SelectedBodyPart += $("#chkLeftKnee1").val().replace(/\s+/g, '').toLowerCase() + ', ';
+        }
+        else { SelectedBodyPart = SelectedBodyPart.replace($("#chkLeftKnee1").val().replace(/\s+/g, '').toLowerCase() + ', ', ''); }
+
+
+        if ($("#chkRightKnee1").prop("checked")) {
+            SelectedBodyPart += $("#chkRightKnee1").val().replace(/\s+/g, '').toLowerCase() + ', ';
+        }
+        else { SelectedBodyPart = SelectedBodyPart.replace($("#chkRightKnee1").val().replace(/\s+/g, '').toLowerCase() + ', ', ''); }
+
+        SelectedBodyPart = SelectedBodyPart.replace(/,\s*$/, "");
+
+        $("#SelectedBodyParthidden").val(SelectedBodyPart);
+       
+
+        if ($('#chk' + cntrl.replace('PostOP', '1')).prop("checked")) {
+            debugger;
+            try {
+
+                var ExaminedResult = ckExaminedResult.getData();
+                var PhysicalExamination = ckPhysicalExamination.getData();
+                var HistoryPresentillness = cktHistoryPresentillness.getData();
+
+                debugger;
+
+                var url = '@Url.Action("GetMacroDetails", "Visit")';
+
+
+                var model = {
+                    "bodyName": cntrl
+                }
+
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    data: model,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
+                        debugger;
+
+
+                        if (data.result === 1) {
+
+
+
+                            HistoryPresentillness = "<p>" + data.data[0].cc_desc + "</p>"; //Replace("#BODYPART", selectedbodypart).Replace("#DOE", hdndoe.Value).Replace("#DOA", hdndoa.Value); Replace("#CASETYPE", Convert.ToString(Session["CASETYPE"]));
+
+
+                            ExaminedResult = "<p>" + data.data[0].pt_desc + "</p>"; //.replace("#BODYPART", selectedbodypart)
+                            PhysicalExamination = "<p>" + data.data[0].pe_desc + "</p>";  //convert gender
+                            // default for all the pages.
+                        }
+                        debugger;
+                        selectedbodypart = $("#SelectedBodyParthidden").val();
+
+
+                       var DummyDOE = $("#hddoe").val();
+                        // Split the date string into month, day, and year
+                        var dateParts = DummyDOE.split('/');
+
+                        // Create a new Date object using the split parts
+                        var dateObj = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]); // Month is 0-indexed
+
+                        // Format the date to "March, 05, 2025"
+                        var formattedDate = dateObj.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: '2-digit'
+                        });
+                        var DOE = formattedDate;
+                        var DOA = $("#hddoa").val();
+
+                        var Gender = $("#hdgender").val();
+                        var CASETYPE = $("#hdcasetype").val();
+                        var casetype1 = "";
+                        if (CASETYPE == "NF") { casetype1 = "motor vehicle"; }
+                        else { casetype1 = "work-related"; }
+                        var genderdetail = "";
+
+                        if (Gender == "Male") { genderdetail = "gentleman"; }
+                        else { genderdetail = "lady"; }
+
+                        ExaminedResult = ExaminedResult.replaceAll("#BODYPART", selectedbodypart);
+                        $('#txtExaminedResult1').val(ExaminedResult);
+                        ckExaminedResult.data.set(ExaminedResult);
+                        PhysicalExamination = PhysicalExamination.replaceAll("#gender", genderdetail)
+                        $('#txtPhysicalExamination1').val(PhysicalExamination);
+                        ckPhysicalExamination.data.set(PhysicalExamination);
+                        HistoryPresentillness = HistoryPresentillness.replaceAll("#BODYPART", selectedbodypart).replace("#DOE", DOE).replace("#CASETYPE", casetype1);
+                        $('#txtHistoryPresentillness1').val(HistoryPresentillness);
+                        cktHistoryPresentillness.data.set(HistoryPresentillness);
+
+
+
+
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
+            }
+            catch (err) {
+            }
+        }
+    }
+
+
+
+    function fnPostOPSave(t) {
+        debugger;
+        //if (isPage1Valid()) {
+        var url = '@Url.Action("SavePost", "FUVisit")';
+        var model = {
+            "id": $("#txtId_P1").val(),
+            "PatientIE_ID": $("#id").val(),
+            "PatientFU_ID": $("#hdFUId").val(),
+            "chkLeftShoulder": $("#chkLeftShoulder1").prop("checked"),
+            "chkRightShoulder": $("#chkRightShoulder1").prop("checked"),
+            "chkLeftHip": null,
+            "chkRightHip": null,
+            "chkLeftKnee": $("#chkLeftKnee1").prop("checked"),
+            "chkRightKnee": $("#chkRightKnee1").prop("checked"),
+            "chkLeftAnkleFoot": null,
+            "chkRightAnkleFoot": null,
+            "txtHistoryPresentillness": cktHistoryPresentillness.getData(),
+            "txtPhysicalExamination": ckPhysicalExamination.getData(),
+            "txtExaminedResult": ckExaminedResult.getData(),
+
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    $("#txtId_P1").val(data);
+                    autoclosepopup();
+                    fnShowPOC();
+
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+        //}
+    }
+
+</script>

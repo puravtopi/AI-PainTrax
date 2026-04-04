@@ -1,0 +1,1026 @@
+﻿@model PainTrax.Web.Models.InitialIntake
+<link href="~/assets/img/favicon.png" rel="icon">
+<link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+@{
+    Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
+}
+
+<link href="~/css/intake.css" rel="stylesheet" asp-append-version="true" />
+
+
+
+<main id="main" class="main" style="margin-left:0px!important">
+
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="InitialIntake" asp-controller="IntakeForm" id="frmIntake">
+                            <br />
+                            <input type="hidden" asp-for="cmp_id" />
+                            <div class="section">
+                                <div class="grid">
+                                    <div>
+                                        <label>Location</label>
+
+                                        <select name="location_id" id="location_id" class="form-control" asp-for="location_id" style="width:200px" asp-items="@ViewBag.locList"></select>
+                                    </div>
+                                    <div>
+                                        <label>Patient Name:</label>
+
+                                        <input type="text" id="fname" asp-for="fname" placeholder="First Name" style="display:inline;width:80%;">
+                                        <button type="button" id="btnMic_f_name" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                                onclick="startVoiceInput('btnMic_f_name','fname','audioContainer')" title="Start">
+                                            🎤
+                                        </button>
+
+                                    </div>
+                                    <div>
+                                        <label>&nbsp;</label>
+                                        <input type="text" id="lname" asp-for="lname" placeholder="Last Name" style="display:inline;width:80%;">
+                                        <button type="button" id="btnMic_l_name" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                                onclick="startVoiceInput('btnMic_l_name','lname','audioContainer')" title="Start">
+                                            🎤
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <label>Sex:</label>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                <input asp-for="gender" type="radio" value="2" />
+                                                F
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="gender" value="1" type="radio" />
+                                                M
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label>DOA:</label>
+                                        <input type="date" id="doa" asp-for="doa">
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <div>
+                                        <label>DOB:</label>
+
+                                        <input type="date" id="dob" asp-for="dob">
+                                    </div>
+                                    <div>
+                                        <label>Age:</label>
+
+                                        <input type="text" id="age" readonly="readonly" asp-for="age">
+                                    </div>
+
+                                    <div>
+                                        <label>Height:</label>
+
+                                        <input type="text" id="height" asp-for="height" style="width:80%">
+                                        <button type="button" id="btnMic_height" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                                onclick="startVoiceInput('btnMic_height','height','audioContainer')" title="Start">
+                                            🎤
+                                        </button>
+                                    </div>
+
+                                    <div>
+                                        <label>Weight:</label>
+
+                                        <input type="text" id="weight" asp-for="weight" style="width:80%">
+                                        <button type="button" id="btnMic_weight" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                                onclick="startVoiceInput('btnMic_weight','weight','audioContainer')" title="Start">
+                                            🎤
+                                        </button>
+                                    </div>
+
+
+                                    <div>
+                                        <label>Handedness:</label>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                <input asp-for="handedness" type="radio" value="1" />
+                                                R
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="handedness" type="radio" value="2" />
+                                                L
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <div>
+                                        <label> Currently working</label>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                <input asp-for="working_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="working_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        <label>Job title</label>
+                                        <input type="text" asp-for="JobTitle" />
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <div>
+                                        <label>
+                                            If not working: Stopped immediately after accident
+                                            <label class="inline-option">
+                                                <input asp-for="Stopped_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="Stopped_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                            (
+
+                                            <label class="inline-option">
+                                                <input asp-for="Retired" type="checkbox" />
+                                                Retired
+                                            </label>
+
+                                            <label class="inline-option">
+                                                <input asp-for="Unemployed" type="checkbox" />
+                                                Unemployed
+                                            </label>
+                                            )
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <div>
+                                        <label class="inline-option">
+                                            If yes, Why?
+                                            <input type="text" asp-for="working_why" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="gird">
+                                    <label>Chief Complaint</label>
+                                    <div class="checkbox-grid">
+
+                                        <label class="inline-option">
+                                            <input asp-for="rsh" type="checkbox" />
+                                            RSH
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="lsh" type="checkbox" />
+                                            LSH
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="rkn" type="checkbox" />
+                                            RKN
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="lkn" type="checkbox" />
+                                            LKN
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="relb" type="checkbox" />
+                                            RElB
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="lelb" type="checkbox" />
+                                            LELB
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="rhip" type="checkbox" />
+                                            RHIP
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="lhip" type="checkbox" />
+                                            LHIP
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="rank" type="checkbox" />
+                                            RANK
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="lank" type="checkbox" />
+                                            LANK
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="rwri" type="checkbox" />
+                                            RWRI
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="lwri" type="checkbox" />
+                                            LWRI
+                                        </label>
+
+                                    </div>
+
+                                </div>
+                                <div class="grid">
+                                    <div>
+                                        <label>Type of Injury:</label>
+                                        <div class="checkbox-grid">
+                                            <label class="inline-option">
+                                                <input asp-for="MVA" type="checkbox" />
+                                                MVA
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="workrelated" type="checkbox" />
+                                                Work-Related
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label>Degree of Disability</label>
+
+                                        <input type="text" id="degreeofDisability" asp-for="degreeofDisability">
+                                        <button type="button" id="btnMic_dd" class="btn" style="display:inline;line-height:15px;font-size:14px;
+                                                onclick="startVoiceInput('btnMic_dd','degreeofDisability','audioContainer')" title="Start">
+                                            🎤
+                                        </button>
+                                    </div>
+
+
+                                </div>
+                                <div class="grid">
+                                    <label class="inline-option">
+                                        The patient reports that on ___/___/____, while
+                                        <select name="wr1" id="wr1" class="form-control" asp-for="wr1" style="width:200px" asp-items="@ViewBag.WR1"></select>,
+                                        they sustained a work-related injury when
+                                        <select name="wr2" id="wr2" class="form-control" asp-for="wr2" style="width:200px" asp-items="@ViewBag.WR2"></select>
+                                    </label>
+                                </div>
+                                <br />
+                                <div class="grid">
+
+                                    <label class="inline-option">
+                                        The incident occurred
+                                        <select name="wr3" id="wr3" class="form-control" asp-for="wr3" style="width:200px" asp-items="@ViewBag.wr3"></select>,
+                                        and involved
+                                        <select name="wr4" id="wr4" class="form-control" asp-for="wr4" style="width:200px" asp-items="@ViewBag.WR4"></select>
+                                    </label>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="grid">
+
+                                    <label class="inline-option">
+                                        As a result of this event, the patient experienced
+                                        <select name="wr5" id="wr5" class="form-control" asp-for="wr5" style="width:200px" asp-items="@ViewBag.WR5"></select>,
+                                        and involved
+                                        <select name="wr6" id="wr6" class="form-control" asp-for="wr6" style="width:200px" asp-items="@ViewBag.WR6"></select>
+                                    </label>
+                                </div>
+                                <br />
+                                <div class="grid">
+                                    <div>
+                                        <label> Asymptomatic prior to accident:</label>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                <input asp-for="asymptomaticpriortoaccident_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="asymptomaticpriortoaccident_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label> History of prior trauma</label>
+                                        <div class="radio-group">
+
+                                            <label class="inline-option">
+                                                <input asp-for="historyofpriortrauma_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="historyofpriortrauma_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <textarea style="width:80%" id="description_of_the_priortrauma" asp-for="description_of_the_priortrauma"></textarea>
+                                    <button type="button" id="btnMic_des" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                            onclick="startVoiceInput('btnMic_des','description_of_the_priortrauma','audioContainer')" title="Start">
+                                        🎤
+                                    </button>
+                                </div>
+                                <br />
+                                <div class="grid">
+                                    <div class="checkbox-grid">
+                                        <label class="inline-option">
+                                            <input asp-for="Pedestrian" type="checkbox" />
+                                            Pedestrian
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="Bicyclist" type="checkbox" />
+                                            Bicyclist
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="Motorcyclist" type="checkbox" />
+                                            Motorcyclist
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="Buspass" type="checkbox" />
+                                            Bus Passenger
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="Driver" type="checkbox" />
+                                            Driver
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="FrontPass" type="checkbox" />
+                                            Front Passenger
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="RearPass" type="checkbox" />
+                                            Rear Passenger
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="gird">
+                                    <label> Vehicle hit:</label>
+                                    <div class="checkbox-grid">
+                                        <label class="inline-option">
+                                            <input asp-for="Rear" type="checkbox" />
+                                            Rear
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="Front" type="checkbox" />
+                                            Front
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="Driversidefront" type="checkbox" />
+                                            Driver-side Front
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="Driversiderear" type="checkbox" />
+                                            Driver-side Rear
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="DriverSideswipe" type="checkbox" />
+                                            Driver-side Sideswipe
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="TBonedDriverside" type="checkbox" />
+                                            T-Boned (Driver-side)
+                                        </label>
+
+
+                                        <label class="inline-option">
+                                            <input asp-for="Passengersidefront" type="checkbox" />
+                                            Passenger-side Front
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="Passengersiderear" type="checkbox" />
+                                            Passenger-side Rear
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="TBonePassengerside" type="checkbox" />
+                                            T-Boned (Passenger-side)
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="PassengerSideswipe" type="checkbox" />
+                                            Passenger-side Sideswipe
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <div>
+                                        <label> Airbags deployed:</label>
+                                        <div class="radio-group">
+
+                                            <label class="inline-option">
+                                                <input asp-for="airbagsdeployed_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="airbagsdeployed_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label>  EMS Arrived:</label>
+                                        <div class="radio-group">
+
+                                            <label class="inline-option">
+                                                <input asp-for="EMSArrived_yes" type="radio" value="Yes" />
+
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="EMSArrived_yes" type="radio" value="No" />
+
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label> Police at Scene:</label>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                <input asp-for="PoliceatScene_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="PoliceatScene_yes" type="radio" value="No" />
+
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label> WenttoHospital:</label>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                <input asp-for="WenttoHospital_yes" type="radio" value="Yes" />
+
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="WenttoHospital_yes" type="radio" value="No" />
+
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+
+                                        <label>Hospital Name:</label>
+
+                                        <input type="text" id="Hospitalname" asp-for="Hospitalname" style="width:80%">
+                                        <button type="button" id="btnMic_hop" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                                onclick="startVoiceInput('btnMic_hop','Hospitalname','audioContainer')" title="Start">
+                                            🎤
+                                        </button>
+                                    </div>
+
+                                </div>
+                                <div class="gird">
+                                    <label> PMH:</label>
+                                    <div class="checkbox-grid">
+                                        <label class="inline-option">
+                                            <input asp-for="PMHNone" type="checkbox" />
+                                            None
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="PMHDiabetes" type="checkbox" />
+                                            Diabetes
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="PMHHTN" type="checkbox" />
+                                            HTN
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="PMHHLD" type="checkbox" />
+                                            HLD
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="PMHAsthma" type="checkbox" />
+                                            Asthma
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="PMHCardiac" type="checkbox" />
+                                            Cardiac
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="PMHThyroid" type="checkbox" />
+                                            Thyroid
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input asp-for="PMHCA" type="checkbox" />
+                                            CA
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <textarea style="width:80%" id="description_of_the_PMH" asp-for="description_of_the_PMH"></textarea>
+                                    <button type="button" id="btnMic_desc_p" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                            onclick="startVoiceInput('btnMic_desc_p','description_of_the_PMH','audioContainer')" title="Start">
+                                        🎤
+                                    </button>
+                                </div>
+                                <br />
+                                <div class="grid">
+
+                                    <label class="inline-option">
+                                        PSH
+                                        <input asp-for="PSHNone" type="checkbox" />
+                                        None
+                                        <input type="text" id="description_of_the_PSH" asp-for="description_of_the_PSH">
+                                        <button type="button" id="btnMic_desc_psh" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                                onclick="startVoiceInput('btnMic_desc_psh','description_of_the_PSH','audioContainer')" title="Start">
+                                            🎤
+                                        </button>
+                                    </label>
+                                </div>
+                                <br />
+                                <div class="grid">
+                                    <div class="checkbox-grid">
+                                        <label class="inline-option">
+                                            Meds:
+                                            <input asp-for="MedsNone" type="checkbox" />
+                                            None
+                                        </label>
+                                        <label class="inline-option">
+                                            <input asp-for="PainmedsPRN" type="checkbox" />
+                                            Pain meds PRN
+                                            <input type="text" id="description_of_the_Meds" asp-for="description_of_the_Meds">
+                                        </label>
+                                        <label class="inline-option">
+                                            <input asp-for="Unabletorecall" type="checkbox" />
+                                            Unable to recall
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label> Drug Allergy:</label>
+                                    <div class="radio-group">
+
+                                        <label class="inline-option">
+                                            <input asp-for="DrugAllergy_yes" type="radio" value="Yes" />
+                                            Yes
+                                        </label>
+                                        <label class="inline-option">
+                                            <input asp-for="DrugAllergy_yes" type="radio" value="No" />
+                                            No
+                                        </label>
+                                        <input type="text" id="DrugAllergy" asp-for="DrugAllergy" style="width:80%">
+                                        <button type="button" id="btnMic_drugallergy" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                                onclick="startVoiceInput('btnMic_drugallergy','DrugAllergy','audioContainer')" title="Start">
+                                            🎤
+                                        </button>
+                                    </div>
+                                </div>
+                                <label> Soc.His:</label>
+                                <div class="grid">
+
+                                    <div>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                Smoke
+                                                <input asp-for="Smoke_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="Smoke_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+
+                                            <input type="text" id="ppd_txt" asp-for="ppd_txt" style="width:80%">
+                                            <button type="button" id="btnMic_ppd_txt" class="btn" style="display:inline;line-height:15px;font-size:14px; width:18%;"
+                                                    onclick="startVoiceInput('btnMic_ppd_txt','ppd_txt','audioContainer')" title="Start">
+                                                🎤
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                Alcohol
+                                                <input asp-for=" Alcohol_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for=" Alcohol_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                Cannabis
+                                                <input asp-for="Cannabis_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="Cannabis_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                Recreational Drugs
+                                                <input asp-for="RecreationalDrugs_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="RecreationalDrugs_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label> PT/Chiro:</label>
+                                <div class="grid">
+                                    <div>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                <input asp-for="PTChiro_yes" type="radio" value="Yes" />
+                                                Yes
+
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="PTChiro_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+
+                                        <div class="inline-option">
+                                            <label> Duration:</label>
+                                            <input type="text" id="Duration_txt" asp-for="Duration_txt">
+                                            <button type="button" id="btnMic_Duration_txt" class="btn" style="display:inline;line-height:15px;font-size:14px;"
+                                                    onclick="startVoiceInput('btnMic_Duration_txt','Duration_txt','audioContainer')" title="Start">
+                                                🎤
+                                            </button>
+                                            <label> Weeks/Months/Years</label>
+                                        </div>
+                                    </div>
+                                    <div>
+
+                                        <div>
+                                            <label class="inline-option">
+                                                Relief:
+                                                <input asp-for="ReliefGood" type="checkbox" />
+                                                Good
+                                            </label>
+                                            <label class="inline-option" for="isactive">
+                                                <input asp-for="ReliefLittle" type="checkbox" />
+                                                Little
+                                            </label>
+                                            <label class="inline-option" for="isactive">
+                                                <input asp-for="ReliefNone" type="checkbox" />
+                                                None
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="grid">
+                                    <div>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                Walk:
+                                                <input asp-for="Walk_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="Walk_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+
+                                            <input type="text" id="blocks_txt" asp-for="blocks_txt">
+                                            <button type="button" id="btnMic_blocks_txt" class="btn" style="display:inline;line-height:15px;font-size:14px; width:5%;"
+                                                    onclick="startVoiceInput('btnMic_blocks_txt','blocks_txt','audioContainer')" title="Start">
+                                                🎤
+                                            </button>
+                                            blocks.
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                Stand:
+                                                <input asp-for="Stand_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="Stand_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+
+                                            <input type="text" id="Stand_txt" asp-for="Stand_txt">
+                                            <button type="button" id="btnMic_Stand_txt" class="btn" style="display:inline;line-height:15px;font-size:14px; width:5%;"
+                                                    onclick="startVoiceInput('btnMic_Stand_txt','Stand_txt','audioContainer')" title="Start">
+                                                🎤
+                                            </button>
+                                            mins.
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                Sit:
+                                                <input asp-for="Sit_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="Sit_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+
+                                            <input type="text" id="Sit_txt" asp-for="Sit_txt">
+                                            <button type="button" id="btnMic_Sit_txt" class="btn" style="display:inline;line-height:15px;font-size:14px; width:5%;"
+                                                    onclick="startVoiceInput('btnMic_Sit_txt','Sit_txt','audioContainer')" title="Start">
+                                                🎤
+                                            </button>
+                                            mins.
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="grid">
+                                    <div class="checkbox-grid">
+                                        <label class="inline-option">
+                                            Unable to <input class="form-check-input" asp-for="Garden" type="checkbox" />
+                                            Garden
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Playsports" type="checkbox" />
+                                            Play Sports
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Drive" type="checkbox" />
+                                            Drive
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Lift" type="checkbox" />
+                                            Lift
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Childcare" type="checkbox" />
+                                            Childcare
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Carry" type="checkbox" />
+                                            Carry
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Reachoverhead" type="checkbox" />
+                                            Reach Overhead
+                                        </label>
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Laundry" type="checkbox" />
+                                            Laundry
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Shopping" type="checkbox" />
+                                            Shopping
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Errands" type="checkbox" />
+                                            Errands
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Kneel" type="checkbox" />
+                                            Kneel
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Squat" type="checkbox" />
+                                            Squat
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Stairs" type="checkbox" />
+                                            Stairs
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Jog" type="checkbox" />
+                                            Jog
+                                        </label>
+
+                                        <label class="inline-option">
+                                            <input class="form-check-input" asp-for="Exercise" type="checkbox" />
+                                            Exercise
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12 text-end">
+
+                                        <button type="submit" class="btn btn-primary px-4 me-2">
+                                            Submit
+                                        </button>
+
+                                        <button type="button" class="btn btn-primary px-4 me-2" onclick="fnSave()">
+                                            Save
+                                        </button>
+
+                                        <button type="button"
+                                                class="btn btn-outline-secondary px-4"
+                                                onclick="location.href='@Url.Action("InitialIntake", "IntakeForm")'">
+                                            Cancel
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<audio id="audioContainer" controls style="display:none"></audio>
+<script>
+    let mediaRecorder = null;
+    let recognition = null;
+    let audioChunks = [];
+
+    // 🔁 Dynamic voice input handler
+    async function startVoiceInput(btnId, inputId, audioPreviewId = null) {
+
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+
+        if (!recognition) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
+        }
+
+        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+
+            // 🎙 Start recording
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+
+            mediaRecorder.onstop = () => {
+                if (!audioPreviewId) return;
+
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const audioURL = URL.createObjectURL(audioBlob);
+
+                const audioPreview = document.getElementById(audioPreviewId);
+                if (audioPreview) {
+                    audioPreview.src = audioURL;
+                    //audioPreview.style.display = 'block';
+                }
+            };
+
+            mediaRecorder.start();
+            recognition.start();
+            btn.textContent = "⏹";
+            btn.title = "Stop";
+
+            recognition.onresult = (event) => {
+                const text = Array.from(event.results)
+                    .map(r => r[0].transcript)
+                    .join(' ');
+
+                // ✨ Replace spoken punctuation
+                input.value = replaceText(text);
+            };
+
+        } else {
+            // ⏹ Stop recording
+            mediaRecorder.stop();
+            recognition.stop();
+            btn.textContent = "🎤";
+            btn.title = "Start";
+        }
+    }
+
+    function replaceText(text) {
+        const _text = text
+            .replace(/\bcomma\b/gi, ',')
+            .replace(/\bperiod\b/gi, '.')
+            .replace(/\bfull stop\b/gi, '.')
+            .replace(/\bcolon\b/gi, ':')
+            .replace(/\bsemicolon\b/gi, ';')
+            .replace(/\bopen bracket\b/gi, '(')
+            .replace(/\bclose bracket\b/gi, ')')
+            .replace(/\bopen parenthesis\b/gi, '[')
+            .replace(/\bclose parenthesis\b/gi, ']')
+            .replace(/\bslash\b/gi, '\\')
+            .replace(/\bequal to\b/gi, '=')
+            .replace(/\bnew line\b/gi, '<br>')
+            .replace(/\bquestion mark\b/gi, '?')
+            .replace(/\bexclamation mark\b/gi, '!');
+        return _text;
+    }
+
+
+    document.getElementById("dob").addEventListener("change", function () {
+        const dob = new Date(this.value);
+        const today = new Date();
+
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+
+        // Adjust age if birthday hasn't occurred yet this year
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        document.getElementById("age").value = age >= 0 ? age : "";
+    });
+
+    function fnSave() {
+        //var formData = getFormJson("#frmIntake");
+        var url = '@Url.Action("SaveForm", "IntakeForm")'
+        var formData = getFormJson("#frmIntake");
+        console.log(formData);
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (res) {
+                console.log("Saved");
+            }
+        });
+    }
+
+    function getFormJson(form) {
+        var data = {};
+
+        $(form).find("input, select, textarea").each(function () {
+            var name = $(this).attr("name");
+            var type = $(this).attr("type");
+
+            if (type === "checkbox") {
+                data[name] = $(this).is(":checked");
+            }
+            else if (type === "radio") {
+                if ($(this).is(":checked")) {
+                    data[name] = $(this).val();
+                }
+            }
+            else {
+                data[name] = $(this).val();
+            }
+        });
+
+        return data;
+    }
+</script>
+
+
+

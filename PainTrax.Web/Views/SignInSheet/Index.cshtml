@@ -1,0 +1,372 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/js/evtCalender.js" asp-append-version="true"></script>
+<link href="~/assets/css/calendar.css" rel="stylesheet" asp-append-version="true" />
+
+<style>
+    ul, #myUL {
+        list-style-type: none;
+    }
+
+    #myUL {
+        margin: 0;
+        padding: 0;
+    }
+
+    .caret {
+        cursor: pointer;
+        -webkit-user-select: none; /* Safari 3.1+ */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+        user-select: none;
+    }
+
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    .caret-down::before {
+        -ms-transform: rotate(90deg); /* IE 9 */
+        -webkit-transform: rotate(90deg); /* Safari */
+        ' transform: rotate(90deg);
+    }
+
+    .nested {
+        display: none;
+    }
+
+    .active {
+        display: block;
+    }
+</style>
+<script>
+    function BindScriptforTreeView() {
+        var toggler = document.getElementsByClassName("caret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".nested").classList.toggle("active");
+                this.classList.toggle("caret-down");
+            });
+        }
+    }
+</script>
+<script>
+    function GetSIDate() {
+        var url = '@Url.Action("GetSIDate", "SignInSheet")';
+        //var SIUrl = '@Url.Action("DWSIReport", "SignInSheet")';
+        var editurldocument = '@Url.Action("DWSIReport", "SignInSheet")';
+        var model = {
+            "SIDate": document.getElementById("txtSIDate").value,
+            "Location_Id": document.getElementById("location_id").value
+        }
+        $.ajax({
+            url: url,
+            data: model,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
+            success: function (data) {
+
+                var html = "";
+                var json = JSON.parse(data);
+                let total = json.length;
+                $.each(json, function (index, value) {
+                    html += '<li><span class="caret"> <a onclick="GetSIDateDetails(' + value.IEID + ',' + value.FUID + ',\'' + String(value.type) + '\')">' + value.lname + ',' + value.fname + '</a></span>';
+                    html += '<ul class="nested">';
+                    html += '<li>' + value.compensation + '</li>';
+                    html += '<li>' + value.location + '</li>';
+                    html += '<li>' + value.doa + '</li>';
+                    html += '<li>' + value.type + '</li>';
+                    html += '<li> DOE:' + value.doe + '</li>';
+                    html += '</ul></li>';
+
+                });
+                document.getElementById("myUL").innerHTML = "";
+                // document.getElementById("dlSI").innerHTML = '<a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Document"  href="' + editurldocument + '/' + full.patient_id + '"><i class="bi bi-folder-fill" title="Document"></i><span>Document</span></a>';
+                //  document.getElementById("dlSI").innerHTML = '<a  href="' + SIUrl + '/' + document.getElementById("txtSIDate").value + ' / ' + document.getElementById("location_id").value + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Down SI"></i></a> &nbsp; &nbsp;';
+                $('#myUL').append(html);
+                document.getElementById("Total").innerHTML = '<h6 style="color:black"> Total : ' + total + '</h1>';
+                document.getElementById("totrow").style = "display:block";
+                BindScriptforTreeView();
+            },
+            error: function (data, status, jqXHR) { alert("Error " + jqXHR); }
+        });
+    }
+
+    function GetSIDateDetails(IEID, FUID, type) {
+       
+        debugger;
+        var url = '@Url.Action("GetSIDateDetails", "SignInSheet")';
+        var model = {
+            "IEID": IEID,
+            "FUID": FUID,
+            "type": type
+        }
+        $.ajax({
+            url: url,
+            data: model,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                var html = "";
+                var json = JSON.parse(data);
+                document.getElementById("lblName").innerHTML = json[0].lname + ',' + json[0].fname;
+                document.getElementById("lblDoa").innerHTML = json[0].doa;
+                document.getElementById("lblLocation").innerHTML = json[0].location;
+                document.getElementById("lblCaseType").innerHTML = json[0].compensation;
+                document.getElementById("lblMAProvider").innerHTML = json[0].provider;
+
+                // Neck back details
+
+                document.getElementById("lblNeckMRI").innerHTML = json[0].diagcervialbulge_date;
+                if (json[0].other1_study.indexOf("UE") !== -1) {
+                    document.getElementById("lblNeckUE").innerHTML = json[0].other1_date;
+                }
+                else if (json[0].other2_study.indexOf("UE") !== -1) {
+                    document.getElementById("lblNeckUE").innerHTML = json[0].other2_date;
+                }
+                else if (json[0].other3_study.indexOf("UE") !== -1) {
+                    document.getElementById("lblNeckUE").innerHTML = json[0].other3_date;
+                }
+                else if (json[0].other4_study.indexOf("UE") !== -1) {
+                    document.getElementById("lblNeckUE").innerHTML = json[0].other4_date;
+                }
+                else if (json[0].other5_study.indexOf("UE") !== -1) {
+                    document.getElementById("lblNeckUE").innerHTML = json[0].other5_date;
+                }
+                else if (json[0].other6_study.indexOf("UE") !== -1) {
+                    document.getElementById("lblNeckUE").innerHTML = json[0].other6_date;
+                }
+                else if (json[0].other7_study.indexOf("UE") !== -1) {
+                    document.getElementById("lblNeckUE").innerHTML = json[0].other7_date;
+                }
+
+                // Low back details
+
+                document.getElementById("lblLowBackMRI").innerHTML = json[0].diaglumberbulge_date;
+
+                if (json[0].other1_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblLowBackLE").innerHTML = json[0].other1_date;
+                }
+                else if (json[0].other2_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblLowBackLE").innerHTML = json[0].other2_date;
+                }
+                else if (json[0].other3_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblLowBackLE").innerHTML = json[0].other3_date;
+                }
+                else if (json[0].other4_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblLowBackLE").innerHTML = json[0].other4_date;
+                }
+                else if (json[0].other5_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblLowBackLE").innerHTML = json[0].other5_date;
+                }
+                else if (json[0].other6_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblLowBackLE").innerHTML = json[0].other6_date;
+                }
+                else if (json[0].other7_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblLowBackLE").innerHTML = json[0].other7_date;
+                }
+
+                // Mid back details
+
+                document.getElementById("lblMidBackMRI").innerHTML = json[0].diagthoracicbulge_date;
+                if (json[0].other1_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblMidBackLE").innerHTML = json[0].other1_date;
+                }
+                else if (json[0].other2_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblMidBackLE").innerHTML = json[0].other2_date;
+                }
+                else if (json[0].other3_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblMidBackLE").innerHTML = json[0].other3_date;
+                }
+                else if (json[0].other4_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblMidBackLE").innerHTML = json[0].other4_date;
+                }
+                else if (json[0].other5_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblMidBackLE").innerHTML = json[0].other5_date;
+                }
+                else if (json[0].other6_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblMidBackLE").innerHTML = json[0].other6_date;
+                }
+                else if (json[0].other7_study.indexOf("LE") !== -1) {
+                    document.getElementById("lblMidBackLE").innerHTML = json[0].other7_date;
+                }
+
+            },
+            error: function (data, status, jqXHR) { alert("Error " + jqXHR); }
+        });
+    }
+
+
+    function closemodal() {
+        //$('#ModalStatus').modal('hide');
+        document.querySelector("#newProcedureModal").classList.remove("show");
+        document.querySelector("#newProcedureModal").style.display = "none";
+        //alert(selectDate);
+
+        document.getElementById('modelContent').style.height = "600px";
+    }
+    function AddProcedureModal() {
+        //id = document.getElementById("<%= hfPatientId.ClientID %>").value;
+        //name = document.getElementById("<%= lblPatientDetail.ClientID %>").innerText;
+        // var newappurl = '@Url.Action("New", "Appointment")';
+        // document.getElementById('target').src = newappurl + "?caladd=true&type=multiple";   //?newAppPid=" + id + "&newAppName="+name;
+        document.querySelector("#newProcedureModal").classList.add("show");
+        document.querySelector("#newProcedureModal").style.display = "block";
+        //$j('#largeModel').modal('show');
+    }
+</script>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Sign-In-Sheet</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">Sign-In-Sheet</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <div class="modal fade" id="newProcedureModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="modelContent" style="height:650px">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modelTitle">New Procedure </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closemodal()"></button>
+                </div>
+                <div class="modal-body">
+                    @*  <iframe id="target" style="width: 100%; height: 100%" frameborder="0"></iframe> *@
+                    <div>BodyPart :</div>
+                    <div>Type :</div>
+                    <div>Procedure :</div>
+                    <div>Sub Procedure :</div>
+                    <div>Date</div>
+                    <div></div>
+                    <div>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closemodal()"></button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div><!-- End Large Modal-->
+
+    <section class="section dashboard">
+        <div class="row">
+            <!-- Recent Sales -->
+            <div class="col-12">
+                <div class="row" id="calhead">
+
+                    <!-- Sales Card -->
+                    <div class="col-xxl-12 col-md-12">
+                        <div class="card info-card sales-card">
+
+
+                            <div class="card-body">
+                                <h5 class="card-title">Select Filter</h5>
+                                <div class="row">
+
+
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <h5>Date</h5>
+                                        <input type="date" class="form-control" name="txtSIDate" id="txtSIDate">
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <h5>&nbsp;Location</h5>
+                                        <select name="location_id" id="location_id" class="form-control" onchange="locationChange()" asp-items="@ViewBag.locList"></select>
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        
+
+                                        <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="SISheetReport" asp-controller="SignInSheet">Download SI Sheet</a>
+                                        <button class="btn btn-success" style="float:right; margin-left:10px;" onclick="GetSIDate()" type="button">Search</button>
+
+                                        <div id="dlSI">
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-center">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- End Sales Card -->
+
+
+                </div>
+                <hr>
+                <div class="card info-card sales-card">
+                    <ul id="Total"></ul>
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            <ul id="myUL"></ul>
+                        </div>
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <table>
+                                <tr>
+                                    <td> <b><label>Name: </label> </b><label id="lblName"></label></td>
+                                    <td> <b><label>DOA: </label> </b><label id="lblDoa"></label></td>
+                                    <td> <b><label>Location: </label> </b> <label id="lblLocation"></label></td>
+                                    <td> <b><label>Case Type:</label> </b> <label id="lblCaseType"></label></td>
+                                </tr>
+                                <tr>
+                                    <th><label>Neck:</label> <label id="lblNeck"></label></th>
+                                    <th><label>LowBack:</label> <label id="lblLowBack"></label></th>
+                                    <th><label>MidBack:</label> <label id="lblMidBack"></label></th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td><b><label>MRI:</label></b> <label id="lblNeckMRI"></label></td>
+                                    <td><b><label>MRI:</label></b> <label id="lblLowBackMRI"></label></td>
+                                    <td><b><label>MRI:</label></b> <label id="lblMidBackMRI"></label></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b><label>UE:</label></b> <label id="lblNeckUE"></label></td>
+                                    <td><b><label>LE:</label></b> <label id="lblLowBackLE"></label></td>
+                                    <td><label></label> <label id="lblMidBackLE"></label></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b><label>MA and Providers :</label> </b> <label id="lblMAProvider"></label></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b><label>Procedures :</label></b> <label id="lblProcedures"></label></td>
+                                    @* <td><input type="button" onclick="AddProcedureModal()" id="btnProcedure" value="New" /></td> *@
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- End Recent Sales -->
+
+        </div>
+        @*   </div><!-- End Left side columns -->
+        <!-- Right side columns -->
+        </div> *@
+    </section>
+
+</main><!-- End #main -->

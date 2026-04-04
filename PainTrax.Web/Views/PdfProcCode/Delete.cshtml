@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@{
+    ViewData["Title"] = "Import Document";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var clientCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+}
+
+    @model tbl_pdfproccode
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Add Procedure Code</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+
+        <div class="card">
+            <div class="card-body">
+
+
+    <p>Are you sure you want to delete this record?</p>
+
+    <div>
+        <strong>MCode:</strong> @Model.mcode <br />
+        <strong>Procedure:</strong> @Model.mprocedure
+    </div>
+
+    <form asp-action="ConfirmDelete" method="post">
+        <input type="hidden" name="id" value="@Model.id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="/PdfProcCode/Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</div>
+</section>
+</main>

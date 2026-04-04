@@ -1,0 +1,779 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #tbl_length {
+        display: none;
+    }
+</style>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Dashboard</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+
+
+        <div class="col-lg-12">
+            <div class="row">
+                <!-- Sales Card -->
+                <div class="col-xxl-4 col-md-6">
+                    <div class="card info-card sales-card">
+
+                        @*  <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                        <h6>Filter</h6>
+                        </li>
+
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                        </ul>
+                        </div>*@
+
+                        <div class="card-body">
+                            <h5 class="card-title">New Patient <span>| Today</span></h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-cart"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <h6>@ViewBag.TodaysPatient</h6>
+                                    <!--<span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>-->
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- End Sales Card -->
+                <!-- Revenue Card -->
+                <div class="col-xxl-4 col-md-6">
+                    <div class="card info-card revenue-card">
+
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+
+                                <li><a class="dropdown-item" href="#">Today</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Appointment <span>| This Month</span></h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-currency-dollar"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <h6>0</h6>
+                                    <!--<span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>-->
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- End Revenue Card -->
+                <!-- Customers Card -->
+                <div class="col-xxl-4 col-xl-12">
+
+                    <div class="card info-card customers-card">
+
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+
+                                <li><a class="dropdown-item" href="#">Today</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Procedure <span>| Today</span></h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-people"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <h6>0</h6>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div><!-- End Customers Card -->
+                <!-- Sales Card -->
+                <div class="col-xxl-3 col-md-6" style="display:none">
+                    <div class="card info-card sales-card">
+
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+
+                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="fnTotalPatient(1,'Today')">Today</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="fnTotalPatient(2,'This Month')">This Month</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="fnTotalPatient(3,'This Year')">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Total Patient <span id="totalTitle">| Till Date</span></h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-cart"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <h6 id="totalPatient">@ViewBag.TotalPatient </h6>
+                                    <!--<span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>-->
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- End Sales Card -->
+                <!-- Revenue Card -->
+                <div class="col-xxl-3 col-md-6" style="display:none">
+                    <div class="card info-card revenue-card">
+
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+
+                                <li><a class="dropdown-item" href="#">Today</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Alerts <span>| Alert</span></h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-currency-dollar"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <h6>0</h6>
+                                    <!--<span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>-->
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- End Revenue Card -->
+
+
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+
+
+        <!-- Left side columns -->
+        <div class="col-lg-8" style="display:none">
+            <div class="row">
+
+
+                <!-- Reports -->
+                <div class="col-12">
+                    <div class="card">
+
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6>Filter</h6>
+                                </li>
+
+                                <li><a class="dropdown-item" href="#">Today</a></li>
+                                <li><a class="dropdown-item" href="#">This Month</a></li>
+                                <li><a class="dropdown-item" href="#">This Year</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Reports <span>/Today</span></h5>
+
+                            <!-- Line Chart -->
+                            <div id="reportsChart"></div>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    new ApexCharts(document.querySelector("#reportsChart"), {
+                                        series: [{
+                                            name: 'IE',
+                                            data: [31, 40, 28, 51, 42, 82, 56],
+                                        }, {
+                                            name: 'FU',
+                                            data: [11, 32, 45, 32, 34, 52, 41]
+                                        }],
+                                        chart: {
+                                            height: 350,
+                                            type: 'bar',
+                                            toolbar: {
+                                                show: false
+                                            },
+                                        },
+                                        markers: {
+                                            size: 4
+                                        },
+                                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
+                                        fill: {
+                                            type: "gradient",
+                                            gradient: {
+                                                shadeIntensity: 1,
+                                                opacityFrom: 0.3,
+                                                opacityTo: 0.4,
+                                                stops: [0, 90, 100]
+                                            }
+                                        },
+                                        dataLabels: {
+                                            enabled: false
+                                        },
+                                        stroke: {
+                                            curve: 'smooth',
+                                            width: 2
+                                        },
+                                        xaxis: {
+                                            type: 'datetime',
+                                            categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+                                        },
+                                        tooltip: {
+                                            x: {
+                                                format: 'dd/MM/yy HH:mm'
+                                            },
+                                        }
+                                    }).render();
+                                });
+                            </script>
+                            <!-- End Line Chart -->
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- End Left side columns -->
+        <!-- Right side columns -->
+        <div class="col-lg-4" style="display:none">
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+
+                    <div class="activity">
+
+                        <div class="activity-item d-flex">
+                            <div class="activite-label">32 min</div>
+                            <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                            <div class="activity-content">
+                                Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
+                            </div>
+                        </div><!-- End activity item-->
+
+                        <div class="activity-item d-flex">
+                            <div class="activite-label">56 min</div>
+                            <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
+                            <div class="activity-content">
+                                Voluptatem blanditiis blanditiis eveniet
+                            </div>
+                        </div><!-- End activity item-->
+
+                        <div class="activity-item d-flex">
+                            <div class="activite-label">2 hrs</div>
+                            <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
+                            <div class="activity-content">
+                                Voluptates corrupti molestias voluptatem
+                            </div>
+                        </div><!-- End activity item-->
+
+                        <div class="activity-item d-flex">
+                            <div class="activite-label">1 day</div>
+                            <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
+                            <div class="activity-content">
+                                Tempore autem saepe <a href="#" class="fw-bold text-dark">occaecati voluptatem</a> tempore
+                            </div>
+                        </div><!-- End activity item-->
+
+                        <div class="activity-item d-flex">
+                            <div class="activite-label">2 days</div>
+                            <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
+                            <div class="activity-content">
+                                Est sit eum reiciendis exercitationem
+                            </div>
+                        </div><!-- End activity item-->
+
+                        <div class="activity-item d-flex">
+                            <div class="activite-label">4 weeks</div>
+                            <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
+                            <div class="activity-content">
+                                Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
+                            </div>
+                        </div><!-- End activity item-->
+
+                    </div>
+
+                </div>
+            </div><!-- End Recent Activity -->
+
+
+        </div><!-- End Right side columns -->
+
+
+        <div class="col-lg-12">
+            <div class="row">
+                <!-- Sales Card -->
+                <div class="col-xxl-4 col-md-6">
+                    <div class="card info-card sales-card">
+
+
+
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Missing Attorney
+                            </h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-cart"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <a asp-action="Index" asp-controller="Visit" asp-route-f="A"> <h6>@ViewBag.TodaysAttorny</h6></a>
+                                    <!--<span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>-->
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- End Sales Card -->
+                <!-- Revenue Card -->
+                <div class="col-xxl-4 col-md-6">
+                    <div class="card info-card revenue-card">
+
+
+
+                        <div class="card-body">
+                            <h5 class="card-title">Missing Claim Number </h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-currency-dollar"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <a asp-action="Index" asp-controller="Visit" asp-route-f="C"> <h6>@ViewBag.TotalClaimNo</h6></a>
+                                    <!--<span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>-->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- End Revenue Card -->
+                <!-- Customers Card -->
+                <div class="col-xxl-4 col-xl-12">
+
+                    <div class="card info-card customers-card">
+
+
+                        <div class="card-body">
+                            <h5 class="card-title">Missing Insurance Company</h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-people"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <a asp-action="Index" asp-controller="Visit" asp-route-f="I"> <h6>@ViewBag.TodaysIncCo</h6></a>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div><!-- End Customers Card -->
+                <!-- Sales Card -->
+                <div class="col-xxl-3 col-md-6" style="display:none">
+                    <div class="card info-card sales-card">
+
+
+
+                        <div class="card-body">
+                            <h5 class="card-title">Policy Holder</h5>
+
+                            <div class="d-flex align-items-center">
+                                <!--<div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-cart"></i>
+                                </div>-->
+                                <div class="ps-3">
+                                    <h6>0</h6>
+                                    <!--<span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>-->
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- End Sales Card -->
+
+
+
+            </div>
+        </div>
+
+        <div class="col-12" style="display:none">
+            <div class="card recent-sales overflow-auto">
+
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Last 10 visit. <span>| Today</span></h5>
+
+                    <table class="table table-borderless datatable">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">patient name </th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Case no</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row"><a href="#">#2457</a></th>
+                                <td>Brandon Jacob</td>
+                                <td><a href="#" class="text-primary">At praesentium minu</a></td>
+                                <td>123</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row"><a href="#">#2147</a></th>
+                                <td>Bridie Kessler</td>
+                                <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
+                                <td>456</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row"><a href="#">#2049</a></th>
+                                <td>Ashleigh Langosh</td>
+                                <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
+                                <td>7987</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row"><a href="#">#2644</a></th>
+                                <td>Angus Grady</td>
+                                <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
+                                <td>789</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row"><a href="#">#2644</a></th>
+                                <td>Raheem Lehner</td>
+                                <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
+                                <td>546</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div><!-- End Recent Sales -->
+
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Index" asp-controller="Home" id="frmPOC">
+                        <br />
+                        <div class="row mb-3">
+                            <div class="col-md-3 col-lg-3">
+
+                                <label class="col-md-12 col-lg-12 col-form-label">FromDate</label>
+                                <div class="col-md-12 col-lg-12">
+                                    <input type="date" id="fdate" class="form-control">
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-lg-3">
+                                <label class="col-md-12 col-lg-12 col-form-label">ToDate</label>
+                                <div class="col-md-12 col-lg-12">
+                                    <input type="date" id="tdate" class="form-control">
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <label class="col-md-12 col-lg-12 col-form-label">&nbsp;</label>
+                                <div class="col-md-12 col-lg-12">
+
+                                    <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
+                                    <button class="btn btn-success" style="float:right; margin-left:10px;" type="button" onclick="fnSearch()">Search</button>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+                    </form>
+                    <br />
+                    <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+
+
+
+                                <th scope="col">Dates</th>
+                                <th scope="col">Surg Center</th>
+                                <th scope="col">Surgeon</th>
+                                <th scope="col">Schedule</th>
+                                <th scope="col">Booked</th>
+                                <th scope="col">Proc Done</th>
+                                <th scope="col">Report</th>
+                                <th scope="col">Billed</th>
+                                <th scope="col">Comment</th>
+
+                                <th style="width:5%">Action</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </section>
+    <div class="modal fade" id="SCModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle">Surgery Center Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="ProcedureDetailIDs" />
+                    <select id="ddlSC" class="form-select" asp-items="@ViewBag.surgoryList"></select>
+                    <p id="p_error" style="color:red"></p>
+                    <input id="txtSurgonName" class="form-control" placeholder="Surgon Name" />
+                    <p id="sn_error" style="color:red"></p>
+                    <input id="txtAssistant" class="form-control" placeholder="Assistant Name" />
+                    <p id="a_error" style="color:red"></p>
+                    <input type="hidden" id="hdDate" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnUpdateSC()">Save</button>
+                </div>
+            </div><!-- End Large Modal-->
+        </div>
+    </div>
+</main><!-- End #main -->
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        bindList("", "");
+    });
+
+    function fnReset() {
+        $("#fdate").val('');
+        $("#tdate").val('');
+        bindList("", "");
+    }
+
+    function bindList(fDate, tDate) {
+
+        var url = '@Url.Action("ScheduleList", "Home")?fDate=' + fDate + '&tDate=' + tDate;
+
+        $('#tbl').DataTable().clear().destroy();
+        $("#tbl").DataTable({
+
+            "pageLength": 100,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            "ajax": {
+                "url": url,
+                "type": "POST",
+                "datatype": "json",
+                dataSrc: function (json) {
+                    debugger
+                    console.log('Raw JSON from server:', json);   // 👈 See what you got
+                    return json.data; // must return the array of rows for DataTables
+                }
+            },
+
+            "columns": [
+                { "data": "scheduledDate", "autoWidth": true },
+                { "data": "surgerycenterName", "autoWidth": true },
+                { "data": "surgonName", "autoWidth": true },
+                { "data": "scheduledCnt", "autoWidth": true },
+                { "data": "bookedCnt", "autoWidth": true },
+                { "data": "bookedCnt", "autoWidth": true },
+                { "data": "bookedCnt", "autoWidth": true },
+                { "data": "bookedCnt", "autoWidth": true },
+                { "data": "bookedCnt", "autoWidth": true },
+                {
+                    "render": function (data, type, full, meta) {
+                        var index = '<a href="javascript:void(0)" onclick="fnShowModel(\'' + full.procedureDetailIDs + '\',\'' + full.surgerycenterId + '\',\'' + full.scheduledDate + '\')"><i class="ri-add-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Suregory Center"></i></a> &nbsp'
+                        return index;
+                    }
+                },
+            ]
+        });
+    }
+
+    function fnTotalPatient(type, title) {
+        var url = '@Url.Action("TotalPatient", "Home")?type=' + type;
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                $("#totalPatient").html(data);
+                $("#totalTitle").html("| " + title);
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnSearch() {
+        var fDate = $("#fdate").val();
+        var tDate = $("#tdate").val();
+        bindList(fDate, tDate);
+    }
+
+    function fnShowModel(procedureDetailIDs, sCenterId,sDate) {
+        $('#ProcedureDetailIDs').val(procedureDetailIDs);
+        debugger
+        if (sCenterId != 'null') {
+            $("#ddlSC").val(sCenterId);
+            $("#hdDate").val(sDate);
+        }
+        $('#SCModal').modal('show');
+    }
+
+    function fnUpdateSC() {
+        var sProcedureDetailIDs = $('#ProcedureDetailIDs').val();
+        var sId = $('#ddlSC').val();
+        var scName = $('#ddlSC option:selected').text();
+        var sSurgeon = $('#txtSurgonName').val();
+        var sAssistant = $('#txtAssistant').val();
+
+        var isValid = true;
+
+        if (sSurgeon == '' || sSurgeon == null) {
+            isValid = false;
+            $("#sn_error").text("Please Enter Surgon Name");
+        }
+        else {
+            $("#sn_error").text("");
+        }
+        // if (sAssistant == '' || sAssistant == null) {
+        //     $("#a_error").text("Please Enter Assistant Name");
+        //     isValid = false;
+        // }else{
+        //     $("#a_error").text("");
+        // }
+
+        if (!isValid)
+            return;
+        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSurgeon=' + sSurgeon + '&sAssistant=' + sAssistant + '&sSCName=' + scName + '&sDate=' + $('#hdDate').val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                if (data) {
+                    $('#txtSurgonName').val('');
+                    $('#txtAssistant').val('');
+                    $('#ddlSC').prop('selectedIndex', 0);
+                    $('#SCModal').modal('hide');
+                    bindList("", "");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+</script>

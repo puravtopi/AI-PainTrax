@@ -1,0 +1,204 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@{
+    ViewData["Title"] = "Import Document";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var clientCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Visit List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <br />
+                        @if (clientCode.ToLower() == "ppcpc")
+                        {
+                            <h5>PPC Import IE Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="UploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                            <h5>PPC Import FU Document</h5>
+
+                            <form asp-action="UploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                            <h5>PPC Import FU (Updated) Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="UploadFileFUUpdate" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        }
+                        @if (clientCode.ToLower() == "ipmc")
+                        {
+                            <h5>IPMC Import IE Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="IPMCUploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <h5>IPMC Import FU Document</h5>
+                            <form asp-action="IPMCUploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
+                        @if (clientCode.ToLower() == "mnpllc")
+                        {
+                            <h5>MNPLLC Import IE Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="MNPLLCUploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <h5>MNPLLC Import FU Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="MNPLLCUploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                            <h5>MNPLLC Import FU (Updated) Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="MNPLLCUploadFileFUUpdate" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
+                        
+                        @if (clientCode.ToLower() == "bhfpc")
+                        {
+                            <h5>BHF Import IE Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="BHFUploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <h5>BHF Import FU Document</h5>
+                            <form asp-action="BHFUploadFileFUUpdate" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>

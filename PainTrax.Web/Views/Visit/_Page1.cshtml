@@ -1,0 +1,1056 @@
+﻿@model MS.Models.tbl_ie_page1
+@using PainTrax.Web.Helper
+
+<style>
+    .ck-editor__editable_inline p {
+        margin: 0;
+    }
+</style>
+<style>
+    .clsSmallCK .ck-editor__editable_inline p {
+        margin: 0;
+    }
+
+    .clsSmallCK .ck.ck-reset.ck-editor.ck-rounded-corners {
+        max-height: 250px;
+        margin-bottom: 10px;
+        overflow-y: scroll
+    }
+</style>
+
+<br />
+<div class="col-lg-12">
+    <input type="hidden" id="txtId_P1" value="@Model.id" />
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#bodypart">
+            Body Parts
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtbodypart" style="width:100%" value="@Model.bodypart" data-role="tagsinput" />
+            <input type="hidden" id="hdbodyparts" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Reason">
+            Reason For Appointment
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+
+
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsSmallCK" style="height: fit-content;">
+                <textarea id="txtReason">@Model.appt_reason</textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#history">
+            History
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10">
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtHistory" onchange="fnAutoSave()">@Model.history</textarea>
+
+            </div>
+            @*  <div class="col-sm-10" style="height: fit-content;">
+            <button id="btnDictateHistory" type="button" class="btn btn-primary" style="display:flex">🎤 Start Dictation</button>
+
+            <div id="audioContainer" style="display: none; align-items: center; gap: 10px;">
+            <audio id="audioPreviewHistory" controls style="width: 200px;"></audio>
+            <button id="btnDeleteAudio" type="button" class="btn btn-danger btn-sm">🗑️ Delete</button>
+            </div>
+            </div> *@
+            <div class="col-sm-10" style="display: flex; align-items: center; gap: 10px; height: fit-content;padding:5px">
+                <button id="btnDictateHistory" type="button" class="btn btn-primary">🎤 Start Dictation</button>
+
+                <div id="audioContainer" style="display: none; align-items: center; gap: 10px;">
+                    <audio id="audioPreviewHistory" controls style="width: 200px;"></audio>
+                    <button id="btnDeleteAudio" type="button" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                </div>
+                <input type="hidden" id="hdHistoryPath" />
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Vital">
+            Vital
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="vital" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastMedicalHistory">
+            PMH
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="pmh" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastSurgicalHistory">
+            PSH
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="psh" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Allergies">
+            Allergies
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="allergies" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastMedications">
+            Medication
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="medication" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#SocialHistory">
+            Social History
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="social_history" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#FamilyHistory">
+            Family History
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="family_history" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#IR">
+            Impairment Rating/Tylenol
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="impairment_rating" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#DD">
+            Degree of Disability
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="dd" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Occupation">
+            Occupation
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="occupation" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#WorkStatus">
+            Work Status
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control globalauto" asp-for="work_status" />
+        </div>
+    </div>
+
+
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CC">
+            CC
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtCC">@Model.cc</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PE">
+            PE
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="pe" />
+            <div id="div_pe_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPE">@Model.pe</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3" style="display:none">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            ROM
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            <input type="hidden" asp-for="rom" />
+            <div id="div_rom_desc">
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3" style="display:none">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Diagnoses
+            <br />
+            <a href=# style="color:blue;font-size:small" onclick="fndefaultDiagnoses()">Click for Default</a>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtDaignosis">@Model.daignosis_desc</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Diagnoses">
+            Assessment
+            <br />
+            <div class="col-sm-10" id="divdaigo">
+
+                <br />
+                @Html.Raw(ViewBag.DaignoLink)
+                <br />
+
+            </div>
+            <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="daignosis_desc" />
+
+            <div id="div_daignosis_desc">
+            </div>*@
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtAssessment">@Model.assessment</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PoPlan">
+            Poc Assessment
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="daignosis_desc" />
+
+            <div id="div_daignosis_desc">
+            </div>*@
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPocAssessment">@Model.poc_assesment</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PoPlan">
+            Po-Plan
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @*<input type="hidden" asp-for="daignosis_desc" />
+
+            <div id="div_daignosis_desc">
+            </div>*@
+
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPlan">@Model.plan</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Injection">
+            Injection Report
+            <div class="col-sm-10">
+                <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
+            </div>
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtInjection">@Model.injection_desc</textarea>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="daignoCodeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl" id="modelDaignoCode">
+    </div>
+</div><!-- End Large Modal-->
+@{
+    <input type="hidden" id="hdnHandedness" />
+    <input type="hidden" id="hdnAge" />
+    <input type="hidden" id="hdnDOS" />
+    <input type="hidden" id="hdnGender" />
+    <input type="hidden" id="hdnFname" />
+    <input type="hidden" id="hdnLname" />
+    <input type="hidden" id="hdnDOI" />
+    <input type="hidden" id="hdnaccidentType" />
+    <input type="hidden" id="hdnDOAcc" />
+
+}
+
+
+<script src="~/assets/dist/bootstrap-tagsinput.min.js" asp-append-version="true"></script>
+<script src="~/assets/dist/bootstrap-tagsinput/bootstrap-tagsinput-angular.min.js" asp-append-version="true"></script>
+
+
+<script>
+
+
+    var ckDaignosis, ckCC, ckPE, ckAssessment, ckPlan, ckHistory, ckInjection, ckPOCAssestence, ckReason;
+
+
+    var body = '@Model.bodypart';
+
+    $(document).ready(function () {
+
+        ClassicEditor.create(document.querySelector('#txtHistory'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckHistory = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtReason'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckReason = editor;
+        })
+            .catch(handleSampleError);
+
+
+
+        ClassicEditor.create(document.querySelector('#txtDaignosis'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckDaignosis = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtCC'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getCCFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckCC = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPE'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getPEFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckPE = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtAssessment'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckAssessment = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPlan'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckPlan = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtInjection'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckInjection = editor;
+        })
+            .catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPocAssessment'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckPOCAssestence = editor;
+        })
+            .catch(handleSampleError);
+
+    });
+
+    $('#txtbodypart').on('itemAdded', function (event) {
+        fnShowDetails();
+        var item = event.item.toLowerCase(); // normalize case
+
+        try {
+            var cc = ckCC.getData();
+            var pe = ckPE.getData();
+            var assessment = ckAssessment.getData();
+            var history = ckHistory.getData();
+            // var plan = ckPlan.getData();
+
+            //var rom = quillROM.root.innerHTML;
+            var daig = ckDaignosis.getData();
+
+            var url = '@Url.Action("GetMacroDetails", "Visit")';
+
+            var model = {
+
+                "bodyName": item
+            }
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                data: model,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+
+
+                    if (data.result === 1) {
+                        debugger
+                        if (data.data[0].cc_desc != null)
+                            cc = cc + "<p>" + data.data[0].cc_desc + "</p>";
+                        if (data.data[0].pe_desc != null)
+                            pe = pe + "<p>" + data.data[0].pe_desc + "</p>";
+                        if (data.data[0].a_desc != null)
+                            assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
+                        // plan = plan + + data.data[0].plan_desc + "</p>";
+                        //rom = rom + "<p>" + data.data[0].rom_desc + "</p>";
+                    }
+                    debugger
+                    var DOS = $("#hdnDOS").val();
+                    var Gender = $("#hdnGender").val();
+                    var genderMrMs = "";
+                    if (Gender == "1") { genderMrMs = "Mr."; }
+                    else { genderMrMs = "Ms."; }
+                    var sex = "";
+                    if (Gender == "1") { sex = "male"; }
+                    else { sex = "female"; }
+                    var LName = $("#hdnLname").val();
+                    var FName = $("#hdnFname").val();
+                    var Age = $("#hdnAge").val();
+                    var DOAcc = $("#hdnDOAcc").val();
+                    var DOI = $("#hdnDOI").val();
+
+                    // if (DOAcc == "") { DOI = "___"; }
+                    // else { DOI = "#doi"; }
+                    var accidentType = $("#hdnaccidentType").val();
+                    var handed = $("#hdnHandedness").val();
+                    var handedness = "";
+
+
+
+                    if (handed == "1") { handedness = "right"; }
+                    else if (handed == "2") { handedness = "left"; }
+                    else if (handed == "3") { handedness = "ambidextrous"; }
+                    else { handedness = "___"; }
+
+
+
+                    $('#cc').val(cc);
+                    ckCC.data.set(cc);
+
+                    $('#pe').val(pe);
+                    ckPE.data.set(pe);
+                    debugger
+
+                    history = history.replace("#dos", DOS).replace("#fn", FName).replace("#ln", LName).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+
+                    $('#txtHistory').val(history);
+
+                    ckHistory.data.set(history);
+
+                    assessment = assessment.replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+
+                    $('#txtAssessment').val(assessment);
+
+                    ckAssessment.data.set(assessment);
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error!" + xhr.status);
+                },
+            });
+
+
+            var linkbody = item.replace(" ", "_");
+
+            daig = "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
+
+            $('#divdaigo').append(daig);
+        }
+        catch (err) {
+        }
+
+    });
+
+
+    $('#txtbodypart').on('beforeItemRemove', function (event) {
+
+
+        var item = event.item.toLowerCase(); // normalize
+
+        var tag = event.item;
+
+        var strBody = $("#txtbodypart").val().replace(tag, "");
+
+        const myArray = strBody.split(",");
+
+        var daig = '';
+
+        myArray.forEach(function (item) {
+            if (item != '') {
+                var linkbody = item.replace(" ", "_");
+
+                daig = daig + "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
+            }
+        });
+
+        $('#divdaigo').html(daig);
+
+    });
+
+    function fnShowDetails() {
+
+        // Construct the URL with patientId
+        var url = '@Url.Action("GetPatientIEDetails", "Visit")?Id=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                debugger;
+
+                if (data.result === 1) {
+
+                    let dateObjdos = new Date(data.data.doe);
+                    if (dateObjdos) {
+                        // Format as MM/DD/YYYY
+                        let formatteddateObjdos = (dateObjdos.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                            dateObjdos.getDate().toString().padStart(2, '0') + '/' +
+                            dateObjdos.getFullYear();
+
+                        $('#hdnDOS').val(formatteddateObjdos);
+                    }
+                    else {
+                        $('#hdnDOS').val("____");
+                    }
+
+                    $('#hdnHandedness').val(data.data.handeness);
+                    $('#hdnAge').val(data.data.age);
+                    $('#hdnGender').val(data.data.gender);
+                    $('#hdnFname').val(data.data.fname);
+                    $('#hdnLname').val(data.data.lname);
+
+                    $('#hdnDOAcc').val(data.data.doa);
+
+                    let dateObjdoi = new Date(data.data.doa);
+                    if (dateObjdoi) {
+
+                        // Format as MM/DD/YYYY
+                        let formatteddateObjdoi = (dateObjdoi.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                            dateObjdoi.getDate().toString().padStart(2, '0') + '/' +
+                            dateObjdoi.getFullYear();
+                        $('#hdnDOI').val(formatteddateObjdoi);
+                    }
+                    else {
+                        $('#hdnDOI').val("____");
+                    }
+
+                    $('#hdnaccidentType').val(data.data.accidentType);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error! " + xhr.status);
+            }
+        });
+    }
+
+    function openDaignoModel(body) {
+
+
+
+        $('#modeltitle').text("Add Daignosis");
+
+        var url = '@Url.Action("GetDaignoCodeList", "Visit")?bodyparts=' + body + "&ieId=" + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $('#modelDaignoCode').html(data);
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+        $('#daignoCodeModal').modal('show');
+        return false;
+    }
+
+    function isPage1Valid() {
+        var result = true;
+        result = requirValidation("history");
+
+        return result;
+    }
+
+    function fnPage1Save(t) {
+        // First trigger the button click
+        $("#btnDaignoCode").trigger("click");
+
+        if (t != null) {
+            // bootbox.confirm({
+
+            //     message: 'Are sure you want to save Details?',
+            //     swapButtonOrder: true,
+            //     callback: function (result) {
+            //         if (result) {
+            //if (isPage1Valid()) {
+            Page1Save(t);
+            //}
+            //         }
+            //     }
+            // });
+        } else {
+            Page1Save(null);
+        }
+    }
+
+    function Page1Save(t) {
+        var url = '@Url.Action("SavePage1", "Visit")';
+
+        var myContentDaignosis = ckDaignosis.getData();
+
+        var model = {
+            "id": $("#txtId_P1").val(),
+            "history": ckHistory.getData(),
+            "appt_reason": ckReason.getData(),
+            "vital": $("#vital").val(),
+            "pmh": $("#pmh").val(),
+            "psh": $("#psh").val(),
+            "allergies": $("#allergies").val(),
+            "medication": $("#medication").val(),
+            "family_history": $("#family_history").val(),
+            "social_history": $("#social_history").val(),
+            "cc": ckCC.getData(),
+            "pe": ckPE.getData(),
+            "assessment": ckAssessment.getData(),
+            "plan": ckPlan.getData(),
+            "rom": "",
+            "ie_id": $("#id").val(),
+            "patient_id": $("#patientid").val(),
+            "bodypart": $("#txtbodypart").val(),
+            "daignosis_desc": myContentDaignosis,
+            "daignosis_delimit": myContentDaignosis,
+            "dd": $("#dd").val(),
+            "work_status": $("#work_status").val(),
+            "occupation": $("#occupation").val(),
+            "impairment_rating": $("#impairment_rating").val(),
+            "poc_note": $("#poc_note").val(),
+            "injection_desc": ckInjection.getData(),
+            "poc_assesment": ckPOCAssestence.getData(),
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    $("#txtId_P1").val(data);
+                    autoclosepopup();
+
+                    fnShowPOC();
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+
+    function fndefaultDiagnoses() {
+
+        var url = '@Url.Action("GetDefultDaignoCodeList", "Visit")?bodyparts=' + $("#txtbodypart").val() + '';
+
+        $.ajax({
+            type: "Post",
+            url: url,
+
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+
+
+                var daignoCodeDetails = "<ul>";
+
+
+                var myContentDaignosis = ckDaignosis.getData();
+
+                data.forEach(function (i) {
+
+
+                    if (i.isSelect) {
+                        if (myContentDaignosis.indexOf(i.diagCode) < 0) {
+
+                            daignoCodeDetails += "<li>" + i.diagCode;
+                            daignoCodeDetails += " - " + i.description;
+                            daignoCodeDetails += "</li>";
+                        }
+                    }
+                });
+
+                var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ul>";
+                ckDaignosis.data.set(htmlDaignosis);
+
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+
+        return false;
+    }
+
+    function fnAutoSave() {
+        alert('auto save');
+    }
+
+</script>
+
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
+    let audioBlob;
+
+    // --- Speech to text (browser API) ---
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    fngetDictation('history');
+
+    document.getElementById('btnDictateHistory').addEventListener('click', async () => {
+        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+            // Start recording audio
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            audioChunks = [];
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+
+            mediaRecorder.onstop = async () => {
+                audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const audioURL = URL.createObjectURL(audioBlob);
+                const audioPreview = document.getElementById('audioContainer');
+                audioPreview.src = audioURL;
+                audioPreview.style.display = 'block';
+
+                // 🧠 Auto save immediately when recording stops
+                await autoSaveDictation();
+            };
+
+            // 🧠 configure recognition for dictation
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
+
+            mediaRecorder.start();
+            recognition.start();
+            document.getElementById('btnDictateHistory').textContent = "⏹ Stop Dictation";
+
+            recognition.onresult = (event) => {
+                const text = Array.from(event.results)
+                    .map(result => result[0].transcript)
+                    .join(' ');
+                // document.getElementById('txtHistory').value = text;
+                // 🪄 replace spoken punctuation words
+                const _text = text
+                    .replace(/\bcomma\b/gi, ',')
+                    .replace(/\bperiod\b/gi, '.')
+                    .replace(/\bfull stop\b/gi, '.')
+                    .replace(/\bcolon\b/gi, ':')
+                    .replace(/\bsemicolon\b/gi, ';')
+                    .replace(/\bopen bracket\b/gi, '(')
+                    .replace(/\bclose bracket\b/gi, ')')
+                    .replace(/\bopen parenthesis\b/gi, '[')
+                    .replace(/\bclose parenthesis\b/gi, ']')
+                    .replace(/\bslash\b/gi, '\\')
+                    .replace(/\bequal to\b/gi, '=')
+                    .replace(/\bnew line\b/gi, '<br>')
+                    .replace(/\bquestion mark\b/gi, '?')
+                    .replace(/\bexclamation mark\b/gi, '!');
+                // .replace(/\bnew line\b/gi, '\n');
+                ckHistory.setData(_text)
+            };
+        } else {
+            // Stop recording
+            mediaRecorder.stop();
+            recognition.stop();
+            document.getElementById('btnDictateHistory').textContent = "🎤 Start Dictation";
+        }
+    });
+
+    // --- Reusable Auto-Save Function ---
+    async function autoSaveDictation() {
+        if (!audioBlob) {
+            alert("No audio found to save!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('textData', ckHistory.getData());
+        formData.append('audioFile', audioBlob, 'voice.webm');
+        formData.append('type', 'history');
+        formData.append('ie_id', $("#id").val());
+
+        const url = "@Url.Action("SaveDictation", "Visit")";
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok && result.fileUrl) {
+                alert('Saved automatically after stopping dictation!');
+
+                const audioContainer = document.getElementById('audioContainer');
+                const audioPreview = document.getElementById('audioPreviewHistory');
+                audioPreview.src = result.fileUrl;
+                audioContainer.style.display = 'flex';
+                fngetDictation('history');
+            } else {
+                alert('Error while auto-saving.');
+            }
+        } catch (error) {
+            alert('Auto-save failed: ' + error.message);
+        }
+    }
+
+    function fngetDictation(type) {
+
+        var url = '@Url.Action("GetDictation", "Visit")?type=' + type + '&ie_id=' + $("#id").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data) {
+                if (data != '') {
+                    const audioContainer = document.getElementById('audioContainer');
+                    const audioPreview = document.getElementById('audioPreviewHistory');
+                    audioPreview.src = data; // use saved file URL
+                    audioContainer.style.display = 'flex';
+                    debugger
+                    $('#hdHistoryPath').val(data);
+                    //audioPreview.play();
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    document.getElementById('btnDeleteAudio').addEventListener('click', async () => {
+        if (!confirm("Are you sure you want to delete this dictation?")) return;
+
+        const url = "@Url.Action("DeleteDictation", "Visit")";
+
+        const audioPreview = document.getElementById('audioPreviewHistory');
+        const formData = new FormData();
+        formData.append('ie_id', $("#id").val());
+        formData.append('type', 'history');
+        formData.append('path', $('#hdHistoryPath').val());
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok && result.success) {
+                alert("Dictation deleted successfully!");
+                const audioContainer = document.getElementById('audioContainer');
+
+                audioPreview.src = '';
+                audioContainer.style.display = 'none';
+            } else {
+                alert("Error deleting dictation.");
+            }
+        } catch (err) {
+            alert("Delete failed: " + err.message);
+        }
+    });
+
+</script>

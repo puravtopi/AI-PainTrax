@@ -1,0 +1,57 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<main id="main" class="main">
+    <button type="button" class="btn btn-primary" onclick="TransferProcess()">Transfer</button>
+<h2>Folders</h2>
+<ul>
+        <table border="1" class="table table-striped-columns">
+            <thead>
+                <tr>
+                    <th width="120">Old Folder</th>
+                    <th width="120">New Folder</th>
+                    <th>Processed</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Folders != null)
+                {
+                    foreach (var folderDetail in (List<Tuple<string, string, string>>)ViewBag.Folders)
+                    {
+                        <tr>
+                            <td>@folderDetail.Item1</td> 
+                            <td>@folderDetail.Item2</td> 
+                            <td>@folderDetail.Item3</td>
+                           
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No folder details available</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+</ul>
+</main>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script type="text/javascript">
+ function TransferProcess() {
+               var url = '@Url.Action("TransferProcess", "Patientdocument")';
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data : "",
+                    dataType: "json"
+                }).done(function (data) {
+                        window.location="Transfer";
+                });
+            }
+
+
+</script>

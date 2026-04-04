@@ -1,0 +1,1073 @@
+﻿@using PainTrax.Web.Helper
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var locationOptions = "";
+    var locList = ViewBag.locList as IEnumerable<SelectListItem>;
+
+    if (locList != null)
+    {
+        foreach (var item in locList)
+        {
+            locationOptions += $"<option value=\"{item.Value}\" {(item.Selected ? "selected" : "")}>{item.Text}</option>";
+        }
+    }
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var designation = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation);
+}
+<div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); z-index:9999;">
+    <div class="d-flex justify-content-center align-items-center" style="height:100%;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Sending...</span>
+        </div>
+    </div>
+</div>
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Visit List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            @{
+                                if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
+                                {
+                                    <div class="col-md-12 col-lg-12">
+                                        <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <!-- Table with hoverable rows -->
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">FName</th>
+                                        <th scope="col">LName</th>
+                                        <th scope="col">DOB</th>
+                                        <th scope="col">DOA</th>
+                                        <th scope="col">Account No</th>
+                                        <th scope="col">DOS</th>
+                                        <th scope="col">Case Type</th>
+                                        <th scope="col">Location</th>
+                                        <th scope="col">Provider</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                        <!-- End Table with hoverable rows -->
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" id="commentModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle">Add Comments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <input type="hidden" id="id" />
+                        <input type="hidden" id="ie_id" />
+                        <div class="col-sm-12">
+                            <textarea id="extra_comments" name="extra_comments" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnSaveComment()">Save changes</button>
+                </div>
+            </div><!-- End Large Modal-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="signModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Signature</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" id="sid" />
+                    <input type="hidden" id="pid" />
+                    <div class="col-sm-10">
+                        <div class="col-sm-10" id="signCon">
+                        </div>
+
+                        <center>
+                            <canvas id="signature-pad" style="border: 1px solid #000;" crossorigin="anonymous"></canvas>
+                            <img id="imgSign" style="display:none" />
+                        </center>
+                    </div>
+                    <div class="mt-3" id="signaction">
+                        <button type="button" class="btn btn-danger" id="clear-signature">Clear</button>
+                        <button type="button" class="btn btn-warning" id="undo-signature">Undo</button>
+                        <button type="button" class="btn btn-secondary" id="redo-signature">Redo</button>
+                        <button type="button" class="btn btn-primary" id="save-signature" onclick="fnSaveSign()">Save Signature</button>
+                        <button type="button" class="btn btn-primary" id="save-signature" onclick="fnPrint()">Print</button>
+                    </div>
+                    <div class="mt-3" id="changesign" style="display:none">
+                        <button type="button" class="btn btn-primary" onclick="fnChangeSave()">Change Signature</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="pocModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle">POC List</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="pocBody">
+                    <input type="hidden" id="id" />
+                    <input type="hidden" id="ie_id" />
+                    <div class="col-sm-12">
+                        <textarea id="extra_comments" name="extra_comments" rows="5" class="form-control"></textarea>
+                    </div>
+                </div>
+                @*  <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnSaveComment()">Save changes</button>
+                </div>*@
+            </div><!-- End Large Modal-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="fuModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle">Visit Type</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="type_ie_id" />
+                    <input type="hidden" id="type_patient_id" />
+                    @*  <select id="ddlfuType" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.VisitType>()"></select> *@
+                    <select id="ddlfuType" class="form-select" asp-items="@ViewBag.visitTypeList"></select>
+                    <br />
+                    <p id="p_error" style="color:red"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnCreateFU()">Next</button>
+                </div>
+            </div><!-- End Large Modal-->
+        </div>
+    </div>
+
+    <input type="hidden" id="hfilter" value="@ViewBag.filterCase" />
+
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@latest/dist/signature_pad.umd.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+
+
+
+    <script>
+
+        var pageSize = @ViewBag.pageSize;
+
+
+        var canvas = document.getElementById("signature-pad");
+        var signaturePad = new SignaturePad(canvas, {
+            penColor: 'black',
+            backgroundColor: 'white',
+        });
+
+        $(document).ready(function () {
+            bindList();
+            fnShowSignatureContent();
+
+
+            var undoStack = [];
+
+            $("#clear-signature").click(function () {
+                signaturePad.clear();
+                undoStack = [];
+            });
+
+            $("#undo-signature").click(function () {
+                var data = signaturePad.toData();
+                if (data.length > 0) {
+                    var removedStroke = data.pop();
+                    undoStack.push(removedStroke);
+                    signaturePad.fromData(data);
+                }
+            });
+
+            $("#redo-signature").click(function () {
+                if (undoStack.length > 0) {
+                    var redoStroke = undoStack.pop();
+                    var data = signaturePad.toData();
+                    data.push(redoStroke);
+                    signaturePad.fromData(data);
+                }
+            });
+
+            $("#save-signature").click(function () {
+                if (signaturePad.isEmpty()) {
+                    alert("Please draw your signature before saving.");
+                } else {
+                    var signatureData = signaturePad.toDataURL("image/jpeg");
+                    fnSaveSign(signatureData);
+                }
+            });
+
+            function fnSaveSign(signatureData) {
+
+
+                var url = '@Url.Action("SaveSign", "Visit")';
+
+                var pId = $("#pid").val();
+                var sid = $("#sid").val();
+                var data = {
+                    id: sid,
+                    patient_id: pId,
+                    signatureData: signatureData,
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log("Signature saved successfully:", response);
+                        $("#signModal").modal("hide");
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error saving signature:", xhr.status, error);
+                    },
+                });
+            }
+        });
+
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+            signaturePad.clear();
+        }
+
+        function bindList() {
+
+            var url = '@Url.Action("List", "Visit")';
+            var editurl = '@Url.Action("Create", "Visit")';
+            var printurl = '@Url.Action("IEPrint", "Visit")';
+            var appurl = '@Url.Action("Appointments", "Appointment")';
+            var intakeurl = '@Url.Action("AIInitialIntake", "IntakeForm")';
+            var editurldocument = '@Url.Action("Index", "Patientdocument")';
+
+            var tab = $("#tbl").DataTable({
+
+
+                initComplete: function () {
+
+                    $("#tbl_filter").append(`
+                                            <span class="ms-2">
+                                                <select id="statusFilter"
+                                                        class="form-control form-control-sm"
+                                                        style="width:120px; display:inline-block;">
+                                                    <option value="All">All</option>
+                                                    <option value="Active" selected>Active</option>
+                                                    <option value="Inactive">Inactive</option>
+                                                </select>
+                                            </span>
+                                        `);
+
+                    var otherFiltersHtml = `
+                                        <div class="dt-custom-filters mt-2">
+
+                                            <div class="d-flex flex-wrap align-items-center gap-3">
+
+                                                <!-- Location -->
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <label class="mb-0 fw-normal">Location</label>
+                                                    <select id="locationFilter" class="form-control form-control-sm" style="width:180px;">
+
+        @Html.Raw(locationOptions)
+                                                    </select>
+                                                </div>
+
+                                                <!-- From -->
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <label class="mb-0 fw-normal">From</label>
+                                                    <input type="date" id="fDate" class="form-control form-control-sm" style="width:150px;" />
+                                                </div>
+
+                                                <!-- To -->
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <label class="mb-0 fw-normal">To</label>
+                                                    <input type="date" id="tDate" class="form-control form-control-sm" style="width:150px;" />
+                                                </div>
+
+                                                <!-- Apply -->
+                                                <button id="btnApplyDate" class="btn btn-sm btn-primary">
+                                                    Apply
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                        `;
+
+                    $("#tbl_filter").closest(".row").after(otherFiltersHtml);
+
+
+                    // Filter DataTable when dropdown changes
+                    $('#statusFilter').on('change', function () {
+                        var val = $(this).val();
+                        $('#tbl').DataTable().column(3).search(val).draw();  // Column index to filter
+                    });
+
+                    // Location filter
+                    $('#locationFilter').on('change', function () {
+                        $('#tbl').DataTable().ajax.reload();
+                    });
+                    $('#btnApplyDate').on('click', function () {
+
+                        var fDate = $('#fDate').val();
+                        var tDate = $('#tDate').val();
+
+                        // Optional validation
+                        if (fDate && tDate && fDate > tDate) {
+                            alert('From Date cannot be greater than To Date');
+                            return;
+                        }
+
+                        $('#tbl').DataTable().ajax.reload();
+                    });
+                },
+
+                "lengthMenu": [[25, 50, 100], [25, 50, 100]],
+                "pageLength": pageSize,
+                "processing": true, // for show progress bar
+                "serverSide": true, // for process server side
+                "filter": true, // this is for disable filter (search box)
+                "orderMulti": false, // for disable multiple column at once
+                "ajax": {
+                    "url": url,
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": function (d) {
+                        d.f = $("#hfilter").val();
+                        d.statusFilter = $('#statusFilter').val();
+                        d.locid = $('#locationFilter').val();
+                        // NEW
+                        d.fDate = $('#fDate').val();
+                        d.tDate = $('#tDate').val();// <-- passes dropdown value correctly
+                    }
+                },
+
+                "columns": [
+
+                    //{
+                    //    "className": 'dt-control',
+
+                    //    "data": null,
+                    //    "defaultContent": '➕',
+                    //    "visible":"isfu"
+                    //},
+                    {
+                        "className": 'dt-control',
+
+
+                        "data": "isFU",
+                        "defaultContent": '',
+                        "render": function (value) {
+                            console.log("+" + value)
+                            if (value == true)
+                                return "➕";
+                            else
+                                return "";
+                        }
+                    },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return '<a  href="' + editurl + '/' + full.id + '" id="fname_' + full.patient_id + '">' + full.fname + '</a>';
+                        }
+                    },
+                    //{ "data": "lname", "lname": "lname", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return '<a  href="' + editurl + '/' + full.id + '"  id="lname_' + full.patient_id + '">' + full.lname + '</a>';
+                        }
+                    },
+                    {
+                        "data": "dob", "autoWidth": true,
+                        "type": "date ",
+                        "render": function (value) {
+
+                            if (value === null) return "";
+
+                            var date = new Date(value);
+                            var month = date.getMonth() + 1;
+                            var formattedDate = date.getDate().toString().length > 1 ? date.getDate() : "0" + date.getDate();
+                            return (month.toString().length > 1 ? month : "0" + month) + "/" + formattedDate + "/" + date.getFullYear();
+                        }
+                    },
+
+
+                    {
+                        "data": "doa", "autoWidth": true,
+                        "type": "date ",
+                        "render": function (value) {
+
+                            if (value === null) return "";
+
+                            var date = new Date(value);
+                            var month = date.getMonth() + 1;
+                            var formattedDate = date.getDate().toString().length > 1 ? date.getDate() : "0" + date.getDate();
+                            return (month.toString().length > 1 ? month : "0" + month) + "/" + formattedDate + "/" + date.getFullYear();
+                        }
+                    },
+                    { "data": "account_no", "autoWidth": true },
+                    {
+                        "data": "doe", "autoWidth": true,
+                        "type": "date ",
+                        "render": function (value) {
+
+                            if (value === null) return "";
+
+                            var date = new Date(value);
+                            var month = date.getMonth() + 1;
+                            var formattedDate = date.getDate().toString().length > 1 ? date.getDate() : "0" + date.getDate();
+                            return (month.toString().length > 1 ? month : "0" + month) + "/" + formattedDate + "/" + date.getFullYear();
+                        }
+                    },
+
+                    { "data": "compensation", "autoWidth": true },
+                    { "data": "location", "location": "location", "autoWidth": true },
+                    { "data": "providerName", "providerName": "providerName", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) {
+                            //var index = '<a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" title="Edit"></i></a> &nbsp; &nbsp;'
+                            //index += '<a onclick="return confirm("Are you sure you want to delete this record ?")" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            //index += '<a onclick="fnShowComment(' + full.id + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i></a> &nbsp; &nbsp;';
+                            //index += '<a onclick="fnShowPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i></a> &nbsp; &nbsp;';
+                            //index += '<a onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i></a> &nbsp; &nbsp;';
+                            //return index;
+
+                            var index = '<a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></a>';
+                            index += ' <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowComment(' + full.id + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i><span>Add Comments</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSign(' + full.patient_id + ')" href="#" ><i class="bi bi-pencil-square" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Sign" data-bs-original-title="Add Sign"></i><span>Add Sign</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + appurl + '/' + full.id + '"><i class="bi bi-calendar-week" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Appointments" data-bs-original-title="Print"></i><span>Appointments</span></a></li>';
+                            index += ' <li style="@(designation.ToLower() == "super admin" ? "display:list-item" : "display:none")"><a class="dropdown-item d-flex align-items-center" onclick="fnDeletePatient(' + full.id + ',' + full.patient_id + ',' + '\'' + `${full.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${full.lname.replace(/'/g, "\\'")}` + '\')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Document"  href="' + editurldocument + '/' + full.patient_id + '"><i class="bi bi-folder-fill" title="Document"></i><span>Document</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" title="Edit"></i><span>Edit</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(' + full.id + ',0)" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + full.id + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnFuType(' + full.id + ',' + full.patient_id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Next Visit</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="checkAuthorizationForm(' + full.patient_id + ',' + '\'' + `${full.email}` + '\')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Send Authorization" data-bs-original-title="Send Authorization"></i><span>Send Authorization</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + intakeurl + '?id=' + full.intakeid +'&locid='+ full.location_id + '" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Intake Form</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + `${full.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${full.lname.replace(/'/g, "\\'")}` + '\')" href="#"  ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Print Demo</span></a></li></ul></a>';
+
+
+                            return index;
+                        }
+                    }
+
+
+                ]
+
+            });
+            tab.on('click', 'td.dt-control', function (e) {
+                let tr = e.target.closest('tr');
+                let row = tab.row(tr);
+                e.target.innerHTML = "➕";
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                }
+                else {
+                    // Open this row
+                    row.child(fnGetFUList(row.data())).show();
+                    e.target.innerHTML = "➖";
+                }
+            });
+        }
+
+        function fnShowComment(ieId) {
+
+
+            var url = '@Url.Action("GetComment", "Visit")?ieId=' + ieId
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    if (data != null) {
+                        $("#extra_comments").val(data.comment_details);
+                        $("#id").val(data.id);
+
+                    }
+                    else {
+                        $("#extra_comments").val("");
+                        $("#id").val("0");
+                    }
+
+                    $("#ie_id").val(ieId);
+
+                    $("#commentModal").modal('show');
+                },
+                error: function (xhr, status, error) {
+                    alert("Error!" + xhr.status);
+                },
+            });
+
+        }
+
+        function fnSaveComment() {
+
+
+            var url = '@Url.Action("SaveComment", "Visit")'
+            var model = {
+                "id": $("#id").val(),
+                "comment_details": $("#extra_comments").val(),
+                "ie_id": $("#ie_id").val()
+            }
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                data: model,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    $("#extra_comments").val('');
+                    $("#commentModal").modal('hide');
+                },
+                error: function (xhr, status, error) {
+                    alert("Error!" + xhr.status);
+                },
+            });
+
+        }
+
+        function fnShowSign(pId) {
+
+
+            debugger
+
+            var url = '@Url.Action("GetSign", "Visit")?pId=' + pId
+
+            var fname = $("#fname_" + pId).text();
+            var lname = $("#lname_" + pId).text();
+
+
+            $("#pid").val(pId);
+            $("#pname").html(fname + ' ' + lname);
+
+
+
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    if (data != null) {
+
+                        $("#sid").val(data.id);
+                        const canvas = document.getElementById("signature-pad");
+
+                        const signaturePad = new SignaturePad(canvas);
+                        signaturePad.fromDataURL(data.signatureValue);
+                    }
+                    else {
+
+                        $("#sid").val("0");
+                        signaturePad.clear();
+                        undoStack = [];
+                    }
+
+                    $("#signModal").modal('show');
+                },
+                error: function (xhr, status, error) {
+                    alert("Error!" + xhr.status);
+                },
+            });
+
+        }
+
+        function fnChangeSave() {
+            $("#signaction").hide();
+            $("#changesign").show();
+
+        }
+
+        function fnDeletePatient(Id, pId, fname, lname) {
+            if (confirm("Are you sure you want to delete ...?")) {
+
+                var patient_name = lname + ',' + fname;
+                var url = '@Url.Action("DeleteIE", "Visit")?ieId=' + Id + "&pId=" + pId + "&pName=" + patient_name;
+                var redirecturl = '@Url.Action("Index", "Visit")';
+
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
+                        if (data != null) {
+                            window.location = redirecturl;
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
+
+            }
+            else {
+                return false;
+            }
+        }
+
+        function fnDeleteFU(Id, fname, lname) {
+            if (confirm("Are you sure you want to delete ...?")) {
+
+                var pName = lname + ',' + fname;
+                var url = '@Url.Action("DeleteFU", "FUVisit")?fuId=' + Id + '&pName=' + pName;
+                var redirecturl = '@Url.Action("Index", "Visit")';
+
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
+                        if (data != null) {
+                            window.location = redirecturl;
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
+
+            }
+            else {
+                return false;
+            }
+        }
+
+        function DeleteData(CustomerID) {
+            if (confirm("Are you sure you want to delete ...?")) {
+                Delete(CustomerID);
+            }
+            else {
+                return false;
+            }
+        }
+
+        function Delete(CustomerID) {
+            var url = '@Url.Content("~/")' + "DemoGrid/Delete";
+
+            $.post(url, { ID: CustomerID }, function (data) {
+                if (data) {
+                    oTable = $('#example').DataTable();
+                    oTable.draw();
+                }
+                else {
+                    alert("Something Went Wrong!");
+                }
+            });
+        }
+
+        function fnShowPOCSummary(ieId, fuId) {
+            var url = '';
+            if (fuId == 0)
+                url = '@Url.Action("POCSummary", "Visit")?patientIEId=' + ieId;
+            else
+                url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + fuId;
+
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+
+                    $("#pocBody").html(data);
+                    $("#pocModal").modal('show');
+                }
+            })
+        }
+
+        function fnShowSignatureContent() {
+            debugger;
+            var url = '';
+
+            url = '@Url.Action("GetSignContent", "Visit")';
+
+
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+
+                    $("#signCon").html(data.sign_content);
+                    console.log(data);
+                }
+            })
+        }
+
+        function fnFuType(id, patientid) {
+            $("#type_ie_id").val(id);
+            $("#type_patient_id").val(patientid);
+            $("#fuModal").modal('show');
+        }
+
+        function checkAuthorizationForm(id,email) {
+            
+            var url = '@Url.Action("CheckAuthorizationForm", "Visit")?Id=' + id ;
+
+            $("#loader").show(); // show loader
+
+            
+            if (email == 'null' ) {
+                alert("Patient email address is not available. Please add an email address before sending the authorization request.");
+                $("#loader").hide();
+                return;
+            }
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    if (data == "1") {
+                        bootbox.confirm("The authorization email has already been sent to the patient. Do you want to send it again?", function (result) {
+                            if (result) {
+                                fnSendAuthorization(id, email);
+                            }
+                        });
+                    }
+                    else {
+                        fnSendAuthorization(id,email);
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                    alert("Error!" + xhr.status);
+                },
+                complete: function () {
+                    $("#loader").hide(); // hide loader when request finishes
+                }
+            })
+        }
+
+        function fnSendAuthorization(id, email) {
+            var url = '@Url.Action("SendAuthorization", "Visit")?Id=' + id +'&email=' + email;
+
+            $("#loader").show(); // show loader
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    if (data == "1")
+                        alert("Authorization request email has been sent successfully to the patient.");
+                    else
+                        alert("Patient email address is not available. Please add an email address before sending the authorization request.")
+                },
+                error: function (xhr, status, error) {
+
+                    alert("Error!" + xhr.status);
+                },
+                complete: function () {
+                    $("#loader").hide(); // hide loader when request finishes
+                }
+            })
+        }
+
+        function fnShowSurgeryPOCSummary(ieId) {
+            var url = '@Url.Action("SurgeryPOCSummary", "Visit")?patientIEId=' + ieId;
+
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+
+                    $("#pocBody").html(data);
+                    $("#pocModal").modal('show');
+                },
+                error: function (xhr, status, error) {
+
+                    alert("Error!" + xhr.status);
+                },
+            })
+        }
+
+        function fnCreateFU() {
+            var patientIEId = $("#type_ie_id").val();
+            var patientId = $("#type_patient_id").val();
+            var type = $("#ddlfuType option:selected").text();
+
+            $.ajax({
+                url: '@Url.Action("CreateFU", "Visit")',
+                type: 'POST', // Change to 'GET' if your endpoint expects a GET request
+                data: {
+                    patientIEId: patientIEId,
+                    patientId: patientId,
+                    type: type
+                },
+                success: function (response) {
+                    debugger
+                    // Handle success - Redirect, show a message, update UI, etc.
+                    console.log("Success:", response);
+                    if (response.success) {
+                        $("#p_error").text('');
+                        window.location.href = response.redirectUrl; // Assuming the response contains a redirect URL
+                    }
+                    else {
+                        if (response.statusCode == 401)
+                            $("#p_error").text("MC IE already present for this patient.");
+                        else
+                            $("#p_error").text(type + " present for this date.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error("Error:", error);
+                    alert("An error occurred while creating the follow-up.");
+                }
+            });
+        }
+
+        function fnGetFUList(d) {
+            debugger
+            // `d` is the original data object for the row
+            debugger
+            var id = d.id;
+            var url = '@Url.Action("FuList", "Visit")?ieId=' + id;
+            var editurl = '@Url.Action("Create", "FUVisit")?patientIEId=' + id;
+            var printurl = '@Url.Action("IEPrint", "Visit")';
+
+
+            let childtab = document.createElement("table");
+            childtab.className = "table table-striped table-bordered dt-responsive nowrap dataTable no-footer";
+            let head = "  <thead><tr>";
+            head += "<th>  FName </th>";
+            head += "<th>  LName </th>";
+            head += "<th>  DOB </th>";
+            head += "<th>  DOA </th>";
+            head += "<th>  DOS </th>";
+            head += "<th>  Case Type </th>";
+            head += "<th>  Location </th>";
+            head += "<th>  Type </th>";
+            head += "<th>  Provider </th>";
+            head += "<th>  Action </th>";
+            head += "</tr>  <thead>";
+            childtab.innerHTML += head;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "",
+                success: function (response) {
+                    if (response.length) {
+                        $.each(response, function (key, value) {
+
+
+                            var index = '<a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></a>';
+                            index += ' <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '&patientFUId=' + value.patientFU + '"><i class="ri-edit-line" title="Edit"></i><span>Edit</span></a></li>';
+                            index += ' <li style="@(designation.ToLower() == "super admin" || designation.ToLower() == "admin" ? "display:list-item" : "display:none")"><a class="dropdown-item d-flex align-items-center" onclick="fnDeleteFU(' + value.patientFU + ', ' + '\'' + `${value.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${value.lname.replace(/'/g, "\\'")}` + '\')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowComment(' + value.patientFU + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i><span>Add Comments</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(0,' + value.patientIE_ID + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + value.patientFU + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="checkAuthorizationForm(' + value.patient_id + ',' + '\'' + `${value.email}` + '\')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Send Authorization" data-bs-original-title="Send Authorization"></i><span>Send Authorization</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + value.patientFU + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li></ul>';
+
+
+                            let row = "  <tr>";
+                            row += "<td><a href='" + editurl + "&patientFUId=" + value.patientFU + "'>" + value.fname + "</a></td>";
+                            row += "<td><a href='" + editurl + "&patientFUId=" + value.patientFU + "'>" + value.lname + "</a></td>";
+                            row += "<td>" + formatDate(value.dob) + "</td>";
+                            row += "<td>" + formatDate(value.doa) + "</td>";
+                            row += "<td>" + formatDate(value.doe) + "</td>";
+                            row += "<td>" + value.compensation + "</td>";
+                            row += "<td>" + value.location + "</td>";
+                            row += "<td>" + value.type + "</td>";
+                            row += "<td>" + value.providerName + "</td>";
+                            row += "<td>" + index + "</td>";
+                            childtab.innerHTML += row;
+
+                        });
+                    }
+                    else {
+                        let row = "  <tr><td colspan='8'> <p>No Data Found</p></td></tr>";
+
+                        childtab.innerHTML += row;
+                    }
+
+                    //  alert("Hello");
+                }
+            });
+
+
+            return (
+
+                childtab
+            );
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function formatDate(strdate) {
+            if (strdate !== '' && strdate !== undefined && strdate != null) {
+                const date = new Date(strdate); // {object Date}
+
+                const dateFormatted = new Intl.DateTimeFormat("en-US", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit"
+                }).format(date);
+
+                return dateFormatted;
+            }
+            return '';
+        }
+
+        function DownloadPdf(id, fname, lname) {
+            var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
+            //alert(fname);
+            var checkboxes = $('.pdfCheckbox');
+            var txt_date = '';
+            var txt_surgery = '';
+            var txt_docName = '';
+            var txt_MCode_Proc = '';
+            var txtProcedureCode = '';
+            // Loop through each checkbox element
+            downloadurl = downloadurl + '?pdffile=Demo.pdf&id=' + id + '&txt_date=' + txt_date + '&txt_surgery=' + txt_surgery + '&txt_docName=' + txt_docName + '&txt_MCode_Proc=' + txt_MCode_Proc + '&txtProcedureCode=' + txtProcedureCode;
+            fetch(downloadurl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    console.log(response);
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Handle the Excel file data here
+
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = lname + "," + fname + "_Demo.pdf";
+                    link.click();
+                })
+                .catch(error => {
+                    console.error('Error downloading Excel file:', error);
+                });
+
+        }
+
+        function fnPrint() {
+            debugger
+            const divContents = document.getElementById("signCon").innerHTML;
+            var canvas = document.getElementById('signature-pad');
+            var imgData = canvas.toDataURL();
+
+            var printSection = document.createElement('div');
+            printSection.innerHTML = divContents;
+
+            var img = document.createElement('img');
+            img.src = imgData;
+            img.width = 100;
+            //img.width = canvas.width;
+            img.height = 70;
+            //img.height = canvas.height;
+            img.style.borderBottom = "1px solid black";
+            img.style.marginTop = "20px";
+
+            printSection.appendChild(img);
+
+            var iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = '0';
+            document.body.appendChild(iframe);
+
+            var doc = iframe.contentWindow || iframe.contentDocument;
+            var docDoc = doc.document || doc;
+
+            docDoc.open();
+            docDoc.write(printSection.innerHTML);
+            docDoc.close();
+
+            iframe.onload = function () {
+                setTimeout(function () {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                    document.body.removeChild(iframe);
+                }, 100);
+            };
+
+        }
+
+
+    </script>
+
+    <style>
+
+
+        .dt-custom-filters label {
+            white-space: nowrap;
+        }
+    </style>
+</main>

@@ -1,0 +1,514 @@
+﻿
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\MapPdfController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Services\CommonService.cs~RF19f029d6.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Templete\1\IEReport.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
+    <PackageReference Include="DocX" Version="3.0.0" />
+    <PackageReference Include="EPPlus" Version="7.0.9" />
+    <PackageReference Include="GroupDocs.Viewer" Version="24.4.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.2" />
+    <PackageReference Include="HtmlTextWriter" Version="2.1.1" />
+    <PackageReference Include="HtmlToOpenXml.dll" Version="2.3.0" />
+    <PackageReference Include="itext" Version="8.0.3" />
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="8.0.3" />
+    <PackageReference Include="itext7" Version="8.0.0" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.0" />
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.4.20" />
+    <PackageReference Include="MailKit" Version="4.6.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="OpenXmlPowerTools" Version="4.5.3.2" />
+    <PackageReference Include="Optivem.Framework.Infrastructure.FluentValidation" Version="1.0.23" />
+    <PackageReference Include="System.Data.OleDb" Version="7.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Logfiles\" />
+    <Folder Include="Uploads\HeaderTemplate\" />
+    <Folder Include="Uploads\Sign\" />
+    <Folder Include="wwwroot\Forms\" />
+    <Folder Include="wwwroot\audio\" />
+    <Folder Include="wwwroot\Uploads\DriverLicense\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\AccidentType\Create.cshtml" />
+    <None Include="Views\AccidentType\Edit.cshtml" />
+    <None Include="Views\AccidentType\Index.cshtml" />
+    <None Include="Views\Adjuster\Create.cshtml" />
+    <None Include="Views\Adjuster\Edit.cshtml" />
+    <None Include="Views\Adjuster\Index.cshtml" />
+    <None Include="Views\Admin\Index.cshtml" />
+    <None Include="Views\Appointment\Appointments.cshtml" />
+    <None Include="Views\Appointment\ChangeStatus.cshtml" />
+    <None Include="Views\Appointment\Index.cshtml" />
+    <None Include="Views\Appointment\Multiple.cshtml" />
+    <None Include="Views\Appointment\New.cshtml" />
+    <None Include="Views\Appointment\Reports.cshtml" />
+    <None Include="Views\AppProvider\Create.cshtml" />
+    <None Include="Views\AppProvider\Edit.cshtml" />
+    <None Include="Views\AppProvider\Index.cshtml" />
+    <None Include="Views\AppStatus\Create.cshtml" />
+    <None Include="Views\AppStatus\Edit.cshtml" />
+    <None Include="Views\AppStatus\Index.cshtml" />
+    <None Include="Views\Attorneys\Create.cshtml" />
+    <None Include="Views\Attorneys\Edit.cshtml" />
+    <None Include="Views\Attorneys\Index.cshtml" />
+    <None Include="Views\CaseType\Create.cshtml" />
+    <None Include="Views\CaseType\Edit.cshtml" />
+    <None Include="Views\CaseType\Index.cshtml" />
+    <None Include="Views\Company\Create.cshtml" />
+    <None Include="Views\Company\Edit.cshtml" />
+    <None Include="Views\Company\Index.cshtml" />
+    <None Include="Views\DefaultSettings\Index.cshtml" />
+    <None Include="Views\DefaultSettings\_NE.cshtml" />
+    <None Include="Views\DefaultSettings\_Page1.cshtml" />
+    <None Include="Views\DefaultSettings\_Page2.cshtml" />
+    <None Include="Views\Designation\Create.cshtml" />
+    <None Include="Views\Designation\Edit.cshtml" />
+    <None Include="Views\Designation\Index.cshtml" />
+    <None Include="Views\Diagcode\Create.cshtml" />
+    <None Include="Views\Diagcode\Edit.cshtml" />
+    <None Include="Views\Diagcode\Index.cshtml" />
+    <None Include="Views\Forms\Index.cshtml" />
+    <None Include="Views\Forms\Manage.cshtml" />
+    <None Include="Views\ForwardSetting\IETOFU.cshtml" />
+    <None Include="Views\FUVisit\Create.cshtml" />
+    <None Include="Views\FUVisit\FUPrint.cshtml" />
+    <None Include="Views\FUVisit\_DaignoCode.cshtml" />
+    <None Include="Views\FUVisit\_NE.cshtml" />
+    <None Include="Views\FUVisit\_OtherPage.cshtml" />
+    <None Include="Views\FUVisit\_Page1.cshtml" />
+    <None Include="Views\FUVisit\_Page2.cshtml" />
+    <None Include="Views\FUVisit\_Page3.cshtml" />
+    <None Include="Views\FUVisit\_POC.cshtml" />
+    <None Include="Views\FUVisit\_POCSummary.cshtml" />
+    <None Include="Views\Group\Create.cshtml" />
+    <None Include="Views\Group\Edit.cshtml" />
+    <None Include="Views\Group\Index.cshtml" />
+    <None Include="Views\Home\AdminDashboard.cshtml" />
+    <None Include="Views\Home\AdminLogin.cshtml" />
+    <None Include="Views\Home\ForgotPassword.cshtml" />
+    <None Include="Views\Home\ForgotPasswordConfirmation.cshtml" />
+    <None Include="Views\Home\GetProvider.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Login.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Home\ResetPassword.cshtml" />
+    <None Include="Views\Home\SessionExpired.cshtml" />
+    <None Include="Views\ImportDoc\Index.cshtml" />
+    <None Include="Views\ImportPdf\Index.cshtml" />
+    <None Include="Views\Inscos\Create.cshtml" />
+    <None Include="Views\Inscos\Edit.cshtml" />
+    <None Include="Views\Inscos\Index.cshtml" />
+    <None Include="Views\Location\Create.cshtml" />
+    <None Include="Views\Location\Edit.cshtml" />
+    <None Include="Views\Location\Index.cshtml" />
+    <None Include="Views\Log\Index.cshtml" />
+    <None Include="Views\Macros\Create.cshtml" />
+    <None Include="Views\Macros\Edit.cshtml" />
+    <None Include="Views\Macros\Index.cshtml" />
+    <None Include="Views\MapPdf\Index.cshtml" />
+    <None Include="Views\Patientdocument\Index.cshtml" />
+    <None Include="Views\Patientdocument\PreviewDoc.cshtml" />
+    <None Include="Views\Patient\Create.cshtml" />
+    <None Include="Views\Patient\Edit.cshtml" />
+    <None Include="Views\Patient\Index.cshtml" />
+    <None Include="Views\PdfProcCode\Create.cshtml" />
+    <None Include="Views\PdfProcCode\Delete.cshtml" />
+    <None Include="Views\PdfProcCode\Edit.cshtml" />
+    <None Include="Views\PdfProcCode\Import.cshtml" />
+    <None Include="Views\PdfProcCode\Index.cshtml" />
+    <None Include="Views\PdfProcCode\_Form.cshtml" />
+    <None Include="Views\Pdf\Index.cshtml" />
+    <None Include="Views\Pdf\MapPdf.cshtml" />
+    <None Include="Views\PrintSetting\Index.cshtml" />
+    <None Include="Views\PrintSetting\ModifyTemplate.cshtml" />
+    <None Include="Views\PrintSetting\Templates.cshtml" />
+    <None Include="Views\Procedure\Create.cshtml" />
+    <None Include="Views\Procedure\Edit.cshtml" />
+    <None Include="Views\Procedure\Index.cshtml" />
+    <None Include="Views\Provider\Create.cshtml" />
+    <None Include="Views\Provider\Edit.cshtml" />
+    <None Include="Views\Provider\Index.cshtml" />
+    <None Include="Views\ReferringPhysician\Create.cshtml" />
+    <None Include="Views\ReferringPhysician\Edit.cshtml" />
+    <None Include="Views\ReferringPhysician\Index.cshtml" />
+    <None Include="Views\Settings\Index.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_AdminLayout.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_ProviderLayout.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\Signature\Create.cshtml" />
+    <None Include="Views\Signature\Edit.cshtml" />
+    <None Include="Views\Signature\Index.cshtml" />
+    <None Include="Views\SignInSheet\Index.cshtml" />
+    <None Include="Views\SignInSheet\SISheetReport.cshtml" />
+    <None Include="Views\State\Create.cshtml" />
+    <None Include="Views\State\Edit.cshtml" />
+    <None Include="Views\State\Index.cshtml" />
+    <None Include="Views\TransferDoc\Index.cshtml" />
+    <None Include="Views\TransferSign\Index.cshtml" />
+    <None Include="Views\Treatment\Create.cshtml" />
+    <None Include="Views\Treatment\Edit.cshtml" />
+    <None Include="Views\Treatment\Index.cshtml" />
+    <None Include="Views\User\Create.cshtml" />
+    <None Include="Views\User\Edit.cshtml" />
+    <None Include="Views\User\EditUserProfile.cshtml" />
+    <None Include="Views\User\Index.cshtml" />
+    <None Include="Views\Visit\Create.cshtml" />
+    <None Include="Views\Visit\IEPrint.cshtml" />
+    <None Include="Views\Visit\Index.cshtml" />
+    <None Include="Views\Visit\_DaignoCode.cshtml" />
+    <None Include="Views\Visit\_FUList.cshtml" />
+    <None Include="Views\Visit\_NE.cshtml" />
+    <None Include="Views\Visit\_OtherPage.cshtml" />
+    <None Include="Views\Visit\_Page1.cshtml" />
+    <None Include="Views\Visit\_Page2.cshtml" />
+    <None Include="Views\Visit\_Page3.cshtml" />
+    <None Include="Views\Visit\_POC.cshtml" />
+    <None Include="Views\Visit\_POCSummary.cshtml" />
+    <None Include="Views\WebsiteMacros\Create.cshtml" />
+    <None Include="Views\WebsiteMacros\Edit.cshtml" />
+    <None Include="Views\WebsiteMacros\Index.cshtml" />
+    <None Include="Views\_ViewImports.cshtml" />
+    <None Include="Views\_ViewStart.cshtml" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.min.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.locales.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.locales.min.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.min.js" />
+    <None Include="wwwroot\ckeditor-full\adapters\jquery.js" />
+    <None Include="wwwroot\ckeditor-full\build-config.js" />
+    <None Include="wwwroot\ckeditor-full\CHANGES.md" />
+    <None Include="wwwroot\ckeditor-full\ckeditor.js" />
+    <None Include="wwwroot\ckeditor-full\config.js" />
+    <None Include="wwwroot\ckeditor-full\lang\en.js" />
+    <None Include="wwwroot\ckeditor-full\LICENSE.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\a11yhelp.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\af.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\ar.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\az.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\bg.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\ca.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\cs.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\cy.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\da.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\de.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\el.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\en-gb.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\en.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\eo.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\es-mx.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\es.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\et.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\eu.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\fa.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\fi.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\fo.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\fr-ca.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\fr.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\gl.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\gu.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\he.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\hi.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\hr.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\hu.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\id.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\it.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\ja.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\km.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\ko.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\ku.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\lt.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\lv.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\mk.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\mn.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\nb.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\nl.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\no.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\oc.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\pl.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\pt.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\ro.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\ru.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\si.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\sk.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\sl.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\sq.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\sr.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\sv.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\th.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\tr.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\tt.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\ug.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\uk.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\vi.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\a11yhelp\dialogs\lang\zh.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\clipboard\dialogs\paste.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\colordialog\dialogs\colordialog.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\copyformatting\cursors\cursor-disabled.svg" />
+    <None Include="wwwroot\ckeditor-full\plugins\copyformatting\cursors\cursor.svg" />
+    <None Include="wwwroot\ckeditor-full\plugins\dialog\dialogDefinition.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\div\dialogs\div.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\CHANGELOG.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\LICENSE.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\plugindefinition.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\README.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\authentication.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\exportpdf.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\configfilename.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\emptyeditor.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\integration.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\integrations\easyimage.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\notifications.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\notificationsasync.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\paperformat.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\readonly.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\stylesheets.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\tokenfetching.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\tokentwoeditorscorrect.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\tokentwoeditorswrong.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\tokenwithouturl.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\manual\wrongendpoint.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\notification.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\resourcespaths.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\statistics.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\stylesheets.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\exportpdf\tests\_helpers\tools.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\find\dialogs\find.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\forms\dialogs\button.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\forms\dialogs\checkbox.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\forms\dialogs\form.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\forms\dialogs\hiddenfield.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\forms\dialogs\radio.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\forms\dialogs\select.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\forms\dialogs\textarea.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\forms\dialogs\textfield.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\iframe\dialogs\iframe.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\image\dialogs\image.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\link\dialogs\anchor.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\link\dialogs\link.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\liststyle\dialogs\liststyle.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\pastefromgdocs\filter\default.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\pastefromlibreoffice\filter\default.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\pastefromword\filter\default.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\pastetools\filter\common.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\pastetools\filter\image.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\scayt\CHANGELOG.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\scayt\dialogs\options.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\scayt\LICENSE.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\scayt\README.md" />
+    <None Include="wwwroot\ckeditor-full\plugins\smiley\dialogs\smiley.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\af.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\ar.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\az.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\bg.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\ca.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\cs.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\cy.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\da.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\de.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\el.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\en-ca.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\en-gb.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\en.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\eo.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\es-mx.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\es.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\et.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\eu.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\fa.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\fi.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\fr-ca.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\fr.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\gl.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\he.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\hr.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\hu.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\id.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\it.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\ja.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\km.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\ko.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\ku.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\lt.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\lv.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\nb.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\nl.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\no.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\oc.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\pl.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\pt.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\ro.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\ru.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\si.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\sk.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\sl.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\sq.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\sr.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\sv.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\th.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\tr.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\tt.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\ug.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\uk.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\vi.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\lang\zh.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\specialchar\dialogs\specialchar.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\tabletools\dialogs\tableCell.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\table\dialogs\table.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\templates\dialogs\templates.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\templates\templatedefinition.js" />
+    <None Include="wwwroot\ckeditor-full\plugins\templates\templates\default.js" />
+    <None Include="wwwroot\ckeditor-full\README.md" />
+    <None Include="wwwroot\ckeditor-full\samples\img\logo.svg" />
+    <None Include="wwwroot\ckeditor-full\samples\js\sample.js" />
+    <None Include="wwwroot\ckeditor-full\samples\js\sf.js" />
+    <None Include="wwwroot\ckeditor-full\samples\old\assets\posteddata.php" />
+    <None Include="wwwroot\ckeditor-full\samples\old\assets\uilanguages\languages.js" />
+    <None Include="wwwroot\ckeditor-full\samples\old\dialog\assets\my_dialog.js" />
+    <None Include="wwwroot\ckeditor-full\samples\old\sample.js" />
+    <None Include="wwwroot\ckeditor-full\samples\old\sample_posteddata.php" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\font\fontello.svg" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\js\abstracttoolbarmodifier.js" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\js\fulltoolbareditor.js" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\js\toolbarmodifier.js" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\js\toolbartextmodifier.js" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\lib\codemirror\codemirror.js" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\lib\codemirror\javascript.js" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
+    <None Include="wwwroot\ckeditor-full\samples\toolbarconfigurator\lib\codemirror\show-hint.js" />
+    <None Include="wwwroot\ckeditor-full\SECURITY.md" />
+    <None Include="wwwroot\ckeditor-full\skins\moono-lisa\readme.md" />
+    <None Include="wwwroot\ckeditor-full\styles.js" />
+    <None Include="wwwroot\ckeditor-full\vendor\promise.js" />
+    <None Include="wwwroot\ckeditor\build\ckeditor.js" />
+    <None Include="wwwroot\ckeditor\build\ckeditor.js.map" />
+    <None Include="wwwroot\ckeditor\build\translations\af.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ar.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ast.js" />
+    <None Include="wwwroot\ckeditor\build\translations\az.js" />
+    <None Include="wwwroot\ckeditor\build\translations\bg.js" />
+    <None Include="wwwroot\ckeditor\build\translations\bn.js" />
+    <None Include="wwwroot\ckeditor\build\translations\bs.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ca.js" />
+    <None Include="wwwroot\ckeditor\build\translations\cs.js" />
+    <None Include="wwwroot\ckeditor\build\translations\da.js" />
+    <None Include="wwwroot\ckeditor\build\translations\de-ch.js" />
+    <None Include="wwwroot\ckeditor\build\translations\de.js" />
+    <None Include="wwwroot\ckeditor\build\translations\el.js" />
+    <None Include="wwwroot\ckeditor\build\translations\en-au.js" />
+    <None Include="wwwroot\ckeditor\build\translations\en-gb.js" />
+    <None Include="wwwroot\ckeditor\build\translations\eo.js" />
+    <None Include="wwwroot\ckeditor\build\translations\es-co.js" />
+    <None Include="wwwroot\ckeditor\build\translations\es.js" />
+    <None Include="wwwroot\ckeditor\build\translations\et.js" />
+    <None Include="wwwroot\ckeditor\build\translations\eu.js" />
+    <None Include="wwwroot\ckeditor\build\translations\fa.js" />
+    <None Include="wwwroot\ckeditor\build\translations\fi.js" />
+    <None Include="wwwroot\ckeditor\build\translations\fr.js" />
+    <None Include="wwwroot\ckeditor\build\translations\gl.js" />
+    <None Include="wwwroot\ckeditor\build\translations\gu.js" />
+    <None Include="wwwroot\ckeditor\build\translations\he.js" />
+    <None Include="wwwroot\ckeditor\build\translations\hi.js" />
+    <None Include="wwwroot\ckeditor\build\translations\hr.js" />
+    <None Include="wwwroot\ckeditor\build\translations\hu.js" />
+    <None Include="wwwroot\ckeditor\build\translations\id.js" />
+    <None Include="wwwroot\ckeditor\build\translations\it.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ja.js" />
+    <None Include="wwwroot\ckeditor\build\translations\jv.js" />
+    <None Include="wwwroot\ckeditor\build\translations\km.js" />
+    <None Include="wwwroot\ckeditor\build\translations\kn.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ko.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ku.js" />
+    <None Include="wwwroot\ckeditor\build\translations\lt.js" />
+    <None Include="wwwroot\ckeditor\build\translations\lv.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ms.js" />
+    <None Include="wwwroot\ckeditor\build\translations\nb.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ne.js" />
+    <None Include="wwwroot\ckeditor\build\translations\nl.js" />
+    <None Include="wwwroot\ckeditor\build\translations\no.js" />
+    <None Include="wwwroot\ckeditor\build\translations\oc.js" />
+    <None Include="wwwroot\ckeditor\build\translations\pl.js" />
+    <None Include="wwwroot\ckeditor\build\translations\pt-br.js" />
+    <None Include="wwwroot\ckeditor\build\translations\pt.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ro.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ru.js" />
+    <None Include="wwwroot\ckeditor\build\translations\si.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sk.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sl.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sq.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sr-latn.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sr.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sv.js" />
+    <None Include="wwwroot\ckeditor\build\translations\th.js" />
+    <None Include="wwwroot\ckeditor\build\translations\tk.js" />
+    <None Include="wwwroot\ckeditor\build\translations\tr.js" />
+    <None Include="wwwroot\ckeditor\build\translations\tt.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ug.js" />
+    <None Include="wwwroot\ckeditor\build\translations\uk.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ur.js" />
+    <None Include="wwwroot\ckeditor\build\translations\uz.js" />
+    <None Include="wwwroot\ckeditor\build\translations\vi.js" />
+    <None Include="wwwroot\ckeditor\build\translations\zh-cn.js" />
+    <None Include="wwwroot\ckeditor\build\translations\zh.js" />
+    <None Include="wwwroot\ckeditor\LICENSE.md" />
+    <None Include="wwwroot\ckeditor\README.md" />
+    <None Include="wwwroot\ckeditor\sample\script.js" />
+    <None Include="wwwroot\ckeditor\webpack.config.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\ckeditor\build\ckeditor.d.ts" />
+    <TypeScriptCompile Include="wwwroot\ckeditor\src\ckeditor.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\IntakeForm\CreateV1.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\WebsiteMacros\Index.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

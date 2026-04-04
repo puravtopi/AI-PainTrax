@@ -1,0 +1,585 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var pdffiles = ViewBag.pdffiles as List<string>;
+    var tables = ViewBag.tables as List<string>;
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<link href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+<!-- Vendor CSS Files -->
+<link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true">
+<link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" asp-append-version="true">
+<link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" asp-append-version="true">
+<link href="~/assets/vendor/quill/quill.snow.css" rel="stylesheet" asp-append-version="true">
+<link href="~/assets/vendor/quill/quill.bubble.css" rel="stylesheet" asp-append-version="true">
+<link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet" asp-append-version="true">
+<link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet" asp-append-version="true">
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<script>
+    function myFunction(input, select) {
+        filter = input.value.toUpperCase();
+        if (select) {
+            opt = select.getElementsByTagName("option");
+            for (i = 0; i < opt.length; i++) {
+                //alert(opt[i].value);
+                if (opt[i].value.toUpperCase().indexOf(filter) > -1) {
+                    opt[i].style.display = "";
+                } else {
+                    opt[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function selectTable() {
+        var ddltable = document.getElementById('ddltable').value;
+        var ddlcols = document.getElementById('ddlcols');
+
+        $.ajax({
+            type: 'GET',
+            url: '/Mappdf/SelectTable?tablename=' + ddltable,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                let cols=JSON.parse( response);
+       //         alert(response);
+                let options = "";
+                cols.forEach((col) => {
+                    options += "<option value='" + col.Field + "'>" + col.Field + "</option>";
+                });
+                ddlcols.innerHTML = options;
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function selectText() {
+        var ddlpdf = document.getElementById('ddlpdf').value;
+        var ddltext = document.getElementById('ddltext');
+        var ddlmap = document.getElementById('ddlmap');
+        //alert(ddlpdf);
+        $.ajax({
+            type: 'GET',
+            url: '/Mappdf/SelectText?pdfname=' + ddlpdf,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                let texts = JSON.parse(response);
+          //               alert(response);
+                let options = "";
+                texts.forEach((text) => {
+                    options += "<option value='" + text.Textbox + "'>" + text.Textbox + "</option>";
+                });
+                ddltext.innerHTML = options;
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+        selectMapped();
+        // $.ajax({
+        //     type: 'GET',
+        //     url: '/Mappdf/SelectMap?pdfname=' + ddlpdf,
+        //     contentType: false,
+        //     processData: false,
+        //     success: function (response) {
+        //         let texts = JSON.parse(response);
+        //         //             alert(response);
+        //         let options = "";
+        //         texts.forEach((text) => {
+        //             if (text.Name.toLowerCase() == "txttable")   {
+        //                 document.getElementById("txttable").innerHTML = text.Value;
+        //             }
+        //             else if(text.Name.toLowerCase() == "txtfile") {
+        //                 document.getElementById("txtfile").innerHTML = text.Value;
+        //             }
+        //             else if (text.Value.trim() != "") {
+        //                 options += "<option value='" + text.Value + "'>" + text.Value + "</option>";
+        //             }
+        //         });
+        //         ddlmap.innerHTML = options;
+        //     },
+        //     error: function (error) {
+        //         console.error(error);
+        //     }
+        // });
+    }
+    function selectMapped()
+    {
+        var ddlpdf = document.getElementById('ddlpdf').value;
+        $.ajax({
+            type: 'GET',
+            url: '/Mappdf/SelectMap?pdfname=' + ddlpdf,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                let texts = JSON.parse(response);
+                          //   alert(response);
+                let options = "";
+                texts.forEach((text) => {
+                    if (text.Name.toLowerCase() == "txttable") {
+                        document.getElementById("txttable").innerHTML = text.Value;
+                    }
+                    else if (text.Name.toLowerCase() == "txtfile") {
+                        document.getElementById("txtfile").innerHTML = text.Value;
+                    }
+                    else if (text.Value.trim() != "") {
+                        options += "<option value='" + text.Value + "'>" + text.Value + "</option>";
+                    }
+                });
+                ddlmap.innerHTML = options;
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function uploadFile() {
+        var formData = new FormData();
+        var fileInput = document.getElementById('fileupload');
+        if (fileInput.files.length > 0) {
+            formData.append('file', fileInput.files[0]);
+            $.ajax({
+                type: 'POST',
+                url: '/Mappdf/UploadFile',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        } else {
+            alert('Please select a file to upload.');
+        }
+    }
+    function map() {
+        var text = document.getElementById('ddltext').value;
+        var col = document.getElementById('ddlcols').value;
+        var pdffile = document.getElementById('ddlpdf').value;
+        var error = false;
+        var errorMessage = "";
+        if(pdffile=="-- Select --") {
+            error = true;
+            errorMessage = "Pdf ";
+        }
+        if(text==""){
+            error = true;
+            errorMessage += "Textbox ";
+        }
+        if (col == "") {
+            error = true;
+            errorMessage += "Column ";
+        }
+        if (error) {
+            document.querySelector("#alertModal").classList.add("show");
+            document.querySelector("#alertModal").style.display = "block";
+            document.querySelector("#alertMessage").innerHTML = errorMessage + " not selected";
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Mappdf/Map?SourceFile=' + pdffile + "&TextName=" + text + "&ColumnName=" + col,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                let cols = JSON.parse(response);
+                      //  alert(response);
+                selectMapped();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+    function unmap() {
+        var text = document.getElementById('ddltext').value;
+        var pdffile = document.getElementById('ddlpdf').value;
+        var error = false;
+        var errorMessage = "";
+        if (pdffile == "-- Select --") {
+            error = true;
+            errorMessage = "Pdf ";
+        }
+        if (text == "") {
+            error = true;
+            errorMessage += "Textbox ";
+        }
+        if (error) {
+            document.querySelector("#alertModal").classList.add("show");
+            document.querySelector("#alertModal").style.display = "block";
+            document.querySelector("#alertMessage").innerHTML = errorMessage + " not selected";
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Mappdf/Map?SourceFile=' + pdffile + "&TextName=" + text ,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                let cols = JSON.parse(response);
+                //  alert(response);
+                selectMapped();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+    function mapfile() {
+        var pdffile = document.getElementById('ddlpdf').value;
+        var col = document.getElementById('ddlcols').value;
+
+        var error = false;
+        var errorMessage = "";
+        if (col == "") {
+            error = true;
+            errorMessage += "Column ";
+        }
+        if (error) {
+            document.querySelector("#alertModal").classList.add("show");
+            document.querySelector("#alertModal").style.display = "block";
+            document.querySelector("#alertMessage").innerHTML = errorMessage + " not selected";
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Mappdf/Map?SourceFile=' + pdffile + "&FileName=" + col,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                let cols = JSON.parse(response);
+                //  alert(response);
+                selectMapped();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+        selectMapped();
+    }
+    
+    function maptable() {
+        var pdffile = document.getElementById('ddlpdf').value;
+        var table = document.getElementById('ddltable').value;
+
+        var error = false;
+        var errorMessage = "";
+        if (table == "") {
+            error = true;
+            errorMessage += "Table ";
+        }
+        if (error) {
+            document.querySelector("#alertModal").classList.add("show");
+            document.querySelector("#alertModal").style.display = "block";
+            document.querySelector("#alertMessage").innerHTML = errorMessage + " not selected";
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/Mappdf/Map?SourceFile=' + pdffile + "&Table=" + table,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                let cols = JSON.parse(response);
+                //  alert(response);
+                selectMapped();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+        selectMapped();
+    }
+
+
+
+
+    function perviewPdf(){
+   
+        var pdffile = document.getElementById('ddlpdf').value;
+        $.ajax({
+            type: "GET",
+            url: "/Mappdf/PreviewPdf?SourceFile=" + pdffile,
+            success: function (data) {
+                // Create blob from the response
+                var blob = new Blob([data], { type: "application/pdf" });
+                var url = URL.createObjectURL(blob);
+
+                // Display the PDF
+                // var pdfEmbed = $("<embed>");
+                // pdfEmbed.attr("src", url);
+                // pdfEmbed.attr("type", "application/pdf");
+                // pdfEmbed.css("width", "100%");
+                // pdfEmbed.css("height", "800px"); // Set height as per your requirement
+                // $("#pdfContainer").html('');
+                // $("#pdfContainer").append(pdfEmbed);
+                var pdfIframe = $("<iframe>");
+                pdfIframe.attr("src", url);
+                pdfIframe.css("width", "100%");
+                pdfIframe.css("height", "800px"); // Set height as per your requirement
+                $("#pdfContainer").empty().append(pdfIframe);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching PDF: ", error);
+            }
+        });
+    }
+
+    function closeAlert() {
+        document.querySelector("#alertModal").classList.remove("show");
+        document.querySelector("#alertModal").style.display = "none";
+    }
+
+</script>
+<main id="main" class="main">
+    <div class="modal fade" id="alertModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="modelContent">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modelTitle">Alert </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeAlert()"></button>
+                </div>
+                <div class="modal-body" id="alertMessage">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAlert()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pagetitle">
+        <h1>Map Pdf</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="../home/index">Home</a></li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12" style="margin-top:10px">
+                                <input type="button" name="btnupload" id="btnupload" value="Upload" class="btn btn-info" onclick="uploadFile()" />
+                                Upload Pdf : <input type="file" id="fileupload" />
+                                <label id="pdferror"></label>
+                            </div>
+
+                        </div>
+                        <br />
+                        <div class="row">
+
+                            <div class="col-sm-2 col-md-2" style="margin-top:10px">
+                                Select Pdf:
+                            </div>
+
+                            <div class="col-sm-8 col-md-3" style="margin-top:10px;">
+                                   
+                                <select id="ddlpdf" name="ddlpdf" style="padding:1px 3px;width:100%;border-radius:2px" onchange="selectText()">
+                                    <option>-- Select  --</option>
+                                    @foreach (var file in pdffiles)
+                                    {
+                                        
+                                        <option value="@file">@file</option>
+                                    }
+                                    
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2 col-md-2" style="margin-top:10px">
+                                Select Table :
+                            </div>
+
+                            <div class="col-sm-8 col-md-3" style="margin-top:10px">
+                                <select id="ddltable" name="ddltable" style="width:100%" onchange="selectTable()">
+                                    <option>-- Select  --</option>
+                                    @foreach (var tableName in tables)
+                                    {
+
+                                        <option value="@tableName">@tableName</option>
+                                    }
+
+                                </select>
+                            </div>
+                            <div class="col-sm-2 col-md-2" style="margin-top:10px">
+                                <input type="button" value="Map Table" class="btn btn-primary" onclick="maptable() " />
+                            </div>
+                        </div>                        
+                        <div class="row">
+                            <div class="col-sm-12 col-md-5">
+                                File Name Prefix: <label id="txtfile"></label>
+                            </div>
+                            <div class="col-sm-12 col-md-7" >
+                                Table Name:<label id="txttable"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <br />
+
+                        <input type="button" value="Map" class="btn btn-success" onclick="map();"/>
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="button" value="set Filename Prefix" class="btn btn-warning" onclick="mapfile() " />
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="button" value="UnMap" class="btn btn-danger" onclick="unmap()" />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-4" style="margin-top:10px">
+                                Text : 
+                                <br />
+                                <input type="text" class="form-control" onkeyup="myFunction(this,document.getElementById('ddltext') );" />
+                                <br />
+                                <select id="ddltext" name="ddltext" size=10 style="width:100%">
+                                  
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-4" style="margin-top:10px">
+                                Fields :
+                                <br />
+                                <input type="text" class="form-control" onkeyup="myFunction(this,document.getElementById('ddlcols') );"  />
+                                <br />
+                                <select id="ddlcols" name="ddlcols" size="10" style="width:100%">
+                                  
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-4" style="margin-top:10px">
+                                Mapped :
+                                <br />
+                                <input type="text" class="form-control" onkeyup="myFunction(this,document.getElementById('ddlmap') );" />
+                                <br />
+                                <select id="ddlmap" name="ddlmap" size="10" style="width:100%">
+                                  
+                                </select>
+                            </div>
+
+                        </div>
+                        <br />
+@*                         <input type="button" value="Transfer Pdf" class="btn btn-success" />
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" value=""  /> Overwrite
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="button" value="Preview" class="btn btn-secondary" onclick="perviewPdf()" />
+                        <div id="pdfContainer"></div>
+ *@                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+@* <div style="float:left;margin-left:10px">
+        Prefix :<asp:Label ID="lblPrefix" runat="server" Width="300" Text=""></asp:Label>
+        Table Name :<asp:Label ID="lblTableName" runat="server" Text=""></asp:Label><br />
+
+        <iframe runat="server" id="tframe" style="width:600px;height:600px"></iframe>
+    </div>
+    <div style="float:left;margin:0px 30px">
+        <asp:FileUpload ID="FilePdf" Width="250" runat="server" style="float:left" />
+        <asp:Button ID="btnBlankPdf" runat="server" Text="Upload Pdf" OnClick="btnBlankPdf_Click" />
+        <br />
+        <asp:Label ID="lblPdf" runat="server" Text=""></asp:Label>
+        <br />
+
+        <div style="display:inline-table">
+            <div style="float:left;width:230px">
+
+                <%--  <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                    <ContentTemplate>
+                        --%>
+                        <br />
+
+                        <asp:Label ID="Label3" runat="server" Text="Pdf"></asp:Label><br />
+
+                        <asp:DropDownList ID="ddlPdf" runat="server" Width="230" AutoPostBack="true" OnSelectedIndexChanged="ddlPdf_SelectedIndexChanged"></asp:DropDownList><br /><br />
+                        <asp:Label ID="Label1" runat="server" Text="Texts"></asp:Label><br />
+                        <asp:TextBox ID="txtSearchText" runat="server" Width="230" onkeyup="myFunction(this,'text')" placeholder="Search for Textboxes.."></asp:TextBox>
+                        <asp:ListBox ID="ListText" CssClass="ListText" runat="server" Width="230" Height="300"></asp:ListBox>
+                        <%--
+                    </ContentTemplate>
+                </asp:UpdatePanel>--%>
+
+            </div>
+            <div style="float:left;width:100px;text-align:center">
+                <br /><br />
+                <asp:Button ID="btnTMap" runat="server" Text="Map Table" OnClick="btnTMap_Click" /><br /><br />
+                <br /><br /><br /><br /><br />
+
+
+                <asp:Button ID="btnMap" runat="server" Text="Map " OnClick="btnMap_Click" /><br /><br />
+                <asp:Button ID="btnUnMap" runat="server" Text="UnMap" OnClick="btnUnMap_Click" /><br /><br />
+                <asp:Button ID="btnClear" runat="server" Text="Clear Map" OnClick="btnClear_Click" /><br /><br />
+            </div>
+
+            <div style="float:left;width:230px">
+                <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                    <Triggers>
+                        <asp:PostBackTrigger ControlID="txtSearchField" />
+
+                    </Triggers>
+                    <ContentTemplate>
+                        <asp:Label ID="Label5" runat="server" Text="[Contains Field PatientIE_ID]"></asp:Label> <br />
+                        <asp:Label ID="Label4" runat="server" Text="Tables and Views"></asp:Label> <br />
+                        <asp:DropDownList ID="ddlTable" runat="server" Width="230" AutoPostBack="true" OnSelectedIndexChanged="ddlTable_SelectedIndexChanged"></asp:DropDownList><br /><br />
+                        <asp:Label ID="Label2" runat="server" Text="Fields"></asp:Label><br />
+                        <asp:TextBox ID="txtSearchField" runat="server" width="230" onkeyup="myFunction(this,'field')" placeholder="Search for Fields.."></asp:TextBox>
+
+                        <asp:ListBox ID="ListField" runat="server" Width="230" Height="300"></asp:ListBox>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+        </div>
+
+        <%--            <div>
+            <asp:Button ID="btnPdfSelect" runat="server" Text="Select Pdf" style="width:200px" OnClick="btnPdfSelect_Click" />
+            <asp:Button ID="btnTableSelect" runat="server" Text="Select Table" style="width:210px" OnClick="btnTableSelect_Click" />
+        </div>
+        <br />--%>
+
+        <asp:Label ID="lblMessage" runat="server" Text="" ForeColor="IndianRed"></asp:Label>
+        <br />
+        <br />
+        <div style="">
+            <asp:TextBox ID="txtPage" runat="server" Width="30"></asp:TextBox>
+            <asp:Button ID="btnPage" runat="server" Text="Set Page" OnClick="btnPage_Click" />
+            &nbsp;&nbsp;&nbsp;
+            <%--<asp:TextBox ID="txtFileName" runat="server"></asp:TextBox>--%>
+            <asp:Button ID="btnFile" runat="server" Text="Set File Name Prefix" OnClick="btnFile_Click" />
+            <asp:TextBox ID="txtDefault" runat="server" Visible="false" Width="230" placeholder="Default Value for Field"></asp:TextBox>
+            <asp:Button ID="btnDefault" runat="server" Visible="false" Text="Set Default" OnClick="btnDefault_Click" />
+            <br />
+            <br />
+            <asp:Button ID="btnDownload" runat="server" Text="Transfer Pdf" OnClick="btnDownload_Click" />
+            <asp:CheckBox ID="chkOverwrite" runat="server" Text="OverWrite" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button ID="btnRemove" runat="server" Text="Remove Pdf" OnClick="btnRemove_Click" />
+            <br />
+            <br />
+            <asp:Label ID="lblError" runat="server" Text="" ForeColor="IndianRed"></asp:Label>
+        </div>
+
+
+
+    </div>
+ *@

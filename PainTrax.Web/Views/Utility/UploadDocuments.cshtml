@@ -1,0 +1,155 @@
+﻿@model IList<PainTrax.Web.ViewModel.UploadDocVM>
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Upload Documents</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">Upload Documents</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                       @*  <div class="row mb-3">
+                            <div class="col-md-3 col-lg-3">
+
+                                <label class="col-md-12 col-lg-12 col-form-label">Company</label>
+                                <div class="col-md-12 col-lg-12">
+                                    <select id="ddlCmp" class="form-control" asp-items="ViewBag.LstCmp">
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div> *@
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Upload Documents</h5>
+                            </div>
+                            <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+                            </div>
+                        </div>
+
+                        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th style="width:5%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Count() > 0)
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+
+                                            <td>@item.DirName</td>
+                                            <td>
+                                                <button class="btn btn-warning" type="button" onclick="fnUploadDocument('@item.DirName')">Upload</button>
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="2"><p>No data found</p></td></tr>
+
+                                }
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div id="content"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div class="modal fade" id="fuModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modeltitle">Upload Documents</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="direName" />
+
+                <input type="file" id="files" name="files" multiple="multiple" />
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnUpload()">Upload</button>
+            </div>
+        </div><!-- End Large Modal-->
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+    function fnUploadDocument(dirName) {
+
+        $("#direName").val(dirName);
+        $("#fuModal").modal('show');
+    }
+
+    function fnUpload() {
+
+
+        var dirName = $("#direName").val();
+
+        var formData = new FormData();
+        var files = $('#files')[0].files;
+
+        for (var i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+        formData.append('DirName', dirName);
+        formData.append('CmpId', $("#ddlCmp").val());
+
+        var url = '@Url.Action("UploadDocuments", "Utility")';
+
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $("#content").html(response);
+                $("#files").val('');
+                $("#fuModal").modal('hide');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('File upload failed.');
+            }
+        });
+    }
+
+
+
+
+</script>

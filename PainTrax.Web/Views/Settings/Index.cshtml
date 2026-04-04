@@ -1,0 +1,397 @@
+﻿@model PainTrax.Web.Models.tbl_settings
+<style>
+    .ck-editor__editable_inline p {
+        margin: 0;
+    }
+</style>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Settings</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">Manage Settings</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h5 class="card-title">Manage Setting</h5>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="Index" asp-controller="Settings" enctype="multipart/form-data">
+
+                            <input type="hidden" asp-for="id" />
+
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="page_size" class="col-md-4 col-lg-3 col-form-label">Page Size</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select asp-for="page_size" class="form-select">
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                         @*    <span asp-validation-for="page_size" class="text-danger"></span> *@
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="font_family" class="col-md-4 col-lg-3 col-form-label">Font Family</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="font_family">
+                                                <option value="Arial">Arial</option>
+                                                <option value="Calibri">Calibri</option>
+                                                <option value="TimesNewRoman">Times New Roman</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="font_size" class="col-md-4 col-lg-3 col-form-label">Font Size</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="font_size">
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="location" class="col-md-4 col-lg-3 col-form-label">Location</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="location" asp-items="@ViewBag.locList"></select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="dateformat" class="col-md-4 col-lg-3 col-form-label">Date Format</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            @{
+                                                var cDate = System.DateTime.Now;
+                                            }
+                                            <select asp-for="dateformat" class="form-select">
+                                                <option value="MM/dd/yyyy">@cDate.ToString("MM/dd/yyyy")</option>
+                                                <option value="MM/dd/yyyy HH:mm:ss">@cDate.ToString("MM/dd/yyyy HH:mm:ss")</option>
+                                                <option value="MM/dd/yyyy HH:mm tt">@cDate.ToString("MM/dd/yyyy HH:mm tt")</option>
+                                                <option value="MMMM dd, yyyy">@cDate.ToString("MMMM dd, yyyy")</option>
+                                                <option value="dddd, dd MMMM yyyy">@cDate.ToString("dddd, dd MMMM yyyy")</option>
+                                                <option value="dddd, dd MMMM yyyy HH:mm:ss">@cDate.ToString("dddd, dd MMMM yyyy HH:mm:ss")</option>
+                                                <option value="dddd, dd MMMM yyyy hh:mm tt">@cDate.ToString("dddd, dd MMMM yyyy hh:mm tt")</option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="pageBreakForInjection" class="col-md-4 col-lg-3 col-form-label">PageBreak For Injection</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="pageBreakForInjection">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="injectionAsSeparateBlock" class="col-md-4 col-lg-3 col-form-label">Injection As Separate Block</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="injectionAsSeparateBlock">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="show_preop" class="col-md-4 col-lg-3 col-form-label">Show PreOp</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="show_preop">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="show_postop" class="col-md-4 col-lg-3 col-form-label">Show PostOp</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="show_postop">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="table_border" class="col-md-4 col-lg-3 col-form-label">Show Table Border</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="table_border">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="casetype" class="col-md-4 col-lg-3 col-form-label">Side Case</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="casetype">
+                                                <option value="U">Upper</option>
+                                                <option value="L">Lower</option>
+                                                <option value="M">Mix</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="injectionAsSeparateBlock" class="col-md-4 col-lg-3 col-form-label">Diagnostics Settings</label>
+                                        <div class="col-md-1 col-lg-1">
+                                            <input type="checkbox" asp-for="isdaignosisshow" />
+                                        </div>
+                                        <div class="col-md-1 col-lg-4">
+                                            <textarea asp-for="foundStatment" class="form-control" placeholder="Found Statment"></textarea>
+                                        </div>
+                                        <div class="col-md-1 col-lg-4">
+                                            <textarea asp-for="notfoundStatment" class="form-control" placeholder="Not Found Statment"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">GAIT</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" asp-for="gait_default" class="form-control" />
+                                        </div>
+
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Followup Date</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" asp-for="fu_default" class="form-control" />
+                                        </div>
+
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Select All</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select id="selectAll" class="form-select" aria-label="Default select example" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="diagcervialbulge_comma" class="col-md-2 col-lg-2 col-form-label">Cervial Comma</label>
+
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="diagcervialbulge_comma" class="form-select" aria-label="Default select example" asp-for="diagcervialbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diagthoracicbulge_comma" class="col-md-2 col-lg-2 col-form-label">Thoracic Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="diagthoracicbulge_comma" class="form-select" aria-label="Default select example" asp-for="diagthoracicbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diaglumberbulge_comma" class="col-md-2 col-lg-2 col-form-label">Lumber Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="diaglumberbulge_comma" class="form-select" aria-label="Default select example" asp-for="diaglumberbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="diagleftshoulder_comma" class="col-md-2 col-lg-2 col-form-label">Left Shoulder Comma</label>
+
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="diagleftshoulder_comma" class="form-select" aria-label="Default select example" asp-for="diagleftshoulder_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diagrightshoulder_comma" class="col-md-2 col-lg-2 col-form-label">Right Shoulder Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="diagrightshoulder_comma" class="form-select" aria-label="Default select example" asp-for="diagrightshoulder_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diagleftknee_comma" class="col-md-2 col-lg-2 col-form-label">Left Knee Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="diagleftknee_comma" class="form-select" aria-label="Default select example" asp-for="diagleftknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="diagrightknee_comma" class="col-md-2 col-lg-2 col-form-label">Right Knee Comma</label>
+
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="diagrightknee_comma" class="form-select" aria-label="Default select example" asp-for="diagrightknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diagbrain_comma" class="col-md-2 col-lg-2 col-form-label">Brain Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="diagbrain_comma" class="form-select" aria-label="Default select example" asp-for="diagbrain_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="other1_comma" class="col-md-2 col-lg-2 col-form-label">Other1 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="other1_comma" class="form-select" aria-label="Default select example" asp-for="other1_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="other2_comma" class="col-md-2 col-lg-2 col-form-label">Other2 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="other2_comma" class="form-select" aria-label="Default select example" asp-for="other2_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                         <label for="title" asp-for="other3_comma" class="col-md-2 col-lg-2 col-form-label">Other3 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="other3_comma" class="form-select" aria-label="Default select example" asp-for="other3_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="other4_comma" class="col-md-2 col-lg-2 col-form-label">Other4 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="other4_comma" class="form-select" aria-label="Default select example" asp-for="other4_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="other5_comma" class="col-md-2 col-lg-2 col-form-label">Other5 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="other5_comma" class="form-select" aria-label="Default select example" asp-for="other5_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="other6_comma" class="col-md-2 col-lg-2 col-form-label">Other6 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="other6_comma" class="form-select" aria-label="Default select example" asp-for="other6_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="other7_comma" class="col-md-2 col-lg-2 col-form-label">Other7 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select id="other7_comma" class="form-select" aria-label="Default select example" asp-for="other7_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Signature Content</label>
+
+                                        <div class="col-md-8 col-lg-9">
+                                            <textarea class="form-control" id="txtHistory" asp-for="sign_content"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Header Template</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="file" class="form-control" name="header_template" accept=".docx,.doc,.dotx">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label"></label>
+                                        <div class="col-md-8 col-lg-7">
+                                            @if (!string.IsNullOrEmpty(Model.header_template))
+                                            {
+                                                <a href="@Url.Content("~/Uploads/HeaderTemplate/" + Model.header_template)" target="_blank">@Model.header_template</a>
+                                            }
+                                            else
+                                            {
+                                                <span>No file uploaded</span>
+                                            }
+                                            <input type="hidden" id="header_template_hidden" name="header_template_hidden" value="@Model.header_template" />
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="row mb-3">
+
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    var ckHistory;
+    ClassicEditor
+        .create(document.querySelector('#txtHistory'))
+        .catch(error => {
+            console.error(error);
+        });
+    $(document).ready(function () {
+
+        
+
+        var mess = '@ViewBag.Message';
+        if (mess != '' && mess != undefined) {
+            $('#myModalMessage').modal('show');
+            $('#messBody').html('<p>' + mess + '</p>');
+
+            autoclosepopup();
+        }
+
+        document.getElementById('selectAll').addEventListener('change', function () {
+            debugger;
+        const selectedValue = this.value;
+       
+    const firstDropdown = document.getElementById('diagcervialbulge_comma');
+    const secondDropdown = document.getElementById('diagthoracicbulge_comma');
+    const thidDropdown = document.getElementById('diaglumberbulge_comma');
+    const fourDropdown = document.getElementById('diagleftshoulder_comma');
+    const fiveDropdown = document.getElementById('diagrightshoulder_comma');
+    const sixDropdown = document.getElementById('diagleftknee_comma');
+    const sevenDropdown = document.getElementById('diagrightknee_comma');
+    const eightDropdown = document.getElementById('diagbrain_comma');
+    const nineDropdown = document.getElementById('other1_comma');
+    const tenDropdown = document.getElementById('other2_comma');
+    const elevenDropdown = document.getElementById('other3_comma');
+    const twelveDropdown = document.getElementById('other4_comma');
+    const thirteenDropdown = document.getElementById('other5_comma');
+    const fouteenDropdown = document.getElementById('other6_comma');
+    const fifteenDropdown = document.getElementById('other7_comma');
+
+        // Set the second dropdown value to match the first
+        firstDropdown.value = selectedValue;
+        secondDropdown.value = selectedValue;
+        thidDropdown.value = selectedValue;
+        fourDropdown.value = selectedValue;
+        fiveDropdown.value = selectedValue;
+        sixDropdown.value = selectedValue;
+        sevenDropdown.value = selectedValue;
+        eightDropdown.value = selectedValue;
+        nineDropdown.value = selectedValue;
+        tenDropdown.value = selectedValue;
+        elevenDropdown.value = selectedValue;
+        twelveDropdown.value = selectedValue;
+        thirteenDropdown.value = selectedValue;
+        fouteenDropdown.value = selectedValue;
+        fifteenDropdown.value = selectedValue;
+    });
+    })
+
+
+    function autoclosepopup() {
+        $('#myModalMessage').data('hideInterval', setTimeout(function () {
+            $('#myModalMessage').modal('hide');
+        }, 1500));
+    }
+
+   
+
+</script>
+
+

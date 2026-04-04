@@ -1,0 +1,866 @@
+﻿@model PainTrax.Web.ViewModel.POCReportVM
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>POC Report</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">POC Report</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="POCReport" asp-controller="Report" id="frmPOC">
+                            <br />
+                            <div class="row mb-3">
+                                <div class="col-md-3 col-lg-3">
+
+                                    <label class="col-md-12 col-lg-12 col-form-label">FromDate</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="fdate" id="fdate" class="form-control">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">ToDate</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="tdate" class="form-control">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">Location</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList"></select>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <br />
+                                    <br />
+                                    <input type="checkbox" class="form-check-input" asp-for="_requested" /><label class="form-check-label" for="rememberMe">
+                                        &nbsp; Requsted &nbsp;
+                                    </label>
+                                    <input type="checkbox" class="form-check-input" asp-for="_scheduled" id="_scheduled" onclick="fnScheduled()" /><label class="form-check-label" for="rememberMe">
+                                        &nbsp; Schedule &nbsp;
+                                    </label>
+                                    <input type="checkbox" class="form-check-input" asp-for="_executed" /><label class="form-check-label" for="rememberMe">
+                                        &nbsp;  Execute &nbsp;
+                                    </label>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">MCODE Type</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <select asp-for="mcodeid" class="form-select">
+                                            <option value="0">All</option>
+                                            <option value="1">InHouse</option>
+                                            <option value="2">Other</option>
+                                            <option value="3">Rest</option>
+                                            <option value="4">SX Cnt</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <br />
+                            <div class="col-md-12 col-lg-12">
+
+                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Report">Export</a>
+                                <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
+                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSave" type="button" onclick="fnUpdatePOCReport()">Save</button>
+                                <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit" id="btnSearch">Search</button>
+                              
+
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <br />
+                            <div class="col-md-12 col-lg-12">
+                               
+                                <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnSMulticheduledPopup()">Reschedule</button>
+                                <button class="btn btn-success" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
+                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Add Surgery Center</button>
+                               
+                            </div>
+                            <div class="clearfix"></div>
+                            <br />
+                        </form>
+                        <br />
+                        @{
+                            var columns = ViewBag.Columns as List<string>;
+                            var cmpId = ViewBag.cmpid;
+                        }
+                        <div class="table-responsive">
+                            <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+
+                                        <th scope="col"> <input type="checkbox" id="chkAll" /></th>
+
+
+                                        @{
+                                            if (columns.Contains("Sex"))
+                                            {
+                                                <th scope="col" id="sex" onclick="sortTable(1);">Sex</th>
+                                            }
+                                            if (columns.Contains("Name"))
+                                            {
+                                                <th scope="col" id="name" onclick="sortTable(1);">Name</th>
+                                            }
+                                            if (columns.Contains("Account_No"))
+                                            {
+                                                <th scope="col" id="account_no" onclick="sortTable(1);">Account_No</th>
+                                            }
+                                            
+                                            if (columns.Contains("Case"))
+                                            {
+                                                <th scope="col" id="case" onclick="sortTable(2);">Case</th>
+                                            }
+                                            if (columns.Contains("DOE"))
+                                            {
+                                                <th scope="col" id="DOE" onclick="sortTable(4);">DOE</th>
+                                            }
+                                            if (columns.Contains("DOB"))
+                                            {
+                                                <th scope="col" id="dob" onclick="sortTable(3);">DOB</th>
+                                            }
+                                            if (columns.Contains("DOA"))
+                                            {
+                                                <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>
+                                            }
+                                           
+                                            if (columns.Contains("MCODE"))
+                                            {
+                                                <th scope="col" id="MCODE" onclick="sortTable(5);">MCODE</th>
+                                            }
+                                            if (columns.Contains("Side"))
+                                            {
+                                                <th scope="col" id="Side" onclick="sortTable(9);">Side</th>
+                                            }
+                                            if (columns.Contains("Level"))
+                                            {
+                                                <th scope="col" id="Level" onclick="sortTable(10);">Level</th>
+                                            }
+                                            if (columns.Contains("Phone"))
+                                            {
+                                                <th scope="col" id="Phone" onclick="sortTable(6);">Phone</th>
+                                            }
+                                            if (columns.Contains("Location"))
+                                            {
+                                                <th scope="col" id="Location" onclick="sortTable(7);">Location</th>
+                                            }
+                                            if (columns.Contains("Insurance"))
+                                            {
+                                                <th scope="col" id="Insurance" onclick="sortTable(8);">Ins co</th>
+                                            }
+
+                                            if (columns.Contains("SC_Name"))
+                                            {
+                                                <th scope="col" id="SurgeryCenter" onclick="sortTable(11);">Surgery Center</th>
+                                            }
+                                            if (columns.Contains("Surgeon"))
+                                            {
+                                                <th scope="col" id="Surgeon" onclick="sortTable(12);">Surgeon</th>
+                                            }
+                                            if (columns.Contains("ClaimNo"))
+                                            {
+                                                <th scope="col" id="ClaimNo" onclick="sortTable(12);">Claim No</th>
+                                            }
+                                            if (columns.Contains("MC"))
+                                            {
+                                                <th scope="col" id="MC" onclick="sortTable(12);">MC</th>
+                                            }
+                                            if (columns.Contains("Allergies"))
+                                            {
+                                                <th scope="col" id="Allergies" onclick="sortTable(12);">Allergies</th>
+                                            }
+                                            if (columns.Contains("Note"))
+                                            {
+                                                <th scope="col" id="Note" onclick="sortTable(12);">Note</th>
+                                            }
+                                            if (columns.Contains("Attorney"))
+                                            {
+                                                <th scope="col" id="Attorney" onclick="sortTable(1);">Attorney</th>
+                                            }                                            
+                                            if (columns.Contains("Policy"))
+                                            {
+                                                <th scope="col" id="PolicyNo" onclick="sortTable(1);">PolicyNo</th>
+                                            }
+                                            if (columns.Contains("Vaccinated"))
+                                            {
+                                                <th scope="col" id="vaccinated" onclick="sortTable(1);">Vaccinated</th>
+                                            }
+                                            if (columns.Contains("Request"))
+                                            {
+                                                <th scope="col">Requested</th>
+                                            }
+                                            
+                                        }
+                                        <th scope="col">Schedule</th>
+                                        <th scope="col">Executed</th>
+                                        <th style="width:5%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var columnsval = ViewBag.Columns as List<string>;
+                                        var cmpId1 = ViewBag.cmpid;
+                                    }
+                                    @if (Model.lstPOCReport.Count > 0)
+                                    {
+                                        @foreach (var item in Model.lstPOCReport)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" value="@item.procedureDetail_id" class="chkTrans" />
+                                                    <input type="hidden" value="@item.procedureDetail_id" id="hid" />
+                                                </td>
+                                                @{
+                                                    if (columnsval.Contains("Sex"))
+                                                    {
+                                                        <td>@item.gender</td>
+                                                    }
+                                                    if (columnsval.Contains("Name"))
+                                                    {
+                                                        <td>@item.name</td>
+                                                    }
+                                                    if (columnsval.Contains("Account_No"))
+                                                    {
+                                                        <td>@item.acct_no</td>
+                                                    }
+                                                   
+                                                    if (columnsval.Contains("Case"))
+                                                    {
+                                                        <td>@item.casetype</td>
+                                                    }
+                                                    if (columnsval.Contains("DOE"))
+                                                    {
+                                                        <td>@(item.doe == null ? "" : item.doe.Value.ToString("MM/dd/yyyy"))</td>
+                                                    }
+                                                    if (columnsval.Contains("DOB"))
+                                                    {
+                                                        <td>@(item.dob == null ? "" : item.dob.Value.ToString("MM/dd/yyyy"))</td>
+                                                    }
+                                                    if (columnsval.Contains("DOA"))
+                                                    {
+                                                        <td>@(item.doa == null ? "" : item.doa.Value.ToString("MM/dd/yyyy"))</td>
+                                                    }
+                                                    
+                                                    if (columnsval.Contains("MCODE"))
+                                                    {
+                                                        <td>@item.mcode</td>
+                                                    }
+                                                    if (columnsval.Contains("Side"))
+                                                    {
+                                                        <td>
+                                                            @if (item.scheduled != null)
+                                                            {
+                                                                <input type="text"
+                                                                       style="width:100px"
+                                                                       name="sides[@item.procedureDetail_id]"
+                                                                       class="form-control sides-input"
+                                                                       value="@item.sides"
+                                                                       data-id="@item.procedureDetail_id"
+                                                                       onChange="fnUpdateSideLevel(@item.procedureDetail_id)" />
+                                                                <input type="hidden" value="@item.procedureDetail_id" id="hdnId" />
+                                                            }
+                                                            else
+                                                            {
+                                                                @item.sides
+                                                            }
+                                                        </td>
+                                                    }
+                                                    if (columnsval.Contains("Level"))
+                                                    {
+                                                        <td>
+                                                            @if (item.scheduled != null)
+                                                            {
+                                                                <input type="text"
+                                                                       style="width:100px"
+                                                                       name="level[@item.procedureDetail_id]"
+                                                                       class="form-control level-input"
+                                                                       value="@item.level"
+                                                                       data-id="@item.procedureDetail_id"
+                                                                       onChange="fnUpdateSideLevel(@item.procedureDetail_id)" />
+                                                                @* <input type="hidden" value="@item.level" id="hdnlevel" /> *@
+                                                            }
+                                                            else
+                                                            {
+                                                                @item.level
+                                                            }
+                                                        </td>
+                                                    }
+                                                    if (columnsval.Contains("Phone"))
+                                                    {
+                                                        <td>@item.phone</td>
+                                                    }
+                                                    if (columnsval.Contains("Location"))
+                                                    {
+                                                        <td>@item.location</td>
+                                                    }
+                                                    if (columnsval.Contains("Insurance"))
+                                                    {
+                                                        <td>@item.cmpname</td>
+                                                    }
+
+                                                    if (columnsval.Contains("SC_Name"))
+                                                    {
+                                                        <td>@item.sx_center_name</td>
+                                                    }
+                                                    if (columnsval.Contains("Surgeon"))
+                                                    {
+                                                        <td>@item.surgon_name</td>
+                                                    }
+                                                    if (columnsval.Contains("ClaimNo"))
+                                                    {
+                                                        <td>@item.primary_claim_no</td>
+                                                    }
+                                                    if (columnsval.Contains("MC"))
+                                                    {
+                                                        <td>@item.mc</td>
+                                                    }
+                                                    if (columnsval.Contains("Allergies"))
+                                                    {
+                                                        <td>@item.allergies</td>
+                                                    }
+                                                    if (columnsval.Contains("Note"))
+                                                    {
+                                                        <td>@item.note</td>
+                                                    }
+                                                    if (columnsval.Contains("Attorney"))
+                                                    {
+                                                        <td>@item.Attorney</td>
+                                                    }
+                                                    
+                                                    if (columnsval.Contains("Policy"))
+                                                    {
+                                                        <td>@item.PolicyNo</td>
+                                                    }
+                                                    if (columnsval.Contains("Vaccinated"))
+                                                    {
+                                                        <td>@item.vaccinated</td>
+                                                    }
+                                                    if (columnsval.Contains("Request"))
+                                                    {
+                                                        <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
+                                                    }
+                                                    
+
+                                                }
+                                                <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
+                                                <td><label id="lblexe">@(item.executed == null ? "" : item.executed.Value.ToString("MM/dd/yyyy"))</label></td>
+                                                <td>
+                                                    @{
+                                                        if (item.scheduled != null)
+                                                        {
+                                                            <button class="btn btn-warning" type="button" onclick="fnScheduledPopup(@item.procedureDetail_id)">Reschedule</button>
+                                                        }
+
+                                                        if (item.executed != null)
+                                                        {
+                                                            <a onclick="DownloadPdf( @item.id ,'@item.fname ', ' @item.lname ', ' @item.mcode ' )"><i class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download PT FORM"> PT </i></a>
+                                                        }
+                                                    }
+
+
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr><td colspan="12"><p>No data found</p></td></tr>
+
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div class="modal fade" id="scheduleModel" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Reschedule Date</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+
+                <input type="hidden" id="pid" />
+                <div class="col-sm-10">
+                    <input type="date" id="txtRescheduleDate" class="form form-control" />
+                </div>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary" id="save-signature" onclick="fnTransToRescheduledSingle()">Reschedule</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onclick="fnclosePP()">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="multischeduleModel" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Reschedule Date</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-sm-10">
+                    <input type="date" id="txtRescheduleDateM" class="form form-control" />
+                </div>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary" id="save-signature" onclick="fnTransToRescheduled()">Reschedule</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onclick="fnclosePP()">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SCModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modeltitle">Surgery Center Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ProcedureDetailIDs" />
+                <select id="ddlSC" class="form-select" asp-items="@ViewBag.surgoryList"></select>
+                <p id="p_error" style="color:red"></p>
+                <input id="txtSurgonName" class="form-control" placeholder="Surgeon" />
+                <p id="sn_error" style="color:red"></p>
+                <input id="txtAssistant" class="form-control" placeholder="Assistant" />
+                <p id="a_error" style="color:red"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnUpdateSC()">Save</button>
+            </div>
+        </div><!-- End Large Modal-->
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+    var isShow = '@ViewBag.ShowTransfer';
+
+    if (isShow == 'True') {
+        fnScheduled();
+    }
+    function fnScheduledPopup(Id) {
+
+        $("#pid").val(Id);
+        $("#scheduleModel").modal('show');
+
+    }
+
+    function fnSMulticheduledPopup(Id) {
+
+        $("#multischeduleModel").modal('show');
+
+    }
+
+    function fnclosePP() {
+        $("#pid").val('');
+        $("#txtRescheduleDate").val('');
+        $("#txtRescheduleDateM").val('');
+    }
+
+    function fnScheduled() {
+
+        if ($("#_scheduled").prop("checked")) {
+            $("#btnTransfer").show();
+            $("#btnRescheduled").show();
+            $("#btnSave").show();
+            $("#btnSC").show();
+        } else {
+            $("#btnTransfer").hide();
+            $("#btnRescheduled").hide();
+            $("#btnSave").hide();
+            $("#btnSC").hide();
+        }
+    }
+
+    function fnTransToExecute() {
+
+        var arrayIds = '', arrayDates = '';
+
+        $('table tr').each(function (i) {
+            // Only check rows that contain a checkbox
+            var $chkbox = $(this).find('input[type="checkbox"]');
+
+            if ($chkbox.length) {
+                var status = $chkbox.prop('checked');
+                if (status) {
+
+                    var label = $(this).find('#lblsche');
+                    var id = $(this).find('#hid')
+
+                    arrayIds = arrayIds + ',' + id.val();
+                    arrayDates = arrayDates + ',' + label.text();
+
+                }
+            }
+        });
+
+
+        var url = '@Url.Action("TransferToExecute", "Report")?ids=' + arrayIds + '&dates=' + arrayDates;
+
+        $.ajax({
+            type: "POST",
+            url: url,
+
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function () {
+
+                location.reload();
+            },
+            failure: function (response) {
+                alert("Invalid Details...")
+            }
+        });
+    }
+
+    function fnUpdateSC() {
+        debugger;
+        var sProcedureDetailIDs = $('#ProcedureDetailIDs').val();
+        var sId = $('#ddlSC').val();
+        var sSCName = $("#ddlSC option:selected").text();
+        var sSurgeon = $('#txtSurgonName').val();
+        var sAssistant = $('#txtAssistant').val();
+
+        var isValid = true;
+
+        // if (sSCName == '' || sSCName == null) {
+        //     isValid = false;
+        //     $("#sn_error").text("Please Enter Surgon Name");
+        // }
+        // else {
+        //     $("#sn_error").text("");
+        // }
+        // if (sAssistant == '' || sAssistant == null) {
+        //     $("#a_error").text("Please Enter Assistant Name");
+        //     isValid = false;
+        // } else {
+        //     $("#a_error").text("");
+        // }
+
+        if (!isValid)
+            return;
+        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSCName=' + sSCName + '&sAssistant=' + sAssistant + '&sSurgeon=' + sSurgeon;
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                if (data) {
+                    $('#txtSurgonName').val('');
+                    $('#txtAssistant').val('');
+                    $('#ddlSC').prop('selectedIndex', 0);
+                    $('#SCModal').modal('hide');
+                    $('#btnSearch').click();
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnSC() {
+
+        var arrayIds = '';
+
+        $('table tr').each(function (i) {
+            // Only check rows that contain a checkbox
+            var $chkbox = $(this).find('input[type="checkbox"]').not('#chkAll');
+
+            if ($chkbox.length) {
+                var status = $chkbox.prop('checked');
+                if (status) {
+                    var id = $(this).find('#hid')
+                    arrayIds = arrayIds + ',' + id.val();
+                }
+            }
+        });
+        if (arrayIds == undefined || arrayIds == '' || arrayIds == null) {
+            alert("Please Select Patient.")
+        }
+        else {
+            $('#ProcedureDetailIDs').val(arrayIds);
+            $('#SCModal').modal('show');
+        }
+
+
+
+    }
+
+    function fnTransToRescheduled() {
+
+
+        var sDate = $("#txtRescheduleDateM").val();
+
+        var arrayIds = '';
+
+        $('table tr').each(function (i) {
+            // Only check rows that contain a checkbox
+            var $chkbox = $(this).find('input[type="checkbox"]');
+
+            if ($chkbox.length) {
+                var status = $chkbox.prop('checked');
+                if (status) {
+                    var id = $(this).find('#hid')
+                    arrayIds = arrayIds + ',' + id.val();
+                }
+            }
+        });
+        if (sDate == undefined || sDate == '' || sDate == null) {
+            alert("Please Select Date.")
+        }
+        else {
+
+            var url = '@Url.Action("TransferToResheduled", "Report")?ids=' + arrayIds + "&sDate=" + sDate;;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function () {
+
+                    location.reload();
+                },
+                failure: function (response) {
+                    alert("Invalid Details...")
+                }
+            });
+        }
+    }
+
+    function fnTransToRescheduledSingle() {
+
+        var id = $("#pid").val();
+        var sDate = $("#txtRescheduleDate").val();
+        var url = '@Url.Action("TransferToResheduled", "Report")?ids=' + id + "&sDate=" + sDate;
+
+        if (sDate == undefined || sDate == '' || sDate == null) {
+            alert("Please Select Date.")
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: url,
+
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    location.reload();
+                },
+                failure: function (response) {
+                    alert("Invalid Details...")
+                }
+            });
+        }
+    }
+
+
+    function fnUpdateSideLevel(id) {
+
+
+
+        var side = $(".sides-input[data-id='" + id + "']").val();
+        var level = $(".level-input[data-id='" + id + "']").val();
+
+        var url = '@Url.Action("UpdatePOCSideLevelReport", "Report")?id=' + id + "&side=" + side + "&level=" + level;
+
+        $.ajax({
+            type: "POST",
+            url: url,
+
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function () {
+                //alert("Details are saved.")
+                //location.reload();
+            },
+            failure: function (response) {
+                alert("Invalid Details...")
+            }
+        });
+
+    }
+
+    function fnUpdatePOCReport() {
+
+
+        var arrayIds = '';
+        var arraySide = '';
+        var arrayLevel = '';
+        $('#tbl tbody tr').each(function () {
+            var $chkbox = $(this).find('input[type="checkbox"].chkTrans');
+
+            if ($chkbox.length && $chkbox.prop('checked')) {
+                var status = $chkbox.prop('checked');
+                if (status) {
+                    var id = $(this).find('#hid')
+                    arrayIds = arrayIds + ',' + id.val();
+
+                    // 🔹 get from textbox instead of hidden
+                    var side = $(this).find('.sides-input');
+                    arraySide += ',' + (side.length ? side.val() : '');
+
+                    var level = $(this).find('.level-input');
+                    arrayLevel += ',' + (level.length ? level.val() : '');
+                }
+            }
+        });
+
+        debugger
+        if (arrayIds == undefined || arrayIds == '' || arrayIds == null) {
+            alert("Please Select Patient.");
+            return;
+        }
+
+        if (arrayIds === '') {
+            arrayIds = $('#hdnId').val();
+            arraySide = $(".sides-input[data-id='" + arrayIds + "']").val();
+            arrayLevel = $(".level-input[data-id='" + arrayIds + "']").val();
+        }
+        var url = '@Url.Action("UpdatePOCReport", "Report")?ids=' + arrayIds + "&side=" + arraySide + "&level=" + arrayLevel;
+
+
+
+        $.ajax({
+            type: "POST",
+            url: url,
+
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function () {
+                alert("Details are saved.")
+                //location.reload();
+            },
+            failure: function (response) {
+                alert("Invalid Details...")
+            }
+        });
+    }
+    function fnReset() {
+        $('#frmPOC').trigger("reset");
+        $("#frmPOC")[0].reset();
+        window.location = '@Url.Action("POCReport", "Report")';
+    }
+    function DownloadPdf(id, fname, lname, mode) {
+        modefilter = mode.trim();
+        var modedetails = "";
+        if (modefilter == "RSAS" || modefilter == "SARS") { modedetails = "s/p right shoulder arthroscopy"; }
+        else if (modefilter == "LSAS" || modefilter == "SALS") { modedetails = "s/p left shoulder arthroscopy "; }
+        else if (modefilter == "RKAS" || modefilter == "SARK") { modedetails = "s/p right knee arthroscopy"; }
+        else if (modefilter == "LKAS" || modefilter == "SALK") { modedetails = "s/p left knee arthroscopy"; }
+        else if (modefilter == "SALE") { modedetails = "s/p left elbow arthroscopy"; }
+        else if (modefilter == "SARE") { modedetails = "s/p right elbow arthroscopy"; }
+        else if (modefilter == "SARA") { modedetails = "s/p left ankle arthroscopy"; }
+        else if (modefilter == "SALA") { modedetails = "s/p right ankle arthroscopy"; }
+        else if (modefilter == "SALW") { modedetails = "s/p left wrist arthroscopy"; }
+        else if (modefilter == "SARW") { modedetails = "s/p right wrist arthroscopy"; }
+        else if (modefilter == "SARH") { modedetails = "s/p right hip arthroscopy"; }
+        else if (modefilter == "SALH") { modedetails = "s/p left hip arthroscopy"; }
+
+        var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
+        // ;
+        console.log("Forms/PT FORM.pdf");
+        //downloadurl = downloadurl + '?pdffile=' + "Forms/PT Referral.pdf" + '&id=' + id + '&txt_date=' + formatDate(document.getElementById("fdate").value) + '&txt_surgery=' + formatDate(document.getElementById("fdate").value) + '&txt_docName=' + "" + '&txt_MCode_Proc=' + "test mcode " + '&txtProcedureCode=' + "test mcode procedure " + '&txt_diagnosis=' + modedetails;
+        downloadurl = downloadurl + '?pdffile=' + "Forms/PT Referral.pdf" + '&id=' + id + '&txt_date=' + formatDate(document.getElementById("fdate").value) + '&txt_surgery=' + formatDate(document.getElementById("fdate").value) + '&txt_docName=' + "" + '&txt_MCode_Proc=' + "test mcode " + '&txtProcedureCode=' + modedetails + '&txt_diagnosis=' + modedetails;
+        fetch(downloadurl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                console.log(response);
+                return response.blob();
+            })
+            .then(blob => {
+                // Handle the Excel file data here
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = lname.trim() + ", " + fname.trim() + "_" + "PT Referral" + "_" + formatDate(document.getElementById("fdate").value) + ".pdf";
+                link.click();
+            })
+            .catch(error => {
+                console.error('Error downloading Excel file:', error);
+            });
+
+    }
+    function formatDate(date) {
+        var d = new Date(date);
+        d.setTime(d.getTime() + d.getTimezoneOffset() * 60 * 1000);
+        var month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [month, day, year].join('-');
+    }
+    function sortTable(columnIndex) {
+        var table = document.getElementById("tbl");
+        var rows = Array.prototype.slice.call(table.querySelectorAll("tbody > tr"));
+
+        rows.sort(function (rowA, rowB) {
+            var cellA = rowA.cells[columnIndex].textContent;
+            var cellB = rowB.cells[columnIndex].textContent;
+
+            if (!isNaN(cellA) && !isNaN(cellB)) {
+                return cellA - cellB;
+            }
+
+            return cellA.localeCompare(cellB);
+        });
+
+        rows.forEach(function (row) {
+            table.querySelector("tbody").appendChild(row);
+        });
+    }
+
+
+    $(document).on('change', '#chkAll', function () {
+        $('.chkTrans').prop('checked', this.checked);
+    });
+
+</script>

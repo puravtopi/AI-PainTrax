@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Download Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var dataTable = ViewBag.ViewStructure as System.Data.DataTable;
+}
+
+<h2>Columns</h2>
+<main id="main" class="main">
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>ColumnName</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in dataTable.Rows)
+        {
+            <tr>
+                <td>@row[0]</td>
+            </tr>
+        }
+    </tbody>
+</table>
+</main>

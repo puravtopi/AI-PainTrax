@@ -1,0 +1,179 @@
+﻿@model PainTrax.Web.Models.tbl_patient
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Patient</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Patient">List</a></li>
+                <li class="breadcrumb-item active">Create</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        @*<h5 class="card-title">Add Designation</h5>*@
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title"></h5>
+                            </div>
+                            @* <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+
+                                <a class="btn btn-primary" asp-action="Index" asp-controller="Patient">Cancel</a>
+
+                            </div> *@
+                        </div>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="Edit" asp-controller="Patient">
+
+                            <input type="hidden" asp-for="id" />
+
+                            <div class="row mb-3">
+                                <label for="inputText" class="col-sm-2 col-form-label">Last Name</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" asp-for="lname" onchange="fnCheckPatientNameOnly()">
+                                    <span id="error-lname" style="display:none" class="errorSpan">Please Enter Last Name.</span>
+                                </div>
+                                <label for="inputText" class="col-sm-2 col-form-label">First Name</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" asp-for="fname" onchange="fnCheckPatientNameOnly()">
+                                    <span id="error-fname" style="display:none" class="errorSpan">Please Enter First Name.</span>
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputText" class="col-sm-2 col-form-label">MI</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" asp-for="mname" onchange="fnCheckPatientNameOnly()">
+                                </div>
+                                <label for="inputText" class="col-sm-2 col-form-label">Sex</label>
+                                <div class="col-sm-4">
+                                    <select asp-for="gender" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Gender>()"></select>
+                                </div>
+
+
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputText" class="col-sm-2 col-form-label">DOB</label>
+                                <div class="col-sm-4">
+                                    <input type="date" class="form-control" asp-for="dob">
+                                    <span id="error-dob" style="display:none" class="errorSpan">Please Enter DOB.</span>
+                                </div>
+                                <label for="inputText" class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-4">
+                                    <input type="email" class="form-control" asp-for="email">
+                                </div>
+                            </div>
+                            <div class="row mb-3" style="display:none">
+                                <label for="inputText" class="col-sm-2 col-form-label">
+                                    Handedness
+                                </label>
+                                <div class="col-sm-4">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>Select Handedness</option>
+                                        <option value="1">Right-Handed</option>
+                                        <option value="2">Left-Handed</option>
+                                        <option value="3">Ambidextrous</option>
+                                    </select>
+                                </div>
+                                <label for="inputText" class="col-sm-2 col-form-label">SSN</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" asp-for="ssn">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Address</label>
+                                <div class="col-sm-4">
+                                    <textarea class="form-control" asp-for="address"></textarea>
+                                </div>
+                                <label for="inputNumber" class="col-sm-2 col-form-label">City</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" asp-for="city">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="inputNumber" class="col-sm-2 col-form-label">State</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" asp-for="state">
+                                </div>
+
+                                <label for="inputDate" class="col-sm-2 col-form-label">Zip</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" asp-for="zip">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputNumber" class="col-sm-2 col-form-label">Home Ph</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" asp-for="home_ph">
+                                </div>
+
+                                <label for="inputDate" class="col-sm-2 col-form-label">Mobile</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" asp-for="mobile">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputNumber" class="col-sm-2 col-form-label">
+                                    Vaccinated
+                                </label>
+                                <div class="col-sm-4">
+                                    <select class="form-select" asp-for="vaccinated" aria-label="Default select example">
+
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+
+                                    </select>
+                                </div>
+
+                                <label for="inputDate" class="col-sm-2 col-form-label">Medical Clearance</label>
+                                <div class="col-sm-4">
+                                     <select class="form-select" asp-for="mc" aria-label="Default select example">
+
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputNumber" class="col-sm-2 col-form-label">
+                                    Account No
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" asp-for="account_no">
+                                </div>
+
+
+                            </div>
+                            <div class="row mb-3">
+
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <a class="btn btn-primary" asp-action="Index" asp-controller="Patient">Back</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

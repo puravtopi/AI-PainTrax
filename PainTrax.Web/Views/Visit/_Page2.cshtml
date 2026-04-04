@@ -1,0 +1,176 @@
+﻿@model MS.Models.tbl_ie_page2
+<br />
+<div class="col-lg-12">
+    <input type="hidden" id="txtId_P2" value="@Model.id" />
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Ros">
+            ROS
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+
+            <textarea id="txtROS" class="txttest">@Model.ros</textarea>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#ADL">
+            ADL
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            <textarea id="txtAOD">@Model.aod</textarea>
+        </div>
+
+    </div>
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Others Test
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+
+            <textarea id="txtOther">@Model.other</textarea>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    var ckROS, ckADL, ckOther;
+
+
+    $(document).ready(function () {
+
+        ClassicEditor.create(document.querySelector('#txtOther'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckOther = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtAOD'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckADL = editor;
+        })
+            .catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtROS'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckROS = editor;
+
+            ClassicEditor.instances.editor.on('change', function () {
+                alert("TEST");
+            });
+        })
+            .catch(handleSampleError);
+
+
+
+    });
+
+
+    function fnPage2Save(t) {
+
+        if (t != null) {
+            // bootbox.confirm({
+
+            //     message: 'Are sure you want to save Details?',
+            //     swapButtonOrder: true,
+            //     callback: function (result) {
+            //         if (result) {
+                        Page2Save(t);
+            //         }
+            //         else {
+            //             $(t).tab('show');
+            //         }
+            //     }
+            // });
+        }
+        else {
+            Page2Save(t);
+        }
+
+    }
+
+    function Page2Save(t) {
+        var url = '@Url.Action("SavePage2", "Visit")';
+
+        var model = {
+            "id": $("#txtId_P2").val(),
+            "ros": ckROS.getData(),
+            "aod": ckADL.getData(),
+            "other": ckOther.getData(),
+            "ie_id": $("#id").val(),
+            "patient_id": $("#patientid").val()
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+
+                    $("#txtId_P2").val(data);
+
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+    }
+</script>

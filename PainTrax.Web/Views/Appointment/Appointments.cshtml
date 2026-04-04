@@ -1,0 +1,208 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model PainTrax.Web.Models.tbl_patient;
+@{
+
+
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+         function closemodal() {
+           location.reload();
+          }
+            //var $j = jQuery.noConflict();
+          function newApp() {
+              //id = document.getElementById("<%= hfPatientId.ClientID %>").value;
+              //name = document.getElementById("<%= lblPatientDetail.ClientID %>").innerText;
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById('target').src = newappurl + "?patientid="+ @Model.id  ;   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+             //$j('#largeModel').modal('show');           
+          }
+          function multiApp() {
+              //id = document.getElementById("<%= hfPatientId.ClientID %>").value;
+              //name = document.getElementById("<%= lblPatientDetail.ClientID %>").innerText;
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById('target').src = newappurl + "?patientid="+ @Model.id +"&type=multiple" ;   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+             //$j('#largeModel').modal('show');           
+          }
+          function editApp(id){
+             // alert(id);
+              document.getElementById('modelTitle').innerText = "Edit Appoinment";
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById('target').src = newappurl + "?appid="+ id  +"&type=update";   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+          }
+          function deleteApp(id){
+              //alert(id);
+              document.getElementById('modelTitle').innerText = "Delete Appoinment";
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById('target').src = newappurl + "?appid="+ id  +"&type=remove" ;   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+          }
+          function changeStatus(id,statusId){
+              document.getElementById('modelTitle').innerText = "Change Status";
+              document.getElementById('modelContent').style.height = "300px";
+              var newappurl = '@Url.Action("ChangeStatus","Appointment")';
+              document.getElementById('target').src = newappurl + "?appid="+ id +"&statusid=" + statusId ;   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+
+          }
+          function search(){
+              var appurl = '@Url.Action("Appointments","Appointment")';
+              if (document.getElementById('searchStartDate').value != "" && document.getElementById('searchEndDate').value)
+                  window.location = appurl + "?searchStart=" + document.getElementById('searchStartDate').value + "&searchEnd=" + document.getElementById('searchEndDate').value;
+              else
+                  window.location = appurl;
+          }
+
+
+</script>
+<main id="main" class="main">
+  
+    <div class="pagetitle">
+      <h1>Scheduler Appointments</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Scheduler Appointments</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+  
+    <section class="section dashboard">
+      <div class="row">
+  
+        <!-- Left side columns -->
+        <div class="col-12">
+          <div class="row">
+  
+            <div class="col-12">
+              <div class="card info-card card-body">
+              <br>
+              <h4>Name : <b>@Model.fname @Model.lname</b></h4>
+            </div>
+             </div> 
+   
+  
+          </div><!-- End Customers Card -->
+         
+           <!-- Large Modal -->
+              <div class="modal fade" id="newAppModal" tabindex="-1" >
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content" id="modelContent" style="height:600px">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modelTitle">New Appointment </h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closemodal()" ></button>
+                    </div>
+                    <div class="modal-body">
+                      <iframe id="target" style="width: 100%; height: 100%" frameborder="0"></iframe>
+                    </div>
+                    @*<div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closemodal()" >Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>*@
+                  </div>
+                </div>
+              </div><!-- End Large Modal-->
+  
+  
+          <!-- Recent Sales -->
+          <div class="col-12">
+           
+            <div class="row">
+                   <div class="col-xxl-6 col-xl-6">
+  
+              <div class="card info-card customers-card">
+  
+                
+                <div class="card-body" style="text-align: center;" >
+                       <div  style="margin-top:3px">
+                           <h6>&nbsp;</h6>
+                      <!--<input type="button" class="btn btn-primary" name="" id="" value="New"    data-bs-toggle="modal" data-bs-target="#largeModal">-->
+                      <input type="button" class="btn btn-primary" name="" id="" value="New"  onclick="newApp()" >
+                      <input type="button" class="btn btn-primary" name="" id="" value="Multiple"  onclick="multiApp()" >
+                      <a asp-action="Index" asp-controller="Appointment" class="btn btn-primary" > Scheduler </a>
+                      <a asp-action="Reports" asp-controller="Appointment" class="btn btn-primary" > Reports </a>                      
+                      </div>
+                </div>
+  
+              </div>
+  
+  
+            </div>
+            <!-- Customers Card -->
+            <div class="col-xxl-6 col-xl-6">
+              <div class="card info-card customers-card">
+                <div class="card-body">
+                  <div class="row" style="margin-top:8px">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                      <h5>From</h5>
+                      <input type="date" class="form-control" name="" id="searchStartDate">
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                      <h5>To</h5>
+                      <input type="date" class="form-control" name="" id="searchEndDate">
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                      <h5>&nbsp;</h5>
+                      <input type="button" class="btn btn-primary" name="" id="" value="Search"  onclick="search()" >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+         
+          </div>
+          <div class="row">
+             @foreach (var item in ViewBag.list)
+             {
+                        <!-- Card -->
+            <div class="col-xxl-4 col-md-4">
+              <div class="card info-card revenue-card">
+
+                <div class="card-body" style="text-align: center;">
+
+                  <h5 class="card-title">
+                      @DateTime.Parse(item["appointmentDate"]).ToString("MM/dd/yyyy").Replace("-","/")
+                      @DateTime.ParseExact(@item["appointmentStart"], "HH:mm", null).ToString("hh:mm tt")
+                        <br/>  @item["location"] </h5>
+
+                  <div >
+                        <input type="button" class="btn btn-success" onclick='editApp(@item["appointment_id"])' value="✎" />
+                        <input type="button" class="btn btn-primary" onclick='changeStatus(@item["appointment_id"],@item["status_id"])'  value='@item["status"]' />
+                        <input type="button" class="btn btn-danger" onclick='deleteApp(@item["appointment_id"])' value="✖"/>
+                  </div>
+
+                </div>
+
+              </div>
+            </div><!-- End Card -->
+            
+            }
+             
+         
+          </div>
+  
+      
+  
+        </div><!-- End Recent Sales -->
+  
+      </div><!-- End Top Selling -->
+  
+      </div>
+      </div><!-- End Left side columns -->
+  
+      <!-- Right side columns -->
+  
+      </div>
+    </section>
+  
+  </main><!-- End #main -->

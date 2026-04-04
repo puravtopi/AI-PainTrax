@@ -1,0 +1,230 @@
+﻿@model PainTrax.Web.ViewModel.ProSXReportVM
+
+<main id="main" class="main">
+    <style>
+        #tbl th, #tbl td {
+            white-space: nowrap !important;
+        }
+    </style>
+    <div class="pagetitle">
+        <h1>Pro/SX Report</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">Pro/SX Report</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="ProSXReport" asp-controller="Report" id="frmPOC">
+                            <br />
+                            <div class="row mb-3">
+                                <div class="col-md-3 col-lg-3">
+
+                                    <label class="col-md-12 col-lg-12 col-form-label">Date</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="fdate" class="form-control">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">Select Date</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <select asp-for="tdate" class="form-select" asp-items="@ViewBag.dateList"></select>
+                                    </div>
+                                </div>
+                                @*  <div class="col-md-3 col-lg-3">
+                                <label class="col-md-12 col-lg-12 col-form-label">Location</label>
+                                <div class="col-md-12 col-lg-12">
+                                <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList"></select>
+
+                                </div>
+                                </div> *@
+                                <div class="col-md-3 col-lg-3">
+                                    <br />
+                                    <br />
+
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <br />
+                            <div class="col-md-12 col-lg-12">
+                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcelProSX" asp-controller="Report">Export</a>
+                                <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
+                                <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
+                        <br />
+
+                        @using (Html.BeginForm("UpdateProSXReport", "Report", FormMethod.Post))
+                        {
+                            <button type="submit" class="btn btn-success align-content-end">Update details</button>
+                            <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>MC</th>
+                                        <th>Case</th>
+                                        <th>Location</th>
+                                        <th>MCODE</th>
+                                        <th>Schedule</th>
+                                        <th>sx_center_name</th>
+                                        <th>sx_Notes</th>
+                                        <th>sx_Status</th>
+                                        <th>mc_Status</th>
+                                        <th>SX_Ins_Ver_Status</th>
+                                        <th>Ver_comment</th>
+                                        <th>Preop_notesent</th>
+                                        <th>Bookingsheet_status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.lstProSXReport.Count > 0)
+                                    {
+                                        for (int i = 0; i < Model.lstProSXReport.Count; i++)
+                                        {
+                                            <tr style="background-color:@(Model.lstProSXReport[i].color)">
+                                                @Html.HiddenFor(m => m.lstProSXReport[i].procedureDetail_id) <!-- Needed for DB update -->
+
+                                                <td>@Html.DisplayFor(m => m.lstProSXReport[i].name)</td>
+                                                <td>@Html.DisplayFor(m => m.lstProSXReport[i].Phone)</td>
+                                                <td>@Html.DisplayFor(m => m.lstProSXReport[i].mc)</td>
+                                                <td>@Html.DisplayFor(m => m.lstProSXReport[i].casetype)</td>
+                                                <td>@Html.DisplayFor(m => m.lstProSXReport[i].location)</td>
+                                                <td>@Html.DisplayFor(m => m.lstProSXReport[i].mcode)</td>
+                                                <td>@(Model.lstProSXReport[i].scheduled?.ToString("MM/dd/yyyy"))</td>
+
+                                                <td>@Html.TextAreaFor(m => m.lstProSXReport[i].sx_center_name, new { @class = "form-control" })</td>
+                                                <td>@Html.TextAreaFor(m => m.lstProSXReport[i].sx_Notes, new { @class = "form-control" })</td>
+
+                                                <td>
+                                                    @Html.DropDownListFor(m => m.lstProSXReport[i].sx_Status,
+                                                             (SelectList)ViewBag.StatusList,
+                                                             "Select Status",
+                                                             new { @class = "form-control" })
+                                                </td>
+
+                                                <td>
+                                                    @Html.DropDownListFor(m => m.lstProSXReport[i].mc_Status,
+                                                             new SelectList(new[] { "Requested", "Not Needed", "MC Cleared" }, Model.lstProSXReport[i].mc_Status),
+                                                             "Select Status",
+                                                             new { @class = "form-control" })
+                                                </td>
+
+                                                <td>
+                                                    @Html.DropDownListFor(m => m.lstProSXReport[i].SX_Ins_Ver_Status,
+                                                             (SelectList)ViewBag.InsuranceStatusList,
+                                                             "Select Status",
+                                                             new { @class = "form-control" })
+                                                </td>
+
+                                                <td>@Html.TextAreaFor(m => m.lstProSXReport[i].Ver_comment, new { @class = "form-control" })</td>
+
+                                                <td>
+                                                    @Html.DropDownListFor(m => m.lstProSXReport[i].Preop_notesent,
+                                                             new SelectList(new[] { "Yes", "No", "N/A" }, Model.lstProSXReport[i].Preop_notesent),
+                                                             "Select Status",
+                                                             new { @class = "form-control" })
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownListFor(m => m.lstProSXReport[i].Bookingsheet_sent,
+                                                             new SelectList(new[] { "Yes", "No", "N/A" }, Model.lstProSXReport[i].Bookingsheet_sent),
+                                                             "Select Status",
+                                                             new { @class = "form-control" })
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+<script>
+
+    function fnReset() {
+        $('#frmPOC').trigger("reset");
+        $("#frmPOC")[0].reset();
+        window.location = '@Url.Action("ProSXReport", "Report")';
+    }
+
+</script>
+
+@* <script>
+    $(document).ready(function () {
+        $("#tbl").DataTable({
+            searching: false,
+            paging: false,
+            info: false,
+            order: [], // no default sorting
+
+            columnDefs: [
+                { targets: [0, 7, 9], orderable: true },   // enable sorting on Name(0) and Status(9)
+                { targets: "_all", orderable: false }  // disable sorting on every other column
+            ]
+        });
+    });
+</script> *@
+
+
+<script>
+    $(function () {
+
+        if ($.fn.DataTable.isDataTable("#tbl")) {
+            $("#tbl").DataTable().clear().destroy();
+        }
+
+        $("#tbl").DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            autoWidth: true,
+            columnDefs: [
+                { targets: [0, 2, 9], orderable: true },  // Name, MC
+                { targets: "_all", orderable: false }, // everything else default false
+
+                {
+                    targets: 9,   // mc_Status (dropdown)
+                        orderable: true,
+                    render: function (data, type, row, meta) {
+                        if (type === 'sort') {
+                            return $(data).find("option:selected").text();
+                        }
+                        return data;
+                    }
+                }
+            ]
+        });
+
+    });
+   
+</script>

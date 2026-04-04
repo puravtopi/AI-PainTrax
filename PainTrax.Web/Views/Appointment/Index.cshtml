@@ -1,0 +1,458 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+ <script src="~/assets/js/evtCalender.js" asp-append-version="true"></script>
+ <link href="~/assets/css/calendar.css" rel="stylesheet" asp-append-version="true" />
+ <script>
+     var daystart =480;
+     var dayend = 480;
+     var  selectDate = new Date();
+     document.addEventListener('DOMContentLoaded', function () {            
+            setData(getData());
+       });
+
+     function locationChange() {
+            setData(getData());
+     }
+     
+     
+     function TransferDate() {
+            var url = '@Url.Action("TransferDate","Appointment")';
+            var model = {
+            "Fromdate": document.getElementById("txtFDate").value,
+            "Todate": document.getElementById("txtTDate").value,
+            "Location_Id": document.getElementById("location_id").value
+            }
+            $.ajax({
+                url: url,
+                data: model,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
+            success: function (data) {
+                calClicked();
+                setData(getData());
+               // alert(data.d);
+            },
+            error: function (data, status, jqXHR) { alert("Error " + jqXHR); }
+        });
+     }
+
+     function getData() {
+         var apps = [];
+         //alert(document.getElementById("location_id").value);
+           var url = '@Url.Action("GetAppointmentCounts","Appointment")';
+           $.ajax({
+            type: "Get",
+            url: url+'?location_id='+document.getElementById("location_id").value,            
+            contentType: "application/json; charset=utf-8",
+            
+             async: false,
+            success: function (data, status) {
+                apps = JSON.parse( data);
+                console.log(data);
+                
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+         
+         return apps;
+     }
+     function getApp(sDate) {
+         var apps = [];
+         //alert(document.getElementById("location_id").value);
+           var url = '@Url.Action("GetDayAppointments","Appointment")';
+           $.ajax({
+            type: "Get",
+            url: url+'?selected_date='+sDate+'&location_id='+document.getElementById("location_id").value,            
+            contentType: "application/json; charset=utf-8",
+            
+             async: false,
+            success: function (data, status) {
+                apps = JSON.parse( data);
+                console.log(data);
+                
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+         
+         return apps;
+     }
+     function dateClicked(sDate) {
+            
+            var cal = document.getElementById("cal");
+            var app = document.getElementById("app");
+            cal.style.visibility = "collapse";
+            app.style.visibility = "visible";
+           
+            showApp(sDate, "app");
+            setAppData(getApp(sDate));
+            selectDate = sDate;
+            //alert('Link ' + text+ ' clicked');
+        }
+        function calClicked() {
+            var cal = document.getElementById("cal");
+            var app = document.getElementById("app");
+            app.style.visibility = "collapse";
+            cal.style.visibility = "visible";
+            
+        }
+         function closemodal() {
+            //$('#ModalStatus').modal('hide');
+              document.querySelector("#newAppModal").classList.remove("show");
+              document.querySelector("#newAppModal").style.display = "none";
+             //alert(selectDate);
+              showApp(selectDate, "app");
+              setAppData(getApp(selectDate));
+            
+            setData(getdata());
+              document.getElementById('modelContent').style.height = "600px";
+          }
+          calAdd = function (appoint,seldate) {
+            var newappurl = '@Url.Action("New","Appointment")';
+              console.log(appoint);
+           document.getElementById('target').src = newappurl +  "?caladd=true&selecteddate=" +  seldate + "&selectedtime=" + appoint + "&locationid=" + document.getElementById("location_id").value;
+            //setTimeout(function () {
+            //    var iframe = document.getElementById("target");
+            //    iframe.contentWindow.document.form1.txtFollowedUpOn.focus();
+            //}, 300);
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+          }
+           calChangeStatus = function (appoint) {
+              document.getElementById('modelTitle').innerText = "Change Status";
+              document.getElementById('modelContent').style.height = "300px";
+              var newappurl = '@Url.Action("ChangeStatus","Appointment")';
+               console.log(appoint);
+              document.getElementById('target').src = newappurl + "?appid="+ appoint.appointment_id +"&statusid=" + appoint.status_id ;   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+             
+             
+
+        }
+         calRemove = function (appoint) {
+            document.getElementById('modelTitle').innerText = "Delete Appoinment";
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById   ('target').src = newappurl + "?appid="+ appoint.appointment_id   +"&type=remove" ;   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+        }
+         
+         calChange = function (appoint) {
+             // alert(id);
+              document.getElementById('modelTitle').innerText = "Edit Appoinment";
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById('target').src = newappurl + "?appid="+ appoint.appointment_id    +"&type=update";   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+          }  
+         function multiApp() {
+              //id = document.getElementById("<%= hfPatientId.ClientID %>").value;
+              //name = document.getElementById("<%= lblPatientDetail.ClientID %>").innerText;
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById('target').src = newappurl + "?caladd=true&type=multiple";   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+             //$j('#largeModel').modal('show');           
+          }
+
+     </script>
+
+ <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Scheduler</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">Home</li>
+          <li class="breadcrumb-item active">Scheduler</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+         <div class="modal fade" id="newAppModal" tabindex="-1" >
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content" id="modelContent" style="height:650px">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modelTitle">New Appointment </h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closemodal()" ></button>
+                    </div>
+                    <div class="modal-body">
+                      <iframe id="target" style="width: 100%; height: 100%" frameborder="0"></iframe>
+                    </div>
+                    @*<div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closemodal()" >Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>*@
+                  </div>
+                </div>
+              </div><!-- End Large Modal-->
+    
+    <section class="section dashboard">
+      <div class="row" >
+    <!-- Recent Sales -->
+            <div class="col-12" >
+              <div class="row"  id="calhead">
+
+                <!-- Sales Card -->
+                <div class="col-xxl-4 col-md-6">
+                  <div class="card info-card sales-card">
+    
+                   
+                    <div class="card-body">
+                      <h5 class="card-title">Select Month Year</h5>
+                      <div class="row">
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="cal_month">
+                         <h5>Month</h5>
+                    
+                      </div>
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="cal_year">
+                        <h5>Year</h5>
+                      </div>
+                    </div>
+
+                      <div class="d-flex align-items-center">
+                      </div>
+                    </div>
+    
+                  </div>
+                </div><!-- End Sales Card -->
+    
+                <!-- Revenue Card -->
+                <div class="col-xxl-4 col-md-6">
+                  <div class="card info-card revenue-card">
+    
+                    <div class="card-body">
+
+                      <h5 class="card-title">Location </h5>
+                      
+                      <div class="row">
+                        <div>
+                          <h5>&nbsp;</h5> 
+                        <select name="location_id" id="location_id" class="form-control" onchange="locationChange()"  asp-items="@ViewBag.locList"></select>
+                      </div>
+                    </div>
+
+                      </div>
+    
+                  </div>
+                </div><!-- End Revenue Card -->
+    
+                <!-- Customers Card -->
+                <div class="col-xxl-4 col-xl-12">
+    
+                  <div class="card info-card customers-card">
+    
+                   
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                          <h5 class="card-title">Transfer</h5>    
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                          <input type="button" value="Transfer"  class="btn btn-primary mt-2" onclick="TransferDate()" style="float:right">
+                        </div>
+                      
+                      </div>
+                      <div class="row">
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                         <h5>From</h5>
+                         <input type="date" class="form-control" name="txtFDate" id="txtFDate">
+                      </div>
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <h5>To</h5>
+                        <input type="date"  class="form-control" name="txtTDate" id="txtTDate">
+                       </select>
+                       
+                      </div>
+                    </div>
+
+                      <div class="d-flex align-items-center">
+                      </div>
+                    </div>
+    
+                  </div>
+          
+                </div><!-- End Customers Card -->
+    
+    
+    
+          
+              </div>
+          
+              <div class="card recent-sales overflow-auto" id="caltab" >
+
+                <div class="filter">
+                  <input type="button" value="Multiple"  class="btn btn-primary" onclick="multiApp()" >
+                  <a asp-action="Reports" asp-controller="Appointment" class="btn btn-primary" > Reports </a>   
+                  
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Options</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Multiple</a></li>
+                    <li><a class="dropdown-item" href="#">Reports</a></li>
+                  </ul>
+
+                </div>
+
+            @*    <div class="card-body">
+                 
+                  <table class="table table-bordered mytable">
+                    
+                    <thead>
+                      <tr >
+                        <th colspan="7" style="font-size: 30px;" >March 2023</th>
+                      </tr>
+                      <tr >
+                        <th  >Sun</th>
+                        <th  >Mon</th>
+                        <th  >Tue</th>
+                        <th  >Wed</th>
+                        <th  >Thr</th>
+                        <th  >Fri</th>
+                        <th  >Sat</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr >
+                        <td class="cell-grey" >26</td>
+                        <td class="cell-grey">27</td>
+                        <td class="cell-grey">28</td>
+                        <td  >1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>10</td>
+                        <td>11</td>
+                      </tr>
+                      <tr>                        
+                        <td>12</td>
+                        <td>13</td>
+                        <td>14</td>
+                        <td>15</td>
+                        <td>16</td>
+                        <td>
+                          
+                             <span class="badge bg-primary ">4</span>
+                          
+                          17
+                        </td>
+                        <td>
+                          
+                             <span class="badge bg-primary">2</span>
+                          
+                          18
+                        </td>
+                      </tr>
+                      <tr>                        
+                        <td>19</td>
+                        <td>20</td>
+                        <td>21</td>
+                        <td>22</td>
+                        <td>23</td>
+                        <td>24</td>
+                        <td>25</td>
+                      </tr>
+                      <tr>                        
+                        <td>26</td>
+                        <td>27</td>
+                        <td>28</td>
+                        <td>29</td>
+                        <td>30</td>
+                        <td>31</td>
+                        <td class="cell-grey">1</td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+                </div>*@
+                <div class="card-body">
+                  <div id="cal" style="margin:auto"></div>  
+                    <div id="app" style="visibility:collapse" class="container">
+                             
+                  </div>
+                </div>
+
+              </div>
+
+@*              <div class="card recent-sales overflow-auto"  id="daytab" >
+
+                <div class="filter">
+                  <input type="button" value="Show Calender"  class="btn btn-primary" style="margin-right: 30px;" id="btncal" >
+                </div>
+
+                <div class="card-body">
+                 
+                  <table class="table table-bordered daytable">
+                    <tbody>
+                      <tr >
+                        <th colspan="7" style="font-size: 30px;" >06/15/2023</th>
+                      </tr>
+                      <tr  >
+                        <td width="150px" class="time"   >8:00 AM</td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Add" class="btn  btn-sm btnadd"> </td>
+                        <td>
+                           <!-- <input type="button" value="X" class="btn btn-danger btn-sm" > -->
+                            <span>Lorem Spsum</span>
+                             
+                        </td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Scheduled" class="btn  btn-sm btnadd"> </td>
+                      </tr>
+                      <tr>
+                        <td width="150px" class="time" >8:30 AM</td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Add" class="btn  btn-sm btnadd"> </td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>                        
+                        <td width="150px" class="time">9:00 AM</td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Add" class="btn  btn-sm btnadd"> </td>
+                        <td>  </td>
+                        <td></td>
+                      </tr>
+                      <tr>                        
+                        <td width="150px" class="time">9:30 AM</td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Add" class="btn  btn-sm btnadd"> </td>
+                        <td>  </td>
+                        <td></td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+*@
+              
+            </div><!-- End Recent Sales -->
+
+    
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+  
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+<script> showCalendar("cal","cal_month","cal_year")</script>

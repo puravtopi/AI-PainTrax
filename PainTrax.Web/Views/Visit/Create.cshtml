@@ -1,0 +1,2397 @@
+﻿@model PainTrax.Web.ViewModel.VisitVM
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="~/assets/dist/bootstrap-tagsinput.css">
+<script src="~/ckeditor/build/ckeditor.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+
+
+
+
+<style>
+    :root {
+        /* Make the mention background blue. */
+        --ck-color-mention-background: hsla(9, 100%, 64%, 0) !important;
+        /* Make the mention text dark grey. */
+        --ck-color-mention-text: hsl(0, 0%, 15%) !important;
+    }
+
+    .ck-editor__editable_inline p {
+        margin: 0;
+    }
+</style>
+<style>
+    .dropdown {
+        position: relative;
+        width: 300px;
+        display: inline-block;
+    }
+
+        .dropdown select {
+            width: 100%;
+        }
+
+        .dropdown > * {
+            box-sizing: border-box;
+        }
+
+        .dropdown select {
+        }
+
+        .dropdown input {
+            position: absolute;
+            width: calc(100% - 20px);
+        }
+</style>
+
+<style>
+    .select2-container .select2-selection--single {
+        height: 38px !important;
+        padding-top: 4px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        margin-top: 1px !important;
+    }
+</style>
+
+<style>
+    .header-nav .nav-profile img {
+        text-align: right;
+    }
+
+    .label-info {
+        background-color: #5bc0de;
+    }
+
+    .label {
+        display: inline;
+        padding: 0.2em 0.6em 0.3em;
+        font-size: 70%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25em;
+    }
+
+    .tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-sticky-on .tox-editor-header {
+        background-color: #fff;
+        box-shadow: 0 2px 2px -2px rgba(34, 47, 62, 0.2), 0 8px 8px -4px rgba(34, 47, 62, 0.15);
+        padding: 4px 0;
+        display: none !important;
+    }
+
+    .tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-sticky-on .tox-editor-header {
+        display: block !important;
+    }
+</style>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Manage Visit</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Visit">List</a></li>
+                <li class="breadcrumb-item active">Add Visit</li>
+            </ol>
+
+        </nav>
+    </div><!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-md-9 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row" style="padding:10px">
+                            <div class="col-md-9 col-sm-9">
+                                <!-- Bordered Tabs -->
+                                <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" id="home-tab" data-bs-target="#bordered-home" role="tab" aria-controls="home" aria-selected="true">Patient Details</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation" onclick="fnGetPage1()">
+                                        <a class="nav-link " id="page1-tab" data-bs-target="#bordered-profile" role="tab" aria-controls="profile" aria-selected="false">SOAP</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation" onclick="fnGetPage2()">
+                                        <a class="nav-link" id="page2-tab" data-bs-target="#bordered-contact" role="tab" aria-controls="contact" aria-selected="false">Page2</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation" onclick="fnGetPageNE()">
+                                        <a class="nav-link" id="ne-tab" data-bs-target="#bordered-ne" role="tab" aria-controls="contact" aria-selected="false">NE</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation" onclick="fnGetPage3()">
+                                        <a class="nav-link" id="p4-tab" data-bs-target="#bordered-p4" role="tab" aria-controls="contact" aria-selected="false">Diagnostics</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="poc-tab" data-bs-target="#bordered-poc" role="tab" aria-controls="contact" aria-selected="false">POC</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation" onclick="fnGetOthers()">
+                                        <a class="nav-link" id="other-tab" data-bs-target="#bordered-other" role="tab" aria-controls="contact" aria-selected="false">Others</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation" onclick="fnGetComments()">
+                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-comments" role="tab" aria-controls="contact" aria-selected="false">Comments</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-ps" role="tab" aria-controls="contact" aria-selected="false">POC Summary</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation" onclick="fnGetDocumentList()">
+                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-doc" role="tab" aria-controls="contact" aria-selected="false">Documents</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                &nbsp; &nbsp;
+                                <a id="defaultSaveButton" name="defaultSaveButton" target="_new" onclick="fnSaveDefault()" class="btn btn-warning bi bi-capslock" title="Save Default" style="float:right;display:none;margin-left:5px;"></a>
+                                <a id="printButton" name="printButton" target="_new" onclick="fnPrint()" class="btn btn-success bi bi-printer" title="Print Report" style="float:right;display:none"></a> &nbsp; &nbsp;
+                                <button type="button" id="btnSaveAll" class="btn btn-secondary bi bi-floppy" style="margin-right:4px; margin-left:4px; float:right;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                                        <path d="M11 2H9v3h2z"></path>
+                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"></path>
+                                    </svg>
+                                </button>
+                                <a id="printButtonSOAP" name="printButtonSOAP" onclick="DownloadPdf(@Model.patientid  ,'@Model.fname','@Model.lname')" href="#" class="btn btn-warning bi bi-printer" title="Print Demo" style="float:right;display:block"></a> &nbsp; &nbsp;
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-12 col-sm-12">
+                                <div class="tab-content pt-2" id="borderedTabContent">
+                                    <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
+
+                                        <input type="hidden" asp-for="id" />
+                                        <input type="hidden" asp-for="patientid" />
+                                        <input type="hidden" value="@Model.id" id="hdIEId" />
+                                        <input type="hidden" value="@Model.old_dos" id="hdOldDOS" />
+
+                                        <div class="col-lg-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Visit Details</h5>
+
+                                                    <!-- Advanced Form Elements -->
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#location">
+                                                            Location
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList" onchange="fnUpdateSidePanel()"></select>
+                                                            <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#dos">
+                                                            DOS.
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="date" asp-for="dos" class="form-control"  onblur="fnUpdateSidePanel()" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#doi">
+                                                            DOA.
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="date" asp-for="doa" class="form-control" onblur="fnUpdateSidePanel()" />
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CT">
+                                                            Case Type
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            @* <select asp-for="compensation" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.CaseType>()"></select>*@
+                                                            <select asp-for="compensation" class="form-select" asp-items="@ViewBag.csList" onchange="fnUpdateSidePanel()"></select>
+                                                            <span id="error-casetype" style="display:none" class="errorSpan">Please Select CaseType.</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3" id="accidentDropdown">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Accident Type
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            @* <select asp-for="compensation" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.CaseType>()"></select>*@
+                                                            <select asp-for="accidentType" class="form-select" asp-items="@ViewBag.asList"></select>
+
+                                                        </div>
+                                                        <label for="provider" class="col-sm-2 col-form-label">Provider:</label>
+                                                        <div class="col-sm-4">
+                                                            <select asp-for="providerid" name="provider" class="form-select">
+                                                                @foreach (var item in ViewBag.providerList)
+                                                                {
+                                                                    <option value="@item.Value">@item.Text</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Patient Details</h5>
+
+                                                    <!-- General Form Elements -->
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#ln">
+                                                            Last Name <span style="color: red;">*</span>
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="lname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
+                                                            <span id="error-lname" style="display:none" class="errorSpan">Please Enter Last Name.</span>
+                                                        </div>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#fn">
+                                                            First Name
+                                                            <span style="color: red;">*</span>
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="fname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
+                                                            <span id="error-fname" style="display:none" class="errorSpan">Please Enter First Name.</span>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputText" class="col-sm-2 col-form-label">MI</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="mname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
+                                                        </div>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#gender">
+                                                            Sex
+                                                            <span style="color: red;">*</span>
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <select asp-for="gender" class="form-select" onchange="fnUpdateSidePanel();" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Gender>()"></select>
+                                                            <span id="error-gender" style="display:none" class="errorSpan">Please Select Gender.</span>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#dob">
+                                                            DOB
+                                                            <span style="color: red;">*</span>
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="date" class="form-control" asp-for="dob" onblur="fnUpdateSidePanel()">
+                                                            <span id="error-dob" style="display:none" class="errorSpan">Please Enter DOB.</span>
+                                                        </div>
+                                                        <label for="inputText" class="col-sm-2 col-form-label">
+                                                            Handedness
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" asp-for="handeness" aria-label="Default select example">
+                                                                <option selected value="1">right</option>
+                                                                <option value="2">left</option>
+                                                                <option value="3">ambidextrous</option>
+                                                                <option value="4">________</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputPassword" class="col-sm-2 col-form-label">Address</label>
+                                                        <div class="col-sm-4">
+                                                            <textarea class="form-control" asp-for="address"></textarea>
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">City</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="city">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">State</label>
+                                                        <div class="col-sm-4">
+                                                            <select asp-for="state" class="form-select" asp-items="@ViewBag.stateList">
+                                                            </select>
+                                                        </div>
+
+                                                        <label for="inputDate" class="col-sm-2 col-form-label">Zip</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="zip">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">Home Ph</label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control msktxt" type="text" asp-for="home_ph" placeholder="xxx-xxx-xxxx">
+                                                        </div>
+
+                                                        <label for="inputDate" class="col-sm-2 col-form-label">Mobile</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control msktxt" asp-for="mobile" placeholder="xxx-xxx-xxxx">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputText" class="col-sm-2 col-form-label">Email</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="email" class="form-control" asp-for="email">
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Vaccinated
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" asp-for="vaccinated" aria-label="Default select example">
+
+                                                                <option value="true">Yes</option>
+                                                                <option value="false">No</option>
+
+                                                            </select>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Account No
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="account_no" onchange="fnCheckPatientNameOnly();">
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Referring Physician
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <select asp-for="physicianid" class="form-select" asp-items="@ViewBag.physicianList">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-3">
+
+
+                                                        <label for="inputText" class="col-sm-2 col-form-label">SSN</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control msktxt" asp-for="ssn" placeholder="xxx-xx-xxxx">
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            MC
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" asp-for="mc" aria-label="Default select example">
+
+                                                                <option value="Yes">Yes</option>
+                                                                <option value="No">No</option>
+
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Note
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                            <textarea asp-for="mc_details" class="form-control"></textarea>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Insurance Details</h5>
+
+                                                    <!-- Advanced Form Elements -->
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Insurance Co.
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control" type="text" asp-for="prime_cmpname">
+                                                            @*  <select asp-for="prime_cmpname" name="prime_cmpname" style="width:100% !important" class="form-select searchable-dropdown">
+                                                            <option value="">-- Select ---</option>
+                                                            @foreach (var item in ViewBag.insuranceList)
+                                                            {
+                                                            <option value="@item.ival">@item.val</option>
+                                                            }
+                                                            </select> *@
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Address.
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <textarea class="form-control" asp-for="prime_address"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Phone.:
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control msktxt" type="text" asp-for="prime_phone" placeholder="xxx-xxx-xxxx">
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Claim #:
+
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control" type="text" asp-for="prime_claim_no">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Policy #:
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control" type="text" asp-for="prime_policy_no">
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            WCB Group#:
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control" type="text" asp-for="prime_WCB_group">
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Secondary Insurance Details</h5>
+
+                                                    <!-- Advanced Form Elements -->
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Insurance Co.
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control" type="text" asp-for="sec_cmpname">
+                                                            @*   <select asp-for="sec_cmpname" name="sec_cmpname" style="width:100%!important;" class="form-select searchable-dropdown">
+                                                            <option value="">-- Select ---</option>
+                                                            @foreach (var item in ViewBag.insuranceList)
+                                                            {
+                                                            <option value="@item.ival">@item.val</option>
+                                                            }
+                                                            </select> *@
+
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Address.
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <textarea class="form-control" asp-for="sec_address"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Phone.:
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control msktxt" type="text" asp-for="sec_phone" placeholder="xxx-xxx-xxxx">
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Claim #:
+
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control" type="text" asp-for="sec_claim_no">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Policy #:
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control" type="text" asp-for="sec_policy_no">
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            WCB Group#:
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input class="form-control" type="text" asp-for="sec_WCB_group">
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Employer Details</h5>
+
+                                                    <!-- Advanced Form Elements -->
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Employer Name
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="emp_name" />
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Employer Address
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="emp_address" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Employer Phone.
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control msktxt" asp-for="emp_phone" placeholder="xxx-xxx-xxxx" />
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Employer Fax
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control msktxt" asp-for="emp_fax_no" placeholder="xxx-xxx-xxxx" />
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Attorney Details</h5>
+
+                                                    <!-- Advanced Form Elements -->
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Attorney Name
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="attory_name" />
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Attorney Ph
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="attory_phone" placeholder="xxx-xxx-xxxx" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Attorney Email
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="email" class="form-control" asp-for="attory_email" />
+                                                        </div>
+
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Paralegal
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="paralegal" />
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Adjuster  Details</h5>
+
+                                                    <!-- Advanced Form Elements -->
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Adjuster  Name
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="adj_name" />
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Adjuster  Ph
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="adj_phone" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Adjuster  Email
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="adj_email" />
+                                                        </div>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Adjuster  Fax
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control msktxt" asp-for="adj_fax_no" placeholder="xxx-xxx-xxxx" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Alert Note</h5>
+                                                    <!-- Advanced Form Elements -->
+
+                                                    <div class="row mb-3">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Alert
+                                                        </label>
+                                                        <div class="col-sm-10">
+                                                            <textarea class="form-control globalauto" rows="10" asp-for="alert_note"></textarea>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
+                                        @*  @Html.Partial("_Page1", Model.Page1) *@
+                                        <div id="divPage1"></div>
+
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
+                                        @*  @Html.Partial("_Page2", Model.Page2) *@
+                                        <div id="divPage2"></div>
+
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-ne" role="tabpanel" aria-labelledby="contact-tab">
+                                        @* @Html.Partial("_NE", Model.NE) *@
+                                        <div id="divNE"></div>
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-p4" role="tabpanel" aria-labelledby="contact-tab">
+                                        @*  <div class="col-lg-12">
+                                        @Html.Partial("_Page3", Model.Page3)
+                                        </div> *@
+                                        <div id="divPage3"></div>
+                                    </div><!-- End Bordered Tabs -->
+                                    <div class="tab-pane fade" id="bordered-poc" role="tabpanel" aria-labelledby="poc-tab">
+                                        <div class="col-lg-12">
+                                            <div id="divPOC">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-other" role="tabpanel" aria-labelledby="other-tab">
+                                        <div class="col-lg-12">
+                                            @*  @Html.Partial("_OtherPage", Model.Other) *@
+                                            <div id="divOthers"></div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-ps" role="tabpanel" aria-labelledby="ps-tab">
+                                        <div class="col-lg-12" id="pocsummary">
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-doc" role="tabpanel" aria-labelledby="doc-tab">
+                                        <div class="col-lg-12">
+                                            @*   @Html.Partial("_documents", Model) *@
+                                            <div id="divDocuments"></div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-comments" role="tabpanel" aria-labelledby="comments-tab">
+                                        @*    @Html.Partial("_Comments", Model.Comment) *@
+                                        <div id="divComment"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Patient Details</h5>
+                        <div class="col-lg-12">
+
+                            <div class="row mb-3">
+                                <label class="col-sm-4">
+                                    <b> Name</b>
+                                </label>
+                                <div class="col-sm-8" id="pdName">
+                                    @{
+                                        var fullName = Model.lname + "," + Model.fname;
+                                    }
+                                    @fullName
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b> Location</b>
+                                </label>
+                                <div class="col-sm-8" id="pdLoc">
+                                    @Model.location
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b> Case Type</b>
+                                </label>
+                                <div class="col-sm-8" id="pdCT">
+                                    @Model.compensation
+                                    <input type="hidden" id="CTLbl" value="@Model.compensation" />
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4">
+                                    <b> DOB</b>
+                                </label>
+                                <div class="col-sm-8" id="pdDOB">
+                                    @{
+                                        var dob = Model.dob == null ? "" : Model.dob.Value.ToString("MM/dd/yyyy");
+                                    }
+                                    @dob
+
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4">
+                                    <b> Age</b>
+                                </label>
+                                <div class="col-sm-8" id="pdAge">
+                                    @Model.age
+
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b> DOA</b>
+                                </label>
+                                <div class="col-sm-8" id="pdDOA">
+                                    @{
+                                        var doa = Model.doa == null ? "" : Model.doa.Value.ToString("MM/dd/yyyy");
+                                    }
+                                    @doa
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b> DOS</b>
+                                </label>
+                                <div class="col-sm-8" id="pdDOS">
+                                    @{
+                                        var dos = Model.dov == null ? "" : Model.dov.Value.ToString("MM/dd/yyyy");
+                                    }
+                                    @dos
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b> Sex</b>
+                                </label>
+                                <div class="col-sm-8" id="pdGender">
+                                    @{
+
+                                        var gender = "";
+                                        if (Model.gender != null)
+                                            gender = PainTrax.Web.Helper.EnumHelper.GetDisplayName(Enum.Parse<PainTrax.Web.Helper.EnumHelper.Gender>(Model.gender));
+                                    }
+                                    @System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(gender.ToLower())
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b>Ins. Comp.</b>
+                                </label>
+                                <div class="col-sm-8">
+                                    @Model.prime_cmpname
+
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b> Claim#</b>
+                                </label>
+                                <div class="col-sm-8">
+                                    @Model.prime_claim_no
+
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b> Body Part</b>
+                                </label>
+                                <div class="col-sm-8">
+                                    @{
+                                        var bodypart = Model.Page1 != null ? Model.Page1.bodypart : "";
+
+                                        bodypart = string.IsNullOrEmpty(bodypart) ? "" : bodypart;
+                                        bodypart = PainTrax.Web.Helper.Common.ReplceCommowithAnd(bodypart);
+                                    }
+                                    @bodypart
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @{
+                    if (!string.IsNullOrEmpty(Model.alert_note))
+                    {
+                        <div class="card" id="alert_card">
+                            <div class="card-body">
+                                <h5 class="card-title">Alert Note</h5>
+                                <div class="col-lg-12">
+
+                                    <div class="row mb-3 alert alert-warning" id="alert_short">
+                                        @Model.alert_note
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Website Macros</h5>
+                        <div class="col-lg-12" style="max-height:250px; overflow-y:scroll;font-size:small">
+
+                            <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+
+                                        <th scope="col">Title</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model.listWebsiteMacros)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @item.name
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Procedure Performed</h5>
+                        <div class="col-lg-12">
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <textarea class="form-control" asp-for="procedure_performed" rows="5"></textarea>
+                                    <br>
+                                    <button type="button" class="btn btn-secondary" onclick="fnSaveProcedurePerformd()">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</main><!-- End #main -->
+
+<input type="hidden" id="hd-active-tab" />
+
+<div id="errorModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title">PainTrax</h4>
+                <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+            </div>
+            <div class="modal-body">
+                <p>Please Create IE First and than try to create document preview.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type='text/javascript' src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+
+<script>
+
+
+
+    var _ccitems = ('@ViewBag.ccmacroList').replace(/&quot;/ig, '"');
+    const ccitems = JSON.parse(_ccitems.replace(/[\n\r]/g, '\\n'));
+
+    //var _allitems = ('@ViewBag.allmacroList').replace(/&quot;/ig, '"');
+    var _allitems = ('@ViewBag.allmacroList').replace(/&quot;/ig, '"')
+        .replace(/&#x2B;/g, '+');
+    const allitems = JSON.parse(_allitems.replace(/[\n\r]/g, '\\n'));
+
+
+
+    function getFeedItems(queryText) {
+
+        // As an example of an asynchronous action, return a promise
+        // that resolves after a 100ms timeout.
+        // This can be a server request or any sort of delayed action.
+        return new Promise(resolve => {
+            setTimeout(() => {
+                const itemsToDisplay = allitems
+                    // Filter out the full list of all items to only those matching the query text.
+                    .filter(isItemMatching)
+                    // Return 10 items max - needed for generic queries when the list may contain hundreds of elements.
+                    .slice(0, 10);
+                resolve(itemsToDisplay);
+            }, 100);
+        });
+
+        function isItemMatching(item) {
+            // Make the search case-insensitive.
+            const searchString = queryText.toLowerCase();
+
+            // Include an item in the search results if the name or username includes the current user input.
+            return (
+                item.name.toLowerCase().includes(searchString) ||
+                item.id.toLowerCase().includes(searchString)
+            );
+        }
+    }
+
+
+    function getCCFeedItems(queryText) {
+
+        // As an example of an asynchronous action, return a promise
+        // that resolves after a 100ms timeout.
+        // This can be a server request or any sort of delayed action.
+        return new Promise(resolve => {
+            setTimeout(() => {
+                const itemsToDisplay = ccitems
+                    // Filter out the full list of all items to only those matching the query text.
+                    .filter(isItemMatching)
+                    // Return 10 items max - needed for generic queries when the list may contain hundreds of elements.
+                    .slice(0, 10);
+                resolve(itemsToDisplay);
+            }, 100);
+        });
+
+        function isItemMatching(item) {
+            // Make the search case-insensitive.
+            const searchString = queryText.toLowerCase();
+
+            // Include an item in the search results if the name or username includes the current user input.
+            return (
+                item.name.toLowerCase().includes(searchString) ||
+                item.id.toLowerCase().includes(searchString)
+            );
+        }
+    }
+
+    var _peitems = ('@ViewBag.pemacroList').replace(/&quot;/ig, '"');
+
+    const peitems = JSON.parse(_peitems.replace(/[\n\r]/g, '\\n'));
+
+    function getPEFeedItems(queryText) {
+
+        // As an example of an asynchronous action, return a promise
+        // that resolves after a 100ms timeout.
+        // This can be a server request or any sort of delayed action.
+        return new Promise(resolve => {
+            setTimeout(() => {
+                const itemsToDisplay = peitems
+                    // Filter out the full list of all items to only those matching the query text.
+                    .filter(isItemMatching)
+                    // Return 10 items max - needed for generic queries when the list may contain hundreds of elements.
+                    .slice(0, 10);
+                resolve(itemsToDisplay);
+            }, 100);
+        });
+
+        function isItemMatching(item) {
+            // Make the search case-insensitive.
+            const searchString = queryText.toLowerCase();
+
+            // Include an item in the search results if the name or username includes the current user input.
+            return (
+                item.name.toLowerCase().includes(searchString) ||
+                item.id.toLowerCase().includes(searchString)
+            );
+        }
+    }
+
+    function customItemRenderer(item) {
+
+
+        const itemElement = document.createElement('span');
+
+        itemElement.classList.add('custom-item');
+        itemElement.id = `mention-list-item-id-${item.userId}`;
+        itemElement.textContent = `${item.name} `;
+
+        return itemElement;
+    }
+
+    function handleSampleError(error) {
+
+    }
+
+
+    function fnPrint() {
+        var url = "@Url.Action("IEPrint", "Visit")?id=" + $("#hdIEId").val();
+
+        window.open(
+            url,
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
+    function fnSaveDefault() {
+        var url = "@Url.Action("SaveDefault", "Visit")?id=" + $("#hdIEId").val();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (data) {
+                $('#myModalMessage').modal('show');
+                $('#messBody').html("Details Saved.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error fetching physicians: " + error);
+            }
+        });
+    }
+
+    function fnSaveProcedurePerformd() {
+        var id = $("#hdIEId").val();
+        if (id != null && id != undefined) {
+            var pp = $("#procedure_performed").val();
+            $.ajax({
+                url: '@Url.Action("SaveProcedurePerformed", "Visit")',
+                type: 'GET',
+                data: { eId: id, pp: pp },
+                success: function (data) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html("Details Saved.");
+                },
+                error: function (xhr, status, error) {
+                    alert("Error fetching physicians: " + error);
+                }
+            });
+        }
+        else {
+            alert("Please Create Initial First.");
+        }
+    }
+</script>
+
+
+<script>
+    var dobAlertShown = false;
+        $('#dob').on('change', function () {
+        dobAlertShown = false;
+    });
+    $(document).ready(function () {
+
+
+        // $(".msktxt").inputmask("999-999-9999");
+        // $("#ssn").inputmask("999-99-9999");
+
+        $("body").addClass("toggle-sidebar");
+
+        var alertNote = $("#alert_note").val();
+
+        if (alertNote != '') {
+            $('.modal-title').text('Alert');
+            var myModal = new bootstrap.Modal(document.getElementById('myModalMessage'));
+            myModal.show();
+            // $('#myModalMessage').modal('show');
+            $('#messBody').html("<p>" + alertNote + "</p>");
+
+        }
+        $('#locationid').change(function () {
+
+            var locationid = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetPhysiciansByLocation", "Visit")',
+                type: 'GET',
+                data: { locationid: locationid },
+                success: function (data) {
+
+                    locationwisephysician("#physicianid", data)
+                },
+                error: function (xhr, status, error) {
+                    alert("Error fetching physicians: " + error);
+                }
+            });
+        });
+        function locationwisephysician(dropDownId, list, selectedId) {
+            $(dropDownId).empty();
+            $(dropDownId).append("<option value='0'>Select</option>")
+            $.each(list, function (index, row) {
+                $(dropDownId).append("<option value='" + row.value + "'>" + row.text + "</option>")
+            });
+        }
+
+        $("#btnSaveAll").click(function () {
+            var id = $('.tab-content .active').attr('id');
+
+            if (id === "bordered-home") {
+                if (isDetaildValid()) {
+
+                    if ($("#id").val() === "0") {
+                        var url = '@Url.Action("CheckPatientName", "Visit")';
+
+                        var model = {
+                            "fname": $("#fname").val(),
+                            "lname": $("#lname").val(),
+                            "dob": $("#dob").val(),
+                            "account_no": $("#account_no").val()
+                        }
+
+                        $.ajax({
+                            type: "Post",
+                            url: url,
+                            data: model,
+                            contentType: "application/x-www-form-urlencoded",
+                            success: function (data, status, xhr) {
+
+                                if (data.result === 1) {
+                                    $('#myModalMessage').modal('show');
+                                    $('#messBody').html('<p>We Aleady have Entry for this Patient. Please Generate New Case for this Patient.</p>');
+                                }
+                                else {
+                                    fnDetailsSave(null);
+
+
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                //alert("Error!" + xhr.status);
+                            },
+                        });
+                    } else {
+                        fnDetailsSave(null);
+                    }
+                }
+            }
+            else if (id === "bordered-profile") {
+                fnPage1Save(null);
+            }
+            else if (id === "bordered-contact") {
+                fnPage2Save(null);
+            }
+            else if (id === "bordered-ne") {
+                fnNESave(null);
+            }
+            else if (id === "bordered-p4") {
+                fnPage3Save(null);
+            }
+            else if (id === "bordered-other") {
+                fnOtherSave(null);
+            }
+            else if (id === "bordered-comments") {
+                fnSaveComment(null);
+            }
+
+        })
+
+        // $('.searchable-dropdown').select2({
+        //     placeholder: "-- Select ---",
+        //     allowClear: true
+        // });
+    });
+
+    $('#borderedTab a').on('click', function (e) {
+
+        var id = $('.tab-content .active').attr('id');
+
+        e.preventDefault();
+        var currentPaneId = $('.tab-content .active').attr('id'); // current pane ID (leaving)
+        var t = this;
+        var nextTabLink = this;
+        var selectedTabId = $(this).attr('id');
+        if (selectedTabId === 'home-tab')
+            $('#printButtonSOAP').show();
+        else
+            $('#printButtonSOAP').hide();
+
+
+        $("#hd-active-tab").val(id);
+
+        if (id === "bordered-home") {
+
+            $('#printButton').hide();
+            $('#defaultSaveButton').hide();
+
+            if (isDetaildValid()) {
+
+                if ($("#id").val() === "0") {
+                    var url = '@Url.Action("CheckPatientName", "Visit")';
+
+                    var model = {
+                        "fname": $("#fname").val(),
+                        "lname": $("#lname").val(),
+                        "dob": $("#dob").val(),
+                        "account_no": $("#account_no").val()
+                    }
+
+                    $.ajax({
+                        type: "Post",
+                        url: url,
+                        data: model,
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (data, status, xhr) {
+
+                            if (data.result === 1) {
+                                $('#myModalMessage').modal('show');
+                                $('#messBody').html('<p>We Aleady have Entry for this Patient. Please Generate New Case for this Patient.</p>');
+                            }
+                            else {
+                                fnDetailsSave(t);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            //alert("Error!" + xhr.status);
+                        },
+                    });
+                } else {
+                    fnDetailsSave(t);
+                }
+            }
+        }
+        else if (id === "bordered-profile") {
+            fnPage1Save(t);
+        }
+        else if (id === "bordered-contact") {
+            fnPage2Save(t);
+        }
+        else if (id === "bordered-ne") {
+            fnNESave(t);
+        }
+        else if (id === "bordered-p4") {
+            fnPage3Save(t);
+        }
+        else if (id === "bordered-other") {
+            fnOtherSave(t);
+        }
+        else if (id === "bordered-poc") {
+            $(t).tab('show');
+        }
+        else if (id === "bordered-ps") {
+            $(t).tab('show');
+        }
+        else if (id === "bordered-doc") {
+            $(t).tab('show');
+        }
+        else if (id === "bordered-comments") {
+            fnSaveComment(t);
+            // loadCommentPartial($("#id").val());
+        }
+        // ===== LOAD logic for the tab you are going to =====
+        if ($(nextTabLink).data('bs-target') === "#bordered-comments") {
+            loadCommentPartial($("#id").val());
+        }
+        if (isDetaildValid()) {
+            // Switch to the next tab
+            $(t).tab('show');
+        }
+    });
+
+    function loadCommentPartial(ieId) {
+        $.get('@Url.Action("LoadCommentPartial", "Visit")', { ie_id: ieId }, function (html) {
+            $("#commentPartialContainer").html(html);
+        });
+    }
+
+    function fnDetailsSave(t) {
+
+        var isnew = false;
+        // bootbox.confirm({
+
+        //     message: 'Are sure you want to save Details?',
+        //     swapButtonOrder: true,
+        //     buttons: {
+        //         confirm: {
+        //             label: 'Ok',
+        //             className: 'btn-primary'
+        //         },
+        //         cancel: {
+        //             label: 'Cancel',
+        //             className: 'btn btn-secondary'
+        //         }
+        //     },
+        //     callback: function (result) {
+
+        // if (result) {
+        var url = '@Url.Action("SaveDetails", "Visit")';
+
+
+        if ($("#id").val() == '0')
+            isnew = true;
+
+        var model = {
+            "id": $("#id").val(),
+            "patientid": $("#patientid").val(),
+            "locationid": $("#locationid").val(),
+            "providerid": $("#providerid").val(),
+            "dos": $("#dos").val(),
+            "doa": $("#doa").val(),
+            "old_dos": $("#hdOldDOS").val(),
+            "compensation": $("#compensation").val(),
+            "accidentType": $("#accidentType").val(),
+            "fname": $("#fname").val(),
+            "lname": $("#lname").val(),
+            "mname": $("#mname").val(),
+            "gender": $("#gender").val(),
+            "dob": $("#dob").val(),
+            "email": $("#email").val(),
+            "handeness": $("#handeness").val(),
+            "ssn": $("#ssn").val(),
+            "address": $("#address").val(),
+            "city": $("#city").val(),
+            "state": $("#state").val(),
+            "zip": $("#zip").val(),
+            "home_ph": $("#home_ph").val(),
+            "mobile": $("#mobile").val(),
+            "vaccinated": $("#vaccinated").val(),
+            "mc": $("#mc").val(),
+            "mc_details": $("#mc_details").val(),
+            "account_no": $("#account_no").val(),
+            "prime_cmpname": $("#prime_cmpname").val(),
+            "prime_address": $("#prime_address").val(),
+            "prime_phone": $("#prime_phone").val(),
+            "prime_claim_no": $("#prime_claim_no").val(),
+            "prime_policy_no": $("#prime_policy_no").val(),
+            "prime_WCB_group": $("#prime_WCB_group").val(),
+            "sec_WCB_group": $("#sec_WCB_group").val(),
+            "sec_cmpname": $("#sec_cmpname").val(),
+            "sec_address": $("#sec_address").val(),
+            "sec_phone": $("#sec_phone").val(),
+            "sec_claim_no": $("#sec_claim_no").val(),
+            "sec_policy_no": $("#sec_policy_no").val(),
+            "emp_name": $("#emp_name").val(),
+            "emp_address": $("#emp_address").val(),
+            "emp_phone": $("#emp_phone").val(),
+            "emp_fax_no": $("#emp_fax_no").val(),
+            "attory_name": $("#attory_name").val(),
+            "attory_phone": $("#attory_phone").val(),
+            "attory_fax_no": $("#attory_fax_no").val(),
+            "attory_email": $("#attory_email").val(),
+            "adj_name": $("#adj_name").val(),
+            "adj_phone": $("#adj_phone").val(),
+            "adj_email": $("#adj_email").val(),
+            "adj_fax_no": $("#adj_fax_no").val(),
+            "alert_note": $("#alert_note").val(),
+            "physicianid": $("#physicianid").val(),
+            "paralegal": $("#paralegal").val()
+        }
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data.status === 1) {
+                    $('#patientid').val(data.patintid);
+                    $('#id').val(data.ieid);
+                    $("#hdIEId").val(data.ieid);
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+                    fnShowPOCSummary();
+                    fnShowPOC();
+                    $('#printButton').show();
+                    $('#defaultSaveButton').show();
+
+
+                    if ($("#alert_note").val() !== '') {
+
+                        $("#alert_card").show();
+                        $("#alert_short").text($("#alert_note").val());
+                    }
+                    else {
+                        $("#alert_card").hide();
+                    }
+                    if (t !== null) {
+                        $(t).tab('show');
+
+
+                        // var age = calcAge($("#dob").val());
+                        // var doi = $("#doa").val();
+
+
+                        // if (doi != '') {
+                        //     doi = formatDate(doi);
+                        // }
+
+                        // var dos = $("#dos").val();
+
+                        // if (dos != '') {
+                        //     dos = formatDate(dos);
+                        // }
+
+
+                        // //var gender = $("#gender option:selected").text().toLowerCase();
+                        // var accidenttype = $("#accidentType option:selected").text().toLowerCase();
+                        // var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
+
+                        // var content = (ckHistory.getData());
+                        // //content = content.replace("#doi", doi == undefined ? "" : doi);
+                        // // content = content.replace("#age", age);
+                        // //content = content.replace("#gender", gender);
+                        // content = content.replace("#dos", dos == undefined ? "" : dos)
+                        // content = content.replace("#patientname", fullName == undefined ? "" : fullName);
+                        // content = content.replace("#lname", $("#lname").val());
+                        // content = content.replace("#fname", $("#fname").val());
+                        // content = content.replace("#ln", $("#lname").val());
+                        // content = content.replace("#fn", $("#fname").val());
+                        // content = content.replace("#accidenttype", accidenttype);
+                        // content = content.replace("#handedness", $("#handeness option:selected").text().toLowerCase());
+                        // ckHistory.data.set(content);
+
+                        // content = (ckAssessment.getData());
+                        // content = content.replace("#doi", doi);
+                        // //content = content.replace("#age", age);
+                        // //content = content.replace("#gender", gender);
+                        // ckAssessment.data.set(content);
+                    }
+
+                    // if (isnew) {
+                    //     // fnPage1Save(null);
+                    //     // fnPage2Save(null);
+                    //     // fnPage3Save(null);
+                    //     // fnNESave(null);
+                    //     //fnOtherSave(null);
+                    // }
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+        // }
+        // else {
+        //     if (t !== null)
+        //         $(t).tab('show');
+        //     fnShowPOC();
+        // }
+        //}
+        // });
+    }
+    function formatDate(inputDate) {
+
+        var date = inputDate.split('-');
+
+        // Extract date components
+        var month = parseInt(date[1]); // Months are zero based
+        var day = parseInt(date[2])
+        var year = date[0];
+
+        // Pad single digit month and day with leading zeros
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (day < 10) {
+            day = "0" + day;
+        }
+
+        // Return formatted date
+        return month + "/" + day + "/" + year;
+    }
+
+    // $(function () {
+    //     $("#dob").datepicker({
+    //         dateFormat: "mm/dd/yy" , // Setting the format to MM/DD/YYYY
+    //         changeMonth: true,
+    //         changeYear: true,
+    //         yearRange: "1900:2100"
+    //     });
+    //     // Initialize date picker for DOS
+    //     $("#dos").datepicker({
+    //         dateFormat: "mm/dd/yy", // Set the desired date format
+    //         changeMonth: true,
+    //         changeYear: true,
+    //         yearRange: "1900:2100"
+    //     });
+
+    //     // Initialize date picker for DOA
+    //     $("#doa").datepicker({
+    //         dateFormat: "mm/dd/yy",
+    //         changeMonth: true,
+    //         changeYear: true,
+    //         yearRange: "1900:2100"
+    //     });
+    // });
+    function calcAge(dateString) {
+        var birthday = +new Date(dateString);
+        return ~~((Date.now() - birthday) / (31557600000));
+    }
+
+    function isDetaildValid() {
+
+        if (requirValidation("lname") && requirValidation("fname") && requirValidation("dob") && requirValidation("locationid") && requirValidation("gender"))
+            return true;
+        else
+            return false;
+
+    }
+
+    // function requirValidation(id) {
+    //     var result = true;
+    //     var text = $("#" + id).val();
+
+    //     if (text.length === 0 || text === "0") {
+    //         $("#error-" + id).show();
+    //         result = false;
+    //     }
+    //     else {
+    //         $("#error-" + id).hide();
+
+    //     }
+    //     return result;
+    // }
+    function requirValidation(id) {
+        var result = true;
+        var text = $("#" + id).val();
+
+        if (text.length === 0 || text === "0") {
+            $("#error-" + id).show();
+            return false;
+        }
+
+        // ✅ Extra validation only for DOB
+        if (id === "dob") {
+
+            var selectedDate = new Date(text);   // yyyy-MM-dd format
+            var today = new Date();
+
+            var minDate = new Date("1900-01-01");
+
+            if (selectedDate < minDate) {
+                $("#error-" + id).text("DOB must be after 01/01/1900").show();
+                return false;
+            }
+
+            if (selectedDate > today) {
+                $("#error-" + id).text("DOB cannot be future date").show();
+                return false;
+            }
+        }
+
+        $("#error-" + id).hide();
+        return true;
+    }
+
+    function fnShowPOC() {
+        url = '@Url.Action("GetPOC", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPOC").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetPage1() {
+
+
+        var doi = $("#doa").val();
+
+
+        if (doi != '') {
+            doi = formatDate(doi);
+        }
+
+        var dos = $("#dos").val();
+
+        if (dos != '') {
+            dos = formatDate(dos);
+        }
+
+
+        var accidenttype = $("#accidentType option:selected").text().toLowerCase();
+        var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
+        var fname = $("#fname").val();
+        var lname = $("#lname").val();
+        var handeness = $("#handeness option:selected").text().toLowerCase();
+        var gender = $("#gender option:selected").text().toLowerCase();
+
+
+        url = '@Url.Action("GetPage1", "Visit")?doi=' + doi + '&gender=' + gender + '&dos=' + dos + '&accidenttype=' + accidenttype + '&fname=' + fname + '&lname=' + lname + '&handeness=' + handeness + '&patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPage1").html(data);
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetPage2() {
+        url = '@Url.Action("GetPage2", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPage2").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetPageNE() {
+        url = '@Url.Action("GetNE", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divNE").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetPage3() {
+        url = '@Url.Action("GetPage3", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPage3").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetComments() {
+        url = '@Url.Action("GetCommentPage", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divComment").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetDocumentList() {
+        url = '@Url.Action("GetDocuments", "Visit")?patientId=' + $("#patientid").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                $("#divDocuments").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetOthers() {
+        url = '@Url.Action("GetOthers", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                $("#divOthers").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+
+    function fnShowPOCSummary() {
+        var url = '@Url.Action("POCSummary", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                $("#pocsummary").html(data);
+            }
+        })
+    }
+
+    // function fnUpdateSidePanel() {
+
+    //     var fullname = $("#lname").val() + ' ' + $("#fname").val();
+    //     $('#pdName').text(fullname);
+
+    //     $('#pdCT').text($("#compensation option:selected").text());
+    //     $('#pdLoc').text($("#locationid option:selected").text());
+    //     $('#pdDOS').text(fngetAGE($("#dos").val()));
+    //     $('#pdDOS').text(fngetAGE($("#dos").val()));
+    //     $('#pdDOA').text(fngetAGE($("#doa").val()));
+    //     $('#pdGender').text($("#gender option:selected").text());
+
+    //     var dob = $('#dob').val();
+    //     var dos = $('#dos').val();
+    //     if (dob) {
+    //         var today = new Date(dos);
+    //         var birthDate = new Date(dob);
+    //         var age = today.getFullYear() - birthDate.getFullYear();
+    //         var monthDiff = today.getMonth() - birthDate.getMonth();
+
+    //         // Adjust age if birthday hasn't occurred yet this year
+    //         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    //             age--;
+    //         }
+
+    //         $('#pdAge').text(age);
+    //         $('#pdDOB').text(fngetAGE(dob));
+    //     }
+
+    // }
+    // function fnUpdateSidePanel() {
+
+    //     var dos = $('#dos').val();
+    //     var doa = $('#doa').val();
+    //     var dob = $('#dob').val();
+
+    //     var isDobValid = true; // 👈 flag
+
+    //     // ---------- DOA vs DOS validation ----------
+    //     if (dos && doa) {
+    //         if (new Date(doa) > new Date(dos)) {
+    //             alert('DOA cannot be greater than DOS');
+    //             $('#doa').val('');
+    //             $('#pdDOA').text('');
+    //             return;
+    //         }
+    //     }
+
+    //     // ---------- DOB validation ----------
+    //     if (dob && dob.length === 10) {
+    //         var birthDate = new Date(dob);
+    //         var todayDate = new Date();
+    //         todayDate.setHours(0, 0, 0, 0);
+
+    //         var minDate = new Date("1900-01-01");
+
+    //         if (birthDate < minDate) {
+    //             if (!dobAlertShown) {
+    //                 alert("DOB must be after 01/01/1900");
+    //                 dobAlertShown = true;
+    //             }
+    //             isDobValid = false;
+    //         }
+    //         else if (birthDate > todayDate) {
+    //             if (!dobAlertShown) {
+    //                 alert("DOB cannot be future date");
+    //                 dobAlertShown = true;
+    //             }
+    //             isDobValid = false;
+    //         }
+    //         else {
+    //             dobAlertShown = false; // reset once valid
+    //         }
+    //     }
+
+    //     // ---------- Existing UI logic ----------
+    //     var fullname = $("#lname").val() + ' ' + $("#fname").val();
+    //     $('#pdName').text(fullname);
+
+    //     $('#pdCT').text($("#compensation option:selected").text());
+    //     $('#pdLoc').text($("#locationid option:selected").text());
+
+    //     if (dos) $('#pdDOS').text(fngetAGE(dos));
+    //     if (doa) $('#pdDOA').text(fngetAGE(doa));
+
+    //     $('#pdGender').text($("#gender option:selected").text());
+
+    //     // ---------- Age calculation (ONLY if DOB is valid) ----------
+    //     if (dob && dos && isDobValid) {
+    //         var birthDate = new Date(dob);
+    //         var refDate = new Date(dos);
+
+    //         var age = refDate.getFullYear() - birthDate.getFullYear();
+    //         var monthDiff = refDate.getMonth() - birthDate.getMonth();
+
+    //         if (monthDiff < 0 || (monthDiff === 0 && refDate.getDate() < birthDate.getDate())) {
+    //             age--;
+    //         }
+
+    //         // ✅ Age alert only when DOB is valid
+    //         if (age > 90) {
+    //             alert('Age should not be greater than 90 years');
+    //         }
+
+    //         $('#pdAge').text(age);
+    //         $('#pdDOB').text(fngetAGE(dob));
+    //     }
+    // }
+                function validateDateStrict(dateStr, fieldLabel, blockFuture) {
+
+        // Accept only YYYY-MM-DD (what <input type="date"> returns)
+        var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+        if (!regex.test(dateStr)) {
+            alert(fieldLabel + " must be after 01/01/1900");
+            return null;
+        }
+
+        var parts = dateStr.split('-');
+        var year  = parseInt(parts[0], 10);
+        var month = parseInt(parts[1], 10);
+        var day   = parseInt(parts[2], 10);
+
+        var date = new Date(year, month - 1, day);
+
+        // Invalid calendar date
+        if (
+            date.getFullYear() !== year ||
+            date.getMonth() !== month - 1 ||
+            date.getDate() !== day
+        ) {
+            alert("Invalid " + fieldLabel);
+            return null;
+        }
+
+        // DOB cannot be future
+        if (blockFuture) {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (date > today) {
+                alert(fieldLabel + " cannot be future date");
+                return null;
+            }
+        }
+
+        return date;
+    }
+                           function fnUpdateSidePanel() {
+
+        var dob = $('#dob').val();
+        var dos = $('#dos').val();
+        var doa = $('#doa').val();
+
+        var dobDate = null;
+        var dosDate = null;
+        var doaDate = null;
+
+        // ---------- DOB ----------
+        if (dob) {
+            dobDate = validateDateStrict(dob, "DOB", true);
+            if (!dobDate) return;
+        }
+
+        // ---------- DOS ----------
+        if (dos) {
+            dosDate = validateDateStrict(dos, "DOS", false);
+            if (!dosDate) return;
+        }
+
+        // ---------- DOA ----------
+        if (doa) {
+            doaDate = validateDateStrict(doa, "DOA", false);
+            if (!doaDate) return;
+        }
+
+        // ---------- DOA vs DOS ----------
+        if (dosDate && doaDate && doaDate > dosDate) {
+            alert("DOA cannot be greater than DOS");
+
+            $('#doa').val('');      // ✅ clear ONLY DOA
+            $('#pdDOA').text('');
+
+            return;
+        }
+
+        // ---------- Side panel ----------
+        var fullname = $("#lname").val() + ' ' + $("#fname").val();
+        $('#pdName').text(fullname);
+
+        if (dos) $('#pdDOS').text(fngetAGE(dos));
+        if (doa) $('#pdDOA').text(fngetAGE(doa));
+
+        // ---------- Age ----------
+        if (dobDate && dosDate) {
+
+            var age = dosDate.getFullYear() - dobDate.getFullYear();
+            var m = dosDate.getMonth() - dobDate.getMonth();
+
+            if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
+                age--;
+            }
+
+            if (age > 90) {
+                alert("Age should not be greater than 90 years");
+            }
+
+            $('#pdAge').text(age);
+            $('#pdDOB').text(fngetAGE(dob));
+        }
+
+          $('#pdCT').text($("#compensation option:selected").text());
+          $('#pdLoc').text($("#locationid option:selected").text());
+          $('#pdGender').text($("#gender option:selected").text());
+    }
+    function fngetAGE(inputDate) {
+        if (inputDate) {
+            var date = new Date(inputDate);
+
+            // Extract month, date, and year
+            var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+            var day = date.getDate().toString().padStart(2, '0');
+            var year = date.getFullYear();
+
+            // Format date as MM/dd/yyyy
+            var formattedDate = month + '/' + day + '/' + year;
+
+            return formattedDate;
+        }
+        return '';
+    }
+
+    function fnCheckPatientNameOnly() {
+        var url = '@Url.Action("CheckPatientNameOnly", "Visit")';
+
+        var model = {
+            "fname": $("#fname").val(),
+            "lname": $("#lname").val(),
+            "mname": $("#mname").val(),
+            "account_no": $("#account_no").val()
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data.result === 1) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>We Aleady have Entry with this Patient Name.</p>');
+                }
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+</script>
+
+
+@*Auto Complete*@
+<script>
+    $(function () {
+
+        // $("#prime_cmpname").change(function () {
+        //     var companyName = $(this).val();
+        //     var url = "@Url.Action("GetInsuranceDetails", "Visit")";
+        //     if (companyName !== "") {
+        //         $.ajax({
+        //             url: url,
+        //             type: 'GET',
+        //             data: { companyName: companyName },
+        //             success: function (item) {
+        //                 console.log(item);
+
+        //                 // Example: fill fields
+        //                 $("#prime_address").val(item.address)
+        //                 $("#prime_phone").val(item.phone)
+        //             },
+        //             error: function () {
+        //                 alert("Error fetching insurance details");
+        //             }
+        //         });
+        //     }
+        // });
+
+        $("#prime_cmpname").autocomplete({
+            source: function (request, response) {
+
+                var url = "@Url.Action("InsCoAutoComplete", "AutoComplete")";
+
+                $.ajax({
+                    url: url,
+                    data: { "prefix": request.term },
+                    type: "POST",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                var item = i.item;
+
+                $("#prime_address").val(item.address1)
+                $("#prime_phone").val(item.telephone)
+
+
+            },
+            minLength: 1
+        });
+
+        $("#state").autocomplete({
+            source: function (request, response) {
+
+                var url = "@Url.Action("StateAutoComplete", "AutoComplete")";
+
+                $.ajax({
+                    url: url,
+                    data: { "prefix": request.term },
+                    type: "POST",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                var item = i.item;
+
+            },
+            minLength: 1
+        });
+
+
+        // $("#sec_cmpname").change(function () {
+        //     var companyName = $(this).val();
+        //     var url = "@Url.Action("GetInsuranceDetails", "Visit")";
+        //     if (companyName !== "") {
+        //         $.ajax({
+        //             url: url,
+        //             type: 'GET',
+        //             data: { companyName: companyName },
+        //             success: function (item) {
+        //                 console.log(item);
+
+        //                 // Example: fill fields
+        //                 $("#sec_address").val(item.address)
+        //                 $("#sec_phone").val(item.phone)
+        //             },
+        //             error: function () {
+        //                 alert("Error fetching insurance details");
+        //             }
+        //         });
+        //     }
+        // });
+
+        $("#sec_cmpname").autocomplete({
+            source: function (request, response) {
+
+                var url = "@Url.Action("InsCoAutoComplete", "AutoComplete")";
+
+                $.ajax({
+                    url: url,
+                    data: { "prefix": request.term },
+                    type: "POST",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                var item = i.item;
+
+                $("#sec_address").val(item.address1)
+                $("#sec_phone").val(item.telephone)
+
+
+            },
+            minLength: 1
+        });
+
+
+        $("#attory_name").autocomplete({
+            source: function (request, response) {
+
+                var url = "@Url.Action("AttornyAutoComplete", "AutoComplete")";
+
+                $.ajax({
+                    url: url,
+                    data: { "prefix": request.term },
+                    type: "POST",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                var item = i.item;
+
+                $("#attory_email").val(item.emailId)
+                $("#attory_phone").val(item.contactNo)
+                $("#paralegal").val(item.paralegal)
+
+            },
+            minLength: 1
+        });
+
+        $("#adj_name").autocomplete({
+            source: function (request, response) {
+
+                var url = "@Url.Action("AdjusterAutoComplete", "AutoComplete")";
+
+                $.ajax({
+                    url: url,
+                    data: { "prefix": request.term },
+                    type: "POST",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                var item = i.item;
+
+                $("#adj_email").val(item.emailaddress)
+                $("#adj_phone").val(item.telephone)
+                $("#adj_fax_no").val(item.fax)
+
+
+            },
+            minLength: 1
+        });
+
+        $(".globalauto").autocomplete({
+            source: function (request, response) {
+
+
+                var url = "@Url.Action("GlobalAutoComplete", "AutoComplete")";
+
+                $.ajax({
+                    url: url,
+                    data: { "prefix": request.term },
+                    type: "POST",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            },
+            select: function (e, i) {
+                e.preventDefault();
+
+                var item = i.item;
+                this.value = item.val;
+
+                //$('#vital').val(item.val);
+                return false;
+            },
+            minLength: 1
+        })
+
+    });
+
+    function autoclosepopup() {
+        $('#myModalMessage').data('hideInterval', setTimeout(function () {
+            $('#myModalMessage').modal('hide');
+        }, 1000));
+    }
+
+    /* New Function in Script*/
+    function DownloadPdf(id, fname, lname) {
+        var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
+        //alert(fname);
+        var checkboxes = $('.pdfCheckbox');
+        var txt_date = '';
+        var txt_surgery = '';
+        var txt_docName = '';
+        var txt_MCode_Proc = '';
+        var txtProcedureCode = '';
+        // Loop through each checkbox element
+        downloadurl = downloadurl + '?pdffile=Demo.pdf&id=' + id + '&txt_date=' + txt_date + '&txt_surgery=' + txt_surgery + '&txt_docName=' + txt_docName + '&txt_MCode_Proc=' + txt_MCode_Proc + '&txtProcedureCode=' + txtProcedureCode;
+        fetch(downloadurl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                console.log(response);
+                return response.blob();
+            })
+            .then(blob => {
+                // Handle the Excel file data here
+
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = lname + "," + fname + "_Demo.pdf";
+                link.click();
+            })
+            .catch(error => {
+                console.error('Error downloading Excel file:', error);
+            });
+
+    }
+
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabs = document.querySelectorAll('.nav-link');
+        const button = document.getElementById('printButtonSOAP');
+
+        // Function to show or hide button based on selected tab
+        function handleTabClick(e) {
+            const tabId = e.target.id;
+
+            if (tabId === 'home-tab') {
+                button.style.display = 'block'; // Show the button for specific tabs
+            } else {
+                button.style.display = 'none';  // Hide the button for others
+            }
+        }
+
+        // Add click event listener to each tab
+        tabs.forEach(tab => {
+            tab.addEventListener('click', handleTabClick);
+        });
+
+        // Initial check in case the page loads with an active tab
+        handleTabClick({ target: document.querySelector('.nav-link.active') });
+    });
+</script>

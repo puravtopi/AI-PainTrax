@@ -1,0 +1,151 @@
+﻿@model IEnumerable<PainTrax.Web.ViewModel.DaignoCodeVM>
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modeltitle">Select Diagnosis for @ViewBag.BodyPart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+
+        @{
+            if (Model != null)
+            {
+                @if (Model.Count() > 0)
+                {
+                    <table class="table table-hover" id="tblDiagnoCode">
+                        <thead>
+                            <tr>
+
+                                <th scope="col">#</th>
+                                <th>DiagnoCode</th>
+                                <th scope="col">Description</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in Model)
+                                {
+                                    var isChecked = item.IsSelect ? "checked" : "";
+                                    <tr>
+                                        <th scope="row"><input type="checkbox" @isChecked /></th>
+                                        <td>@item.DiagCode</td>
+                                        <td><input type="text" class="form-control" value="@item.Description" />
+                                            <input type="hidden" id="cmpid" value="@item.cmp_id" />
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No Data Found</p>
+                }
+            }
+            else
+            {
+                <p>No Data Found</p>
+            }
+        }
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btnDaignoCode">Save Changes</button>
+    </div>
+</div>
+
+
+<script>
+    // $("#btnDaignoCode").click(function () {
+
+    //     var daignoCodeDetails = "<ol>";
+
+
+    //     var myContentDaignosis = ckAssessment.getData();
+
+
+    //     $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
+
+
+    //         var row = $(this).closest("tr")[0];
+
+    //         if (myContentDaignosis.indexOf(row.cells[1].innerHTML) < 0) {
+
+    //             // daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
+    //             // daignoCodeDetails += " - " + row.cells[2].firstChild.value;
+    //             // daignoCodeDetails += "</li>";
+
+    //             daignoCodeDetails += "<li>" + row.cells[2].firstChild.value;
+    //             daignoCodeDetails += " - " + row.cells[1].innerHTML;
+    //             daignoCodeDetails += "</li>";
+    //         }
+    //     });
+    //     var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
+
+    //     ckAssessment.data.set(htmlDaignosis);
+
+    //     $('#daignoCodeModal').modal('hide');
+    //     return false;
+    // });
+
+
+    $("#btnDaignoCode").click(function () {
+
+        //var daignoCodeDetails = "<ul style='list-style-type: none;'>";
+        var daignoCodeDetails = "";
+        var htmlDaignosis = "";
+
+         var cmpid = $("#cmpid").val();
+
+        var myContentDaignosis = ckAssessment.getData();
+        if (cmpid === "13") {
+             daignoCodeDetails = "<ol>";
+             $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
+
+            debugger;
+            var row = $(this).closest("tr")[0];
+
+            if (myContentDaignosis.indexOf(row.cells[2].firstChild.value) < 0) {
+
+            daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
+            daignoCodeDetails += "  " +row.cells[2].firstChild.value;
+            daignoCodeDetails += "</li>";
+             }
+        });
+        htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
+         }
+         else{
+        $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
+
+            debugger
+            var row = $(this).closest("tr")[0];
+
+            if (myContentDaignosis.indexOf(row.cells[2].firstChild.value) < 0) {
+
+                // daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
+                // daignoCodeDetails += " - " + row.cells[2].firstChild.value;
+                // daignoCodeDetails += "</li>";
+
+                daignoCodeDetails += "<p>" + row.cells[2].firstChild.value;
+                daignoCodeDetails += " - " + row.cells[1].innerHTML;
+                daignoCodeDetails += "</p>";
+            }
+        });
+        htmlDaignosis = myContentDaignosis + daignoCodeDetails ;
+        }
+
+        // var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ul>";
+        //var htmlDaignosis = myContentDaignosis + daignoCodeDetails;
+        ckAssessment.data.set(htmlDaignosis);
+
+        $('#daignoCodeModal').modal('hide');
+        return false;
+    });
+
+   
+</script>

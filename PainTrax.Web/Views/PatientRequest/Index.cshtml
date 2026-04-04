@@ -1,0 +1,193 @@
+﻿@model IList<PainTrax.Web.Models.InitialIntakeAI>
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Patient Request</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">Patient Request</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Patient Request</h5>
+                            </div>
+                            <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+                                <button type="button" onclick="fnShowModel()">Send Request</button>
+                            </div>
+                        </div>
+
+                        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Mobile</th>
+                                    <th scope="col">Request Date</th>
+                                    <th scope="col">Submit Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Count() > 0)
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+
+                                            <td>@item.Location</td>
+                                            <td>@item.FN</td>
+                                            <td>@item.LN</td>
+                                            <td>@item.Email</td>
+                                            <td>@item.Mobile</td>
+                                            <td>@item.SendDate</td>
+                                            <td>@item.PatientSubmitDate</td>
+                                            <td>
+                                                @{
+                                                    if (item.PatientSubmitDate != null)
+                                                    {
+                                                        <button type="button" class="btn" onclick="fnView(@item.LocationId,@item.Id)">View</button>
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="4"><p>No data found</p></td></tr>
+
+                                }
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div id="content"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div class="modal fade" id="fuModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modeltitle">Patient Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form id="patientForm">
+
+                    <!-- Patient Name -->
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <select id="LocationId" class="form-select" asp-items="@ViewBag.locList"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Patient First Name</label>
+                        <input type="text" id="PatientFName" class="form-control" placeholder="Enter name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Patient Last Name</label>
+                        <input type="text" id="PatientLName" class="form-control" placeholder="Enter name" required />
+                    </div>
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="Email" class="form-control" placeholder="Enter email" />
+                    </div>
+
+                    <!-- Mobile Number -->
+                    <div class="mb-3">
+                        <label class="form-label">Mobile No</label>
+                        <input type="text" id="MobileNo" class="form-control" placeholder="Enter mobile number" maxlength="10" />
+                    </div>
+                    @*  *@
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnSendRequest()">Send</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+    function fnShowModel() {
+        $("#fuModal").modal('show');
+    }
+
+    function fnView(locId,id)
+    {
+            var url='@Url.Action("AIInitialIntake", "IntakeForm")?locId='+ locId+'&id='+id;
+            window.location.href=url;
+    }
+
+        function fnSendRequest() {
+
+        var data = {
+            LocationId: $('#LocationId').val(),
+            FirstName: $('#PatientFName').val(),
+            LastName: $('#PatientLName').val(),
+            Email: $('#Email').val(),
+            Mobile: $('#MobileNo').val()
+        };
+
+        // Basic validation
+        if (!data.FirstName || !data.Email) {
+            alert("First Name and Email are required");
+            return;
+        }
+        var url= '@Url.Action("SendRequest", "PatientRequest")';
+        var redirecturl= '@Url.Action("Index", "PatientRequest")';
+        $.ajax({
+            url: url,  // Controller/Action
+            type: 'POST',
+            data: data,
+            success: function (res) {
+                alert("Saved Successfully");
+                $('#patientForm')[0].reset();
+                $('#fuModal').modal('hide');
+                window.location.href=redirecturl;
+            },
+            error: function () {
+                alert("Error occurred");
+            }
+        });
+    }
+
+</script>

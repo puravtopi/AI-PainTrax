@@ -1,0 +1,403 @@
+﻿@model PainTrax.Web.Models.tbl_groups
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Group</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Group">List</a></li>
+                <li class="breadcrumb-item active">Edit</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        @*<h5 class="card-title">Add Designation</h5>*@
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Edit Group</h5>
+                            </div>
+                            @*   <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+
+                            <a class="btn btn-primary" asp-action="Index" asp-controller="Group">Cancel</a>
+
+                            </div> *@
+                        </div>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="Edit" asp-controller="Group" id="frmEdit">
+
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="CreatedBy" />
+                            <input type="hidden" asp-for="CreatedDate" />
+                            <input type="hidden" asp-for="cmp_id" />
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="Title" class="col-md-4 col-lg-3 col-form-label">Group Name</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control requred" asp-for="Title">
+                                            <span asp-validation-for="Title" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="Location_ids" class="col-md-4 col-lg-3 col-form-label">Locations</label>
+                                        <div class="row mb-9">
+
+                                            <div class="col-md-3 col-lg-3">
+
+                                                <div class="form-check">
+
+                                                    <input class="form-check-input" type="checkbox" id="chkall_location">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            @{
+                                                var i = 0;
+                                                var chk = "";
+
+                                            }
+                                            @foreach (var item in Model.LocationList)
+                                            {
+                                                { chk = item.IsChecked ? "checked" : ""; }
+
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Id" id="id_l_@i">
+                                                        <input class="form-check-input clslocation" type="checkbox" id="chk_l_@i" value="@item.IsChecked" @chk>
+                                                        <label class="form-check-label" for="@item.Id" id="item_l_@i">@item.Item</label>
+                                                    </div>
+                                                </div>
+                                                i++;
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="Location_ids" class="col-md-4 col-lg-3 col-form-label">Pages</label>
+                                        <div class="row mb-9">
+
+                                            <div class="col-md-3 col-lg-3">
+
+                                                <div class="form-check">
+
+                                                    <input class="form-check-input" type="checkbox" id="chkall_page">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            @{
+                                                i = 0;
+                                                chk = "";
+                                            }
+                                            @foreach (var item in Model.PagesList)
+                                            {
+                                                { chk = item.IsChecked ? "checked" : ""; }
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Id" id="id_p_@i">
+                                                        <input class="form-check-input clspage" type="checkbox" id="chk_p_@i" value="@item.IsChecked" @chk>
+                                                        <label class="form-check-label" for="@item.Id" id="item_p_@i">@item.Item</label>
+                                                    </div>
+                                                </div>
+                                                i++;
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="reports_ids" class="col-md-4 col-lg-3 col-form-label">Reports</label>
+                                        <div class="row mb-9">
+
+                                            <div class="col-md-3 col-lg-3">
+
+                                                <div class="form-check">
+
+                                                    <input class="form-check-input" type="checkbox" id="chkall_report">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            @{
+                                                i = 0;
+                                                chk = "";
+                                            }
+                                            @foreach (var item in Model.ReportsList)
+                                            {
+                                                { chk = item.IsChecked ? "checked" : ""; }
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Id" id="id_r_@i">
+                                                        <input class="form-check-input clsreport" type="checkbox" id="chk_r_@i" value="@item.IsChecked" @chk>
+                                                        <label class="form-check-label" for="@item.Id" id="item_r_@i">@item.Item</label>
+                                                    </div>
+                                                </div>
+                                                i++;
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="role_ids" class="col-md-4 col-lg-3 col-form-label">Role</label>
+                                        <div class="row mb-9">
+
+                                            <div class="col-md-3 col-lg-3">
+
+                                                <div class="form-check">
+
+                                                    <input class="form-check-input" type="checkbox" id="chkall_role">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            @{
+                                                i = 0;
+                                                chk = "";
+                                            }
+                                            @foreach (var item in Model.RoleList)
+                                            {
+                                                { chk = item.IsChecked ? "checked" : ""; }
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Id" id="id_ro_@i">
+                                                        <input class="form-check-input clsrole" type="checkbox" id="chk_ro_@i" value="@item.IsChecked" @chk>
+                                                        <label class="form-check-label" for="@item.Id" id="item_ro_@i">@item.Item</label>
+                                                    </div>
+                                                </div>
+                                                i++;
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="pages_ids" class="col-md-4 col-lg-3 col-form-label">Form</label>
+                                        <div class="row mb-9">
+
+
+                                            @{
+                                                ViewBag.Title = "PDF Files by Folder";
+                                                var filesByFolder = ViewBag.FilesByFolder as Dictionary<string, List<string>>;
+                                                var f = 1;
+                                            }
+
+                                            @foreach (var folder in filesByFolder)
+                                            {
+                                                <button type="button" class="collapsible" onclick="toggleContent('@folder.Key');">
+                                                    <span id="@folder.Key-sign" class="sign">+</span> @folder.Key
+                                                </button>
+                                                <div class="row @folder.Key-content" style="display:none;">
+                                                    <div class="row mb-9">
+                                                        <div class="form-check">
+
+                                                            <input class="form-check-input" type="checkbox" id="chkall_@f" onclick="checkAllForm(@f)">
+                                                            <label class="form-check-label">Check All</label>
+                                                        </div>
+                                                        @foreach (var pdf in folder.Value)
+                                                        {
+                                                            { chk = Model.form_name.Contains(pdf) ? "checked" : ""; }
+                                                            <div class="col-md-3 col-lg-3">
+
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="pdfCheckbox" name="pdfCheckbox" value="@pdf" class="pdfCheckbox chk_@f" @chk />@pdf
+
+                                                                </div>
+                                                            </div>
+
+                                                        }
+                                                        @{
+                                                            f = f + 1;
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+
+                                        <div class="col-sm-10">
+                                            <button type="button" onclick="fnSave()" class="btn btn-primary">Save</button>
+                                            <a class="btn btn-primary" asp-action="Index" asp-controller="Group">Back</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+
+    var cntLoc = '@Model.LocationList.Count()';
+    var cntPages = '@Model.PagesList.Count()';
+    var cntReports = '@Model.ReportsList.Count()';
+    var cntRoles = '@Model.RoleList.Count()';
+    function fnSave() {
+
+        var url = $("#frmEdit").attr("action");
+        var redirecturl = '@Url.Action("Index", "Group")';
+
+        var listLocation = [];
+
+        for (var i = 0; i < parseInt(cntLoc); i++) {
+            var data = {};
+            data.Id = $("#id_l_" + i).val();
+            data.Item = $("#item_l_" + i).text();
+            data.IsChecked = $("#chk_l_" + i).prop('checked');
+
+            listLocation.push(data);
+        }
+
+        var listPages = [];
+
+        for (var i = 0; i < parseInt(cntPages); i++) {
+            var data = {};
+            data.Id = $("#id_p_" + i).val();
+            data.Item = $("#item_p_" + i).text();
+            data.IsChecked = $("#chk_p_" + i).prop('checked');
+
+            listPages.push(data);
+        }
+
+        var listReports = [];
+
+        for (var i = 0; i < parseInt(cntReports); i++) {
+            var data = {};
+            data.Id = $("#id_r_" + i).val();
+            data.Item = $("#item_r_" + i).text();
+            data.IsChecked = $("#chk_r_" + i).prop('checked');
+
+            listReports.push(data);
+        }
+
+        var listRoles = [];
+
+        for (var i = 0; i < parseInt(cntRoles); i++) {
+            var data = {};
+            data.Id = $("#id_ro_" + i).val();
+            data.Item = $("#item_ro_" + i).text();
+            data.IsChecked = $("#chk_ro_" + i).prop('checked');
+
+            listRoles.push(data);
+        }
+
+        var listForms = [];
+
+        var checkboxes = $('.pdfCheckbox');
+        checkboxes.each(function (index, checkbox) {
+            // Do something with the checkbox element
+            var isChecked = $(checkbox).prop('checked');
+
+            if (isChecked) {
+
+                var data = {};
+                data.Id = $(checkbox).val();
+                data.Item = $(checkbox).val();
+                data.IsChecked = isChecked;
+
+                listForms.push(data);
+            }
+        })
+
+        var model = {
+            "Title": $("#Title").val(),
+            "LocationList": listLocation,
+            "PagesList": listPages,
+            "ReportsList": listReports,
+            "RoleList": listRoles,
+            "FormList": listForms,
+            "Id": $("#Id").val()
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+
+
+                if (data === 1) {
+                    window.location = redirecturl;
+                }
+                else
+                    alert("Error in Data Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+
+    function checkAllForm(val) {
+
+        var cntrlId = 'chkall_' + val;
+
+        if ($('#' + cntrlId).prop('checked')) {
+            $('.chk_' + val).prop('checked', true);
+        }
+        else {
+            $('.chk_' + val).prop('checked', false);
+        }
+    }
+
+    $('#chkall_location').change(function () {
+        $('.clslocation').prop('checked', this.checked);
+    });
+
+    $('#chkall_page').change(function () {
+        $('.clspage').prop('checked', this.checked);
+    });
+
+    $('#chkall_report').change(function () {
+        $('.clsreport').prop('checked', this.checked);
+    });
+
+    $('#chkall_role').change(function () {
+        $('.clsrole').prop('checked', this.checked);
+    });
+
+
+    function toggleContent(contentClass) {
+        var content = document.querySelector('.' + contentClass + '-content');
+        var sign = document.getElementById(contentClass + '-sign');
+        if (content.style.display === "block") {
+            content.style.display = "none";
+            sign.innerText = "+";
+        } else {
+            content.style.display = "block";
+            sign.innerText = "-";
+        }
+    }
+</script>
+
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

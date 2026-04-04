@@ -1,0 +1,175 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@{
+    ViewData["Title"] = "Bulk Pdf";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Bulk Pdf</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+<section class="section">
+
+    <div class="card">
+        <div class="card-body mt-4" >
+            <div class="row">
+                    <div class="col-md-6">
+                        <lable>Select Excel </lable><br />
+                        <div class="row">
+                            <form method="post" class="col-md-10" enctype="multipart/form-data" action="UploadExcel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                            <input type="file" name="excelFile" class="form-control" accept="xlsx" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="submit" class="btn btn-primary"  value="Upload" />
+                                    </div>
+                                </div>
+                            </form>
+                            <form method="post" class="col-md-2" enctype="multipart/form-data" action="ClearExcel">
+
+                                <div class="col-md-2">
+                                    <input type="submit" class="btn btn-primary" value="Clear" />
+                                </div>
+                                </form>
+                            </div>
+                        
+                        <lable>@ViewBag.excelFile</lable><br />
+                        <lable>Heads</lable><br />
+                        @{
+                            var columns = ViewBag.Columns as List<string>;
+                        }
+                        <select size="10" class="form-control" id="excelColumns">
+                            @if (columns != null)
+                            {
+                                foreach (var col in columns)
+                                {
+                                    <option value="@col">@col</option>
+                                }
+                            }
+                        </select>
+                        
+                    </div>
+
+                <div class="col-md-6">
+                    <lable>Select Pdf </lable><br />
+                        <div class="row ">
+                        <form class="col-md-10" enctype="multipart/form-data" action="UploadPdf" method="post">
+                                <div class="row">
+
+                                    <div class="col-md-9">
+                                        <input type="file" class="form-control" name="pdfFile" accept="pdf" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="submit" class="btn btn-primary" value="Upload" />
+                                    </div>
+                                </div>
+                            </form>
+
+                            <form method="post" class="col-md-2" enctype="multipart/form-data" action="ClearPdf">
+
+                                    <div >
+                                        <input type="submit" class="btn btn-primary" value="Clear" />
+                                    </div>
+                             </form>
+
+                         
+                        </div>
+                        <lable>@ViewBag.pdfFile</lable><br />
+                    <lable>TextBoxes</lable><br />
+                        <select size="10" class="form-control" id="pdfFields">
+                            @if (ViewBag.Fields != null)
+                            {
+                                foreach (string f in ViewBag.Fields)
+                                {
+                                    <option>@f</option>
+                                }
+                            }
+                    </select>
+                </div>
+                
+            </div>
+                <br /><br />
+                <div class="row">
+                    <form class="col-md-2" action="GenrateZip" method="post" >
+                        <input type="submit" class="btn btn-primary" value="Genrate" />
+                    </form>
+                    <div class="col-md-1">
+                        <input type="button" id="btnMap" class="btn btn-primary" value="Map" />
+                    </div>
+                   
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4">
+                                Filename Prefix
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="filePrefix" class="form-control"  placeholder="[Column1],[Column2]" value="@ViewBag.prefix" />
+                            </div>
+                            <div class="col-md-2">
+                                <input type="button" id="btnSet" class="btn btn-primary" value="Set" />
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <form class="col-md-3" action="DownloadMapPdf" method="post">
+                        <input type="submit" class="btn btn-primary" value="Download Mapped Pdf" />
+                    </form>
+                </div>
+            </div>
+    </div>
+    </section>
+</main>
+<script>
+    document.getElementById("btnMap").addEventListener("click", function () {
+
+        let excelCol = document.getElementById("excelColumns").value;
+        let pdfField = document.getElementById("pdfFields").value;
+
+        if (!excelCol || !pdfField) {
+            alert("Please select both Excel column and PDF field");
+            return;
+        }
+
+        fetch('/Pdf/MapField', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken':
+                    document.querySelector('input[name="__RequestVerificationToken"]')?.value
+            },
+            body: `excelColumn=${encodeURIComponent(excelCol)}&pdfFieldName=${encodeURIComponent(pdfField)}`
+        })
+        .then(res => res.json())
+        .then(data =>{ alert(data.message); window.location.reload();})
+        .catch(err => console.error(err));
+    });
+</script>
+
+
+<script>
+    document.getElementById("btnSet").addEventListener("click", function () {
+        var value = document.getElementById("filePrefix").value;
+
+        fetch('/Pdf/SetFilePrefix', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'prefix=' + encodeURIComponent(value)
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert("Saved");
+        });
+    });
+</script>

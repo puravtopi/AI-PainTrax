@@ -1,0 +1,7 @@
+The Patient {{PatientName}} ({{Gender}}), dominant hand {{DominantHand}},
+reports that on {{DOA}}, while working as {{JobTitle}},
+they sustained an injury when {{Incident}}.
+
+The incident occurred {{IncidentTypes}} and involved {{BodyPart}}.
+Since the incident, symptoms have been persistent and
+interfere with daily activities.

@@ -1,0 +1,301 @@
+﻿@model PainTrax.Web.Models.tbl_procedures
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Procedure</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Procedure">List</a></li>
+                <li class="breadcrumb-item active">Create</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        @*<h5 class="card-title">Add Designation</h5>*@
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Add Procedure</h5>
+                            </div>
+                            <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+
+                                
+
+                            </div>
+                        </div>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="Create" asp-controller="Procedure" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Position</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <select class="form-select" asp-for="position">
+                                                <option value="">Select</option>
+                                                <option value="Left">Left</option>
+                                                <option value="Right">Right</option>
+                                                <option value="Bilateral">Bilateral</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Display Order</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="number" class="form-control" asp-for="display_order">
+
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Muscle</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="hasmuscle"></textarea>
+
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Side</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="hassubprocedure"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">R_PEDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="pedesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">R_PDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="pdesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">S_CCDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="s_ccdesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">S_ADesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="s_adesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">S_PDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="s_pdesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">E-Heading</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="e_heading"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">E_PEDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="e_pedesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">E_PDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="e_pdesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Default Value for Sides</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <select class="form-select" aria-label="Default select example" asp-for="sidesdefault">
+                                                <option>Select</option>
+                                                <option value="Left">Left</option>
+                                                <option value="Right">Right</option>
+                                                <option value="Bilateral">Bilateral</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                  
+                                </div>
+                                <div class="col-lg-6">
+
+
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Body Part</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="text" class="form-control" asp-for="bodypart">
+                                            <span asp-validation-for="bodypart" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">R - Heading</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="text" class="form-control" asp-for="heading">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Medication</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="hasmedication"> </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">R_CCDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="ccdesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">R_ADesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="adesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">S - Heading</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="s_heading"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">S_PEDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="s_pedesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">E_CCDesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="e_ccdesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">E_ADesc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="e_adesc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Levels Default Value.</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <textarea class="form-control" asp-for="levelsdefault"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">MCODE</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="text" class="form-control" asp-for="mcode">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Desc</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="text" class="form-control" asp-for="mcode_desc">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3" style="display:none" >
+                                        <label class="col-md-4 col-lg-5 col-form-label">Upload Template</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="file" class="form-control" asp-for="upload_template" accept=".doc,.docx">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+                                        <label class="col-sm-3">Injection Description</label>
+                                        <div class="col-md-8" >
+                                            <textarea class="form-control" id="editor" asp-for="injection_description"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">                                 
+                                       
+                                        <div class="col-sm-1 form-check">
+                                            <input class="form-check-input" asp-for="sides" type="checkbox" />
+                                            <label class="form-check-label" for="sides">
+                                                Sides
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-1 form-check">
+                                            <input class="form-check-input" asp-for="haslevel" type="checkbox" />
+                                            <label class="form-check-label" for="haslevel">
+                                                Level
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-1 form-check">
+                                            <input class="form-check-input" asp-for="cf" type="checkbox" />
+                                            <label class="form-check-label" for="cf">
+                                                CF
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-1 form-check">
+                                            <input class="form-check-input" asp-for="pn" type="checkbox" />
+                                            <label class="form-check-label" for="pn">
+                                                PN
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-1 form-check">
+                                            <input class="form-check-input" asp-for="inout" type="checkbox" />
+                                            <label class="form-check-label" for="inout">
+                                                Sx Ctr
+                                            </label>
+                                        </div>
+                                        <div class=" col-sm-2 form-check">
+                                            <input class="form-check-input" asp-for="inhouseprocbit" type="checkbox" />
+                                            <label class="form-check-label" for="inhouseprocbit">
+                                                In-House
+                                            </label>
+                                        </div>
+                                       
+                                    </div>
+                                   
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <a class="btn btn-primary" asp-action="Index" asp-controller="Procedure">Back</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>

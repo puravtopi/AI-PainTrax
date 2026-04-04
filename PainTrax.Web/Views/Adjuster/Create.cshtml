@@ -1,0 +1,124 @@
+﻿@model PainTrax.Web.Models.tbl_adjuster
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Adjuster</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Adjuster">List</a></li>
+                <li class="breadcrumb-item active">Create</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        @*<h5 class="card-title">Add Designation</h5>*@
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Create Adjuster</h5>
+                            </div>
+                            <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+
+                               
+
+                            </div>
+                        </div>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="Create" asp-controller="Adjuster">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Adjuster</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="adjuster">
+                                            <span asp-validation-for="adjuster" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                         <label class="col-md-4 col-lg-3 col-form-label">Address1 </label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <textarea class="form-control" asp-for="address1" tabindex="3"></textarea>
+                                        </div>
+                                    </div>                                                                   
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Contact Person</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="contactperson">
+                                            <span asp-validation-for="contactperson" class="text-danger"></span>
+                                        </div>
+                                    </div> 
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="email" class="form-control" asp-for="emailaddress">
+                                            <span asp-validation-for="emailaddress" class="text-danger"></span>
+                                        </div>
+                                    </div>                    
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Zip</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="zip">
+                                            <span asp-validation-for="zip" class="text-danger"></span>
+                                        </div>
+                                    </div>                                   
+                                    <div class="row mb-3">
+
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <a class="btn btn-primary" asp-action="Index" asp-controller="Adjuster">Back</a>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Mobile No</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="telephone">
+                                            <span asp-validation-for="telephone" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                         <label class="col-md-4 col-lg-3 col-form-label">Address2 </label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <textarea class="form-control" asp-for="address2" tabindex="3"></textarea>
+                                        </div>
+                                    </div> 
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">City</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="city">
+                                            <span asp-validation-for="city" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">State</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="state">
+                                            <span asp-validation-for="state" class="text-danger"></span>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

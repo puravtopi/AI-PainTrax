@@ -1,0 +1,781 @@
+﻿@model MS.Models.tbl_pre
+<br />
+
+
+<style>
+    .clsPreop .ck-editor__editable_inline p {
+        margin: 0;
+    }
+
+    .clsPreop .ck.ck-reset.ck-editor.ck-rounded-corners {
+        max-height: 250px;
+        margin-bottom: 10px;
+        overflow-y: scroll
+    }
+</style>
+
+<div class="col-lg-12">
+
+
+    <input class="form-check-input " type="checkbox" id="chkLeftShoulder" onclick="fnBodyPart('LeftShoulderPreOP');" name="Left Shoulder" value="Left Shoulder" checked=@Convert.ToBoolean(Model.chkLeftShoulder) />
+    <label for="chkLeftShoulder"> Left Shoulder </label>
+
+
+    <input class="form-check-input " type="checkbox" id="chkRightShoulder" onclick="fnBodyPart('RightShoulderPreOP');" name="Right Shoulder" value="Right Shoulder" checked=@Convert.ToBoolean(Model.chkRightShoulder) />
+    <label for="chkRightShoulder"> Right Shoulder </label>
+
+
+    <input class="form-check-input " type="checkbox" id="chkLeftKnee" onclick="fnBodyPart('LeftKneePreOP');" name="Left Knee" value="Left Knee" checked=@Convert.ToBoolean(Model.chkLeftKnee) />
+    <label for="chkLeftKnee"> Left Knee </label>
+
+
+    <input class="form-check-input " type="checkbox" id="chkRightKnee" onclick="fnBodyPart('RightKneePreOP');" name="Right Knee" value="Right Knee" checked=@Convert.ToBoolean(Model.chkRightKnee) />
+    <label for="chkRightKnee"> Right Knee </label>
+
+
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CHIEFCOMPLAINT">
+            CHIEF COMPLAINT :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtHistoryPresentillness">@Model.txtHistoryPresentillness</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PRESENTILLNESS">
+            HISTORY OF PRESENT ILLNESS :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtPresentillness">@Model.txtPresentillness</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PRESENTCOMPLAINTS">
+            PRESENT COMPLAINTS :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtpresentcomplain">@Model.txtpresentcomplain</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastMedicalHistory">
+            Past Medical History :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtPastMedicalHistory">@Model.txtPastMedicalHistory</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastSurgicalHistory">
+            Past Surgical History :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtpastsurgicalhistory">@Model.txtpastsurgicalhistory</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CURRENTMEDICATIONS">
+            CURRENT MEDICATIONS :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtdailyMedications">@Model.txtdailyMedications</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Allergies">
+            Allergies :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtAllergies">@Model.txtAllergies</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#FH">
+            Family History :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtFamilyHistory">@Model.txtFamilyHistory</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#SH">
+
+            Social History :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtSH">@Model.txtSH</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#REVIEWOFSYSTEMS">
+            REVIEW OF SYSTEMS:
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtSocialHistory">@Model.txtSocialHistory</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PhysicalExamination">
+            Physical Examination:
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtPhysicalExamination">@Model.txtPhysicalExamination</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#DIAGNOSTICSTUDIES">
+            DIAGNOSTIC STUDIES:
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtDiagnosticImaging">@Model.txtDiagnosticImaging</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PREOPERATIVEDIAGNOSES">
+            DISABILITY:
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtAssestmentplan">@(@Model.txtAssestmentplan ?? "The patient is currently _____% and temporarily _____ partially/totally disabled.")</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PROPOSEDTREATMENT">
+            PROPOSED TREATMENT:
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtExaminedResult">@Model.txtExaminedResult</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Default">
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtDefault">@Model.txtDefault</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Note">
+            Note:
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
+                <textarea id="txtNote">@Model.txtNote</textarea>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="txtId_P1" value="@Model.id" />
+    <input type="hidden" id="hdnisfirst" />
+    <input type="hidden" id="SelectedBodyParthidden" />
+
+</div>
+
+
+<!-- End Large Modal-->
+
+
+
+
+<script src="~/assets/dist/bootstrap-tagsinput.min.js" asp-append-version="true"></script>
+<script src="~/assets/dist/bootstrap-tagsinput/bootstrap-tagsinput-angular.min.js" asp-append-version="true"></script>
+
+
+<script>
+
+    var txtHistoryPresentillness, txtpresentcomplain, txtPastMedicalHistory, txtpastsurgicalhistory, txtdailyMedications, txtAllergies, txtSocialHistory, txtPhysicalExamination, txtDiagnosticImaging, txtAssestmentplan, txtExaminedResult, txtDefault, txtNote, txtPresentillness, txtFamilyHistory, txtSH;
+
+
+
+    $(document).ready(function () {
+
+
+        ClassicEditor.create(document.querySelector('#txtHistoryPresentillness'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtHistoryPresentillness = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPresentillness'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtPresentillness = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+
+        ClassicEditor.create(document.querySelector('#txtpresentcomplain'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtpresentcomplain = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPastMedicalHistory'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtPastMedicalHistory = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtpastsurgicalhistory'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtpastsurgicalhistory = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtdailyMedications'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtdailyMedications = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtAllergies'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtAllergies = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+        ClassicEditor.create(document.querySelector('#txtFamilyHistory'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtFamilyHistory = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+        ClassicEditor.create(document.querySelector('#txtSH'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtSH = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtSocialHistory'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtSocialHistory = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtPhysicalExamination'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtPhysicalExamination = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtDiagnosticImaging'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtDiagnosticImaging = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtAssestmentplan'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtAssestmentplan = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtExaminedResult'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtExaminedResult = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtDefault'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtDefault = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+        ClassicEditor.create(document.querySelector('#txtNote'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtNote = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
+    });
+
+
+
+
+    function fnBodyPart(cntrl) {
+        debugger;
+        var SelectedBodyPart = "";
+
+        if ($("#chkLeftShoulder").prop("checked")) {
+            SelectedBodyPart += $("#chkLeftShoulder").val().replace(/\s+/g, '').toLowerCase() + ', ';
+        }
+        else { SelectedBodyPart = SelectedBodyPart.replace($("#chkLeftShoulder").val().replace(/\s+/g, '').toLowerCase() + ', ', ''); }
+
+
+        if ($("#chkRightShoulder").prop("checked")) {
+            SelectedBodyPart += $("#chkRightShoulder").val().replace(/\s+/g, '').toLowerCase() + ', ';
+        }
+        else { SelectedBodyPart = SelectedBodyPart.replace($("#chkRightShoulder").val().replace(/\s+/g, '').toLowerCase() + ', ', ''); }
+
+
+        if ($("#chkLeftKnee").prop("checked")) {
+            SelectedBodyPart += $("#chkLeftKnee").val().replace(/\s+/g, '').toLowerCase() + ', ';
+        }
+        else { SelectedBodyPart = SelectedBodyPart.replace($("#chkLeftKnee").val().replace(/\s+/g, '').toLowerCase() + ', ', ''); }
+
+
+        if ($("#chkRightKnee").prop("checked")) {
+            SelectedBodyPart += $("#chkRightKnee").val().replace(/\s+/g, '').toLowerCase() + ', ';
+        }
+        else { SelectedBodyPart = SelectedBodyPart.replace($("#chkRightKnee").val().replace(/\s+/g, '').toLowerCase() + ', ', ''); }
+
+        SelectedBodyPart = SelectedBodyPart.replace(/,\s*$/, "");
+
+        $("#SelectedBodyParthidden").val(SelectedBodyPart);
+        //$("#texens").val("tinkumaster");
+        // alert(cntrl);
+
+
+        // txtExaminedResult.Text = txtExaminedResult.Text.Replace("#BODYPART", selectedbodypart);
+        // txtPhysicalExamination.Text = txtPhysicalExamination.Text.Replace("#gender", convertgender);
+        // txtHistoryPresentillness.Text = node.SelectSingleNode("CC") == null ? txtHistoryPresentillness.Text.ToString().Trim() : node.SelectSingleNode("CC").InnerText;
+        // if (selectedbodypart.ToLower().Contains("shoulder")) {
+        //     txtpresentcomplain.Text = node.SelectSingleNode("PCSH") == null ? "" : node.SelectSingleNode("PCSH").InnerText;
+        // }
+        // else {
+        //     txtpresentcomplain.Text = node.SelectSingleNode("PCKN") == null ? "" : node.SelectSingleNode("PCKN").InnerText;
+        // }
+        // txtpresentcomplain.Text = txtpresentcomplain.Text.Replace("#BODYPART", selectedbodypart);
+        // txtHistoryPresentillness.Text = txtHistoryPresentillness.Text.Replace("#BODYPART", selectedbodypart).Replace("#DOE", hdndoe.Value).Replace("#DOA", hdndoa.Value);
+        // txtHistoryPresentillness.Text = txtHistoryPresentillness.Text.Replace("#CASETYPE", Convert.ToString(Session["CASETYPE"]));
+        // if (selectedbodypartsoap().ToLower().Contains("shoulder")) {
+        //     txtExaminedResult.Text += shouldertext;
+        // }
+        // else {
+        //     txtExaminedResult.Text += Kneetext;
+        // }
+
+
+
+
+
+        if ($('#chk' + cntrl.replace('PreOP', '')).prop("checked")) {
+
+            try {
+
+                var ExaminedResult = txtExaminedResult.getData();
+                var PhysicalExamination = txtPhysicalExamination.getData();
+                var HistoryPresentillness = txtHistoryPresentillness.getData();
+                var presentcomplain = txtpresentcomplain.getData();
+
+                var SocialHistory = txtSocialHistory.getData();
+                var DiagnosticImaging = txtDiagnosticImaging.getData();
+                //var Assestmentplan = txtAssestmentplan.getData();
+                var Default = txtDefault.getData();
+                var Note = txtNote.getData();
+                debugger;
+
+                var url = '@Url.Action("GetMacroDetails", "Visit")';
+
+
+                var model = {
+                    "bodyName": cntrl
+                }
+
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    data: model,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
+                        debugger;
+
+
+                        if (data.result === 1) {
+
+                            if ($("hdnisfirst") != "true") {
+                                $("hdnisfirst").val("true");
+
+                                SocialHistory = "<p>" + data.data[0].ros_desc + "</p>";
+                                DiagnosticImaging = "<p>" + data.data[0].ds_desc + "</p>";
+                                //Assestmentplan = "<p>" + data.data[0].ds_desc + "</p>";
+                                Default = "<p>" + data.data[0].drd_desc + "</p>";
+                                Note = "<p>" + data.data[0].drd_notes + "</p>";
+
+                            }
+
+                            HistoryPresentillness = "<p>" + data.data[0].cc_desc + "</p>"; //Replace("#BODYPART", selectedbodypart).Replace("#DOE", hdndoe.Value).Replace("#DOA", hdndoa.Value); Replace("#CASETYPE", Convert.ToString(Session["CASETYPE"]));
+                            presentcomplain = "<p>" + data.data[0].pc_desc + "</p>";
+
+                            ExaminedResult = "<p>" + data.data[0].pt_desc + "</p>"; //.replace("#BODYPART", selectedbodypart)
+                            PhysicalExamination = "<p>" + data.data[0].pe_desc + "</p>";  //convert gender
+                            // default for all the pages.
+                        }
+                        debugger;
+                        selectedbodypart = $("#SelectedBodyParthidden").val();
+
+
+                        var DummyDOE = $("#hddoe").val();
+                        // Split the date string into month, day, and year
+                        var dateParts = DummyDOE.split('/');
+
+                        // Create a new Date object using the split parts
+                        var dateObj = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]); // Month is 0-indexed
+
+                        // Format the date to "March, 05, 2025"
+                        var formattedDate = dateObj.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: '2-digit'
+                        });
+                        var DOE = formattedDate;
+                        var DOA = $("#hddoa").val();
+
+                        var Gender = $("#hdgender").val();
+                        var CASETYPE = $("#hdcasetype").val();
+                        var casetype1 = "";
+                        if (CASETYPE == "NF") { casetype1 = "motor vehicle"; }
+                        else { casetype1 = "work-related"; }
+                        var genderdetail = "";
+
+                        if (Gender == "Male") { genderdetail = "gentleman"; }
+                        else { genderdetail = "lady"; }
+
+                        ExaminedResult = ExaminedResult.replaceAll("#BODYPART", selectedbodypart);
+                        $('#txtExaminedResult').val(ExaminedResult);
+                        txtExaminedResult.data.set(ExaminedResult);
+                        PhysicalExamination = PhysicalExamination.replaceAll("#gender", genderdetail)
+                        $('#txtPhysicalExamination').val(PhysicalExamination);
+                        txtPhysicalExamination.data.set(PhysicalExamination);
+                        HistoryPresentillness = HistoryPresentillness.replaceAll("#BODYPART", selectedbodypart).replace("#DOE", DOE).replace("#DOA", DOA).replace("#CASETYPE", casetype1);
+                        $('#txtHistoryPresentillness').val(HistoryPresentillness);
+                        txtHistoryPresentillness.data.set(HistoryPresentillness);
+
+                        presentcomplain = presentcomplain.replaceAll("#BODYPART", selectedbodypart);
+                        $('#txtpresentcomplain').val(presentcomplain);
+                        txtpresentcomplain.data.set(presentcomplain);
+
+                        $('#txtSocialHistory').val(SocialHistory);
+                        txtSocialHistory.data.set(SocialHistory);
+
+                        $('#txtDiagnosticImaging').val(DiagnosticImaging);
+                        txtDiagnosticImaging.data.set(DiagnosticImaging);
+
+                        $('#txtDefault').val(Default);
+                        txtDefault.data.set(Default);
+
+                        $('#txtNote').val(Note);
+                        txtNote.data.set(Note);
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
+            }
+            catch (err) {
+            }
+        }
+    }
+
+    function isPage1Valid() {
+        var result = true;
+        result = requirValidation("history");
+
+        return result;
+    }
+
+    function fnPreOPSave(t) {
+        debugger;
+        //if (isPage1Valid()) {
+        var url = '@Url.Action("SavePre", "FUVisit")';
+        var model = {
+            "id": $("#txtId_P1").val(),
+            "PatientIE_ID": $("#id").val(),
+            "PatientFU_ID": $("#hdFUId").val(),
+            "chkLeftShoulder": $("#chkLeftShoulder").prop("checked"),
+            "chkRightShoulder": $("#chkRightShoulder").prop("checked"),
+            "chkLeftHip": null,
+            "chkRightHip": null,
+            "chkLeftKnee": $("#chkLeftKnee").prop("checked"),
+            "chkRightKnee": $("#chkRightKnee").prop("checked"),
+            "chkLeftAnkleFoot": null,
+            "chkRightAnkleFoot": null,
+            "txtHistoryPresentillness": txtHistoryPresentillness.getData(),
+            "txtpresentcomplain": txtpresentcomplain.getData(),
+            "txtPastMedicalHistory": txtPastMedicalHistory.getData(),
+            "txtpastsurgicalhistory": txtpastsurgicalhistory.getData(),
+            "txtdailyMedications": txtdailyMedications.getData(),
+            "txtAllergies": txtAllergies.getData(),
+            "txtFamilyHistory": txtFamilyHistory.getData(),
+            "txtSH": txtSH.getData(),
+            "txtpastaccideninjuries": null,
+            "txtSocialHistory": txtSocialHistory.getData(),
+            "txtPhysicalExamination": txtPhysicalExamination.getData(),
+            "txtDiagnosticImaging": txtDiagnosticImaging.getData(),
+            "txtAssestmentplan": txtAssestmentplan.getData(),
+            "txtExaminedResult": txtExaminedResult.getData(),
+            "txtDefault": txtDefault.getData(),
+            "txtNote": txtNote.getData(),
+            "txtPresentillness": txtPresentillness.getData(),
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    $("#txtId_P1").val(data);
+                    autoclosepopup();
+                    fnShowPOC();
+
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+        //}
+    }
+
+</script>

@@ -1,0 +1,448 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+
+<script>
+
+    $(document).ready(function () {
+        $("#tbl").DataTable({
+            columns: [
+                { data: 'appointmentDate' , "type": "date ",
+                        "render": function (value) {
+
+                            if (value === null) return "";
+
+                            var date = new Date(value);
+                            var month = date.getMonth() + 1;
+                            var dateofmonth = date.getDate().toString().length > 1 ? date.getDate() : "0" + date.getDate();
+                            return (month.toString().length > 1 ? month : "0" + month) + "/" + dateofmonth  + "/" + date.getFullYear();
+                        }},
+                { data: 'appointmentStart' },
+                { data: 'name' }, 
+                { data: 'home_ph' },
+                { data: 'location' },                
+                { data: 'ProviderName' },                
+                { data: 'status' },
+            ]
+        });
+     });
+
+    var myData = [
+    {
+        "id": 1,
+        "first_name": "John",
+        "last_name": "Doe"
+    }
+];
+  function getData() {
+         var apps = [];
+         
+           var url = '@Url.Action("GetReportAppointments","Appointment")';
+           $.ajax({
+            type: "Get",
+            url: url+'?location_id='+document.getElementById("location_id").value
+                    +'&status_id='+document.getElementById("status_id").value
+                    +'&provider_id='+document.getElementById("provider_id").value           
+                     +'&from_date='+document.getElementById("from_date").value            
+                    +'&to_date='+document.getElementById("to_date").value,            
+
+            contentType: "application/json; charset=utf-8",
+            
+             async: false,
+            success: function (data, status) {
+                apps =  data;
+                console.log(apps);
+                $('#tbl').dataTable().fnClearTable();
+                $('#tbl').dataTable().fnAddData(JSON.parse(data));              
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+         
+         return apps;
+     }
+    // function getExcel() {
+    //     var apps = [];
+
+    //     var url = '@Url.Action("GetExcelAppointments","Appointment")';
+    //     $.ajax({
+    //         type: "Get",
+    //         url: url + '?location_id=' + document.getElementById("location_id").value
+    //             + '&status_id=' + document.getElementById("status_id").value
+    //             + '&provider_id=' + document.getElementById("provider_id").value
+    //             + '&from_date=' + document.getElementById("from_date").value
+    //             + '&to_date=' + document.getElementById("to_date").value,
+    //         xhrFields: {
+    //             responseType: 'blob' // Set the response type to 'blob'
+    //         },
+           
+
+    //         success: function (data) {
+    //             var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //             // Create a link and trigger a download
+    //             var link = document.createElement('a');
+    //             link.href = window.URL.createObjectURL(blob);
+    //             link.download = 'appointments.xlsx';
+    //             link.click();
+    //             // $('#tbl').dataTable().fnClearTable();
+    //            // $('#tbl').dataTable().fnAddData(JSON.parse(data));
+    //         },
+    //         error: function (xhr, status, error) {
+    //             alert("Error!" + error);
+    //         },
+    //     });
+
+    //     return apps;
+    // }
+    function getExcel() {
+        var url = '@Url.Action("GetExcelAppointments","Appointment")';
+        url = url + '?location_id=' + document.getElementById("location_id").value
+            + '&status_id=' + document.getElementById("status_id").value
+            + '&provider_id=' + document.getElementById("provider_id").value
+            + '&from_date=' + document.getElementById("from_date").value
+            + '&to_date=' + document.getElementById("to_date").value;
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Handle the Excel file data here
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'Appointments.xlsx';
+                link.click();
+            })
+            .catch(error => {
+                console.error('Error downloading Excel file:', error);
+            });
+
+    }
+    function getPdf() {
+        var url = '@Url.Action("GetPdfAppointments","Appointment")';
+        url = url + '?location_id=' + document.getElementById("location_id").value
+            + '&status_id=' + document.getElementById("status_id").value
+            + '&provider_id=' + document.getElementById("provider_id").value
+            + '&from_date=' + document.getElementById("from_date").value
+            + '&to_date=' + document.getElementById("to_date").value;
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Handle the Excel file data here
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'Appointments.pdf';
+                link.click();
+            })
+            .catch(error => {
+                console.error('Error downloading Excel file:', error);
+            });
+
+    }
+
+
+    function bindList() {
+
+           var url = '@Url.Action("GetReportAppointments","Appointment")';
+           var data = getData();
+           console.log("Bindlist");
+           console.log(data);
+            $("#tbl").DataTable({
+                "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+                "pageLength": 25,
+                "processing": true, // for show progress bar
+                "serverSide": true, // for process server side
+                "filter": true, // this is for disable filter (search box)
+                "orderMulti": false, // for disable multiple column at once
+                //"data" :data,
+                "ajax": {
+                    "url": url,
+                    "type": "GET",
+                    "datatype": "json",
+                    "dataSrc":""
+                },
+                //"columnDefs":
+                //    [{
+                //        "targets": [0],
+                //        "visible": false,
+                //        "searchable": false
+                //    }],
+                "columns": [
+
+                    { "data": "fname", "fname": "fname", },
+                    { "data": "lname", "lname": "lname", "width": "300px" },
+                  
+                 
+
+                ]
+
+            });
+
+        }
+</script>
+<main id="main" class="main">
+  
+    <div class="pagetitle">
+      <h1>Scheduler Reports</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Scheduler Reports</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+  
+    <section class="section dashboard">
+      <div class="row">
+  
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+  
+  
+  
+          </div><!-- End Customers Card -->
+  
+  
+  
+          <!-- Recent Sales -->
+          <div class="col-12">
+            <div class="row">
+  
+              <!-- Sales Card -->
+              <div class="col-xxl-4 col-md-4">
+                <div class="card info-card revenue-card">
+  
+                  <div class="card-body">
+  
+                    <h5 class="card-title">Provider </h5>
+  
+                    <div class="row">
+                      <div>
+  
+                        <select name="provider_id" id="provider_id" class="form-control"   asp-items="@ViewBag.providerList"></select>                      </div>
+                    </div>
+  
+                  </div>
+  
+                </div>
+              </div><!-- End Sales Card -->
+  
+              <!-- Revenue Card -->
+              <div class="col-xxl-4 col-md-4">
+                <div class="card info-card revenue-card">
+  
+                  <div class="card-body">
+  
+                    <h5 class="card-title">Location </h5>
+  
+                    <div class="row">
+                      <div>
+                        <select name="location_id" id="location_id" class="form-control"   asp-items="@ViewBag.locList"></select>
+                      </div>
+                    </div>
+  
+                  </div>
+  
+                </div>
+              </div><!-- End Revenue Card -->
+  
+  
+              <div class="col-xxl-4 col-md-4">
+                <div class="card info-card revenue-card">
+  
+                  <div class="card-body">
+                    <h5 class="card-title">Status </h5>
+                       <select name="status_id" id="status_id" class="form-control"   asp-items="@ViewBag.statusList"></select>
+                    </div>
+  
+                </div>
+  
+              </div>
+            </div><!-- End Revenue Card -->
+            <div class="row">
+            <!-- Customers Card -->
+            <div class="col-xxl-6 col-xl-6">
+  
+              <div class="card info-card customers-card">
+  
+                <h6>&nbsp;</h6>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                      <h5>From</h5>
+                      <input type="date" class="form-control" name="from_date" id="from_date">
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                      <h5>To</h5>
+                      <input type="date" class="form-control" name="to_date" id="to_date">
+                      </select>
+  
+  
+                    </div>
+  
+  
+                  </div>
+  
+                </div>
+  
+              </div>
+  
+  
+            </div>
+            <div class="col-xxl-6 col-xl-6">
+  
+              <div class="card info-card customers-card">
+  
+                <h6>&nbsp;</h6>
+                <div class="card-body" style="text-align: center;" >
+                      <input type="button" class="btn btn-primary" name="" id="" onclick="getData()" value="Generate Report" >
+                      <input type="button" class="btn btn-primary" name="" id="" onclick="getPdf()" value="Generate PDF">
+                      <input type="button" class="btn btn-primary" name="" id="" onclick="getExcel()" value="Generate Excel" >
+                        @*             <a asp-action="GetExcelAppointments" asp-controller="Appointment" class="btn btn-primary">
+                                        Generate Excel
+                                    </a>
+ *@
+                      <h5>&nbsp;</h5>
+                </div>
+  
+              </div>
+  
+  
+            </div>
+          </div>
+  
+          </div>
+  
+          <div class="card recent-sales overflow-auto" id="caltab">
+  
+         
+            <div class="card-body">
+  
+              <table id="tbl" class="table table-bordered ">
+  
+                <thead>
+                
+                  <tr>
+                    <th style="width:100px">Date</th>
+                    <th style="width:100px">Time</th>
+                    <th style="width:300px">Name</th>
+                                    <th style="width:100px">Phone</th>
+                    <th>Location</th>
+                    <th>Proivider</th>
+                    <th style="width:150px">Status</th>
+                  </tr>
+                </thead>
+   @*             <tbody>
+                    <tr>
+                        <td>05/29/2023</td>
+                        <td>17:00 PM </td>
+                            
+                        <td>Lorum Ipsum <br>
+                          
+                        </td>    
+                        <td> Bayside, NY office  </td>
+                        <td>  PT, Chiro</td>
+                        <td>Scheduled </td>
+                    </tr>
+                
+                    <tr>
+                        <td>05/27/2023</td>
+                        <td>08:30 AM </td>
+                            
+                        <td>Lorum Ipsum <br>
+                          
+                        </td>    
+                        <td> Bayside, NY office  </td>
+                        <td>  PT, Chiro, Acupuncture</td>
+                        <td>Scheduled </td>
+                    </tr>
+                
+                    <tr>
+                        <td>05/26/2023</td>
+                        <td>11:00 AM </td>
+                            
+                        <td>Lorum Ipsum <br>
+                          
+                        </td>    
+                        <td> Bayside, NY office  </td>
+                        <td>  PT</td>
+                        <td>Scheduled </td>
+                    </tr>
+                
+                    <tr>
+                        <td>05/24/2023</td>
+                        <td>17:30 PM </td>
+                            
+                        <td>Lorum Ipsum <br>
+                          
+                        </td>    
+                        <td> Bayside, NY office  </td>
+                        <td>  PT</td>
+                        <td>Scheduled </td>
+                    </tr>
+                
+                    <tr>
+                        <td>05/24/2023</td>
+                        <td>11:00 AM </td>
+                            
+                        <td>Lorum Ipsum <br>
+                          
+                        </td>    
+                        <td> Bayside, NY office  </td>
+                        <td>  PT</td>
+                        <td>Scheduled </td>
+                    </tr>
+                
+                    <tr>
+                        <td>05/23/2023</td>
+                        <td>17:30 PM </td>
+                            
+                        <td>Lorum Ipsum <br>
+                          
+                        </td>    
+                        <td> Bayside, NY office  </td>
+                        <td>  PT</td>
+                        <td>Scheduled </td>
+                    </tr>
+   
+                </tbody>
+   *@           </table>
+  
+            </div>
+  
+          </div>
+  
+      
+  
+        </div><!-- End Recent Sales -->
+  
+      </div><!-- End Top Selling -->
+  
+      </div>
+      </div><!-- End Left side columns -->
+  
+      <!-- Right side columns -->
+  
+      </div>
+    </section>
+  
+  </main><!-- End #main -->

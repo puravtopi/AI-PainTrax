@@ -1,0 +1,82 @@
+﻿<main id="main" class="main">
+
+
+
+    <div class="pagetitle">
+        <h1>Print Report</h1>
+
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <br />
+                            <div class="col-md-12 col-lg-12" style="margin-top:10px">
+                                <button class="btn btn-warning" style="float:right;margin:10px" onclick="fnRefresh()"> Refresh</button>
+                                <button class="btn btn-info" style="float:right;margin:10px" onclick="fnDownaloadPDF()">Download PDF</button>
+                                <button class="btn btn-success  " style="float:right;margin:10px" onclick="fnDownaloadWord()">Download Word</button>
+                            </div>
+                        </div>
+                        <div id="fuReport">
+                            @Html.Raw(ViewBag.content)
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $("body").addClass("toggle-sidebar");
+    });
+
+    function fnRefresh() {
+        var url = '@ViewBag.url'.replace('amp;', '');
+
+        window.location = url;
+    }
+
+    function fnDownaloadPDF() {
+        var markup = $("#fuReport").html();
+    }
+
+    function fnDownaloadWord() {
+        var markup = $("#fuReport").html();
+        var url = '@Url.Action("DownloadWord", "FUVisit")';
+
+        var ieId = '@ViewBag.ieId';
+        var fuId = '@ViewBag.fuId';
+        var locId = '@ViewBag.locId';
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: { "htmlContent": markup, "ieId": ieId, "fuId": fuId },
+            beforeSend: function () { $("#overlay").fadeIn(300); },
+            complete: function () {
+                setTimeout(function () {
+                    $("#overlay").fadeOut(300);
+                }, 500);
+            },
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId + "&patientName=" + data.patientName + "&signatureUrl=" + data.signatureUrl + "&dos=" + data.dos + "&injFileName=" + data.injFileName;
+                window.location = downloadUrl
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+</script>

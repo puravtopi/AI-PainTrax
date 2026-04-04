@@ -1,0 +1,381 @@
+﻿<style>
+    .jstree-node.jstree-leaf .jstree-checkbox {
+        display: none !important;
+    }
+</style>
+@model PainTrax.Web.ViewModel.VisitVM
+<br />
+<div class="col-lg-12">
+
+    <div class="row mb-3">
+        <div id="jstree" style="width:80%">
+        </div>
+        <div class="col-md-12 col-lg-12">
+            <button id="downloadBtn" class="btn btn-primary" style="float:right;margin-left:10px;margin-bottom:10px;">Download selected Folders</button>
+            <button class="btn btn-primary" style="float:right;margin-left:10px;margin-bottom:10px;" data-bs-toggle="modal" data-bs-target="#importModal">Add Documents</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" style="border-inline-style:hidden" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:5%">#</th>
+                    <th scope="col">DocName</th>
+                    <th scope="col" style="width:9%">Action </th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Files</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row mb-3">
+                                <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Select Files</label>
+                                <div class="col-md-8 col-lg-9">
+                                    selected folder <label id="selectedfolder" style="color:red">Please Select Folder to upload</label>
+                                    <input type="file" multiple name="postedFile" id="postedFile" />
+                                    <p id="error-message" style="color: red; display: none;">Only image and PDF files are allowed!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <input type="hidden" name="selectedItems" id="selectedItems" />
+                    <input type="hidden" name="selectedParent" id="selectedParent" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" onclick="fnImportDocuments()" class="btn btn-primary">Upload</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div><!-- End Basic Modal-->
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        debugger
+        $('#jstree').on('check_node.jstree', function (e, data) {
+            debugger;
+            var i, j;
+            var selectedItems = [];
+            var parentid;
+            var viewdocurl = '@Url.Action("PreviewDoc", "Patientdocument")';
+            var downloadurl = '@Url.Action("Download", "Patientdocument")';
+            var deleteurl = '@Url.Action("DeleteDoc", "Patientdocument")';
+
+
+            for (i = 0, j = data.selected.length; i < j; i++) {
+
+                //Fetch the Id.
+                var id = data.selected[i];
+                if ($.isNumeric(data.instance.get_node(data.selected[i]).id)) {
+                    parentid = data.instance.get_node(data.selected[i]).text.split('(')[0];
+                }
+                else { parentid = data.instance.get_node(data.selected[i]).id.split('~')[1].split('$')[0]; }
+
+                //Remove the ParentId.
+                if (id.indexOf('-') != -1) {
+                    id = id.split("-")[1];
+                }
+
+                //Add the Node to the JSON Array.
+                selectedItems.push({
+                    text: data.instance.get_node(data.selected[i]).text,
+                    id: id,
+                    parent: data.selected[i].split("-")[0]
+                });
+
+            }
+
+            var currentNode = $("#jstree").jstree("get_selected");
+            var childrens = $("#jstree").jstree("children_d", currentNode);
+
+            $("#tbody").empty();
+
+            for (var i = 0; i < data.instance.get_node(data.selected[0]).children.length; i++) {
+
+                //parentid = data.instance.get_node(data.selected[0]).children[lineNo];
+                console.log(data.instance.get_node(data.selected[0]).children[i]);
+                var lineNo = i;
+                var markup = "<tr><td>" + (lineNo +1) + "</td>";//document id
+                markup += "<td>" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + "</td>";//docment name
+                markup += "<td> ";
+                var fileName = data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1];
+                var previewUrl = viewdocurl + "?filename=" + parentid + "~" + fileName;
+                var fileExtension = fileName.split('.').pop().toLowerCase();
+
+                // Check if the file is supported by Google Docs Viewer
+                if (['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].includes(fileExtension)) {
+                    previewUrl = "https://docs.google.com/viewer?url=" + encodeURIComponent(previewUrl) + "&embedded=true";
+                }
+                markup += ' <a href="' + viewdocurl + "?filename=" + parentid + "~" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + '" target="_blank"><i class="bi bi-eye-fill" data-bs-toggle="Preview File" data-bs-placement="bottom" data-bs-original-title="Preview File" aria-label="Preview File"></i></a>';
+                markup += ' <a href="' + downloadurl + "?filename=" + parentid + "~" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + '"><i class="bi bi-cloud-download-fill" data-bs-toggle="Download File" data-bs-placement="bottom" data-bs-original-title="Download File" aria-label="Download File"></i></a>';
+                markup += ' <a href="' + deleteurl + "?filename=" + parentid + "~" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + '"><i class="bi bi-x-circle-fill" data-bs-toggle="Delete File" data-bs-placement="bottom" data-bs-original-title="Delete File" aria-label="Delete File"></i></a>';
+                markup += " </td>";
+                markup += "</tr>";
+                tableBody = $("#tbody");
+                tableBody.append(markup);
+            }
+
+            //Serialize the JSON Array and save in HiddenField.
+            $('#selectedItems').val(JSON.stringify(selectedItems));
+            $('#selectedParent').val(JSON.stringify(parentid));
+            let labelElement = document.getElementById("selectedfolder");
+            labelElement.innerText = parentid;
+
+        }).jstree({
+            "core": {
+                "themes": {
+                    "variant": "large"
+                },
+                "data": @Html.Raw(Model.doc_json)
+                                                                                                                                                                                                                                                    },
+            "checkbox": {
+                        "keep_selected_style": false,
+                        "three_state": false,  // Disable cascading select
+                    "tie_selection": false  // Disable cascading select on child nodes
+                    },
+
+                    "plugins": ["checkbox","wholerow", "conditionalselect"],
+        });
+         // Download button click handler
+                $('#downloadBtn').click(function () {
+                    debugger;
+                    var selectedNodes = $('#jstree').jstree('get_checked',true);
+                     //var selectedNodes = $('#jstree').jstree('get_selected', true);
+
+                                          // Check if any nodes are selected
+            if (selectedNodes.length > 0){
+                var filenames = [];
+                 for (var i = 0; i < selectedNodes.length; i++) {
+                var node = selectedNodes[i];
+                console.log('Selected node:', node.text);  // Log the selected node's text
+
+
+                // Loop through each child of the current node
+                for (var j = 0; j < node.children.length; j++) {
+                    var childNode = node.children[j];  // Get the child node by ID
+
+                    filenames.push(childNode);
+                }
+            }
+                       var filenamesString = filenames.join(';');
+                       if(filenamesString == "")
+                       {
+                           alert("No files to download");
+                       }
+                       else
+                       {
+
+            // Construct the URL with the filenames string as a query parameter
+            var url = '@Url.Action("DownloadFilesAsZip", "Patientdocument")' + '?filenames=' + encodeURIComponent(filenamesString);
+
+            // Log the URL to the console to check if it's correct
+            console.log(url);
+
+            // Trigger the download by redirecting the browser to the URL
+            window.location.href = url;
+
+            }
+
+            } else {
+                alert("No files selected");
+            }
+                });
+    });
+
+    function ViewDocument(file) {
+        $("#loader").fadeIn();
+        var data = { FileName: file };
+        $.ajax({
+            type: "POST",
+            url: '/Patientdocument/PreviewDoc',
+            data: data,
+            dataType: "json"
+        }).done(function (data) {
+            var folderName = file.replace(".", "_");
+            $("#content").empty();
+            for (var i = 1; i <= data; i++) {
+                $("#content").append("<img src='/Content/" + folderName + "/page-" + i + ".png'/>");
+            }
+            $("#loader").fadeOut();
+        });
+    }
+    function fnImportDocuments() {
+        var formData = new FormData($('#uploadForm')[0]);
+        var url = '@Url.Action("ImportDocumentsData", "Visit")';
+      
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false, // Prevent jQuery from automatically transforming the data into a query string
+            contentType: false, // Use `multipart/form-data`
+            success: function (response) {
+                // Handle success
+                debugger
+                alert('Files uploaded successfully!');
+                //updateSelectedItems(response.updatedJson);
+                location.reload();
+              
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                alert('Error: ' + error);
+            }
+        });
+    }
+
+    // Function to update the selectedItems array and refresh the table
+    function updateSelectedItems(data) {
+        var i, j;
+        var selectedItems = [];
+        var parentid;
+        var viewdocurl = '@Url.Action("PreviewDoc", "Patientdocument")';
+        var downloadurl = '@Url.Action("Download", "Patientdocument")';
+        var deleteurl = '@Url.Action("DeleteDoc", "Patientdocument")';
+
+     debugger
+
+        for (i = 0, j = data.selected.length; i < j; i++) {
+
+            //Fetch the Id.
+            var id = data.selected[i];
+            if ($.isNumeric(data.instance.get_node(data.selected[i]).id)) {
+                parentid = data.instance.get_node(data.selected[i]).text.split('(')[0];
+            }
+            else { parentid = data.instance.get_node(data.selected[i]).id.split('~')[1].split('$')[0]; }
+
+            //Remove the ParentId.
+            if (id.indexOf('-') != -1) {
+                id = id.split("-")[1];
+            }
+
+            //Add the Node to the JSON Array.
+            selectedItems.push({
+                text: data.instance.get_node(data.selected[i]).text,
+                id: id,
+                parent: data.selected[i].split("-")[0]
+            });
+
+        }
+
+        var currentNode = $("#jstree").jstree("get_selected");
+        var childrens = $("#jstree").jstree("children_d", currentNode);
+
+        $("#tbody").empty();
+
+        for (var i = 0; i < data.instance.get_node(data.selected[0]).children.length; i++) {
+
+            //parentid = data.instance.get_node(data.selected[0]).children[lineNo];
+            console.log(data.instance.get_node(data.selected[0]).children[i]);
+            var lineNo = i;
+            var markup = "<tr><td>" + lineNo + "</td>";//document id
+            markup += "<td>" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + "</td>";//docment name
+            markup += "<td> ";
+            var fileName = data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1];
+            var previewUrl = viewdocurl + "?filename=" + parentid + "~" + fileName;
+            var fileExtension = fileName.split('.').pop().toLowerCase();
+
+            // Check if the file is supported by Google Docs Viewer
+            if (['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].includes(fileExtension)) {
+                previewUrl = "https://docs.google.com/viewer?url=" + encodeURIComponent(previewUrl) + "&embedded=true";
+            }
+            markup += ' <a href="' + viewdocurl + "?filename=" + parentid + "~" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + '" target="_blank"><i class="bi bi-eye-fill" data-bs-toggle="Preview File" data-bs-placement="bottom" data-bs-original-title="Preview File" aria-label="Preview File"></i></a>';
+            markup += ' <a href="' + downloadurl + "?filename=" + parentid + "~" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + '"><i class="bi bi-cloud-download-fill" data-bs-toggle="Download File" data-bs-placement="bottom" data-bs-original-title="Download File" aria-label="Download File"></i></a>';
+            markup += ' <a href="' + deleteurl + "?filename=" + parentid + "~" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + '"><i class="bi bi-x-circle-fill" data-bs-toggle="Delete File" data-bs-placement="bottom" data-bs-original-title="Delete File" aria-label="Delete File"></i></a>';
+            markup += " </td>";
+            markup += "</tr>";
+            tableBody = $("#tbody");
+            tableBody.append(markup);
+        }
+
+        //Serialize the JSON Array and save in HiddenField.
+        $('#selectedItems').val(JSON.stringify(selectedItems));
+        $('#selectedParent').val(JSON.stringify(parentid));
+        let labelElement = document.getElementById("selectedfolder");
+        labelElement.innerText = parentid;
+    }
+
+
+
+    // Function to render the table with updated selectedItems
+    function renderTable(selectedItems, parentid) {
+        $("#tbody").empty(); // Clear the table body
+
+        selectedItems.forEach(function (item, index) {
+            var markup = `<tr><td>${index + 1}</td>`;
+            markup += `<td>${item.text}</td>`;
+            markup += "<td>";
+
+            // Add actions
+            var previewUrl = `@Url.Action("PreviewDoc", "Patientdocument")?filename=${parentid}~${item.text}`;
+            markup += `<a href="${previewUrl}" target="_blank"><i class="bi bi-eye-fill"></i></a>`;
+            markup += `<a href="@Url.Action("Download", "Patientdocument")?filename=${parentid}~${item.text}"><i class="bi bi-cloud-download-fill"></i></a>`;
+            markup += `<a href="@Url.Action("DeleteDoc", "Patientdocument")?filename=${parentid}~${item.text}"><i class="bi bi-x-circle-fill"></i></a>`;
+            markup += "</td></tr>";
+
+            $("#tbody").append(markup);
+        });
+
+        // Update hidden fields and label
+        $('#selectedItems').val(JSON.stringify(selectedItems));
+        $('#selectedParent').val(parentid);
+        document.getElementById("selectedfolder").innerText = parentid;
+    }
+
+    
+
+</script>
+<script type="text/javascript">
+ 
+                document.getElementById('postedFile').addEventListener('change', function(event) {
+                  const files = event.target.files;
+                  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+                  let invalidFile = false;
+
+                  // Check if any selected file is invalid
+                  for (let i = 0; i < files.length; i++) {
+                    if (!allowedTypes.includes(files[i].type)) {
+                      invalidFile = true;
+                      break;
+                    }
+                  }
+
+                  // If an invalid file is found, show an error message and clear the input field
+                  if (invalidFile) {
+                    document.getElementById('error-message').style.display = 'block';
+                    event.target.value = ''; // Clear the input field
+                  } else {
+                    document.getElementById('error-message').style.display = 'none';
+                  }
+                });
+
+</script>
+@* "plugins": ["wholerow", "checkbox"] *@

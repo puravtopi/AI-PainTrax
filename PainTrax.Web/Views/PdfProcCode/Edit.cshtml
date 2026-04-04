@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@{
+    ViewData["Title"] = "Pdf Proc Code";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var clientCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+}
+
+@model tbl_pdfproccode
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Add Procedure Code</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+
+        <div class="card">
+            <div class="card-body">
+
+
+<form asp-action="Edit" method="post">
+    @Html.HiddenFor(m => m.id)
+    @Html.Partial("_Form")
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="/PdfProcCode/Index" class="btn btn-secondary">Back</a>
+</form>
+</div>
+</div>
+</section>
+</main>

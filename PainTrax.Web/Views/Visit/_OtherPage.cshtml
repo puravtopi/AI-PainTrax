@@ -1,0 +1,260 @@
+﻿@model MS.Models.tbl_ie_other
+@using PainTrax.Web.Helper;
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<style>
+    .dropdown {
+        position: relative;
+        width: 300px;
+        display: inline-block;
+    }
+
+        .dropdown select {
+            width: 100%;
+        }
+
+        .dropdown > * {
+            box-sizing: border-box;
+        }
+
+        .dropdown select {
+        }
+
+        .dropdown input {
+            position: absolute;
+            width: calc(100% - 20px);
+        }
+</style>
+
+<br />
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">OTHER</h5>
+
+        <input type="hidden" id="txtId_Other" value="@Model.id" />
+        <div class="row mb-3">
+            <label for="inputNumber" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10" id="divTreatment">
+
+                @foreach (var item in Model.listTreatmentMaster)
+                {
+                    var check = item.pre_select.Value ? "checked='checked''" : "";
+                    <div class="form-check">
+                        <input class="form-check-input " type="checkbox" id="@item.id" onclick="fnTreatmentDetails();" @check>
+                        <input type="text" value="@item.treatment_details" class="form-check-label form-control" onchange="fnTreatmentDetails();" id="chk_@item.id" for="@item.id" onclick="fnTreatmentDetails();">
+                    </div>
+                }
+
+
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Treatment">
+                Treatment
+            </label>
+            <div class="col-sm-10" style="height: fit-content;">
+                <input type="hidden" asp-for="treatment_details" />
+                <div id="div_treatment_desc">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+             <label for="note-1" class="col-sm-2 col-form-label">
+                Note1:
+            </label>
+            <div class="col-sm-10" style="height: fit-content;">
+            <input type="text" asp-for="note1" class="form-control" id="note1" />
+            </div>
+             <label for="note-1" class="col-sm-2 col-form-label">
+                Note2:
+            </label>
+            <div class="col-sm-10" style="height: fit-content;">
+                <input type="text" asp-for="note2" class="form-control" id="note2" />
+            </div>
+             <label for="note-3" class="col-sm-2 col-form-label">
+                Note3:
+            </label>
+            <div class="col-sm-10" style="height: fit-content;">
+                <input type="text" asp-for="note3" class="form-control" id="note3" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="inputNumber" class="col-sm-2 col-form-label">
+                FOLLOW UP
+            </label>
+            <div class="col-sm-4">
+                <section class="dropdown">
+                    <input type="text" asp-for="followup_duration" class="form-control"  style="width:88%" onchange="txtMe(this)" />
+                    <select id="ddl_followup_duration" class="form-select" onchange="this.previousElementSibling.value = this.value; this.previousElementSibling.focus();selectVal('followup_duration', this.value)">
+                        <option>2-4 weeks.</option>
+                        <option>4-6 weeks.</option>
+                        <option>6-8 weeks.</option>
+                    </select>
+                </section>
+
+            </div>
+            <label for="inputNumber" class="col-sm-2 col-form-label">
+                FOLLOW Date
+            </label>
+            <div class="col-sm-4">
+                <input type="date" asp-for="followup_date" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hidTreatmentIds" value="@Model.treatment_delimit" />
+    <input type="hidden" id="hidTreatmentDesc" value="@Model.treatment_delimit_desc" />
+</div>
+@{
+    var cmpId = HttpContextAccessor.HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+}
+
+<script>
+
+
+    var quillTreatment;
+
+    $(document).ready(function () {
+
+        quillTreatment = new Quill('#div_treatment_desc', {
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ['bold', 'italic', 'underline'],
+                    ['image', 'code-block']
+                ]
+            },
+            placeholder: 'Enter Treatment details',
+            theme: 'snow'  // or 'bubble'
+        });
+
+        var htmlTreatment = $("#treatment_details").val();
+        quillTreatment.container.firstChild.innerHTML = htmlTreatment
+    })
+
+    function fnOtherSave(t) {
+
+        if (t != null) {
+            // bootbox.confirm({
+
+            //     message: 'Are sure you want to save Details?',
+            //     swapButtonOrder: true,
+            //     callback: function (result) {
+
+            //         if (result) {
+                        OtherSave(t);
+            //         }
+            //         else {
+            //             $(t).tab('show');
+            //         }
+            //     }
+            // });
+        } else {
+            OtherSave(t);
+        }
+    }
+
+
+    function OtherSave(t) {
+
+        var url = '@Url.Action("SaveOther", "Visit")';
+
+        var model = {
+            "id": $("#txtId_Other").val(),
+            "treatment_details": quillTreatment.root.innerHTML,
+            "ie_id": $("#id").val(),
+            "patient_id": $("#patientid").val(),
+            "treatment_delimit": $("#hidTreatmentIds").val(),
+            "note1": $("#note1").val(),
+            "note2": $("#note2").val(),
+            "note3": $("#note3").val(),
+            "treatment_delimit_desc": $("#hidTreatmentDesc").val(),
+            "followup_duration": $("#followup_duration").val(),
+            "followup_date": $("#followup_date").val()
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+                    $("#txtId_Other").val(data);
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnTreatmentDetails() {
+        var strContent = '<ol>';
+        var strIds = '', strDesc = '';
+
+        $('input[type=checkbox]').each(function (i, e) {
+            // Check if the checkbox is selected
+            if (e.checked) {
+                var checkboxValue = $("#chk_" + e.id).val();
+
+                // Only append to strContent if checkboxValue is not undefined or empty
+                if (checkboxValue) {
+                    strContent += '<li>' + checkboxValue + '</li>';
+                    strIds += (strIds ? ',' : '') + e.id;  // Ensure no leading comma
+                    strDesc += (strDesc ? '^' : '') + checkboxValue;  // Ensure no leading ^ for first value
+                }
+            }
+        });
+
+        // Close the ordered list
+        strContent += '</ol>';
+
+        // If no valid checkboxes were selected, clear the content (optional)
+        if (strContent === '<ol></ol>') {
+            strContent = '';  // Or handle this case as needed
+        }
+
+        var cmp_id = '@cmpId';
+
+        if (cmp_id === '18' || cmp_id === '15' || cmp_id === '10' || cmp_id === '2') {
+           
+            strContent = strContent.replace(/<ol>/g, '')     // remove opening <ol>
+                .replace(/<\/ol>/g, '')   // remove closing </ol>
+                .replace(/<li>/g, '<p>')     // remove opening <li>
+                .replace(/<\/li>/g, '</p>'); // replace closing </li> with <br/>;
+        }
+
+        // Update the container with the generated content
+        quillTreatment.container.firstChild.innerHTML = strContent;
+
+        // Set hidden fields with the collected values
+        $('#hidTreatmentIds').val(strIds);
+        $('#hidTreatmentDesc').val(strDesc);
+    }
+    // function fnTreatmentDetails() {
+    //     debugger;
+    //     var strContent = '<ol>';
+    //     var strIds = '', strDesc = '';
+    //     $('input[type=checkbox]').map(function (i, e) {
+    //         if (e.checked) {
+    //             strContent = strContent + '<li>' + $("#chk_" + e.id).val() + '</li>';
+    //             strIds = strIds + ',' + e.id;
+    //         }
+    //         strDesc = strDesc + '^' + $("#chk_" + e.id).val();
+    //     });
+
+    //     quillTreatment.container.firstChild.innerHTML = strContent + '</ol>';
+
+    //     $('#hidTreatmentIds').val(strIds);
+    //     $('#hidTreatmentDesc').val(strDesc);
+    // }
+</script>

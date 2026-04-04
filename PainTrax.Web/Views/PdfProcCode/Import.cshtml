@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@{
+    ViewData["Title"] = "Pdf Proc Code";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var clientCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+}
+<h2>Import CSV - Procedure Codes</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Pdf Procedure Code</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+
+        <div class="card">
+            <div class="card-body mt-4">
+
+
+<form asp-action="ImportXlsx" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Select CSV File</label>
+        <input type="file" name="file" class="form-control" accept=".xlsx" />
+    </div>
+
+    <br />
+
+    <button class="btn btn-success" type="submit">Upload & Import</button>
+    <a href="/PdfProcCode/Index" class="btn btn-secondary">Back</a>
+</form>
+</div>
+</div>
+</section>
+</main>

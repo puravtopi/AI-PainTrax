@@ -1,0 +1,135 @@
+﻿@using PainTrax.Web.Helper
+@model PainTrax.Web.ViewModel.GetProviderVM
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Get Provider";
+    Layout = "~/Views/Shared/_ProviderLayout.cshtml";  // Use the admin layout
+    var userDesignation = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation);
+}
+
+<main id="main" class="main" style="margin-left:0px!important">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <form asp-action="GetProvider" asp-controller="Home">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Welcome</h5>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="row mb-3">
+                                        <label for="inputText" class="col-sm-2 col-form-label">Location</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-select searchable-dropdown" asp-for="locationid" asp-items="@ViewBag.locList"></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if (userDesignation != "Provider")
+                                {
+                                    <div class="col-lg-6">
+                                        <div class="row mb-3">
+                                            <label for="provider" class="col-sm-2 col-form-label">Provider:</label>
+                                            <div class="col-sm-10">
+                                                <select id="providerid" name="providerid" class="form-select searchable-dropdown">
+                                                    @foreach (var item in ViewBag.providerList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            @* <div class="clear-fix"></div>
+                            <div class="col-lg-6">
+                            <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">Providers/MA</label>
+                            <div class="col-sm-10">
+                            <select class="form-select" name="selectedProviders" multiple aria-label="multiple select example">
+
+                            </select>
+                            </div>
+                            </div>
+
+                            </div>
+                            <div class="col-lg-1" style="text-align:center">
+                            <button type="button" class="btn btn-primary"><</button>
+                            <button type="button" class="btn btn-primary">></button>
+                            </div>
+                            <div class="col-lg-5">
+                            <div class="row mb-3">
+                            <div class="col-sm-10">
+                            <select class="form-select" multiple aria-label="multiple select example">
+                            </select>
+                            </div>
+                            </div>
+                            </div>
+                            <div class="clear-fix"></div> *@
+
+                            <div class="row mb-3">
+                                <div class="col-lg-5">
+                                    <label class="col-sm-2 col-form-label">&nbsp;</label>
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-primary">Next</button>
+                                        <label>Intake Forms</label>
+                                        <select id="intakeforms" style="width:50%">
+                                            <option value="#" selected>--Select--</option>
+                                            <option value="@Url.Action("AIInitialIntake", "IntakeForm")">IntakeForm Initial</option>
+                                            <option value="@Url.Action("Create", "FollowupForm")">IntakeForm Follow Up</option>
+                                          
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        $('#intakeforms').on('change', function () {
+            debugger
+        var baseUrl = $(this).val(); // AIInitialIntake URL
+        var locId = $('#locationid').val();
+        
+        if(locId==='0')
+        {
+            alert('Please select location');
+            $('#intakeforms').prop('selectedIndex', 0);
+        }
+        else
+        {
+            if (baseUrl) {
+                var finalUrl = baseUrl + '?locid=' + locId;
+                // Redirect
+                window.location.href = finalUrl;
+            }
+        }
+
+    });
+</script>
+@* <script>
+    $(document).ready(function () {
+        // Attach click event handler to the "Next" button
+        $("button[type='submit']").on("click", function (event) {
+            // Get the selected provider value
+            var selectedProvider = $("#providerid").val();
+            // Check if a provider is selected
+            if (!selectedProvider) {
+                // If no provider selected, prevent form submission and show alert
+                event.preventDefault();
+                alert("Please select a provider before proceeding.");
+            }
+        });
+    });
+</script> *@

@@ -1,0 +1,360 @@
+﻿@model PainTrax.Web.ViewModel.IEToFuVMList
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Setting</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">Manage Setting</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+
+                        <!-- General Form Elements -->
+                        <form asp-action="IETOFU" asp-controller="ForwardSetting" id="frmCreate">
+                            <div class="row">
+                                <div class="col-lg-12">
+
+
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">SOAP</label>
+                                        <div class="row mb-9">
+
+                                            <div class="col-md-3 col-lg-3">
+
+                                                <div class="form-check">
+
+                                                    <input class="form-check-input" type="checkbox" id="chkall_soap">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            @{
+                                                var cnt = 0;
+                                                var chk = "";
+                                            }
+                                            @foreach (var item in (List<SelectListItem>)ViewBag.Page1List)
+                                            {
+                                                { chk = item.Selected ? "checked" : ""; }
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Value" id="id_l_@cnt">
+                                                        <input class="form-check-input clssoap" type="checkbox" id="chk_l_@cnt" value="@item.Selected" @chk>
+                                                        <label class="form-check-label" for="@item.Value">@item.Text</label>
+                                                        <input type="hidden" id="item_l_@cnt" value="@item.Value">
+                                                    </div>
+                                                </div>
+                                                cnt++;
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Page 2</label>
+                                        <div class="row mb-9">
+
+                                            <div class="col-md-3 col-lg-3">
+
+                                                <div class="form-check">
+
+                                                    <input class="form-check-input" type="checkbox" id="chkall_p2">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            @{
+                                                cnt = 0;
+                                                chk = "";
+                                            }
+                                            @foreach (var item in (List<SelectListItem>)ViewBag.Page2List)
+                                            {
+                                                { chk = item.Selected ? "checked" : ""; }
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Value" id="id_p2_@cnt">
+                                                        <input class="form-check-input clsp2" type="checkbox" id="chk_p2_@cnt" value="@item.Selected" @chk>
+                                                        <label class="form-check-label" for="@item.Value">@item.Text</label>
+                                                        <input type="hidden" id="item_p2_@cnt" value="@item.Value">
+                                                    </div>
+                                                </div>
+                                                cnt++;
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">NE</label>
+                                        <div class="row mb-9">
+                                            <div class="col-md-3 col-lg-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="chkall_ne">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            @{
+                                                 cnt = 0;
+                                                     chk = "";
+                                            }
+                                            @foreach (var item in (List<SelectListItem>)ViewBag.PageNEList)
+                                            {
+                                                { chk = item.Selected ? "checked" : ""; }
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Value" id="id_ne_ @cnt">
+                                                        <input class="form-check-input clsne" type="checkbox" id="chk_ne_@cnt" value="@item.Selected" @chk>
+                                                        <label class="form-check-label" for="@item.Value">@item.Text</label>
+                                                        <input type="hidden" id="item_ne_@cnt" value="@item.Value">
+                                                    </div>
+                                                </div>
+                                                cnt++;                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Daignostics</label>
+                                        <div class="row mb-9">
+                                            <div class="col-md-3 col-lg-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="chkall_dg">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            @{
+                                                cnt = 0;
+                                                chk = "";
+                                            }
+                                            @foreach (var item in (List<SelectListItem>)ViewBag.PageDaignoList)
+                                            {
+                                                { chk = item.Selected ? "checked" : ""; }
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Value" id="id_dg_ @cnt">
+                                                        <input class="form-check-input clsdg" type="checkbox" id="chk_dg_@cnt" value="@item.Selected" @chk>
+                                                        <label class="form-check-label" for="@item.Value">@item.Text</label>
+                                                        <input type="hidden" id="item_dg_@cnt" value="@item.Value">
+                                                    </div>
+                                                </div>
+                                                cnt++;
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Other</label>
+                                        <div class="row mb-9">
+                                            <div class="col-md-3 col-lg-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="chkall_other">
+                                                    <label class="form-check-label">Check All</label>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            @{
+                                                cnt = 0;
+                                                chk = "";
+                                            }
+                                            @foreach (var item in (List<SelectListItem>)ViewBag.PageOtherList)
+                                            {
+                                                { chk = item.Selected ? "checked" : ""; }
+                                                <div class="col-md-3 col-lg-3">
+
+                                                    <div class="form-check">
+                                                        <input type="hidden" value="@item.Value" id="id_ne_ @cnt">
+                                                        <input class="form-check-input clsother" type="checkbox" id="chk_other_@cnt" value="@item.Selected" @chk>
+                                                        <label class="form-check-label" for="@item.Value">@item.Text</label>
+                                                        <input type="hidden" id="item_other_@cnt" value="@item.Value">
+                                                    </div>
+                                                </div>
+                                                cnt++;
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+
+                                        <div class="col-sm-10">
+                                            <button type="button" onclick="fnSave()" class="btn btn-primary">Save</button>
+                                            <a class="btn btn-primary" asp-action="IETOFU" asp-controller="ForwardSetting">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $('#chkall_soap').change(function () {
+        $('.clssoap').prop('checked', this.checked);
+    });
+
+    $('#chkall_p2').change(function () {
+        $('.clsp2').prop('checked', this.checked);
+    });
+
+    $('#chkall_ne').change(function () {
+        $('.clsne').prop('checked', this.checked);
+    });
+
+    $('#chkall_dg').change(function () {
+        $('.clsdg').prop('checked', this.checked);
+    });
+
+
+    $('#chkall_other').change(function () {
+        $('.clsother').prop('checked', this.checked);
+    });
+
+    var cntSOAP = '@Model.cntSOAP';
+    var cntPage2 = '@Model.cntPage2';
+    var cntPageNE = '@Model.cntPageNE';
+    var cntPageOther = '@Model.cntPageOther';
+    var cntDG = '@Model.cntPageDaignoList';
+
+    function fnSave() {
+
+        var url = $("#frmCreate").attr("action");
+        var redirecturl = '@Url.Action("IETOFU","ForwardSetting")';
+
+        var listSOAP = [];
+
+        for (var i = 0; i < parseInt(cntSOAP); i++) {
+
+            if ($("#chk_l_" + i).prop('checked')) {
+                var data = {};
+                data.tbl_name = 'page1';
+                data.tbl_column = $("#item_l_" + i).val();
+                listSOAP.push(data);
+            }
+        }
+
+        var listPages2 = [];
+
+        for (var i = 0; i < parseInt(cntPage2); i++) {
+
+
+            if ($("#chk_p2_" + i).prop('checked')) {
+                var data = {};
+                data.tbl_name = 'page2';
+                data.tbl_column = $("#item_p2_" + i).val();
+                listPages2.push(data);
+            }
+        }
+        var listPagesNE = [];
+
+        for (var i = 0; i < parseInt(cntPageNE); i++) {
+
+
+            if ($("#chk_ne_" + i).prop('checked')) {
+                var data = {};
+                data.tbl_name = 'ne';
+                data.tbl_column = $("#item_ne_" + i).val();
+                listPagesNE.push(data);
+            }
+        }
+        var listPagesOther = [];
+
+        for (var i = 0; i < parseInt(cntPageOther); i++) {
+
+
+            if ($("#chk_other_" + i).prop('checked')) {
+                var data = {};
+                data.tbl_name = 'other';
+                data.tbl_column = $("#item_other_" + i).val();
+                listPagesOther.push(data);
+            }
+        }
+
+        var listPagesDG = [];
+
+        for (var i = 0; i < parseInt(cntDG); i++) {
+
+
+            if ($("#chk_dg_" + i).prop('checked')) {
+                var data = {};
+                data.tbl_name = 'dg';
+                data.tbl_column = $("#item_dg_" + i).val();
+                listPagesDG.push(data);
+            }
+        }
+
+        //var listReports = [];
+
+        //for (var i = 0; i < parseInt(cntReports); i++) {
+        //    var data = {};
+        //    data.Id = $("#id_r_" + i).val();
+        //    data.Item = $("#item_r_" + i).text();
+        //    data.IsChecked = $("#chk_r_" + i).prop('checked');
+
+        //    listReports.push(data);
+        //}
+
+        //var listRoles = [];
+
+        //for (var i = 0; i < parseInt(cntRoles); i++) {
+        //    var data = {};
+        //    data.Id = $("#id_ro_" + i).val();
+        //    data.Item = $("#item_ro_" + i).text();
+        //    data.IsChecked = $("#chk_ro_" + i).prop('checked');
+
+        //    listRoles.push(data);
+        //}
+
+        var model = {
+            "SOAP": listSOAP,
+            "page2": listPages2,
+            "NE":listPagesNE,
+            "Other":listPagesOther,
+            "dg":listPagesDG
+           
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+
+
+                if (data === 1) {
+                    window.location = redirecturl;
+                }
+                else
+                    alert("Error in Data Save.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+</script>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

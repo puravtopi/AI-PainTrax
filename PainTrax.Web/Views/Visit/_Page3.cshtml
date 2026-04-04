@@ -1,0 +1,635 @@
+﻿@model MS.Models.tbl_ie_page3
+<style>
+    .inline {
+        display: inline !important;
+    }
+</style>
+<br />
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Diagnostic">DIAGNOSTIC STUDIES</h5>
+        <form class="row g-3" id="frmPage3_1">
+
+            <input type="hidden" id="txtId_P3" value="@Model.id" />
+
+
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="diagcervialbulge_date">
+            </div>
+            <div class="col-md-1">
+
+                <select class="form-select" aria-label="Default select example" asp-for="diagcervialbulge_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" style="width:25%;display:inline !important" aria-label="Default select example" asp-for="diagcervialbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <input type="text" class="form-control" style="width:70%;display:inline !important" placeholder="Cervical bulge" asp-for="diagcervialbulge_text">
+            </div>
+            <div class="col-md-3">
+
+                <input type="text" class="form-control" placeholder="HNP" asp-for="diagcervialbulge_hnp1">
+            </div>
+            <div class="col-md-3">
+
+                <textarea class="form-control" rows="2" asp-for="diagcervialbulge_hnp2"></textarea>
+            </div>
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="diagthoracicbulge_date">
+            </div>
+            <div class="col-md-1">
+
+                <select class="form-select" aria-label="Default select example" asp-for="diagthoracicbulge_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" style="width:25%;display:inline !important" aria-label="Default select example" asp-for="diagthoracicbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <input type="text" class="form-control" style="width:70%;display:inline !important" placeholder="Thoracic bulge" asp-for="diagthoracicbulge_text">
+            </div>
+            <div class="col-md-3">
+
+                <input type="text" class="form-control" placeholder="HNP" asp-for="diagthoracicbulge_hnp1">
+            </div>
+            <div class="col-md-3">
+
+                <textarea class="form-control" rows="2" asp-for="diagthoracicbulge_hnp2"></textarea>
+            </div>
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="diaglumberbulge_date">
+            </div>
+            <div class="col-md-1">
+
+                <select class="form-select" aria-label="Default select example" asp-for="diaglumberbulge_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" style="width:25%;display:inline !important" aria-label="Default select example" asp-for="diaglumberbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <input type="text" class="form-control" style="width:70%;display:inline !important" placeholder="Lumbar bulge" asp-for="diaglumberbulge_text">
+            </div>
+            <div class="col-md-3">
+
+                <input type="text" class="form-control" placeholder="HNP" asp-for="diaglumberbulge_hnp1">
+            </div>
+            <div class="col-md-3">
+
+                <textarea class="form-control" rows="2" asp-for="diaglumberbulge_hnp2"></textarea>
+            </div>
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="diagleftshoulder_date">
+            </div>
+            <div class="col-md-1">
+
+                <select class="form-select" aria-label="Default select example" asp-for="diagleftshoulder_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
+                </select>
+            </div>
+
+            <div class="col-md-9">
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagleftshoulder_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:90%;display:inline !important" placeholder="Left Shoulder" asp-for="diagleftshoulder_text"></textarea>
+            </div>
+            @* <div class="col-md-3">
+
+            <input type="text" class="form-control"  placeholder="HNP" asp-for="diagleftshoulder_h">
+            </div>
+            <div class="col-md-3">
+
+            <textarea class="form-control" id="validationDefault05" rows="2" required=""></textarea>
+            </div>*@
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="diagrightshoulder_date">
+            </div>
+            <div class="col-md-1">
+
+                <select class="form-select" aria-label="Default select example" asp-for="diagrightshoulder_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
+                </select>
+            </div>
+
+            <div class="col-md-9">
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagrightshoulder_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:90%;display:inline !important" placeholder="Right Shoulder" asp-for="diagrightshoulder_text" rows="2"></textarea>
+            </div>
+            @* <div class="col-md-3">
+
+            <input type="text" class="form-control" id="txtHNP1" placeholder="HNP" required="">
+            </div>
+            <div class="col-md-3">
+
+            <textarea class="form-control" id="validationDefault05" rows="2" required=""></textarea>
+            </div>*@
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="diagleftknee_date">
+            </div>
+            <div class="col-md-1">
+
+                <select class="form-select" aria-label="Default select example" asp-for="diagleftknee_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
+                </select>
+            </div>
+
+            <div class="col-md-9">
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagleftknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" rows="2" style="width:90%;display:inline !important" placeholder="Left Knee" asp-for="diagleftknee_text"></textarea>
+            </div>
+            @*   <div class="col-md-3">
+
+            <input type="text" class="form-control" id="txtHNP1" placeholder="HNP" required="">
+            </div>
+            <div class="col-md-3">
+
+            <textarea class="form-control" id="validationDefault05" rows="2" required=""></textarea>
+            </div>*@
+
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="diagrightknee_date">
+            </div>
+            <div class="col-md-1">
+
+                <select class="form-select" aria-label="Default select example" asp-for="diagrightknee_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
+                </select>
+            </div>
+
+            <div class="col-md-9">
+             
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagrightknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" rows="2" style="width:90%;display:inline !important" placeholder="Right Knee" asp-for="diagrightknee_text"></textarea>
+            </div>
+            @* <div class="col-md-3">
+
+            <input type="text" class="form-control" id="txtHNP1" placeholder="HNP" required="">
+            </div>
+            <div class="col-md-3">
+
+            <textarea class="form-control" id="validationDefault05" rows="2" required=""></textarea>
+            </div>*@
+
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Others</h5>
+        <form class="row g-3" id="frmPage3_2">
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="other1_date">
+            </div>
+            <div class="col-md-2">
+               
+                <select class="form-select"  aria-label="Default select example" asp-for="other1_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study2>()">
+                </select>
+            </div>
+
+
+            <div class="col-md-8">
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other1_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" asp-for="other1_text" rows="2"></textarea>
+            </div>
+
+
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="other2_date">
+            </div>
+            <div class="col-md-2">
+
+                <select class="form-select" aria-label="Default select example" asp-for="other2_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study2>()">
+                </select>
+            </div>
+
+
+            <div class="col-md-8">
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other2_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other2_text"></textarea>
+            </div>
+
+
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="other3_date">
+            </div>
+            <div class="col-md-2">
+
+                <select class="form-select" aria-label="Default select example" asp-for="other3_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study2>()">
+                </select>
+            </div>
+
+
+            <div class="col-md-8">
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other3_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other3_text"></textarea>
+            </div>
+
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="other4_date">
+            </div>
+            <div class="col-md-2">
+
+                <select class="form-select" aria-label="Default select example" asp-for="other4_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study2>()">
+                </select>
+            </div>
+
+
+            <div class="col-md-8">
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other4_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other4_text"></textarea>
+            </div>
+
+
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="other5_date">
+            </div>
+            <div class="col-md-2">
+
+                <select class="form-select" aria-label="Default select example" asp-for="other5_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study2>()">
+                </select>
+            </div>
+
+
+            <div class="col-md-8">
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other5_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" rows="2" style="width:80%;display:inline !important" asp-for="other5_text"></textarea>
+            </div>
+
+
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="other6_date">
+            </div>
+            <div class="col-md-2">
+
+                <select class="form-select" aria-label="Default select example" asp-for="other6_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study2>()">
+                </select>
+            </div>
+
+
+            <div class="col-md-8">
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other6_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other6_text"></textarea>
+            </div>
+
+
+            <div class="col-md-2">
+
+                <input type="date" class="form-control pdate" asp-for="other7_date">
+            </div>
+            <div class="col-md-2">
+
+                <select class="form-select" aria-label="Default select example" asp-for="other7_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study2>()">
+                </select>
+            </div>
+
+
+            <div class="col-md-8">
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other7_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" rows="2" style="width:80%;display:inline !important" asp-for="other7_text"></textarea>
+            </div>
+            <div class="clearfix"></div>
+            <br />
+
+            <div class="row mb-3">
+                <label for="inputNumber" class="col-sm-2 col-form-label" bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#DM">
+                    Discharge Medications
+
+                </label>
+                <div class="col-sm-10" style="height: fit-content;">
+
+
+                    <div class="col-sm-12" style="height: fit-content;">
+                        <textarea id="txtDisMediction">@Model.discharge_medications</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <br />
+            <div class="row mb-3">
+                <label for="inputNumber" class="col-sm-2 col-form-label" bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Gait">
+                    GAIT
+                </label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" row="2" asp-for="gait"></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Care">
+                    CARE
+                </label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" row="2" asp-for="care"></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputNumber" class="col-sm-2 col-form-label">
+                    GOAL
+                </label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" row="2" asp-for="goal"></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputNumber" class="col-sm-2 col-form-label">
+                    PRECAUTIONS : Universal
+                </label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" row="2" asp-for="universal"></textarea>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+
+    var ckDisMediction;
+            $(document).on("blur", ".pdate", function () {
+
+        var enteredVal = $(this).val();
+        if (!enteredVal || enteredVal.length !== 10) return;
+
+        var enteredDate = new Date(enteredVal);
+
+        // ---------- Validate Year >= 1900 ----------
+        var year = enteredDate.getFullYear();
+
+        if (year < 1900) {
+            $('#messBody').html(
+                '<p>Year must be greater than or equal to <b>1900</b>.</p>'
+            );
+            $('#myModalMessage').modal('show');
+            return;
+        }
+
+        // ---------- Validate valid date ----------
+        if (isNaN(enteredDate.getTime())) {
+            $('#messBody').html(
+                '<p>Please enter a valid date.</p>'
+            );
+            $('#myModalMessage').modal('show');
+            return;
+        }
+
+        var dosVal = $("#dos").val();
+        var doaVal = $("#doa").val();
+
+        // ---------- Validate against DOS ----------
+        if (dosVal && dosVal.length === 10) {
+
+            var dosDate = new Date(dosVal);
+
+            if (enteredDate > dosDate) {
+                $('#messBody').html(
+                    '<p>Date must be less than or equal to DOS <b>' + dosVal + '</b>.</p>'
+                );
+                $('#myModalMessage').modal('show');
+
+                $(this).val('');   // clear only this field
+                return;
+            }
+        }
+
+        // ---------- Validate against DOA ----------
+        if (doaVal && doaVal.length === 10) {
+
+            var doaDate = new Date(doaVal);
+
+            if (enteredDate < doaDate) {
+                $('#messBody').html(
+                    '<p>Date is less than DOA <b>' + doaVal + '</b>.</p>'
+                );
+                $('#myModalMessage').modal('show');
+                return;
+            }
+        }
+
+    });
+
+    function fnPage3Save(t) {
+        if (t != null) {
+            // bootbox.confirm({
+
+            //     message: 'Are sure you want to save Details?',
+            //     swapButtonOrder: true,
+            //     callback: function (result) {
+            //         if (result) {
+            Page3Save(t);
+            //         }
+            //         else {
+            //             $(t).tab('show');
+            //         }
+            //     }
+            // });
+        }
+        else {
+            Page3Save(t);
+        }
+    }
+
+    function Page3Save(t) {
+        var url = '@Url.Action("SavePage3", "Visit")';
+        var ieId = $("#id").val();
+        var patientId = $("#patientid").val();
+        var Id = $("#txtId_P3").val();
+        var model = $("#frmPage3_1,#frmPage3_2").serialize() + "&ieid=" + ieId + "&patientid=" + patientId + "&id=" + Id + "&discharge_medications=" + ckDisMediction.getData();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                var daignoCodeDetails = "<ol>";
+
+                if ($("#diagcervialbulge_text").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagcervialbulge_text").val() + "</li>";
+                }
+                if ($("#diagcervialbulge_hnp1").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagcervialbulge_hnp1").val() + "</li>";
+                }
+                if ($("#diagcervialbulge_hnp2").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagcervialbulge_hnp2").val() + "</li>";
+                }
+
+                if ($("#diagthoracicbulge_text").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagthoracicbulge_text").val() + "</li>";
+                }
+                if ($("#diagthoracicbulge_hnp1").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagthoracicbulge_hnp1").val() + "</li>";
+                }
+                if ($("#diagthoracicbulge_hnp2").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagthoracicbulge_hnp2").val() + "</li>";
+                }
+
+                if ($("#diaglumberbulge_text").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diaglumberbulge_text").val() + "</li>";
+                }
+                if ($("#diaglumberbulge_hnp1").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp1").val() + "</li>";
+                }
+                if ($("#diaglumberbulge_hnp2").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp2").val() + "</li>";
+                }
+
+                var htmlDaignosis = daignoCodeDetails + "</ol>";
+                ckPOCAssestence.data.set(htmlDaignosis);
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+                    $("#txtId_P3").val(data);
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    // $(".pdate").change(function () {
+    //     const date1 = new Date(this.value);
+    //     const date2 = new Date($("#dos").val());
+
+    //     if (date1 > date2) {
+    //         $('#messBody').html('<p>Date need to be less than DOS date <b>' + $("#dos").val() + '</b>.</p>');
+    //         $('#myModalMessage').modal('show');
+
+    //         $('#' + this.id).val('');
+    //     }
+    // });
+    //     $(".pdate").on("change", function () {
+    // debugger;
+    //         var enteredDateVal = this.value;
+    //         if (!enteredDateVal) return;
+
+    //         var enteredDate = new Date(enteredDateVal);
+
+    //         var dosVal = $("#dos").val();   // existing DOS
+    //         var doaVal = $("#doa").val();   // DOA
+
+    //         // Validate against DOS
+    //         if (dosVal) {
+    //             var dosDate = new Date(dosVal);
+    //             if (enteredDate > dosDate) {
+    //                 $('#messBody').html(
+    //                     '<p>Date must be less than or equal to DOS <b>' + dosVal + '</b>.</p>'
+    //                 );
+    //                 $('#myModalMessage').modal('show');
+    //                 $(this).focus();
+    //                 return;
+    //             }
+    //         }
+
+    //         // Validate against DOA
+    //         if (doaVal) {
+    //             var doaDate = new Date(doaVal);
+    //             if (enteredDate < doaDate) {
+    //                 $('#messBody').html(
+    //                     '<p>Date is less than DOA <b>' + doaVal + '</b>.</p>'
+    //                 );
+    //                 $('#myModalMessage').modal('show');
+    //                 $(this).focus();
+    //                 return;
+    //             }
+    //             }
+    // });
+
+    $(document).ready(function () {
+        ClassicEditor.create(document.querySelector('#txtDisMediction'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckDisMediction = editor;
+        })
+            .catch(handleSampleError);
+
+    })
+
+    function fndefaultDiagnosespage4() {
+
+
+        var url = '@Url.Action("GetDefultDaignoCodeList", "Visit")?bodyparts=' + $("#txtbodypart").val() + '';
+
+        $.ajax({
+            type: "Post",
+            url: url,
+
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+
+
+                var daignoCodeDetails = "<ul>";
+
+
+                var myContentDaignosis = ckDisMediction.getData();
+
+                data.forEach(function (i) {
+
+
+                    if (i.isSelect) {
+                        if (myContentDaignosis.indexOf(i.diagCode) < 0) {
+
+                            daignoCodeDetails += "<li>" + i.diagCode;
+                            daignoCodeDetails += " - " + i.description;
+                            daignoCodeDetails += "</li>";
+                        }
+                    }
+                });
+
+                var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ul>";
+                ckDisMediction.data.set(htmlDaignosis);
+
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+
+        return false;
+    }
+
+</script>
+

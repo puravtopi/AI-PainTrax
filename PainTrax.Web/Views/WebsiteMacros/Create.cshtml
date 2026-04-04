@@ -1,0 +1,94 @@
+﻿@model PainTrax.Web.Models.tbl_website_marco
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Website Macros</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="WebsiteMacros">List</a></li>
+                <li class="breadcrumb-item active">Create</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        @*<h5 class="card-title">Add Designation</h5>*@
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Add Website Macros</h5>
+                            </div>
+                          @*   <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+                                <a class="btn btn-primary" asp-action="Index" asp-controller="WebsiteMacros">Cancel</a>
+                            </div> *@
+                        </div>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="Create" asp-controller="WebsiteMacros">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Key</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="key" data-val-required="The Body Part required.">
+                                            <span asp-validation-for="key" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Desciption</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <textarea class="form-control" rows="10" asp-for="desc"></textarea>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Type</label>
+                                        <div class="col-md-3 col-lg-3">
+                                            <select asp-for="type" class="form-control">
+                                                <option value="CC">CC</option>
+                                                <option value="PE">PE</option>
+                                                <option value="All">All</option>
+                                            </select>
+
+                                        </div>
+                                        @*<label class="col-md-4 col-lg-3 col-form-label">Providers</label>
+                                        <div class="col-md-3 col-lg-3">
+                                            <select asp-for="user_id" class="form-control" asp-items="@ViewBag.userlist">
+                                               
+                                            </select>
+
+                                        </div>*@
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
