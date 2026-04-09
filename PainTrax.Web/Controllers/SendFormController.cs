@@ -27,6 +27,8 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult AuthoAckno(string id)
         {
+            id = Uri.UnescapeDataString(id);
+            id = id.Replace(" ", "+");
             var _id = EncryptionHelper.Decrypt(id);
 
             if (_commonservices.isSignExist(_id) == false)

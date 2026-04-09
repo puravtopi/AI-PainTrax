@@ -59,7 +59,13 @@
                         <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
                         <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
-                        <h4 class="text-center mb-4 fw-bold">Patient Injury Report</h4>
+                        <h4 class="text-center mb-4 fw-bold">
+                            Patient Injury Report
+
+                            <a href='@Url.Action("AIInitialIntakeV2", "IntakeForm", new { locid = ViewBag.LocId, id = ViewBag.Id })'>
+                                Click for V2
+                            </a>
+                        </h4>
 
                         <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white">
 
@@ -1187,7 +1193,7 @@
                 <!-- Patient Name -->
                 <div class="mb-3">
                     <label class="form-label">Upload Image</label>
-                    <input type="file" id="fup" accept="image/*" capture="environment"/>
+                    <input type="file" id="fup" accept="image/*" capture="environment" />
                 </div>
                 <!-- ✅ Loader Overlay -->
                 <div id="uploadLoader"

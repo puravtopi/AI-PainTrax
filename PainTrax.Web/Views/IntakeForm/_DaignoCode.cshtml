@@ -1,0 +1,96 @@
+﻿@model IEnumerable<PainTrax.Web.ViewModel.DaignoCodeVM>
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modeltitle">Select Diagnosis for @ViewBag.BodyPart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btnDaignoCode">Save changes</button>
+    </div>
+    <div class="modal-body">
+
+        @{
+            if (Model != null)
+            {
+                @if (Model.Count() > 0)
+                {
+                    <table class="table table-hover" id="tblDiagnoCode">
+                        <thead>
+                            <tr>
+
+                                <th scope="col">#</th>
+                                <th>DiagnoCode</th>
+                                <th scope="col">Description</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in Model)
+                                {
+                                    var isChecked = item.IsSelect ? "checked" : "";
+                                    <tr>
+                                        <th scope="row"><input type="checkbox" @isChecked /></th>
+                                        <td>@item.DiagCode</td>
+                                        <td>
+                                            <input type="text" class="form-control" value="@item.Description" />
+                                            <input type="hidden" id="cmpid" value="@item.cmp_id" />
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No Data Found</p>
+                }
+            }
+            else
+            {
+                <p>No Data Found</p>
+            }
+        }
+    </div>
+    @* <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btnDaignoCode">Save changes</button>
+    </div> *@
+</div>
+
+
+<script>
+
+    $("#btnDaignoCode").click(function () {
+
+        var daignoCodeDetails = "";
+        var htmlDaignosis =  $("#divDiagnosis").html();
+        var bodyPart= $("#hdSelectedBody").val();
+
+        //$("#divDiagnosis").html(htmlDaignosis);
+
+        daignoCodeDetails = $("#divDiagnosis").html();
+        $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
+
+           var row = $(this).closest("tr")[0];
+           daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
+           daignoCodeDetails += "  " +row.cells[2].querySelector('input[type="text"]').value;
+           daignoCodeDetails += "</li>";
+
+        });
+        htmlDaignosis =  daignoCodeDetails ;
+
+        $("#divDiagnosis").html(htmlDaignosis);
+        $("#Diagnosis").val(daignoCodeDetails);
+        $('#daignoCodeModal').modal('hide');
+        return false;
+    });
+
+
+</script>

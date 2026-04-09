@@ -388,12 +388,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link " asp-action="Index" asp-controller="PatientRequest">
-                    <i class="bi bi-grid"></i>
-                    <span>Patient Request</span>
-                </a>
-            </li>
+           
             <!-- End Dashboard Nav -->
             @{
                 if (pageAccess.ToLower().Contains("patient"))
@@ -413,6 +408,12 @@
                 }
             }
             <li class="nav-item">
+                <a class="nav-link " asp-action="Index" asp-controller="PatientRequest">
+                    <i class="bi bi-grid"></i>
+                    <span>Patient Request</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-menu-button-wide"></i><span>Master</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
@@ -421,7 +422,7 @@
                     @{
                         if (pageAccess.ToLower().Contains("accident type"))
                         {
-                            <li>
+                            <li class="nav-item">
                                 <a asp-action="Index" asp-controller="AccidentType">
                                     <i class="bi bi-circle"></i><span>AccidentType</span>
                                 </a>
@@ -429,7 +430,7 @@
                         }
                         if (pageAccess.ToLower().Contains("adjuster"))
                         {
-                                     <li style="display:none">
+                                     <li style="display:none" >
                                 <a asp-action="Index" asp-controller="Adjuster">
                                     <i class="bi bi-circle"></i><span>Adjuster</span>
                                 </a>

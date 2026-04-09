@@ -79,18 +79,18 @@
                                 <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
                                 <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSave" type="button" onclick="fnUpdatePOCReport()">Save</button>
                                 <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit" id="btnSearch">Search</button>
-                              
+
 
 
                             </div>
                             <div class="clearfix"></div>
                             <br />
                             <div class="col-md-12 col-lg-12">
-                               
+
                                 <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnSMulticheduledPopup()">Reschedule</button>
                                 <button class="btn btn-success" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
                                 <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Add Surgery Center</button>
-                               
+
                             </div>
                             <div class="clearfix"></div>
                             <br />
@@ -121,7 +121,7 @@
                                             {
                                                 <th scope="col" id="account_no" onclick="sortTable(1);">Account_No</th>
                                             }
-                                            
+
                                             if (columns.Contains("Case"))
                                             {
                                                 <th scope="col" id="case" onclick="sortTable(2);">Case</th>
@@ -138,7 +138,7 @@
                                             {
                                                 <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>
                                             }
-                                           
+
                                             if (columns.Contains("MCODE"))
                                             {
                                                 <th scope="col" id="MCODE" onclick="sortTable(5);">MCODE</th>
@@ -191,7 +191,7 @@
                                             if (columns.Contains("Attorney"))
                                             {
                                                 <th scope="col" id="Attorney" onclick="sortTable(1);">Attorney</th>
-                                            }                                            
+                                            }
                                             if (columns.Contains("Policy"))
                                             {
                                                 <th scope="col" id="PolicyNo" onclick="sortTable(1);">PolicyNo</th>
@@ -204,7 +204,7 @@
                                             {
                                                 <th scope="col">Requested</th>
                                             }
-                                            
+
                                         }
                                         <th scope="col">Schedule</th>
                                         <th scope="col">Executed</th>
@@ -224,6 +224,9 @@
                                                 <td>
                                                     <input type="checkbox" value="@item.procedureDetail_id" class="chkTrans" />
                                                     <input type="hidden" value="@item.procedureDetail_id" id="hid" />
+                                                    <input type="hidden" value="@item.sx_center_name" id="hSCN" />
+                                                    <input type="hidden" value="@item.surgon_name" id="hSurgeon" />
+                                                    <input type="hidden" value="@item.assistent_name" id="hAtteding" />
                                                 </td>
                                                 @{
                                                     if (columnsval.Contains("Sex"))
@@ -238,7 +241,7 @@
                                                     {
                                                         <td>@item.acct_no</td>
                                                     }
-                                                   
+
                                                     if (columnsval.Contains("Case"))
                                                     {
                                                         <td>@item.casetype</td>
@@ -255,7 +258,7 @@
                                                     {
                                                         <td>@(item.doa == null ? "" : item.doa.Value.ToString("MM/dd/yyyy"))</td>
                                                     }
-                                                    
+
                                                     if (columnsval.Contains("MCODE"))
                                                     {
                                                         <td>@item.mcode</td>
@@ -341,7 +344,7 @@
                                                     {
                                                         <td>@item.Attorney</td>
                                                     }
-                                                    
+
                                                     if (columnsval.Contains("Policy"))
                                                     {
                                                         <td>@item.PolicyNo</td>
@@ -354,7 +357,7 @@
                                                     {
                                                         <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
                                                     }
-                                                    
+
 
                                                 }
                                                 <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
@@ -602,6 +605,8 @@
     function fnSC() {
 
         var arrayIds = '';
+        var aSCN = '', ahAtteding = '', ahSurgeon = '';
+
 
         $('table tr').each(function (i) {
             // Only check rows that contain a checkbox
@@ -611,7 +616,14 @@
                 var status = $chkbox.prop('checked');
                 if (status) {
                     var id = $(this).find('#hid')
+                    var SCN = $(this).find('#hSCN');
+                    var hAtteding = $(this).find('#hAtteding');
+                    var hSurgeon = $(this).find('#hSurgeon');
                     arrayIds = arrayIds + ',' + id.val();
+                    aSCN = SCN.val();
+                    ahAtteding = hAtteding.val();
+                    ahSurgeon = hSurgeon.val();
+
                 }
             }
         });
@@ -620,6 +632,24 @@
         }
         else {
             $('#ProcedureDetailIDs').val(arrayIds);
+            if (arrayIds.split(',').length == 2) {
+
+
+                $('#txtSurgonName').val(ahSurgeon);
+                $('#txtAssistant').val(ahAtteding);
+
+                var textToSelect = aSCN;  // the text you want
+                $("#ddlSC option").filter(function () {
+                    return $(this).text() === textToSelect;
+                }).prop("selected", true);
+
+            } else {
+                $('#txtSurgonName').val('');
+                $('#txtAssistant').val('');
+                $('#ddlSC').prop('selectedIndex', 0);
+            }
+
+
             $('#SCModal').modal('show');
         }
 

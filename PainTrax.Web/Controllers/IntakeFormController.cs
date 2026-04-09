@@ -4,11 +4,13 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using GroupDocs.Viewer.Results;
 using HtmlToOpenXml;
+using MailKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.Sec;
 using PainTrax.Web.AzureServices;
 using PainTrax.Web.Filter;
@@ -36,16 +38,21 @@ namespace PainTrax.Web.Controllers
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private readonly IWebHostEnvironment _env;
         private readonly AzureAIServices _azureService;
+        private readonly DiagcodesService _diagcodesService = new DiagcodesService();
+        private readonly TreatmentMasterService _treatmentService = new TreatmentMasterService();
+        private readonly ILogger<IntakeFormController> _logger;
         #endregion
 
         public IntakeFormController(
          Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
-         IWebHostEnvironment env, AzureAIServices azureService
+         IWebHostEnvironment env, AzureAIServices azureService,
+         ILogger<IntakeFormController> logger
         )
         {
             Environment = environment;
             _env = env;
             _azureService = azureService;
+            _logger = logger;
 
         }
 
@@ -727,7 +734,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
 
-
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             tbl_locations objLoc = new tbl_locations()
             {
                 id = locId
@@ -735,6 +742,10 @@ namespace PainTrax.Web.Controllers
             var loc = _locservices.GetOne(objLoc);
 
             ViewBag.LocName = loc?.location;
+            ViewBag.CmpId = cmpid.ToString();
+
+            var _dataTreatment = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
+            ViewBag.Treatment = _dataTreatment;
 
             if (id != null)
             {
@@ -745,7 +756,48 @@ namespace PainTrax.Web.Controllers
                     ViewBag.FormData = data.FormData;
                     ViewBag.Id = id;
                     ViewBag.SubmitDate = data.PatientSubmitDate;
+                    ViewBag.Diagnosis = data.Diagnosis;
 
+                }
+            }
+
+            return View();
+        }
+
+        public IActionResult AIInitialIntakeV2(int? locId, int? id)
+        {
+            var templatePath = $"{Request.Scheme}://{Request.Host}/v2/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+            //var templatePath = $"{Request.Scheme}://{Request.Host}/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+            ViewBag.TemplateURL = templatePath + "/report-template.txt";
+            ViewBag.TemplateDOCURL = templatePath + "/report-template-ie.docx";
+            ViewBag.FormData = "";
+            ViewBag.Id = "0";
+            ViewBag.LocId = locId;
+
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            tbl_locations objLoc = new tbl_locations()
+            {
+                id = locId
+            };
+            var loc = _locservices.GetOne(objLoc);
+
+            ViewBag.LocName = loc?.location;
+            ViewBag.CmpId = cmpid.ToString();
+
+            var _dataTreatment = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
+            ViewBag.Treatment = _dataTreatment;
+
+            if (id != null)
+            {
+                var data = service.GetInitialIntakeAIById(id.Value);
+
+                if (data != null)
+                {
+                    ViewBag.FormData = data.FormData;
+                    ViewBag.Id = id;
+                    ViewBag.SubmitDate = data.PatientSubmitDate;
+                    ViewBag.Diagnosis = data.Diagnosis;
+                    ViewBag.TreatmentDesc = data.TreatmentDesc;
                 }
             }
 
@@ -841,7 +893,11 @@ namespace PainTrax.Web.Controllers
                     LN = model.LN,
                     PatientSubmitDate = DateTime.TryParse(model.PatientSubmitDate, out var PatientSubmitDate) ? parsedDOA : (DateTime?)null,
                     LocationId = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
-                    DLPath = model.DLPath
+                    DLPath = model.DLPath,
+                    Diagnosis = model.Diagnosis,
+                    TreatmentDesc = model.TreatmentDesc,
+                    TreatmentIds = model.TreatmentIds,
+                    TreatmentDelimitDesc= model.TreatmentDelimitDesc
                 };
                 var result = service.SaveInitialIntakeAI(initialIntakeAI);
 
@@ -908,10 +964,22 @@ namespace PainTrax.Web.Controllers
                                     psh = string.Join(", ", model.PSH),
                                     bodypart = string.Join(",", model.Complaints),
                                     allergies = "",
-                                    ie_id = ie
+                                    assessment = model.Diagnosis,
+                                    ie_id = ie,
+                                    vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____."
                                 };
 
                                 _ieService.InsertPage1(objPage1);
+
+                                var objOther = new tbl_ie_other()
+                                {
+                                    ie_id = ie,
+                                    treatment_delimit = model.TreatmentIds,
+                                    treatment_delimit_desc = model.TreatmentDelimitDesc,
+                                    treatment_details = model.TreatmentDesc
+                                };
+
+                                _ieService.InsertOtherPage(objOther);
                             }
 
                         }
@@ -946,7 +1014,7 @@ namespace PainTrax.Web.Controllers
                         LN = model.LN,
                         PatientSubmitDate = System.DateTime.Now,
                         LocationId = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
-                        DLPath=  model.DLPath
+                        DLPath = model.DLPath
                     };
                     var result = service.SaveInitialIntakeAI(initialIntakeAI);
                 }
@@ -1111,6 +1179,56 @@ namespace PainTrax.Web.Controllers
                 extractedText = text,
                 parsedData = data,
             });
+        }
+
+        [HttpPost]
+        public IActionResult GetDaignoCodeList(string bodyparts, int id)
+        {
+            try
+            {
+
+                var page1Data = service.GetInitialIntakeAIById(id);
+
+                string assetment = "";
+
+                if (page1Data != null)
+                    assetment = page1Data.Diagnosis;
+
+                bodyparts = bodyparts.Replace("_", " ");
+                bodyparts = bodyparts.TrimEnd();
+                ViewBag.BodyPart = bodyparts.ToUpper();
+                var _bodyparts = _commonservices.GetBodyPart(bodyparts);
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+
+                var formatted = string.Join("','", _bodyparts.Split(',').Select(x => x.Trim()));
+
+                string cnd = " and cmp_id=" + cmpid + " and (BodyPart IN ('" + formatted + "') or Description like '%" + _bodyparts + "%') order by display_order ASC";
+
+                var data = _diagcodesService.GetAll(cnd);
+
+                var cmpIdInt = Convert.ToInt32(cmpid);
+
+                var datavm = (from c in data
+                              select new DaignoCodeVM
+                              {
+                                  DaignoCodeId = c.Id.Value,
+                                  Description = c.Description,
+                                  DiagCode = c.DiagCode,
+                                  IsSelect = assetment != null ? (assetment.IndexOf(c.DiagCode) > 0 ? true : c.PreSelect) : c.PreSelect,
+                                  Display_Order = c.display_order,
+                                  cmp_id = c.cmp_id
+
+                              }).ToList().Where(x => x.cmp_id == cmpIdInt).OrderBy(x => x.Display_Order);
+                return PartialView("_DaignoCode", datavm);
+
+
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "GetDaignoCodeList");
+            }
+
+            return View();
         }
 
 
@@ -1499,6 +1617,27 @@ namespace PainTrax.Web.Controllers
             }
 
             return str;
+        }
+        private void SaveLog(Exception ex, string actionname)
+        {
+            var msg = "";
+            if (ex.InnerException == null)
+            {
+                _logger.LogError(ex.Message);
+                msg = ex.Message;
+            }
+            else
+            {
+                _logger.LogError(ex.InnerException.Message);
+                msg = ex.InnerException.Message;
+            }
+            var logdata = new tbl_log
+            {
+                CreatedDate = DateTime.Now,
+                CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId),
+                Message = msg
+            };
+            new LogService().Insert(logdata);
         }
         #endregion
     }

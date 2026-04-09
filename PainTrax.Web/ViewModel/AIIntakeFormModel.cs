@@ -146,6 +146,10 @@
         public string __RequestVerificationToken { get; set; }
         public string PatientSubmitDate { get; set; }
         public string DLPath { get; set; }
+        public string Diagnosis { get; set; }
+        public string TreatmentIds { get; set; }
+        public string TreatmentDesc { get; set; }
+        public string TreatmentDelimitDesc { get; set; }
     }
 }
 

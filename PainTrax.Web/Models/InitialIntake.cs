@@ -451,6 +451,11 @@ namespace PainTrax.Web.Models
         public DateTime? PatientSubmitDate { get; set; }
 
         public string Visit_Type { get; set; }
+        public string Diagnosis { get; set; }
+
+        public string TreatmentIds { get; set; }
+        public string TreatmentDelimitDesc { get; set; }
+        public string TreatmentDesc { get; set; }
 
         // JSON column → store as string OR strongly typed object
         public string FormData { get; set; }

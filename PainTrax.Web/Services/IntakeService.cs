@@ -329,14 +329,17 @@ namespace PainTrax.Web.Services
             param.Add(new MySqlParameter("p_DOA", model.DOA ?? (object)DBNull.Value));
             param.Add(new MySqlParameter("p_DOE", model.DOE ?? (object)DBNull.Value));
             param.Add(new MySqlParameter("p_FormData",
-      model.FormData != null ? model.FormData : (object)DBNull.Value));
+            model.FormData != null ? model.FormData : (object)DBNull.Value));
             param.Add(new MySqlParameter("p_CmpId", model.CmpId));
             param.Add(new MySqlParameter("p_Email", model.Email));
             param.Add(new MySqlParameter("p_Mobile", model.Mobile));
             param.Add(new MySqlParameter("p_Visit_Type", model.Visit_Type));
             param.Add(new MySqlParameter("p_PatientSubmitDate", model.PatientSubmitDate ?? (object)DBNull.Value));
             param.Add(new MySqlParameter("p_DLPath", model.DLPath));
-
+            param.Add(new MySqlParameter("p_Diagnosis", model.Diagnosis));
+            param.Add(new MySqlParameter("p_Treatment_Details", model.TreatmentDesc));
+            param.Add(new MySqlParameter("p_Treatment_Delimit", model.TreatmentIds));
+            param.Add(new MySqlParameter("p_Treatment_Delimit_Desc", model.TreatmentDelimitDesc));
 
             var data = ExecuteSP("sp_InsertInitialIntake_ai", param);
 
