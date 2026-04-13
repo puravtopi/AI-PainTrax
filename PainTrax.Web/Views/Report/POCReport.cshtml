@@ -53,7 +53,7 @@
                                     <input type="checkbox" class="form-check-input" asp-for="_scheduled" id="_scheduled" onclick="fnScheduled()" /><label class="form-check-label" for="rememberMe">
                                         &nbsp; Schedule &nbsp;
                                     </label>
-                                    <input type="checkbox" class="form-check-input" asp-for="_executed" /><label class="form-check-label" for="rememberMe">
+                                    <input type="checkbox" class="form-check-input" asp-for="_executed" id="_executed" onclick="fnScheduled()" /><label class="form-check-label" for="rememberMe">
                                         &nbsp;  Execute &nbsp;
                                     </label>
                                 </div>
@@ -89,7 +89,7 @@
 
                                 <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnSMulticheduledPopup()">Reschedule</button>
                                 <button class="btn btn-success" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
-                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Add Surgery Center</button>
+                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Surgery Center</button>
 
                             </div>
                             <div class="clearfix"></div>
@@ -171,6 +171,10 @@
                                             if (columns.Contains("Surgeon"))
                                             {
                                                 <th scope="col" id="Surgeon" onclick="sortTable(12);">Surgeon</th>
+                                            }
+                                            if (columns.Contains("Assistant"))
+                                            {
+                                                <th scope="col" id="Assistant" onclick="sortTable(12);">Assistant</th>
                                             }
                                             if (columns.Contains("ClaimNo"))
                                             {
@@ -323,6 +327,10 @@
                                                     if (columnsval.Contains("Surgeon"))
                                                     {
                                                         <td>@item.surgon_name</td>
+                                                    }
+                                                    if (columnsval.Contains("Assistant"))
+                                                    {
+                                                        <td>@item.assistent_name</td>
                                                     }
                                                     if (columnsval.Contains("ClaimNo"))
                                                     {
@@ -506,7 +514,14 @@
             $("#btnRescheduled").show();
             $("#btnSave").show();
             $("#btnSC").show();
-        } else {
+        } 
+        else if($("#_executed").prop("checked"))
+        {
+            $("#btnTransfer").hide();
+            $("#btnRescheduled").hide();
+            $("#btnSave").hide();
+            $("#btnSC").show();
+        }else {
             $("#btnTransfer").hide();
             $("#btnRescheduled").hide();
             $("#btnSave").hide();

@@ -114,6 +114,7 @@ namespace PainTrax.Web.Controllers
             }
             if (_executed)
             {
+                ViewBag.ShowTransfer = true;
                 if (fdate != null && tdate != null)
                 {
                     if (!string.IsNullOrEmpty(_query))
