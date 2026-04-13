@@ -95,7 +95,7 @@ namespace PainTrax.Web.Controllers
             }
             else if (mcodeid == 3)
             {
-               // query += " and pp.INhouseProcbit<>1 and  ISNULL(pp.Other,0) <> 1  ";
+                // query += " and pp.INhouseProcbit<>1 and  ISNULL(pp.Other,0) <> 1  ";
                 query += " and IFNULL(pp.INhouseProcbit,0)<>1 and IFNULL(pp.inout,0)<>1  ";
             }
             else if (mcodeid == 4)
@@ -377,7 +377,7 @@ namespace PainTrax.Web.Controllers
                             case "Account_No":
                                 dr[col] = user.acct_no;
                                 break;
-                            
+
                             case "Case":
                                 dr[col] = user.casetype;
                                 break;
@@ -415,7 +415,7 @@ namespace PainTrax.Web.Controllers
                                 dr[col] = user.mc;
                                 break;
                             case "MC_Details":
-                                dr[col] = user.mc_details;                            
+                                dr[col] = user.mc_details;
                                 break;
                             case "Allergies":
                                 dr[col] = user.allergies;
@@ -437,6 +437,9 @@ namespace PainTrax.Web.Controllers
                                 break;
                             case "Surgeon":
                                 dr[col] = user.surgon_name;
+                                break;
+                            case "Assistant":
+                                dr[col] = user.assistent_name;
                                 break;
                             case "Policy":
                                 dr[col] = user.PolicyNo;
@@ -934,7 +937,7 @@ namespace PainTrax.Web.Controllers
             var objPro = new ProBSReportVM();
             objPro.lstProBSReport = new List<ProBSReportVM>();
 
-            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);            
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
 
             return View(objPro);
         }
@@ -951,7 +954,7 @@ namespace PainTrax.Web.Controllers
             if (fdate != null)
             {
                 _query = " (tp.Scheduled = '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
-            }           
+            }
 
             if (!string.IsNullOrEmpty(_query))
             {
@@ -965,15 +968,15 @@ namespace PainTrax.Web.Controllers
             TempData["ProBSquery"] = query;
 
             //ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
-            
+
             //// for status dropdown. 
             //var statusList = _pocStatusService.GetAll();
 
             //ViewBag.StatusList = new SelectList(statusList, "Name", "Name");
 
-            
 
-            string cnd = " and cmp_id=" + cmpid;            
+
+            string cnd = " and cmp_id=" + cmpid;
             return View(objPOC);
 
         }
@@ -991,7 +994,7 @@ namespace PainTrax.Web.Controllers
                 dt.Columns.Add("Sex");
                 dt.Columns.Add("Name");
                 dt.Columns.Add("Account_No");
-                dt.Columns.Add("DOB");                
+                dt.Columns.Add("DOB");
                 dt.Columns.Add("Phone");
                 dt.Columns.Add("Address");
                 dt.Columns.Add("City");
@@ -1017,7 +1020,7 @@ namespace PainTrax.Web.Controllers
                 dt.Columns.Add("Procedures");
                 dt.Columns.Add("cptcodes");
                 dt.Columns.Add("icdcodes");
-                dt.Columns.Add("specialequ");    
+                dt.Columns.Add("specialequ");
                 int counter = 1;
                 List<string> rowColors = new List<string>();
                 Dictionary<string, tbl_pdfproccode?> mcodeCache = new Dictionary<string, tbl_pdfproccode?>();
@@ -1065,7 +1068,7 @@ namespace PainTrax.Web.Controllers
                         proBS.gender,
                         proBS.name,
                         proBS.account_no,
-                        proBS.DOB?.ToShortDateString() ?? "",                        
+                        proBS.DOB?.ToShortDateString() ?? "",
                         proBS.Phone,
                         proBS.Address,
                         proBS.City,
@@ -1642,7 +1645,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var cnt in data)
                 {
-                    dt.Rows.Add(cnt.doe?.ToShortDateString() ?? "", cnt.location,cnt.WC,cnt.NF,cnt.LIEN , cnt.NoOFIE, cnt.NoOFFU);
+                    dt.Rows.Add(cnt.doe?.ToShortDateString() ?? "", cnt.location, cnt.WC, cnt.NF, cnt.LIEN, cnt.NoOFIE, cnt.NoOFFU);
                 }
 
                 // Create a new Excel file
@@ -2062,13 +2065,13 @@ namespace PainTrax.Web.Controllers
                      new DataColumn("Requested", typeof(string)),
                      new DataColumn("DOE", typeof(string)),
                      new DataColumn("PolicyNo", typeof(string)),
-                     new DataColumn("Attorney", typeof(string))                    
+                     new DataColumn("Attorney", typeof(string))
                 });
 
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var t in data)
                 {
-                    dt.Rows.Add(t.name, t.sex, t.mc, t.casetype, t.location, t.vaccinated, t.mcode, t.bodypart, t.ins_ver_status, t.mc_status, t.case_status, t.insverstatus, t.vac_status, t.scheduled, t.executed, t.requested, t.DOE == null ? "" : t.DOE.Value.ToShortDateString(),t.PolicyNo,t.Attorney);//, IVFR.scheduled == null ? "" : IVFR.scheduled.Value.ToShortDateString());
+                    dt.Rows.Add(t.name, t.sex, t.mc, t.casetype, t.location, t.vaccinated, t.mcode, t.bodypart, t.ins_ver_status, t.mc_status, t.case_status, t.insverstatus, t.vac_status, t.scheduled, t.executed, t.requested, t.DOE == null ? "" : t.DOE.Value.ToShortDateString(), t.PolicyNo, t.Attorney);//, IVFR.scheduled == null ? "" : IVFR.scheduled.Value.ToShortDateString());
                 }
 
                 // Create a new Excel file
