@@ -337,10 +337,8 @@ namespace PainTrax.Web.Services
             param.Add(new MySqlParameter("p_PatientSubmitDate", model.PatientSubmitDate ?? (object)DBNull.Value));
             param.Add(new MySqlParameter("p_DLPath", model.DLPath));
             param.Add(new MySqlParameter("p_Diagnosis", model.Diagnosis));
-            param.Add(new MySqlParameter("p_Treatment_Details", model.TreatmentDesc));
-            param.Add(new MySqlParameter("p_Treatment_Delimit", model.TreatmentIds));
-            param.Add(new MySqlParameter("p_Treatment_Delimit_Desc", model.TreatmentDelimitDesc));
-
+            param.Add(new MySqlParameter("p_Treatment", model.Treatment));
+           
             var data = ExecuteSP("sp_InsertInitialIntake_ai", param);
 
             return data;

@@ -59,6 +59,12 @@
                         <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
                         <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
+                        <input type="hidden" id="hdIEId" name="hdIEId" />
+                        <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
+                        <input type="hidden" id="Diagnosis" name="Diagnosis" />
+                        <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
+                        <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
+                        <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
                         <h4 class="text-center mb-4 fw-bold">
                             Patient Injury Report
 
@@ -1135,7 +1141,27 @@
 
                                 </p>
                             </div>
+                            <h6 class="fw-bold">
+                                Diagnosis <span id="bodyPartLinks" style="margin-left:10px;"></span>
 
+                            </h6>
+                            <div id="collapseEight">
+                                <div class="accordion-body">
+
+                                    <ol> <div class="row" id="divDiagnosis"></div> @Html.Raw(ViewBag.Diagnosis)</ol>
+                                   
+
+                                </div>
+                            </div>
+                            <h6 class="fw-bold">
+                                Treatment / Plan
+                            </h6>
+                           
+                            <a href="javascript:void(0)" onclick="fnshowTreatment()">Add / Edit </a>
+                            <br />
+                            <div id="divTreatment">
+                                @Html.Raw(ViewBag.TreatmentHTML)
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary mt-3 w-100">Submit</button>
@@ -1217,6 +1243,45 @@
     </div>
 </div>
 
+<div class="modal fade" id="treatmentModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modeltitle">Select Treatment / Plan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                @foreach (var item in (List<MS.Models.tbl_treatment_master>)ViewBag.Treatment)
+                {
+                    var check = item.pre_select.Value ? "checked='checked''" : "";
+                    <div class="form-check">
+                        <input class="form-check-input treatment" type="checkbox" id="@item.id" onclick="fnTreatmentDetails();" @check>
+                        <input type="text" value="@item.treatment_details" class="form-check-label form-control" onchange="fnTreatmentDetails();" id="chk_@item.id" for="@item.id" onclick="fnTreatmentDetails();">
+                    </div>
+                }
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="daignoCodeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+
+        <div class="modal-body" id="modelDaignoCode">
+        </div>
+
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
@@ -1244,61 +1309,61 @@
                 throw e;
             }
         }
+
         function startVoice(icon, ctrl) {
 
-        var input = $('#' + ctrl);
+            var input = $('#' + ctrl);
 
-        if (!('webkitSpeechRecognition' in window)) {
-            alert("Voice recognition not supported in this browser");
-            return;
-        }
-
-        // 👉 STOP if already recording
-        if (isRecording) {
-            recognition.stop();
-            isRecording = false;
-            $(icon).css("color", "#007bff");
-            $(icon).attr("title", "Start Recording");
-            return;
-        }
-
-        // 👉 START recording
-        recognition = new webkitSpeechRecognition();
-        recognition.continuous = true;   // 🔥 IMPORTANT
-        recognition.interimResults = false;
-        recognition.lang = "en-US";
-
-        recognition.start();
-        isRecording = true;
-
-        $(icon).css("color", "red");
-         $(icon).attr("title", "Stop Recording");
-
-        recognition.onresult = function (event) {
-
-            var transcript = convertPunctuation(
-                event.results[event.results.length - 1][0].transcript
-            );
-
-            if (transcript.toLowerCase() === "clear all") {
-                if (confirm("Clear all text?")) {
-                    input.val('');
-                }
-            } else {
-                var currentText = input.val() || "";
-                input.val((currentText + "" + transcript).trim());
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Voice recognition not supported in this browser");
+                return;
             }
 
-            updatePreview();
-        };
+            // 👉 STOP if already recording
+            if (isRecording) {
+                recognition.stop();
+                isRecording = false;
+                $(icon).css("color", "#007bff");
+                $(icon).attr("title", "Start Recording");
+                return;
+            }
 
-        recognition.onend = function () {
-            isRecording = false;
-            $(icon).css("color", "#007bff");
-          $(icon).attr("title", "Stop Recording");
-        };
+            // 👉 START recording
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;   // 🔥 IMPORTANT
+            recognition.interimResults = false;
+            recognition.lang = "en-US";
+
+            recognition.start();
+            isRecording = true;
+
+            $(icon).css("color", "red");
+             $(icon).attr("title", "Stop Recording");
+
+            recognition.onresult = function (event) {
+
+                var transcript = convertPunctuation(
+                    event.results[event.results.length - 1][0].transcript
+                );
+
+                if (transcript.toLowerCase() === "clear all") {
+                    if (confirm("Clear all text?")) {
+                        input.val('');
+                    }
+                } else {
+                    var currentText = input.val() || "";
+                    input.val((currentText + "" + transcript).trim());
+                }
+
+                updatePreview();
+            };
+
+            recognition.onend = function () {
+                isRecording = false;
+                $(icon).css("color", "#007bff");
+              $(icon).attr("title", "Stop Recording");
+            };
     }
-
 
         function convertPunctuation(text) {
             return text
@@ -1313,7 +1378,6 @@
                 .replace(/\bnew line\b/gi, "\n")
                 .replace(/\bnext line\b/gi, "\n");
         }
-
 
         function fnShowPresentComplain(cntrl, divCC, divPE) {
             if ($(cntrl).is(":checked")) {
@@ -1355,7 +1419,6 @@
 
             $(this).hide();
         });
-
 
         function loadTemplate() {
             // Try loading a DOCX template first; fall back to plain text.
@@ -1557,9 +1620,16 @@
             if ('@ViewBag.FormData' != '') {
                 bindForm('@ViewBag.FormData');
             }
-            $('#patientForm').on('submit', function (e) {
-                e.preventDefault(); // Stop page reload
 
+        });
+
+        $('#patientForm').on('submit', function (e) {
+                e.preventDefault(); // Stop page reload
+                formData["Diagnosis"]= $("#divDiagnosis").html();
+                formData["TreatmentIds"]= $("#TreatmentIds").val();
+                formData["TreatmentDesc"]= $("#TreatmentDesc").val();
+                formData["TreatmentDelimitDesc"]= $("#TreatmentDelimitDesc").val();
+                formData["Treatment"]= $("#divTreatment").html();
 
                 // Serialize form data
                 var url = '@Url.Action("SaveForm", "IntakeForm")';
@@ -1588,18 +1658,45 @@
                 });
             });
 
-            $(document).on('change', 'input[name="Complaints"]', function () {
+        var selected = [];
+        $(document).on('change', 'input[name="Complaints"]', function () {
 
                 var section = $(this).data('section');
                 var pe = $(this).data('pe');
 
                 fnShowPresentComplain(this, section, pe);
 
-                 var selected = [];
 
-                    $('input[name="Complaints"]:checked').each(function () {
-                        selected.push($(this).val());
-                    });
+                    var value = $(this).val();
+
+                    if ($(this).is(':checked')) {
+                        // Add in click order
+                        selected.push(value);
+                    } else {
+                        // Remove if unchecked
+                        selected = selected.filter(function (item) {
+                            return item !== value;
+                        });
+                    }
+                    if(selected.length>0){
+
+                        var html = '';
+
+                        selected.forEach(function(part) {
+                            part = part.trim();
+
+                            html += `<span class="diagnosis-link"
+                                            data-part="${part}"
+                                            style="margin-left:8px; color:blue; cursor:pointer; text-decoration:underline;">
+                                        ${part}
+                                     </span>`;
+                        });
+
+                        $('#bodyPartLinks').html(html);
+                    }
+                    else{
+                       $('#bodyPartLinks').html('');
+                    }
 
                     var result = selected.join(', ');
 
@@ -1608,12 +1705,76 @@
                     $('#BodyPart').val(result);
             });
 
-            $('#DOB').on('change', function () {
+        $('#DOB').on('change', function () {
                 var dob = $(this).val(); // format: yyyy-mm-dd
                 var age = calculateAge(dob);
                 $('#Age').val(age);
             });
+
+        $(document).on('click', '.diagnosis-link', function(e) {
+
+            e.stopPropagation(); // 🔥 prevents accordion from opening/closing
+
+                var part = $(this).data('part');
+                fnShowDiagnosis(part);
         });
+
+        function fnShowDiagnosis(bodyParts){
+
+            var url = '@Url.Action("GetDaignoCodeList", "IntakeForm")?bodyparts=' + bodyParts + "&id=" + $("#hdId").val();
+            $("#hdSelectedBody").val(bodyParts);
+            $.ajax({
+                type: "Post",
+                url: url,
+
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    $('#modelDaignoCode').html(data);
+                },
+                error: function (xhr, status, error) {
+                    alert("Error!" + xhr.status);
+                },
+            });
+
+            $('#daignoCodeModal').modal('show');
+            return false;
+        }
+        function fnshowTreatment()
+        {
+            $("#treatmentModal").modal('show');
+        }
+
+         function fnTreatmentDetails() {
+                    var strContent = '<ol>';
+                    var strIds = '', strDesc = '';
+
+                    $('input[type=checkbox].treatment').each(function (i, e) {
+                        // Check if the checkbox is selected
+                        if (e.checked) {
+                            var checkboxValue = $("#chk_" + e.id).val();
+
+                            // Only append to strContent if checkboxValue is not undefined or empty
+                            if (checkboxValue) {
+                                strContent += '<li>' + checkboxValue + '</li>';
+                                strIds += (strIds ? ',' : '') + e.id;  // Ensure no leading comma
+                                strDesc += (strDesc ? '^' : '') + checkboxValue;  // Ensure no leading ^ for first value
+                            }
+                        }
+                    });
+
+                    // Close the ordered list
+                    strContent += '</ol>';
+
+                    // If no valid checkboxes were selected, clear the content (optional)
+                    if (strContent === '<ol></ol>') {
+                        strContent = '';  // Or handle this case as needed
+                    }
+
+                    $("#divTreatment").html(strContent);
+                    $('#TreatmentIds').val(strIds);
+                    $('#TreatmentDelimitDesc').val(strDesc);
+                    $('#TreatmentDesc').val(strContent);
+         }
 
         function fnExportDOC() {
             var htmlContent = $('#previewText').html();

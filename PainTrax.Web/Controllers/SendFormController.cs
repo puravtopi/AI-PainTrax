@@ -31,36 +31,70 @@ namespace PainTrax.Web.Controllers
             id = id.Replace(" ", "+");
             var _id = EncryptionHelper.Decrypt(id);
 
-            if (_commonservices.isSignExist(_id) == false)
-            {
-                var data = _commonservices.getPatientDetails(_id);
+            //if (_commonservices.isSignExist(_id) == false)
+            //{
+            var data = _commonservices.getPatientDetails(_id);
 
-                if (data == null)
-                {
-                    data = new Models.PatientDetails()
-                    {
-                        fname = "",
-                        lname = ""
-
-                    };
-                }
-                data.id = _id;
-                data.isExist = false;
-                return View(data);
-            }
-            else
+            if (data == null)
             {
-                var data = new Models.PatientDetails()
+                data = new Models.PatientDetails()
                 {
-                    isExist = true
+                    fname = "",
+                    lname = ""
+
                 };
-                return View(data);
             }
+            data.id = _id;
+            data.isExist = false;
+            return View(data);
+            //}
+            //else
+            //{
+            //    var data = new Models.PatientDetails()
+            //    {
+            //        isExist = true
+            //    };
+            //    return View(data);
+            //}
+
+        }
+
+        public IActionResult AuthoAcknoKDVPC(string id)
+        {
+            id = Uri.UnescapeDataString(id);
+            id = id.Replace(" ", "+");
+            var _id = EncryptionHelper.Decrypt(id);
+
+            //if (_commonservices.isSignExist(_id) == false)
+            //{
+            var data = _commonservices.getPatientDetails(_id);
+
+            if (data == null)
+            {
+                data = new Models.PatientDetails()
+                {
+                    fname = "",
+                    lname = ""
+
+                };
+            }
+            data.id = _id;
+            data.isExist = false;
+            return View(data);
+            //}
+            //else
+            //{
+            //    var data = new Models.PatientDetails()
+            //    {
+            //        isExist = true
+            //    };
+            //    return View(data);
+            //}
 
         }
 
         [HttpPost]
-        public IActionResult SaveSign([FromBody] tbl_ie_sign model)
+        public IActionResult SaveSign([FromBody] PatientDetails model)
         {
             if (string.IsNullOrEmpty(model.signatureData))
                 return BadRequest("Invalid signature data.");
@@ -76,7 +110,7 @@ namespace PainTrax.Web.Controllers
 
 
                 var imageData = Convert.FromBase64String(base64Data);
-                var signaturesDir = Path.Combine(Environment.WebRootPath, "signatures", "authoacko");
+                var signaturesDir = Path.Combine(Environment.WebRootPath, "signatures");
 
 
                 if (!Directory.Exists(signaturesDir))
@@ -90,7 +124,12 @@ namespace PainTrax.Web.Controllers
 
                 var id = _commonservices.InsertSign(filename, base64Data, model.id.ToString());
 
-                var source = Path.Combine(Environment.WebRootPath, "Forms", "PATIENT MASTER AUTHORIZATION.pdf");
+                var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+                var pdffilename = "PATIENT MASTER AUTHORIZATION.pdf";
+                if (client_code.ToLower() == "kdvpc")
+                    pdffilename = "CF_KDV.pdf";
+
+                var source = Path.Combine(Environment.WebRootPath, "Autorization", pdffilename);
                 Dictionary<string, string> controls = new Dictionary<string, string>();
 
                 //Get Patient Data with Sign
@@ -98,8 +137,46 @@ namespace PainTrax.Web.Controllers
 
                 if (pData != null)
                 {
-                    controls.Add("dob", pData.dob.ToString("MM-dd-yyyy"));
+                    controls.Add("dob", pData.dob.Value.ToString("MM-dd-yyyy"));
                     controls.Add("patientName", pData.lname + ' ' + pData.fname);
+                    controls.Add("executionDate", model.executionDate?.ToString("MM-dd-yyyy"));
+                    controls.Add("primaryPhone", model.primaryPhone);
+                    controls.Add("alternatePhone", model.alternatePhone);
+                    controls.Add("email", model.email);
+                    controls.Add("patientPortalUsername", model.patientPortalUsername);
+                    controls.Add("SMSConsentY", string.IsNullOrEmpty(model.sMSConsent) ? ""
+                    : char.ToUpper(model.sMSConsent.ToLowerInvariant()[0]) + model.sMSConsent.ToLowerInvariant().Substring(1));
+                    controls.Add("SMSConsentN", string.IsNullOrEmpty(model.sMSConsent) ? ""
+                    : char.ToUpper(model.sMSConsent.ToLowerInvariant()[0]) + model.sMSConsent.ToLowerInvariant().Substring(1));
+
+                    controls.Add("EmailConsentY", string.IsNullOrEmpty(model.emailConsent) ? ""
+                    : char.ToUpper(model.emailConsent.ToLowerInvariant()[0]) + model.emailConsent.ToLowerInvariant().Substring(1));
+                    controls.Add("EmailConsentN", string.IsNullOrEmpty(model.emailConsent) ? ""
+                    : char.ToUpper(model.emailConsent.ToLowerInvariant()[0]) + model.emailConsent.ToLowerInvariant().Substring(1));
+
+                    controls.Add("VoiceMailConsentY", string.IsNullOrEmpty(model.voiceMailConsent) ? ""
+                    : char.ToUpper(model.voiceMailConsent.ToLowerInvariant()[0]) + model.voiceMailConsent.ToLowerInvariant().Substring(1));
+                    controls.Add("VoiceMailConsentN", string.IsNullOrEmpty(model.voiceMailConsent) ? ""
+                    : char.ToUpper(model.voiceMailConsent.ToLowerInvariant()[0]) + model.voiceMailConsent.ToLowerInvariant().Substring(1));
+
+                    controls.Add("PatientPortalConsentY", string.IsNullOrEmpty(model.patientPortalConsent) ? ""
+                    : char.ToUpper(model.patientPortalConsent.ToLowerInvariant()[0]) + model.patientPortalConsent.ToLowerInvariant().Substring(1));
+                    controls.Add("PatientPortalConsentN", string.IsNullOrEmpty(model.patientPortalConsent) ? ""
+                    : char.ToUpper(model.patientPortalConsent.ToLowerInvariant()[0]) + model.patientPortalConsent.ToLowerInvariant().Substring(1));
+
+                    controls.Add("AudioRecordingConsentY", string.IsNullOrEmpty(model.audioRecordingConsent) ? ""
+                    : char.ToUpper(model.audioRecordingConsent.ToLowerInvariant()[0]) + model.audioRecordingConsent.ToLowerInvariant().Substring(1));
+                    controls.Add("AudioRecordingConsentN", string.IsNullOrEmpty(model.audioRecordingConsent) ? ""
+                    : char.ToUpper(model.audioRecordingConsent.ToLowerInvariant()[0]) + model.audioRecordingConsent.ToLowerInvariant().Substring(1));
+
+                    controls.Add("MarketingConsentY", string.IsNullOrEmpty(model.marketingConsent) ? ""
+                    : char.ToUpper(model.marketingConsent.ToLowerInvariant()[0]) + model.marketingConsent.ToLowerInvariant().Substring(1));
+                    controls.Add("MarketingConsentN", string.IsNullOrEmpty(model.marketingConsent) ? ""
+                    : char.ToUpper(model.marketingConsent.ToLowerInvariant()[0]) + model.marketingConsent.ToLowerInvariant().Substring(1));
+
+                    controls.Add("SignedByName", model.signedByName);
+                    controls.Add("SignedDate", model.signedDate?.ToString("MM-dd-yyyy"));
+                    controls.Add("RelationshipToPatient", model.relationshipToPatient);
 
                     string path = Path.Combine(_env.ContentRootPath, "PatientDocuments", "Others", model.id.ToString());
 
@@ -114,6 +191,7 @@ namespace PainTrax.Web.Controllers
                 return Ok(new { id = 0 });
             }
         }
+
         private string ExtractBase64Data(string signatureData)
         {
             // Example method to extract Base64 data from a comma-separated string

@@ -757,6 +757,7 @@ namespace PainTrax.Web.Controllers
                     ViewBag.Id = id;
                     ViewBag.SubmitDate = data.PatientSubmitDate;
                     ViewBag.Diagnosis = data.Diagnosis;
+                    ViewBag.TreatmentHTML = data.Treatment;
 
                 }
             }
@@ -895,9 +896,9 @@ namespace PainTrax.Web.Controllers
                     LocationId = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
                     DLPath = model.DLPath,
                     Diagnosis = model.Diagnosis,
-                    TreatmentDesc = model.TreatmentDesc,
+                    Treatment = model.Treatment,
                     TreatmentIds = model.TreatmentIds,
-                    TreatmentDelimitDesc= model.TreatmentDelimitDesc
+                    TreatmentDelimitDesc = model.TreatmentDelimitDesc
                 };
                 var result = service.SaveInitialIntakeAI(initialIntakeAI);
 
@@ -966,7 +967,9 @@ namespace PainTrax.Web.Controllers
                                     allergies = "",
                                     assessment = model.Diagnosis,
                                     ie_id = ie,
-                                    vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____."
+                                    vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.",
+                                    cc = this.GetCC(model)
+
                                 };
 
                                 _ieService.InsertPage1(objPage1);
@@ -1638,6 +1641,102 @@ namespace PainTrax.Web.Controllers
                 Message = msg
             };
             new LogService().Insert(logdata);
+        }
+
+        private string GetCC(AIIntakeFormModel model)
+        {
+            string cc_rsh = "", cc_rsh_difficulty = "", cc_rsh_imporve = "",
+                cc_lsh = "", cc_lsh_difficulty = "", cc_lsh_imporve = "",
+                  cc_lkn = "", cc_lkn_difficulty = "", cc_lkn_imporve = "",
+                   cc_rkn = "", cc_rkn_difficulty = "", cc_rkn_imporve = "";
+
+            //right soulder
+            if (!string.IsNullOrEmpty(model.RShPain))
+                cc_rsh = "The patient’s right shoulder pain level is " + model.RShPain + "/10. ";
+            if (model.RShSymptoms.Count > 0)
+                cc_rsh = cc_rsh + "The patient complains of " + string.Join(", ", model.RShSymptoms) + ". ";
+
+            if (model.RShReachOverhead?.ToLower() == "yes")
+                cc_rsh_difficulty = "Overhead";
+            if (model.RShReachBack?.ToLower() == "yes")
+                cc_rsh_difficulty = cc_rsh_difficulty + ", Back";
+            if (model.RShSleepIssue?.ToLower() == "yes")
+                cc_rsh_difficulty = cc_rsh_difficulty + ", Sleeping";
+
+            if (!string.IsNullOrEmpty(cc_rsh_difficulty))
+                cc_rsh = cc_rsh + "The patient has difficulty " + cc_rsh_difficulty + " on the right shoulder. ";
+
+            if (model.RShImprove.Count > 0)
+                cc_rsh = cc_rsh + "There has been improvement with " + string.Join(", ", model.RShImprove) + ".";
+            else
+                cc_rsh = cc_rsh + "There has been no improvement with physical therapy.";
+
+            //left soulder
+            if (!string.IsNullOrEmpty(model.LShPain))
+                cc_lsh = "The patient’s left shoulder pain level is " + model.LShPain + "/10. ";
+            if (model.LShSymptoms.Count > 0)
+                cc_lsh = cc_lsh + "The patient complains of " + string.Join(", ", model.LShSymptoms) + ". ";
+
+
+            if (model.LShReachOverhead?.ToLower() == "yes")
+                cc_lsh_difficulty = "Overhead";
+            if (model.LShReachBack?.ToLower() == "yes")
+                cc_lsh_difficulty = cc_lsh_difficulty + ", Back";
+            if (model.LShSleepIssue?.ToLower() == "yes")
+                cc_lsh_difficulty = cc_lsh_difficulty + ", Sleeping";
+            if (!string.IsNullOrEmpty(cc_lsh_difficulty))
+                cc_lsh = cc_lsh + "The patient has difficulty " + cc_lsh_difficulty + " on the left shoulder. ";
+
+            if (model.LShImprove.Count > 0)
+                cc_lsh = cc_lsh + "There has been improvement with " + string.Join(", ", model.LShImprove) + ".";
+            else
+                cc_lsh = cc_lsh + "There has been no improvement with physical therapy.";
+
+            //right knee
+            if (!string.IsNullOrEmpty(model.RKnPain))
+                cc_rkn = "The patient’s right knee pain level is " + model.RKnPain + "/10. ";
+            if (model.RKnSymptoms.Count > 0)
+                cc_rkn = cc_rkn + "The patient complains of " + string.Join(", ", model.RKnSymptoms) + ". ";
+
+
+            if (model.RKnReachOverhead?.ToLower() == "yes")
+                cc_rkn_difficulty = "Overhead";
+            if (model.RKnReachBack?.ToLower() == "yes")
+                cc_rkn_difficulty = cc_rkn_difficulty + ", Back";
+            if (model.RKnSleepIssue?.ToLower() == "yes")
+                cc_rkn_difficulty = cc_rkn_difficulty + ", Sleeping";
+
+            if (!string.IsNullOrEmpty(cc_rkn_difficulty))
+                cc_rkn = cc_rkn + "The patient has difficulty " + cc_rkn_difficulty.TrimStart(',') + " on the right knee. ";
+
+            if (model.RKnImprove.Count > 0)
+                cc_rkn = cc_rkn + "There has been improvement with " + string.Join(", ", model.RKnImprove) + ".";
+            else
+                cc_rkn = cc_rkn + "There has been no improvement with physical therapy.";
+
+            //left knee
+            if (!string.IsNullOrEmpty(model.LKnPain))
+                cc_lkn = "The patient’s left knee pain level is " + model.LKnPain + "/10. ";
+            if (model.LKnSymptoms.Count > 0)
+                cc_lkn = cc_lkn + "The patient complains of " + string.Join(", ", model.LKnSymptoms) + ". ";
+
+
+            if (model.LKnReachOverhead?.ToLower() == "yes")
+                cc_lkn_difficulty = "Overhead";
+            if (model.LKnReachBack?.ToLower() == "yes")
+                cc_lkn_difficulty = cc_lkn_difficulty + ", Back";
+            if (model.LKnSleepIssue?.ToLower() == "yes")
+                cc_lkn_difficulty = cc_lkn_difficulty + ", Sleeping";
+
+            if (!string.IsNullOrEmpty(cc_lkn_difficulty))
+                cc_lkn = cc_lkn + "The patient has difficulty " + cc_lkn_difficulty.TrimStart(',') + " on the left knee. ";
+
+            if (model.LKnImprove.Count > 0)
+                cc_lkn = cc_lkn + "There has been improvement with " + string.Join(", ", model.LKnImprove) + ".";
+            else
+                cc_lkn = cc_lkn + "There has been no improvement with physical therapy.";
+
+            return cc_rsh + "<br/>" + cc_lsh + "<br/>" + cc_rkn + "<br/>" + cc_lkn;
         }
         #endregion
     }

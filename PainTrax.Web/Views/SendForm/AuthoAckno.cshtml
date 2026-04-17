@@ -68,7 +68,7 @@
 
                         <div class="container my-4" id="formDiv">
 
-                            @if (Model.isExist)
+                            @if (Model.isExist.Value)
                             {
                                 <div id="successMessage" class="alert alert-success">
                                     <div class="container my-4">
@@ -91,6 +91,7 @@
 
                                 <form id="authorizationForm">
                                     <input type="hidden" value="@Model.id" id="id" name="id" />
+                                    <input type="hidden" value="@Model.patientId" id="patientId" name="patientId" />
                                     
                                     <div class="row g-3">
 
@@ -106,7 +107,7 @@
 
                                         <div class="col-md-2">
                                             <label class="form-label">Date of Birth</label>
-                                            <input type="text" class="form-control form-bottom-border" readonly="readonly" name="dob" value="@(Model.dob==null?"": Model.dob.ToShortDateString())">
+                                            <input type="text" class="form-control form-bottom-border" readonly="readonly" name="DOB" value="@(Model.dob==null?"": Model.dob.Value.ToShortDateString())">
                                         </div>
 
                                         <div class="col-md-2">
@@ -306,6 +307,7 @@
             var data = {
                 id: id,
                 signatureData: signatureData,
+                patientId: $("#patientId").val(),
             };
 
             $.ajax({

@@ -66,6 +66,9 @@
         public List<string> RKnType { get; set; }
         public List<string> RShInsp { get; set; }
         public string RShPain { get; set; }
+        public string RShReachOverhead { get; set; }
+        public string RShReachBack { get; set; }
+        public string RShSleepIssue { get; set; }
         public List<string> RShPalp { get; set; }
         public string RShProm { get; set; }
         public List<string> RShType { get; set; }
@@ -97,6 +100,7 @@
         public string PainEffect { get; set; }
         public List<string> RKnImprove { get; set; }
         public string RShAbdPain { get; set; }
+
         public string RShExtPain { get; set; }
         public List<string> RShImprove { get; set; }
         public string RshFlexion { get; set; }
@@ -106,9 +110,15 @@
         public string ChiroRelief { get; set; }
         public List<string> LKnSymptoms { get; set; }
         public List<string> LShSymptoms { get; set; }
+        public string LKnReachOverhead { get; set; }
+        public string LKnReachBack { get; set; }
+        public string LKnSleepIssue { get; set; }
         public List<string> PatientType { get; set; }
         public List<string> RKnSymptoms { get; set; }
         public string RShExternal { get; set; }
+        public string RKnReachOverhead { get; set; }
+        public string RKnReachBack { get; set; }
+        public string RKnSleepIssue { get; set; }
         public string RShFlexPain { get; set; }
         public string RShInternal { get; set; }
         public List<string> RShRomLimit { get; set; }
@@ -126,7 +136,6 @@
         public string ChiroDuration { get; set; }
         public string LShSleepIssue { get; set; }
         public string OtherDrugsTxt { get; set; }
-        public string RShSleepIssue { get; set; }
         public string SymptomsStart { get; set; }
         public bool TreatmentPlan { get; set; }
         public string SymptomPattern { get; set; }
@@ -134,9 +143,9 @@
         public string DailyActivities { get; set; }
         public string MechanismChoice { get; set; }
         public string LShReachOverhead { get; set; }
+        public string LShReachBack { get; set; }
         public string NotWorkingReason { get; set; }
         public string PreInjuryDetails { get; set; }
-        public string RShReachOverhead { get; set; }
         public string SymptomsProgress { get; set; }
         public string DiscontinueReason { get; set; }
         public string MechanismInvolving { get; set; }
@@ -150,6 +159,8 @@
         public string TreatmentIds { get; set; }
         public string TreatmentDesc { get; set; }
         public string TreatmentDelimitDesc { get; set; }
+        public string Treatment { get; set; }
+        public string AccidentAudio { get; set; }
     }
 }
 

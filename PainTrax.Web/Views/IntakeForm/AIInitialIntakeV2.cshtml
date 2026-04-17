@@ -65,7 +65,8 @@
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
                         <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
-                        <h4 class="text-center mb-4 fw-bold">Patient Injury Report
+                        <h4 class="text-center mb-4 fw-bold">
+                            Patient Injury Report
                             <a href='@Url.Action("AIInitialIntake", "IntakeForm", new { locid = ViewBag.LocId })'>
                                 Click for V1
                             </a>
@@ -398,11 +399,11 @@
                                                     <label><input type="radio" name="Records" value="No"> No</label>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     How did you get to hospital:
-                                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Ambulance"> Ambulance</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Car"> Car</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Uber"> Uber</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Cab"> Cab</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Friend"> Friend</label>
+                                                    <label><input type="radio" name="Transport" value="Ambulance"> Ambulance</label>
+                                                    <label><input type="radio" name="Transport" value="Car"> Car</label>
+                                                    <label><input type="radio" name="Transport" value="Uber"> Uber</label>
+                                                    <label><input type="radio" name="Transport" value="Cab"> Cab</label>
+                                                    <label><input type="radio" name="Transport" value="Friend"> Friend</label>
                                                 </div>
                                             </p>
 
@@ -650,8 +651,8 @@
                                                     <input id="RShPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShPain')"></i>/10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="RShType" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShType" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Constant"> Constant</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Intermittent"> Intermittent</label>
 
                                                     <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Stiff"> Stiff</label>
                                                     <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Weak"> Weak</label>
@@ -689,8 +690,8 @@
                                                     <input id="LShPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LShPain')"></i> /10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="LShType" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShType" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Constant"> Constant</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Intermittent"> Intermittent</label>
 
                                                     <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Stiff"> Stiff</label>
                                                     <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Weak"> Weak</label>
@@ -728,8 +729,8 @@
                                                     <input id="RKnPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RKnPain')"></i> /10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnType" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnType" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Constant"> Constant</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Intermittent"> Intermittent</label>
 
                                                     <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Stiff"> Stiff</label>
                                                     <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Weak"> Weak</label>
@@ -1212,7 +1213,7 @@
                                     <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
 
-                                            <ol> <div class="row" id="divDiagnosis"></ol>
+                                            <ol> <div class="row" id="divDiagnosis"></div></ol>
                                             @Html.Raw(ViewBag.Diagnosis)
 
                                         </div>
@@ -1455,21 +1456,60 @@
                 .replace(/\bnew line\b/gi, "\n")
                 .replace(/\bnext line\b/gi, "\n");
         }
-
+        let selectedSections = [];
+        let selectedPESections = [];
 
         function fnShowPresentComplain(cntrl, divCC, divPE) {
-            if ($(cntrl).is(":checked")) {
-                $("#" + divCC).slideDown();
-                $("#" + divPE).slideDown();
-            } else {
-                $("#" + divCC).slideUp();
-                $("#" + divPE).slideUp();
 
-                // OPTIONAL: clear values when unchecked
-                $("#" + divCC).find("input").prop("checked", false).val("");
-                $("#" + divPE).find("input").prop("checked", false).val("");
+        if (!divCC) return;
+
+        if ($(cntrl).is(":checked")) {
+
+            // Add in order
+            if (!selectedSections.includes(divCC)) {
+                selectedSections.push(divCC);
             }
+
+            if (divPE && !selectedPESections.includes(divPE)) {
+                selectedPESections.push(divPE);
+            }
+
+        } else {
+
+            // Remove when unchecked
+            selectedSections = selectedSections.filter(x => x !== divCC);
+            selectedPESections = selectedPESections.filter(x => x !== divPE);
+
+            // Clear values
+            $("#" + divCC).find("input").prop("checked", false).val("");
+            $("#" + divPE).find("input").prop("checked", false).val("");
         }
+
+        renderSectionsInOrder();
+    }
+
+        function renderSectionsInOrder() {
+
+        let ccContainer = $("#presentComplaintContainer");   // create this div
+        let peContainer = $("#physicalExamContainer");       // create this div
+
+        ccContainer.empty();
+        peContainer.empty();
+
+        // Render CC sections in order
+        selectedSections.forEach(function (id) {
+            let el = $("#" + id);
+            el.show();                 // ensure visible
+            ccContainer.append(el);    // append in order
+        });
+
+        // Render PE sections in order
+        // selectedPESections.forEach(function (id) {
+        //     let el = $("#" + id);
+        //     el.show();
+        //     peContainer.append(el);
+        // });
+    }
 
         // CLOSE (❌)
         $("#closePreview").click(function () {
@@ -1545,7 +1585,7 @@
         function updatePreview() {
 
             var values = {};
-            debugger
+            
             $('#patientForm').find('input, select, textarea').each(function () {
                 var key = $(this).attr('name') || $(this).attr('id');
                 var cls = $(this).attr('class');
@@ -1703,7 +1743,9 @@
             $('#patientForm').on('submit', function (e) {
                 e.preventDefault(); // Stop page reload
                 formData["Diagnosis"]= $("#divDiagnosis").html();
-
+                formData["TreatmentIds"]= $("#TreatmentIds").val();
+                formData["TreatmentDesc"]= $("#TreatmentDesc").val();
+                formData["TreatmentDelimitDesc"]= $("#TreatmentDelimitDesc").val();
                 // Serialize form data
                 var url = '@Url.Action("SaveForm", "IntakeForm")';
                 var indexurl = '@Url.Action("Index", "Visit")';
@@ -1730,7 +1772,7 @@
                     }
                 });
             });
-
+             var selected = [];
             $(document).on('change', 'input[name="Complaints"]', function () {
 
                 var section = $(this).data('section');
@@ -1738,11 +1780,22 @@
 
                 fnShowPresentComplain(this, section, pe);
 
-                 var selected = [];
+                
 
-                    $('input[name="Complaints"]:checked').each(function () {
-                        selected.push($(this).val());
-                    });
+                    // $('input[name="Complaints"]:checked').each(function () {
+                    //     selected.push($(this).val());
+                    // });
+                    var value = $(this).val();
+
+                    if ($(this).is(':checked')) {
+                        // Add in click order
+                        selected.push(value);
+                    } else {
+                        // Remove if unchecked
+                        selected = selected.filter(function (item) {
+                            return item !== value;
+                        });
+                    }
 
                     if(selected.length>0){
                         $("#acordPresentComp").show();
@@ -1803,7 +1856,7 @@
 
             // cleaned=cleaned.replace(/"/g, '\\"');
 
-            // debugger
+            // 
             var data = safeParse(val);
 
             $('#patientForm').find('input, select, textarea').each(function () {
