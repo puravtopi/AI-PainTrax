@@ -24,9 +24,6 @@
                                 <h5 class="card-title">Add Diagnosis </h5>
                             </div>
                             <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
-
-                                
-
                             </div>
                         </div>
 
@@ -38,7 +35,7 @@
                                         <label for="BodyPart" class="col-md-4 col-lg-3 col-form-label">Body Part</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" tabindex="1" class="form-control requred" asp-for="BodyPart">
-                                            
+
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -60,7 +57,7 @@
 
                                         </div>
                                     </div>
-                                    
+
                                     <div class="row mb-3">
 
                                         <div class="col-sm-10">
@@ -74,7 +71,7 @@
                                         <label for="DiagCode" class="col-md-4 col-lg-3 col-form-label">Diag Code</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" class="form-control" asp-for="DiagCode">
-                                          
+
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -83,7 +80,13 @@
                                             <input type="text" tabindex="5" class="form-control" asp-for="display_order" />
                                         </div>
                                     </div>
-
+                                    <div class="row mb-3">
+                                        <label for="DiagCode" class="col-md-4 col-lg-3 col-form-label">Diag Code Group</label>
+                                        <div class="col-md-8 col-lg-9 d-flex gap-2">
+                                            <select class="form-select searchable-dropdown" asp-for="DiagCodeGroup" asp-items="@ViewBag.groupList"></select>
+                                            <button type="button" class="btn btn-outline-secondary" id="btnOpenDiagModal" onclick="fnShowGroup()" title="Add Group">+</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -93,7 +96,27 @@
             </div>
         </div>
     </section>
-
+    <div class="modal fade" id="diagCodeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Diagnosis Code Group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="newDiagName" class="form-label">Group name</label>
+                        <input id="newDiagName" class="form-control" />
+                    </div>
+                    <div id="diagError" class="text-danger small d-none"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveDiag" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </main><!-- End #main -->
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -102,3 +125,49 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+<script>
+    function fnShowGroup(){
+        $("#diagCodeModal").modal('show');
+    }
+
+    $("#btnSaveDiag").click(function () {
+
+        var groupName = $("#newDiagName").val().trim();
+
+        if (groupName === "") {
+            $("#diagError").removeClass("d-none").text("Group name is required");
+            return;
+        }
+
+        $("#diagError").addClass("d-none");
+        var url="@Url.Action("SaveGroup", "Diagcode")";
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: { name: groupName },
+            success: function (res) {
+                if (res.success) {
+                    $("#diagCodeModal").modal('hide');
+                    $("#newDiagName").val("");
+
+                      var newOption = new Option(groupName, groupName, true, true);
+        $("#DiagCodeGroup").append(newOption).trigger('change');
+
+        // Optional: select it
+        $("#DiagCodeGroup").val(groupName);
+
+
+                    // optional: refresh list or dropdown
+                    alert("Saved successfully");
+                } else {
+                    $("#diagError").removeClass("d-none").text(res.message);
+                }
+            },
+            error: function () {
+                $("#diagError").removeClass("d-none").text("Something went wrong");
+            }
+        });
+
+    });
+</script>
+

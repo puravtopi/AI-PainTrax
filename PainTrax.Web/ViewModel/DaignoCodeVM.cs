@@ -5,6 +5,7 @@
         public int DaignoCodeId { get; set; }
         public bool IsSelect { get; set; }
         public string DiagCode { get; set; }
+        public string DiagCodeGroup { get; set; }
         public string? Description { get; set; }
 
         public int? Display_Order { get; set; }

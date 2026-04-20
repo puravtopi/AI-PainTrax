@@ -762,7 +762,8 @@ namespace PainTrax.Web.Controllers
                 }
             }
 
-            return View();
+            return PartialView("_IntakeQMPPC");
+            //return View();
         }
 
         public IActionResult AIInitialIntakeV2(int? locId, int? id)
@@ -1217,12 +1218,19 @@ namespace PainTrax.Web.Controllers
                                   DaignoCodeId = c.Id.Value,
                                   Description = c.Description,
                                   DiagCode = c.DiagCode,
+                                  DiagCodeGroup= c.DiagCodeGroup==null?"" : c.DiagCodeGroup,
                                   IsSelect = assetment != null ? (assetment.IndexOf(c.DiagCode) > 0 ? true : c.PreSelect) : c.PreSelect,
                                   Display_Order = c.display_order,
                                   cmp_id = c.cmp_id
 
                               }).ToList().Where(x => x.cmp_id == cmpIdInt).OrderBy(x => x.Display_Order);
-                return PartialView("_DaignoCode", datavm);
+
+
+                var groupedData = datavm
+                .GroupBy(x => x.DiagCodeGroup)
+                .ToList();
+
+                return PartialView("_DaignoCode", groupedData);
 
 
             }

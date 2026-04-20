@@ -67,7 +67,7 @@
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
                         <h4 class="text-center mb-4 fw-bold">
                             Patient Injury Report
-                           @*  <a href='@Url.Action("AIInitialIntake", "IntakeForm", new { locid = ViewBag.LocId })'>
+                            @*  <a href='@Url.Action("AIInitialIntake", "IntakeForm", new { locid = ViewBag.LocId })'>
                                 Click for V1
                             </a> *@
 
@@ -1211,7 +1211,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
+                                        <div class="accordion-body" id="DiagnosisHTML">
 
                                             <ol> <div class="row" id="divDiagnosis"></div></ol>
                                             @Html.Raw(ViewBag.Diagnosis)
@@ -1230,7 +1230,7 @@
                                             <a href="javascript:void(0)" onclick="fnshowTreatment()">Add / Edit </a>
                                             <br />
                                             <div id="divTreatment">
-                                                @Html.Raw(ViewBag.TreatmentDesc)
+                                                @Html.Raw(ViewBag.TreatmentHTML)
                                             </div>
                                         </div>
                                     </div>
@@ -1352,7 +1352,6 @@
 
 <div class="modal fade" id="daignoCodeModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
-
 
         <div class="modal-body" id="modelDaignoCode">
         </div>
@@ -1504,11 +1503,11 @@
         });
 
         // Render PE sections in order
-        // selectedPESections.forEach(function (id) {
-        //     let el = $("#" + id);
-        //     el.show();
-        //     peContainer.append(el);
-        // });
+        selectedPESections.forEach(function (id) {
+            let el = $("#" + id);
+            el.show();
+            peContainer.append(el);
+        });
     }
 
         // CLOSE (❌)
@@ -1585,7 +1584,7 @@
         function updatePreview() {
 
             var values = {};
-            
+
             $('#patientForm').find('input, select, textarea').each(function () {
                 var key = $(this).attr('name') || $(this).attr('id');
                 var cls = $(this).attr('class');
@@ -1743,6 +1742,7 @@
             $('#patientForm').on('submit', function (e) {
                 e.preventDefault(); // Stop page reload
                 formData["Diagnosis"]= $("#divDiagnosis").html();
+                formData["Treatment"]= $("#divTreatment").html();
                 formData["TreatmentIds"]= $("#TreatmentIds").val();
                 formData["TreatmentDesc"]= $("#TreatmentDesc").val();
                 formData["TreatmentDelimitDesc"]= $("#TreatmentDelimitDesc").val();
@@ -1780,7 +1780,7 @@
 
                 fnShowPresentComplain(this, section, pe);
 
-                
+
 
                     // $('input[name="Complaints"]:checked').each(function () {
                     //     selected.push($(this).val());
@@ -1856,7 +1856,7 @@
 
             // cleaned=cleaned.replace(/"/g, '\\"');
 
-            // 
+            //
             var data = safeParse(val);
 
             $('#patientForm').find('input, select, textarea').each(function () {
@@ -2007,6 +2007,7 @@
                     // }
 
                     $("#divTreatment").html(strContent);
+                  
                     $('#TreatmentIds').val(strIds);
                     $('#TreatmentDelimitDesc').val(strDesc);
                     $('#TreatmentDesc').val(strContent);

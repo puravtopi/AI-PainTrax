@@ -24,6 +24,10 @@ using System.IO;
 using SkiaSharp;
 using System.Diagnostics.Metrics;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using System.Globalization;
+using MS.Models;
+using MS.Services;
+using Newtonsoft.Json;
 
 namespace PainTrax.Web.Controllers
 {
@@ -47,6 +51,15 @@ namespace PainTrax.Web.Controllers
         private readonly InsuranceStatusService _insuranceStatusService = new InsuranceStatusService();
         private readonly ProBSServices _servicesProBS = new ProBSServices();
         private readonly PdfProcCodeService _servicesProcCode = new PdfProcCodeService();
+
+        #region Patient Import Report  
+        private readonly PatientImportServices _servicesPatientImport = new PatientImportServices();
+        private readonly PatientService _patientservices = new PatientService();
+        private readonly InscosService _inscosservices = new InscosService();
+        private readonly AttorneysService _attorneyservices = new AttorneysService();
+        private readonly EmpService _empService = new EmpService();
+        private readonly PatientIEService _ieService = new PatientIEService();
+        #endregion
 
         public ReportController(ILogger<ReportController> logger)
         {
@@ -2120,7 +2133,394 @@ namespace PainTrax.Web.Controllers
             }
         }
 
+        #region Patient Import Report   
 
+        [HttpGet]
+        public IActionResult PatientImportReport()
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            // Nothing to load from DB on first visit — the user uploads the file.
+            return View(new PatientImportReportVM());
+        }
+
+        // 1. Set up the TextInfo object to easily handle the Title Case conversion
+        TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+        // 2. Helper function to apply the casing rule (First letter capital, rest small)
+        // We call .ToLower() first because ToTitleCase ignores strings that are ALL CAPS.
+        string FormatNamePart(string namePart)
+        {
+            if (string.IsNullOrWhiteSpace(namePart)) return string.Empty;
+            return textInfo.ToTitleCase(namePart.Trim().ToLower());
+        }
+        private int calculateAge(DateTime bday, DateTime? dos)
+        {
+            DateTime today = dos == null ? DateTime.Today : dos.Value;
+
+            int age = today.Year - bday.Year;
+
+            if (today.Month < bday.Month ||
+        ((today.Month == bday.Month) && (today.Day < bday.Day)))
+            {
+                age--;  //birthday in current year not yet reached, we are 1 year younger ;)
+                        //+ no birthday for 29.2. guys ... sorry, just wrong date for birth
+            }
+
+            return age;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PatientImportReport(
+                                                    string parsedJson,
+                                                    IFormFile excelFile,
+                                                    string locationId,     // ← new
+                                                    string locationName
+                                                )   // ← new (optional, for logging/display)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            // ── Re-populate ViewBag in case we need to return the view with errors ──
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            // ── Validate location ──
+            if (string.IsNullOrWhiteSpace(locationId) || !int.TryParse(locationId, out int locId))
+            {
+                TempData["ImportError"] = "Please select a location before importing.";
+                return RedirectToAction("PatientImportReport");
+            }
+
+            if (string.IsNullOrWhiteSpace(parsedJson))
+            {
+                TempData["ImportError"] = "No data received. Please upload and preview the file first.";
+                return RedirectToAction("PatientImportReport");
+            }
+
+            try
+            {
+                var rows = JsonConvert.DeserializeObject<List<PatientImportRowVM>>(parsedJson);
+
+                if (rows == null || rows.Count == 0)
+                {
+                    TempData["ImportError"] = "The uploaded file contained no valid rows.";
+                    return RedirectToAction("PatientImportReport");
+                }
+
+                // 3. Map the data
+                List<PatientImportReportVM> lstPatientImportReport = rows.Select(row =>
+                {
+                    // --- Parse Name ---
+                    string lastName = string.Empty;
+                    string firstName = null;
+
+                    if (!string.IsNullOrWhiteSpace(row.PatientName))
+                    {
+                        var nameParts = row.PatientName.Split(',');
+
+                        if (nameParts.Length > 0)
+                            lastName = FormatNamePart(nameParts[0]);
+
+                        if (nameParts.Length > 1)
+                            firstName = FormatNamePart(nameParts[1]);
+                    }
+
+                    // --- Parse Dates ---
+                    DateTime? dob = DateTime.TryParse(row.DOB, out DateTime parsedDob) ? parsedDob : (DateTime?)null;
+                    DateTime? doa = DateTime.TryParse(row.DateOfAccident, out DateTime parsedDoa) ? parsedDoa : (DateTime?)null;
+                    DateTime? DOE = DateTime.TryParse(row.DOE, out DateTime parsedDoe) ? parsedDoe : (DateTime?)null;
+                    // --- Create and Map Object ---
+                    return new PatientImportReportVM
+                    {
+                        // If last_name is entirely empty but required by the DB, provide a fallback to prevent DB validation errors
+                        last_name = string.IsNullOrEmpty(lastName) ? "Unknown" : lastName,
+                        first_name = firstName,
+
+                        dob = dob,
+                        doa = doa,
+
+                        sex = row.Sex,
+                        address = row.Address,
+                        phone = row.Phone,
+                        ssn = row.SocialSecurityNo,
+                        employer_company = row.EmployerCompany,
+                        employer_address = row.EmployerAddress,
+                        emergency_contact = row.EmergencyName,
+                        work_phone = row.WorkPhone,
+                        condition_related_to = row.CaseType, // Mapped CaseType to condition_related_to based on context
+                        insurance_company = row.InsuranceCompany,
+                        insurance_address = row.InsAddress,
+                        insurance_phone = row.InsPhone,
+                        claim_number = row.ClaimNo,
+                        claim_address = row.ClaimAddress,
+                        nf2 = row.NF2,
+                        policy_number = row.PolicyNo,
+                        policy_holder = row.PolicyHolder,
+                        wcb_number = row.WCBNo,
+                        carrier_case_number = row.CarrierCaseNo,
+                        policy_adjuster = row.PolicyAdjuster,
+                        attorney = row.Attorney,
+                        firm_name = row.FirmName,
+                        attorney_address = row.AttorneyAddress,
+                        attorney_phone = row.AttorneyPhone,
+                        attorney_fax = row.AttorneyFax,
+                        imported_at = DateTime.Now,
+                        DOE = DOE,
+                        loc_id = Convert.ToInt32(locationId)
+                    };
+                }).ToList();
+                PatientImportReportVM model = new PatientImportReportVM
+                {
+                    cmpy_id = cmpid,
+                    loc_id = Convert.ToInt16(locationId),
+                    lstPatientImportReport = lstPatientImportReport
+                };
+                int result = PatientImportDataToDB(model);
+
+                if (result > 0)
+                {
+                    TempData["ImportSuccess"] = $"Successfully imported {lstPatientImportReport.Count()} patient record(s) to location \"{Convert.ToString(locationName)}\".";
+                }
+                //TempData["ImportSuccess"] = $"Successfully imported {inserted} patient record(s) to location "{ locationName}".";
+                //TempData["ImportSuccess"] = "Success";// $"Successfully imported {inserted} patient record(s) to location "{ locationName}".";
+
+            }
+            catch (Exception ex)
+            {
+                TempData["ImportError"] = $"Import failed: {ex.Message}";
+            }
+
+            return RedirectToAction("PatientImportReport");
+        }
+
+
+        public int PatientImportDataToDB(PatientImportReportVM model)
+        {
+            try
+            {
+                var data = model;
+                int patientId = 0, priminsId = 0, secinsId = 0, attornyId = 0, adjusterId = 0, empId = 0;
+                DateTime dos = DateTime.UtcNow.Date;
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+                int age = 0;
+                int ie = 0;
+                //int defaultlocation = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId).Value;
+                foreach (var report in model.lstPatientImportReport)
+                {
+
+                    age = calculateAge(Convert.ToDateTime(report.dob).Date, dos);
+
+
+                    tbl_patient objPatient = new tbl_patient()
+                    {
+                        //account_no = string.Empty,
+                        address = report.address,
+                        //city = string.Empty,
+                        dob = Convert.ToDateTime(report.dob).Date,
+                        email = string.Empty,
+                        fname = report.first_name,
+                        gender = report.sex == "Female" ? "2" : "1",
+                        //home_ph = string.Empty,
+                        lname = report.last_name,
+                        //mc = ,
+                        //mc_details = model.mc_details,
+                        //mname = model.mname,
+                        mobile = report.phone,
+                        //handeness = model.handeness,
+                        ssn = report.ssn,
+                        // state = model.state,
+                        // physicianid = model.physicianid,
+                        // vaccinated = model.vaccinated,
+                        // zip = model.zip,
+                        cmp_id = cmpid,
+                        createdby = userid,
+                        age = age
+                    };
+
+                    patientId = _patientservices.Insert(objPatient);
+
+                    HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
+                    string pid = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
+                    ViewBag.patientId = patientId;
+                    var query = "";
+                    List<tbl_inscos> insdata = new List<tbl_inscos>();
+                    tbl_inscos objInscos = new tbl_inscos();
+
+                    if (!string.IsNullOrEmpty(report.insurance_company))
+                    {
+                        query = " and cmpname='" + report.insurance_company + "' and cmp_id=" + cmpid + "";
+
+                        insdata = _inscosservices.GetAll(query);
+
+                        //save primary insurance
+
+                        objInscos = new tbl_inscos()
+                        {
+                            address1 = report.insurance_address,
+                            cmpname = report.insurance_company,
+                            telephone = report.insurance_phone,
+                            cmp_id = cmpid,
+                            createdby = userid
+
+                        };
+
+                        if (insdata.Count > 0)
+                        {
+                            objInscos.id = insdata[0].id.Value;
+                            _inscosservices.Update(objInscos);
+                            priminsId = insdata[0].id.Value;
+                        }
+                        else
+                        {
+                            priminsId = _inscosservices.Insert(objInscos);
+                        }
+
+                    }
+
+
+                    if (!string.IsNullOrEmpty(report.attorney))
+                    {
+
+                        query = " and Attorney='" + report.attorney + "' and cmp_id=" + cmpid + "";
+
+                        var attrydata = _attorneyservices.GetAll(query);
+
+
+                        //save attorney
+
+                        tbl_attorneys objAttorneys = new tbl_attorneys()
+                        {
+                            Attorney = report.attorney,
+                            // EmailId = model.attory_email,
+                            ContactNo = report.attorney_phone,
+                            cmp_id = cmpid,
+                            CreatedBy = userid,
+                            // Paralegal = model.paralegal
+
+
+                        };
+
+                        if (attrydata.Count > 0)
+                        {
+                            objAttorneys.Id = attrydata[0].Id.Value;
+                            _attorneyservices.Update(objAttorneys);
+                            attornyId = attrydata[0].Id.Value;
+                        }
+                        else
+                        {
+                            attornyId = _attorneyservices.Insert(objAttorneys);
+                        }
+                    }
+
+                    //if (!string.IsNullOrEmpty(model.adj_name))
+                    //{
+                    //    query = " and adjuster='" + model.adj_name + "' and cmp_id=" + cmpid + "";
+
+                    //    var adjdata = _aadjusterService.GetAll(query);
+
+                    //    //save adjuster
+
+                    //    tbl_adjuster objAdjuster = new tbl_adjuster()
+                    //    {
+                    //        adjuster = model.adj_name,
+                    //        emailaddress = model.adj_email,
+                    //        telephone = model.adj_phone,
+                    //        fax = model.adj_fax_no,
+                    //        cmp_id = cmpid,
+                    //        created_by = userid
+                    //    };
+
+                    //    if (adjdata.Count > 0)
+                    //    {
+                    //        objAdjuster.id = adjdata[0].id.Value;
+                    //        _aadjusterService.Update(objAdjuster);
+                    //        adjusterId = adjdata[0].id.Value;
+                    //    }
+                    //    else
+                    //    {
+                    //        adjusterId = _aadjusterService.Insert(objAdjuster);
+                    //    }
+                    //}
+
+                    if (!string.IsNullOrEmpty(report.employer_company))
+                    {
+                        query = " and name='" + report.employer_company + "' and patient_id=" + patientId + "";
+
+                        var empdata = _empService.GetAll(query);
+
+                        //save employee
+
+                        tbl_emp objEmp = new tbl_emp()
+                        {
+                            address = report.employer_company,
+                            name = report.employer_company,
+                            phone = report.work_phone,
+                            //fax = model.emp_fax_no,
+                            patient_id = patientId
+                        };
+
+                        if (empdata.Count > 0)
+                        {
+                            objEmp.id = empdata[0].id.Value;
+                            _empService.Update(objEmp);
+                            empId = empdata[0].id.Value;
+                        }
+                        else
+                        {
+                            empId = _empService.Insert(objEmp);
+                        }
+                    }
+
+                    //save IE details 
+
+                    tbl_patient_ie objIE = new tbl_patient_ie()
+                    {
+                        adjuster_id = adjusterId,
+                        attorney_id = attornyId,
+                        created_by = userid,
+                        doa = report.doa,
+                        doe = Convert.ToDateTime(report.DOE),
+                        emp_id = empId,
+                        is_active = true,
+                        location_id = report.loc_id,
+                        //provider_id = model.providerid,
+                        patient_id = patientId,
+                        primary_claim_no = report.claim_number,
+                        primary_ins_cmp_id = priminsId,
+                        primary_policy_no = report.policy_number,
+                        //primary_wcb_group = model.prime_WCB_group,
+                        // secondary_claim_no = model.sec_claim_no,
+                        //  secondary_ins_cmp_id = secinsId,
+                        // secondary_policy_no = model.sec_policy_no,
+                        // secondary_wcb_group = model.sec_WCB_group,
+                        compensation = report.condition_related_to,
+                        // accident_type = model.accidentType,
+                        // state = model.state,
+                        // physicianid = model.physicianid,
+                        //  alert_note = model.alert_note,
+                        //  referring_physician = model.referring_physician
+                    };
+
+                    ie = _ieService.Insert(objIE);
+
+                    // HttpContext.Session.SetInt32(SessionKeys.SessionIEId, ie);
+                }
+                // return Json(new { status = 1, patintid = patientId, ieid = ie });
+                return ie;
+                // TempData["Message"] = "Details saved successfully!";
+                //  return RedirectToAction("PatientImportReport");
+            }
+            catch (Exception ex)
+            {
+                // return Json(new { status = 0 });
+                return 0;
+            }
+
+        }
+
+
+        #endregion
 
     }
 }
