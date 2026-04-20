@@ -5554,6 +5554,12 @@ namespace PainTrax.Web.Controllers
             {
                 string _id = EncryptionHelper.Encrypt(id);
                 string link = "https://www.paintrax.com/v2/SendForm/AuthoAckno?id=" + _id;
+
+                var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+
+                if (client_code.ToLower() == "kdvpc")
+                    link = "https://www.paintrax.com/v2/SendForm/AuthoAcknoKDVPC?id=" + _id;
+
                 var subject = "Please Review and Sign Your Authorization Form";
 
                 var body = System.IO.File.ReadAllText("wwwroot/Uploads/EmailTemplate/PatientAuthorizationForm.html")

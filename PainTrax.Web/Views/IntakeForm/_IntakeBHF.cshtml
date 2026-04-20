@@ -67,9 +67,9 @@
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
                         <h4 class="text-center mb-4 fw-bold">
                             Patient Injury Report
-                           @*  <a href='@Url.Action("AIInitialIntake", "IntakeForm", new { locid = ViewBag.LocId })'>
+                            <a href='@Url.Action("AIInitialIntake", "IntakeForm", new { locid = ViewBag.LocId })'>
                                 Click for V1
-                            </a> *@
+                            </a>
 
                         </h4>
 
@@ -120,16 +120,24 @@
                                                 Age:
                                                 <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Height:
+
+                                                DOA:
+                                                <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+                                            </p>
+                                            <p>
+                                                <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Height:
                                                 <input id="Height" name="Height" class="form-control d-inline" style="width:150px" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i>
                                                 Weight:
                                                 <input id="Weight" name="Weight" class="form-control d-inline" style="width:150px" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i>
-                                                lbs.
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                DOA:
-                                                <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+                                                lbs,
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpO2:
+                                                <input id="SpO" name="SpO" class="form-control d-inline" style="width:100px" />%,
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HR:
+                                                <input id="HR" name="HR" class="form-control d-inline" style="width:100px" />,
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
+                                                <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
                                             </p>
 
                                             <!-- Work -->
@@ -137,6 +145,10 @@
                                                 Currently working:
                                                 <input type="radio" name="IsWorking" value="The patient is currently working." /> Yes
                                                 <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." /> No
+                                                <br />
+                                                Occupation:
+                                                <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
                                                 <br />
                                                 Job title:
                                                 <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:90%;" />
@@ -166,16 +178,13 @@
                                             <!-- Chief Complaint -->
                                             <p>
                                                 <b> Chief complaint:</b>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> Neck</label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="mbSection" data-pe="mbPE" /> Mid back</label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="lbSection" data-pe="lbPE" /> Lower back</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" /> R/SH</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" /> L/SH</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> R/KN</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" /> L/KN</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Elbow" /> R/Elb</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Elbow" /> L/Elb</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Wrist" /> R/Wrist</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Wrist" /> L/Wrist</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Hip" /> R/Hip</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" /> L/Hip</label>
                                                 <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
                                             </p>
 
@@ -184,94 +193,60 @@
                                                 Type of Injury:
                                                 <label><input type="radio" name="InjuryType" value="motor vehicle" /> MVA</label>
                                                 <label><input type="radio" name="InjuryType" value="work-related" /> Work-related</label>
+                                                <label><input type="radio" name="InjuryType" value="mm" /> MM</label>
                                                 <label><input type="radio" name="InjuryType" value="lien" /> Lien</label>
+                                                <label><input type="radio" name="InjuryType" value="pi" /> PI</label>
                                             </p>
 
                                             <div id="divWC" style="display:none;">
                                                 <!-- Paragraph Description -->
                                                 <p>
-                                                    The patient reports that on
-                                                    <input type="date" id="lblDOA" name="lblDOA" class="form-control d-inline w-auto" />
-                                                    while
-                                                    <select id="Activity" class="form-select d-inline" style="width:350px" name="Activity">
-                                                        <option value=""></option>
-                                                        <option value="performing regular job duties">performing regular job duties </option>
-                                                        <option value="performing assigned work tasks">performing assigned work tasks </option>
-                                                        <option value="engaged in usual occupational activities">engaged in usual occupational activities </option>
-                                                    </select>,
-                                                    they sustained a work-related injury when
-
-                                                    <select id="Incident" class="form-select d-inline" style="width:350px" name="Incident">
-                                                        <option value=""></option>
-                                                        <option value="slipped">slipped</option>
-                                                        <option value="tripped">tripped</option>
-                                                        <option value="lost balance">lost balance</option>
-                                                        <option value="was struck by an object">was struck by an object</option>
-                                                        <option value="lifted or carried an object">lifted or carried an object</option>
-                                                        <option value="pushed or pulled equipment">pushed or pulled equipment</option>
-                                                        <option value="twisted or turned abruptly">twisted or turned abruptly</option>
-                                                        <option value="experienced repetitive strain">experienced repetitive strain</option>
-                                                        <option value="experienced sudden forceful movement">experienced sudden forceful movement</option>
-                                                    </select>.
-                                                </p>
 
                                                 <p>
-                                                    The incident occurred
-                                                    <select name="IncidentType" class="form-select d-inline" style="width:250px" id="IncidentType">
-                                                        <option value=""></option>
-                                                        <option value="suddenly">suddenly</option>
-                                                        <option value="unexpectedly">unexpectedly</option>
-                                                        <option value="during normal work">during normal work</option>
-                                                    </select>
-                                                    and involved
-
-                                                    <select name="Mechanism" class="form-select d-inline" style="width:300px" id="Mechanism">
-                                                        <option value=""></option>
-                                                        <option value="direct impact">direct impact </option>
-                                                        <option value="overexertion">overexertion</option>
-                                                        <option value="awkward positioning">awkward positioning </option>
-                                                        <option value="forceful movement">forceful movement  </option>
-                                                        <option value="repetitive motion">repetitive motion</option>
-                                                        <option value="loss of footing">loss of footing</option>
-                                                        <option value="sudden loading of the body">sudden loading of the body</option>
-                                                    </select>
+                                                    Patient reports being:
+                                                    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bicyclist"> Bicyclist</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Pedestrian"> Pedestrian</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Belted Driver"> Belted Driver</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Front Passenger">Front Passenger</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Right Side Back Passenger"> Right Side Back Passenger</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Left Side Back Passenger">Left Side Back Passenger</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bus passenger"> Bus passenger</label>
                                                 </p>
-
                                                 <p>
-                                                    As a result, the patient experienced
-                                                    <select class="form-select d-inline" style="width:150px" name="SymptomOnset" id="SymptomOnset">
-                                                        <option value=""></option>
-                                                        <option value="immediate">immediate</option>
-                                                        <option value="same-day">same-day</option>
-                                                        <option value="progressive">progressive</option>
-                                                    </select>
-                                                    pain affecting
-                                                    <input type="text" class="form-control d-inline w-25" name="BodyPart" id="BodyPart" placeholder="body part" />.
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'BodyPart')"></i>
-                                                    which was
-                                                    <select class="form-select d-inline" style="width:350px" name="PainEffect" id="PainEffect">
-                                                        <option value=""></option>
-                                                        <option value="not present prior to this incident">not present prior to this incident</option>
-                                                        <option value="significantly less severe prior to this incident">significantly less severe prior to this incident</option>
-
-                                                    </select>.
+                                                    Vehicle hit:
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Rear-end"> Rear-end</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Front-end"> Front-end</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side front"> Driver-side front</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver-side rear"> Driver-side rear</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger-side front">Passenger-side front</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side rear"> Passenger-side rear </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver sideswipe">Driver sideswipe</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side T-boned"> Driver side T-boned  </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger-side T-boned"> Passenger-side T-boned   </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger sideswipe"> Passenger sideswipe</label>
                                                 </p>
-
                                                 <p>
-                                                    Since the time of injury, the patient reports
-                                                    <select class="form-select d-inline" style="width:150px" name="SymptomPattern" id="SymptomPattern">
-                                                        <option value=""></option>
-                                                        <option value="persistent">persistent</option>
-                                                        <option value="worsening">worsening</option>
-                                                        <option value="fluctuating">fluctuating</option>
-                                                    </select>
-                                                    symptoms that interfere with .
-                                                    <select class="form-select d-inline" style="width:350px" name="DailyActivities" id="DailyActivities">
-                                                        <option value=""></option>
-                                                        <option value="work duties">work duties</option>
-                                                        <option value="activities of daily living ">activities of daily living</option>
-                                                        <option value="physical tasks required for employment">physical tasks required for employment</option>
-                                                    </select>
+                                                    Please describe
+                                                    <textarea id="WCDescription" name="WCDescription" class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'WCDescription')"></i>
+                                                </p>
+                                            </div>
+                                            <div id="divMM" style="display:none;">
+                                                <!-- Paragraph Description -->
+                                                <p>
+                                                    The patient states
+                                                    <input type="date" id="lblDOA" name="lblDOA" style="display:none" />
+                                                    <input type="text" id="States" name="States" class="form-control d-inline w-auto" />
+                                                    <label><input type="checkbox" class="chkMulti" name="StatesType" value="slip and fall"> slip and fall </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="StatesType" value="motor vehicle accident  "> motor vehicle accident </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="StatesType" value="occupational disease "> occupational disease</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="StatesType" value="others"> others</label>
+                                                    <input type="text" id="StatesOther" name="StatesOther" class="form-control d-inline w-auto" />
+                                                </p>
+                                                <p>
+                                                    Please describe
+                                                    <textarea id="MMDescription" name="MMDescription" class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MMDescription')"></i>
                                                 </p>
                                             </div>
                                             <p>
@@ -312,28 +287,10 @@
                                                 </span>
                                             </p>
 
-                                            <!-- Patient Type -->
-                                            <p>
-                                                Patient reports being:
-                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bicyclist"> Bicyclist</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Pedestrian"> Pedestrian</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Motorcyclist"> Motorcyclist</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Driver"> Driver</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Passenger"> Passenger</label>
-                                            </p>
+                                           
 
                                             <!-- Vehicle Hit -->
-                                            <p>
-                                                Vehicle hit:
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Rear"> Rear</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Front"> Front</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side front/rear"> Driver-side front/rear</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver sideswipe"> Driver sideswipe</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side T-boned"> Driver side T-boned</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side front/rear"> Passenger-side front/rear</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger-side swiped"> Passenger-side swiped</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned"> T-boned</label>
-                                            </p>
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1585,7 +1542,7 @@
         function updatePreview() {
 
             var values = {};
-            
+
             $('#patientForm').find('input, select, textarea').each(function () {
                 var key = $(this).attr('name') || $(this).attr('id');
                 var cls = $(this).attr('class');
@@ -1720,12 +1677,18 @@
                     html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
                     html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
                     $("#divWC").hide();
+                    $("#divMM").hide();
+                }
+                else if (data.InjuryType === "mm") {
+                    $("#divWC").hide();
+                    $("#divMM").show();
                 }
                 else {
                     // Remove both
                     html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
                     html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
                     $("#divWC").hide();
+                    $("#divMM").hide();
                 }
 
                 $('#previewText').html(html);
@@ -1780,7 +1743,7 @@
 
                 fnShowPresentComplain(this, section, pe);
 
-                
+
 
                     // $('input[name="Complaints"]:checked').each(function () {
                     //     selected.push($(this).val());
@@ -1856,7 +1819,7 @@
 
             // cleaned=cleaned.replace(/"/g, '\\"');
 
-            // 
+            //
             var data = safeParse(val);
 
             $('#patientForm').find('input, select, textarea').each(function () {

@@ -49,11 +49,12 @@ namespace PainTrax.Web.Services
         public void Insert(tbl_diagcodes data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_diagcodes
-		(BodyPart,DiagCode,Description,CreatedDate,CreatedBy,PreSelect,cmp_id,display_order)Values
-				(@BodyPart,@DiagCode,@Description,@CreatedDate,@CreatedBy,@PreSelect,@cmp_id,@display_order)", conn);
+		(BodyPart,DiagCode,Description,CreatedDate,CreatedBy,PreSelect,cmp_id,display_order,DiagCodeGroup)Values
+				(@BodyPart,@DiagCode,@Description,@CreatedDate,@CreatedBy,@PreSelect,@cmp_id,@display_order,@DiagCodeGroup)", conn);
             cm.Parameters.AddWithValue("@BodyPart", data.BodyPart);
             cm.Parameters.AddWithValue("@DiagCode", data.DiagCode);
             cm.Parameters.AddWithValue("@Description", data.Description);
+            cm.Parameters.AddWithValue("@DiagCodeGroup", data.DiagCodeGroup);
             cm.Parameters.AddWithValue("@CreatedDate", data.CreatedDate);
             cm.Parameters.AddWithValue("@CreatedBy", data.CreatedBy);
             cm.Parameters.AddWithValue("@PreSelect", data.PreSelect);
@@ -67,6 +68,7 @@ namespace PainTrax.Web.Services
             MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_diagcodes SET
 		BodyPart=@BodyPart,
 		DiagCode=@DiagCode,
+		DiagCodeGroup=@DiagCodeGroup,
 		Description=@Description,
 		display_order=@display_order,
 	    PreSelect=@PreSelect
@@ -74,6 +76,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@Id", data.Id);
             cm.Parameters.AddWithValue("@BodyPart", data.BodyPart);
             cm.Parameters.AddWithValue("@DiagCode", data.DiagCode);
+            cm.Parameters.AddWithValue("@DiagCodeGroup", data.DiagCodeGroup);
             cm.Parameters.AddWithValue("@Description", data.Description);
             cm.Parameters.AddWithValue("@PreSelect", data.PreSelect);
             cm.Parameters.AddWithValue("@display_order", data.display_order);
@@ -88,5 +91,31 @@ namespace PainTrax.Web.Services
             Execute(cm);
         }
 
+        public void InsertDiagCodeGroup(tbl_diagcodes_group data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_diagcodes_group
+		(GroupName,Cmp_Id)Values
+				(@GroupName,@Cmp_Id)", conn);
+            cm.Parameters.AddWithValue("@GroupName", data.GroupName);
+            cm.Parameters.AddWithValue("@Cmp_Id", data.Cmp_id);
+           
+            Execute(cm);
+        }
+        public List<tbl_diagcodes_group> GetAllDiagCodeGroups(string cnd = "")
+        {
+            try
+            {
+                string query = "select * from tbl_diagcodes_group where 1=1 ";
+                query = query + cnd;
+                List<tbl_diagcodes_group> dataList = ConvertDataTable<tbl_diagcodes_group>(GetData(query));
+                return dataList;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+
+        }
     }
 }

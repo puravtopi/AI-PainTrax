@@ -22,6 +22,7 @@ namespace PainTrax.Web.Helper
         private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
         private readonly VisitTypeService _visitTypeService = new VisitTypeService();
         private readonly ProSXServices _proSXServices = new ProSXServices();
+        private readonly DiagcodesService _diagcodesService = new DiagcodesService();
 
         public List<SelectListItem> GetDesignation(int cmp_id)
         {
@@ -92,6 +93,32 @@ namespace PainTrax.Web.Helper
                 {
                     Text = item.location,
                     Value = item.id.ToString()
+                });
+            }
+
+            return list;
+        }
+
+        public List<SelectListItem> GetDiagnoCodeGroup(int cmp_id)
+        {
+            string cnd = " and cmp_id=" + cmp_id + " order by GroupName";
+            var data = _diagcodesService.GetAllDiagCodeGroups(cnd);
+            var list = new List<SelectListItem>();
+
+
+            list.Add(new SelectListItem
+            {
+                Text = "--Select Group--",
+                Value = "0"
+            });
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item.GroupName,
+                    Value = item.GroupName
                 });
             }
 

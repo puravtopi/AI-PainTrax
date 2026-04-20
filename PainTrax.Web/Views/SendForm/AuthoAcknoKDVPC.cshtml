@@ -1,0 +1,555 @@
+﻿@model PainTrax.Web.Models.PatientDetails
+
+@{
+    Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
+}
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    .signature-pad {
+        border: 1px solid #ccc;
+        width: 100%;
+        height: 150px;
+        cursor: crosshair;
+    }
+
+    .section-title {
+        font-weight: 600;
+        margin-top: 25px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+    }
+
+    .form-bottom-border {
+        border: none;
+        border-bottom: 2px solid #000;
+        border-radius: 0;
+        background: transparent;
+        padding-left: 0;
+    }
+
+        .form-bottom-border:focus {
+            box-shadow: none;
+            border-bottom: 2px solid #000;
+        }
+</style>
+
+<main id="main" class="main" style="margin-left:0px!important">
+
+    <!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+
+                    <div class="card-body">
+                        <div id="successMessage" class="alert alert-success" style="display:none">
+                            <div class="container my-4">
+
+                                <div class="text-center mb-4">
+                                    Your signature has been successfully submitted.
+                                    <br />
+                                    The authorization form has been recorded in our system.
+                                </div>
+                            </div>
+                        </div>
+                        <div id="failMessage" class="alert alert-danger" style="display:none">
+                            <div class="container my-4">
+
+                                <div class="text-center mb-4">
+                                    Unable to submit the form at the moment.
+                                    <br />
+                                    Please try again or contact the office if the issue continues.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container my-4" id="formDiv">
+
+                            @if (Model.isExist.Value)
+                            {
+                                <div id="successMessage" class="alert alert-success">
+                                    <div class="container my-4">
+
+                                        <div class="text-center mb-4">
+                                            This authorization form was previously signed and recorded in our system. No additional signature is required.
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center mb-4">
+                                    <h4 class="mb-0">KDV Medical, P.C.</h4>
+                                    <p class="mb-0">Tel #: 1-877-SPINE-DR</p>
+                                    <p>Fax: (347) 708-8499</p>
+
+                                    <h5 class="mt-3"><b>PATIENT MASTER AUTHORIZATION & ACKNOWLEDGMENT</b></h5>
+                                </div>
+
+                                <form id="authorizationForm">
+                                    <input type="hidden" value="@Model.id" id="id" name="id" />
+                                    <input type="hidden" value="@Model.patientId" id="patientId" name="patientId" />
+                                    <b>Patient Information</b>
+                                    <div class="row g-3">
+                                        <input type="hidden" asp-for="@Model.fname" />
+                                        <input type="hidden" asp-for="@Model.lname" />
+                                        <div class="col-md-12">
+                                            <label class="form-label">Patient Name</label>
+                                            <input type="text" class="form-control form-bottom-border" name="PatientName" id="PatientName" value="@(Model.lname + ' ' + Model.fname)">
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">Date of Birth</label>
+                                            <input type="Date" class="form-control form-bottom-border" asp-for="@Model.dob">
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">Date of Execution</label>
+                                            <input type="date" class="form-control form-bottom-border" asp-for="@Model.executionDate">
+                                        </div>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Primary Phone</label>
+                                            <input type="text" class="form-control form-bottom-border" asp-for="@Model.primaryPhone">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Alternate Phone</label>
+                                            <input type="text" class="form-control form-bottom-border" asp-for="@Model.alternatePhone">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Email:</label>
+                                            <input type="text" class="form-control form-bottom-border" asp-for="@Model.email">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Patient Portal Username (if enrolled):</label>
+                                            <input type="text" class="form-control form-bottom-border" asp-for="@Model.patientPortalUsername">
+                                        </div>
+                                    </div>
+
+                                    <br />
+
+                                    <p>
+                                        This form obtains your consent for certain communications and recordings. It does not replace
+                                        our <b>Notice of Privacy Practices,</b> which explains how we use and protect your protected health
+                                        information (PHI). All choices are voluntary and will not affect your treatment, payment, or
+                                        eligibility for care.
+                                    </p>
+
+
+                                    <div class="section-title">Section 1: Consent for Electronic Communications</div>
+
+                                    <p>
+                                        Electronic methods (text, email, voicemail) may contain PHI and are generally not fully encrypted,
+                                        creating some risk of unauthorized access. The patient portal is more secure.
+                                        I consent to the following for appointment reminders, confirmations, portal messages/replies, and
+                                        non-urgent health updates (initial each you approve):
+                                    </p>
+
+                                    <ol>
+                                        <li>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+
+                                                <label class="mb-0">Text Messaging (SMS)</label>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input " type="radio" name="sMSConsent" id="smsYes" value="yes">
+                                                    <label class="form-check-label" for="smsYes">Yes</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.sMSYesInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="sMSConsent" id="smsNo" value="no">
+                                                    <label class="form-check-label" for="smsNo">No</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.sMSNoInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+
+                                                <label class="mb-0">Email</label>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input " type="radio" name="emailConsent" id="emailYes" value="yes">
+                                                    <label class="form-check-label" for="emailYes">Yes</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.emailYesInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="emailConsent" id="emailNo" value="no">
+                                                    <label class="form-check-label" for="emailNo">No</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.emailNoInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+
+                                                <label class="mb-0">Voicemail (non-urgent updates)</label>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input " type="radio" name="voiceMailConsent" id="voiceMailYes" value="yes">
+                                                    <label class="form-check-label" for="voiceMailYes">Yes</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.voiceMailYesInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="voiceMailConsent" id="voiceMailNo" value="no">
+                                                    <label class="form-check-label" for="voiceMailNo">No</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.voiceMailNoInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+
+                                                <label class="mb-0">Patient Portal (secure messages/notifications)</label>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input " type="radio" name="patientPortalConsent" id="PatientPortalYes" value="yes">
+                                                    <label class="form-check-label" for="PatientPortalYes">Yes</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.patientPortalYesInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="patientPortalConsent" id="PatientPortalNo" value="no">
+                                                    <label class="form-check-label" for="PatientPortalNo">No</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.patientPortalNoInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                            </div>
+                                        </li>
+
+                                    </ol>
+
+                                    <p>
+                                        I understand I can revoke this consent anytime in writing (or via portal), effective prospectively.
+                                        Revocation does not affect prior communications.
+                                    </p>
+
+
+                                    <div class="section-title">Section 2: Consent for Temporary Audio Recording for Digital Notetaking</div>
+                                    <p>
+                                        During visits, we may temporarily record audio (via secure device/app) solely to assist in creating
+                                        accurate real-time clinical notes for your medical record (treatment purpose under HIPAA).
+                                        I understand and agree
+                                    </p>
+                                    <ul>
+                                        <li>Audio is used only for note creation during/soon after the visit.</li>
+                                        <li>
+                                            No audio is saved or retained — it is permanently deleted immediately after notes are
+                                            reviewed, confirmed, and finalized (raw audio is never part of the medical record).
+                                        </li>
+                                        <li>Final notes become part of your record; audio is not stored or accessible</li>
+                                        <li>This supports treatment and healthcare operations (HIPAA-compliant).</li>
+                                        <li>I can decline or stop recording anytime without affecting care.</li>
+                                        <li>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+
+
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input " type="radio" name="audioRecordingConsent" id="s2Yes" value="yes">
+                                                    <label class="form-check-label" for="s2Yes">Yes, I consent to temporary audio recording for notetaking as described. Initials:</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.audioYesInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="audioRecordingConsent" id="s2No" value="no">
+                                                    <label class="form-check-label" for="s2No">No, I do not consent. Initials:</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.audioNoInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="section-title">Section 3: Authorization for Audio/Video Recordings for Testimonials & Marketing</div>
+                                    <p>
+                                        This is a separate HIPAA authorization for marketing/promotional uses (required when PHI may
+                                        be disclosed beyond treatment/payment/operations).
+                                        If I choose to participate (e.g., providing a spoken/written testimonial, video interview, photo, or
+                                        story about my care experience), I authorize Practice Name to:
+                                    </p>
+                                    <ul>
+                                        <li>Record my audio, video, likeness, voice, name, and statements.</li>
+                                        <li>
+                                            Use, reproduce, publish, and distribute them on our website, social media, brochures,
+                                            ads, newsletters, presentations, or other marketing materials.
+                                        </li>
+
+                                    </ul>
+                                    <p>I understand:</p>
+                                    <ul>
+                                        <li>
+                                            This may disclose limited PHI (e.g., general treatment experience; we will avoid specific
+                                            clinical details unless separately authorized).
+                                        </li>
+                                        <li>
+                                            Participation is voluntary; refusal does not affect care.
+                                        </li>
+                                        <li>No compensation is provided.</li>
+                                        <li>
+                                            I can revoke this authorization anytime by written notice (email/letter); revocation is
+                                            prospective only (does not undo prior uses or distributions).
+                                        </li>
+                                        <li>
+                                            Once public, materials may be copied, shared, or used by third parties (e.g., searchable
+                                            online); we cannot control further dissemination.
+                                        </li>
+                                        <li>
+                                            This serves as my written HIPAA authorization for these marketing disclosures.
+                                        </li>
+
+                                        <li>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+
+
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input " type="radio" name="marketingConsent" id="MarketingConsentYes" value="yes">
+                                                    <label class="form-check-label" for="MarketingConsentYes">
+                                                        Yes, I authorize audio/video/testimonial use for marketing as described (revocable
+                                                        prospectively). Initials:
+                                                    </label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.marketingYesInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="marketingConsent" id="MarketingConsentNo" value="no">
+                                                    <label class="form-check-label" for="MarketingConsentNo">No, I do not authorize. Initials:</label>
+                                                </div>
+
+                                                <input type="text" asp-for="@Model.marketingNoInitials" class="form-control form-control-sm form-bottom-border" placeholder="Initials" style="width:100px;">
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="section-title">Patient Acknowledgment and Signature</div>
+
+                                    <p>
+                                        I have read and understand this form, including risks, terms, and my rights. I voluntarily
+                                        consent/authorize only the items initiated above.
+                                    </p>
+
+
+                                    <p>Patient Signature (or Legal Representative):</p>
+
+                                    <div class="row mt-4">
+
+                                        <div class="col-md-6">
+                                            <label class="form-label"><b>Patient Signature</b></label>
+                                            <br />
+                                            <canvas id="signature-pad" style="border: 1px solid #000; cursor: crosshair;" crossorigin="anonymous"></canvas>
+
+                                            <div class="mt-3" id="signaction">
+                                                <button type="button" class="btn btn-danger" id="clear-signature">Clear</button>
+                                                <button type="button" class="btn btn-warning" id="undo-signature">Undo</button>
+                                                <button type="button" class="btn btn-secondary" id="redo-signature">Redo</button>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-6">
+
+                                            <div class="mb-3">
+                                                <label>Name</label>
+                                                <input type="text" class="form-control form-bottom-border" name="signedByName" id="signedByName">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label>Date</label>
+                                                <input type="date" class="form-control form-bottom-border" name="signedDate" id="signedDate">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label>If signed by Legal Representative: Relationship to Patient</label>
+                                                <input type="text" class="form-control form-bottom-border" name="relationshipToPatient" id="relationshipToPatient">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="text-center mt-4">
+                                        <button class="btn btn-primary px-4" id="save-signature" type="button">Submit</button>
+                                    </div>
+
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+
+    const canvas = document.getElementById("signature-pad");
+    const ctx = canvas.getContext("2d");
+
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+
+    function draw(e) {
+        if (!drawing) return;
+
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+
+        const rect = canvas.getBoundingClientRect();
+
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    var signaturePad = new SignaturePad(canvas, {
+        penColor: 'black',
+        backgroundColor: 'white',
+    });
+
+    $(document).ready(function () {
+
+        var undoStack = [];
+
+        $("#clear-signature").click(function () {
+            signaturePad.clear();
+            undoStack = [];
+        });
+
+        $("#undo-signature").click(function () {
+            var data = signaturePad.toData();
+            if (data.length > 0) {
+                var removedStroke = data.pop();
+                undoStack.push(removedStroke);
+                signaturePad.fromData(data);
+            }
+        });
+
+        $("#redo-signature").click(function () {
+            if (undoStack.length > 0) {
+                var redoStroke = undoStack.pop();
+                var data = signaturePad.toData();
+                data.push(redoStroke);
+                signaturePad.fromData(data);
+            }
+        });
+
+        $("#save-signature").click(function () {
+            if (signaturePad.isEmpty()) {
+                alert("Please draw your signature before saving.");
+            } else {
+                var signatureData = signaturePad.toDataURL("image/jpeg");
+                fnSaveSign(signatureData);
+            }
+        });
+
+
+    });
+
+    function fnSaveSign(signatureData) {
+
+
+            var url = '@Url.Action("SaveSign", "SendForm")';
+
+            var id = $("#id").val();
+
+            var data = {
+                     id: id,
+                     signatureData: signatureData,
+
+                     fName: $("input[name='fName']").val() || null,
+                     lName: $("input[name='lName']").val() || null,
+                     dob: $("input[name='dob']").val() || null,
+                     executionDate: $("input[name='executionDate']").val() || null,
+
+                     primaryPhone: $("input[name='primaryPhone']").val(),
+                     alternatePhone: $("input[name='alternatePhone']").val(),
+                     email: $("input[name='email']").val(),
+                     patientPortalUsername: $("input[name='patientPortalUsername']").val(),
+
+                     sMSConsent: $("input[name='sMSConsent']:checked").val(),
+                     sMSYesInitials: $("input[name='sMSYesInitials']").val(),
+                     sMSNoInitials: $("input[name='sMSNoInitials']").val(),
+
+                     emailConsent: $("input[name='emailConsent']:checked").val(),
+                     emailYesInitials: $("input[name='emailYesInitials']").val(),
+                     emailNoInitials: $("input[name='emailNoInitials']").val(),
+
+                     voiceMailConsent: $("input[name='voiceMailConsent']:checked").val(),
+                     voiceMailYesInitials: $("input[name='voiceMailYesInitials']").val(),
+                     voiceMailNoInitials: $("input[name='voiceMailNoInitials']").val(),
+
+                     patientPortalConsent: $("input[name='patientPortalConsent']:checked").val(),
+                     patientPortalYesInitials: $("input[name='patientPortalYesInitials']").val(),
+                     patientPortalNoInitials: $("input[name='patientPortalNoInitials']").val(),
+
+                     audioRecordingConsent: $("input[name='audioRecordingConsent']:checked").val(),
+                     audioYesInitials: $("input[name='audioYesInitials']").val(),
+                     audioNoInitials: $("input[name='audioNoInitials']").val(),
+
+                     marketingConsent: $("input[name='marketingConsent']:checked").val(),
+                     marketingYesInitials: $("input[name='marketingYesInitials']").val(),
+                     marketingNoInitials: $("input[name='marketingNoInitials']").val(),
+
+                     signedByName: $("input[name='signedByName']").val(),
+                     signedDate: $("input[name='signedDate']").val() || null,
+                     relationshipToPatient: $("input[name='relationshipToPatient']").val(),
+                     patientId: $("#patientId").val()
+                };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (parseInt(response.id) > 0) {
+                        $('#formDiv').hide();
+                        $('#successMessage').show();
+                    } else {
+                        $('#formDiv').hide();
+                        $('#failMessage').show();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error saving signature:", xhr.status, error);
+                },
+            });
+        }
+
+</script>

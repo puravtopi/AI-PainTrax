@@ -387,9 +387,7 @@
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
-            </li>
-           
-            <!-- End Dashboard Nav -->
+            </li><!-- End Dashboard Nav -->
             @{
                 if (pageAccess.ToLower().Contains("patient"))
                 {
@@ -408,12 +406,6 @@
                 }
             }
             <li class="nav-item">
-                <a class="nav-link " asp-action="Index" asp-controller="PatientRequest">
-                    <i class="bi bi-grid"></i>
-                    <span>Patient Request</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-menu-button-wide"></i><span>Master</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
@@ -422,7 +414,7 @@
                     @{
                         if (pageAccess.ToLower().Contains("accident type"))
                         {
-                            <li class="nav-item">
+                            <li>
                                 <a asp-action="Index" asp-controller="AccidentType">
                                     <i class="bi bi-circle"></i><span>AccidentType</span>
                                 </a>
@@ -430,7 +422,7 @@
                         }
                         if (pageAccess.ToLower().Contains("adjuster"))
                         {
-                                     <li style="display:none" >
+                                     <li style="display:none">
                                 <a asp-action="Index" asp-controller="Adjuster">
                                     <i class="bi bi-circle"></i><span>Adjuster</span>
                                 </a>
@@ -678,6 +670,11 @@
                         </a>
                     </li>
                     <li>
+                        <a class="nav-link collapsed" asp-action="PatientImportReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>Patient Import Report</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="nav-link collapsed" asp-action="ProBSReport" asp-controller="Report">
                             <i class="bi bi-circle"></i><span>ProBS Report</span>
                         </a>
@@ -803,18 +800,12 @@
     @RenderBody()
 
 
-    <footer id="footer" class="footer" style="margin-left:0px !important">
+    <footer id="footer" class="footer">
         <div class="copyright">
             &copy; Copyright <strong><span>PainTrax</span></strong>. All Rights Reserved
         </div>
-        <div class="credits">
-            <!-- All the links in the footer should remain intact. -->
-            <!-- You can delete the links only if you purchased the pro version. -->
-            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-            Designed by <a href="https://www.paintrax.com/v2">PainTrax</a>
-        </div>
-    </footer><!-- End Footer --><!-- End Footer -->
+
+    </footer><!-- End Footer -->
     @* @section Scripts {
         <script>
             window.addEventListener('DOMContentLoaded', function () {

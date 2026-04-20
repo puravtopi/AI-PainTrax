@@ -4,6 +4,8 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Org.BouncyCastle.Asn1.Ocsp;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
@@ -19,6 +21,7 @@ namespace PainTrax.Web.Controllers
     {
         private readonly IMapper _mapper;
         private readonly DiagcodesService _services = new DiagcodesService();
+        private readonly Common  _common = new Common();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IConfiguration Configuration;
         private readonly ILogger<DiagcodeController> _logger;
@@ -40,6 +43,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Create()
         {
             tbl_diagcodes obj = new tbl_diagcodes();
+            ViewBag.groupList = _common.GetDiagnoCodeGroup(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value);
             // obj.PreSelect = false;
             return View(obj);
         }
@@ -75,6 +79,13 @@ namespace PainTrax.Web.Controllers
                 tbl_diagcodes obj = new tbl_diagcodes();
                 obj.Id = id;
                 data = _services.GetOne(obj);
+
+                ViewBag.groupList = new SelectList(
+    _common.GetDiagnoCodeGroup(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value),
+    "Text",
+    "Text",
+    data.DiagCodeGroup     
+);
             }
             catch (Exception ex)
             {
@@ -205,8 +216,8 @@ namespace PainTrax.Web.Controllers
                             if (objIsExist.Count == 0)
                                 _services.Insert(obj);
                             else
-                            { 
-                                obj.Id= objIsExist[0].Id;
+                            {
+                                obj.Id = objIsExist[0].Id;
                                 _services.Update(obj);
                             }
 
@@ -294,6 +305,33 @@ namespace PainTrax.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult SaveGroup(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return Json(new { success = false, message = "Group name required" });
+            }
+
+            try
+            {
+                int cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value;
+                var group = new tbl_diagcodes_group
+                {
+                    GroupName = name,
+                    Cmp_id = cmpid
+                };
+
+                _services.InsertDiagCodeGroup(group);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
 
         #region Private Method
 
@@ -351,7 +389,7 @@ namespace PainTrax.Web.Controllers
                                 {
                                     // Gets the column index of the cell with data
                                     int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellReference));
-                                   // int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellValue.InnerText));
+                                    // int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellValue.InnerText));
                                     cellColumnIndex--; //zero based index
                                     if (columnIndex < cellColumnIndex)
                                     {
@@ -441,9 +479,6 @@ namespace PainTrax.Web.Controllers
             // Return the file. A byte array can also be used instead of a stream
             return File(fs, "application/octet-stream", "DiagCodes.xlsx");
         }
-
-
-
         private DataTable ReadExcelToDataTable(Stream stream)
         {
             DataTable dataTable = new DataTable();

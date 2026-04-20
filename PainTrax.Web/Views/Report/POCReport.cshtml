@@ -829,6 +829,7 @@
         window.location = '@Url.Action("POCReport", "Report")';
     }
     function DownloadPdf(id, fname, lname, mode) {
+        debugger;
         modefilter = mode.trim();
         var modedetails = "";
         if (modefilter == "RSAS" || modefilter == "SARS") { modedetails = "s/p right shoulder arthroscopy"; }

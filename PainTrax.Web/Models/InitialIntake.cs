@@ -456,6 +456,8 @@ namespace PainTrax.Web.Models
         public string TreatmentIds { get; set; }
         public string TreatmentDelimitDesc { get; set; }
         public string TreatmentDesc { get; set; }
+        public string Treatment { get; set; }
+        public string AccidentAudio { get; set; }
 
         // JSON column → store as string OR strongly typed object
         public string FormData { get; set; }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PainTrax.Web.ViewModel.DaignoCodeVM>
+﻿@model List<IGrouping<string, PainTrax.Web.ViewModel.DaignoCodeVM>>
 
 <div class="modal-content">
     <div class="modal-header">
@@ -10,52 +10,28 @@
         <button type="button" class="btn btn-primary" id="btnDaignoCode">Save changes</button>
     </div>
     <div class="modal-body">
+        @foreach (var group in Model)
+        {
+            <div class="diag-group" data-group="@group.Key">
+                <h5>@group.Key</h5>
 
-        @{
-            if (Model != null)
-            {
-                @if (Model.Count() > 0)
-                {
-                    <table class="table table-hover" id="tblDiagnoCode">
-                        <thead>
+                <table class="table table-hover md-4">
+                    <tbody>
+                        @foreach (var item in group)
+                        {
+                            var isChecked = item.IsSelect ? "checked" : "";
+
                             <tr>
-
-                                <th scope="col">#</th>
-                                <th>DiagnoCode</th>
-                                <th scope="col">Description</th>
-
+                                <td><input type="checkbox" @isChecked /></td>
+                                <td>@item.DiagCode</td>
+                                <td>
+                                    <input type="text" class="form-control" value="@item.Description" />
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                foreach (var item in Model)
-                                {
-                                    var isChecked = item.IsSelect ? "checked" : "";
-                                    <tr>
-                                        <th scope="row"><input type="checkbox" @isChecked /></th>
-                                        <td>@item.DiagCode</td>
-                                        <td>
-                                            <input type="text" class="form-control" value="@item.Description" />
-                                            <input type="hidden" id="cmpid" value="@item.cmp_id" />
-                                        </td>
-
-                                    </tr>
-                                }
-                            }
-
-
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <p>No Data Found</p>
-                }
-            }
-            else
-            {
-                <p>No Data Found</p>
-            }
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
     </div>
     @* <div class="modal-footer">
@@ -67,27 +43,39 @@
 
 <script>
 
-    $("#btnDaignoCode").click(function () {
+            $("#btnDaignoCode").click(function () {
 
-        var daignoCodeDetails = "";
-        var htmlDaignosis =  $("#divDiagnosis").html();
-        var bodyPart= $("#hdSelectedBody").val();
+        var finalHtml = "";
+        var bodyPart = $("#hdSelectedBody").val();
+        finalHtml = $("#divDiagnosis").html();
+        // Loop each group table (or wrapper)
+        $(".diag-group").each(function () {
 
-        //$("#divDiagnosis").html(htmlDaignosis);
+            var groupName = $(this).data("group"); // group name
+            var groupHtml = "";
 
-        daignoCodeDetails = $("#divDiagnosis").html();
-        $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
 
-           var row = $(this).closest("tr")[0];
-           daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
-           daignoCodeDetails += "  " +row.cells[2].querySelector('input[type="text"]').value;
-           daignoCodeDetails += "</li>";
+            $(this).find("input[type=checkbox]:checked").each(function () {
+
+                var row = $(this).closest("tr")[0];
+
+                var code = row.cells[1].innerHTML;
+                var desc = row.cells[2].querySelector('input[type="text"]').value;
+
+                groupHtml += "<li>" + code + " " + desc + "</li>";
+            });
+
+
+            // Only add group if it has selected items
+            if (groupHtml !== "") {
+                 finalHtml +=  groupHtml;
+            }
 
         });
-        htmlDaignosis =  daignoCodeDetails ;
 
-        $("#divDiagnosis").html(htmlDaignosis);
-        $("#Diagnosis").val(daignoCodeDetails);
+        $("#divDiagnosis").html(finalHtml);
+      
+
         $('#daignoCodeModal').modal('hide');
         return false;
     });
