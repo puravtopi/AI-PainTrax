@@ -38,7 +38,7 @@ namespace PainTrax.Web.Controllers
                 string cnd = " and cmp_id=" + cmpid;
                 if (!string.IsNullOrEmpty(searchtxt))
                     cnd = " and title like '%" + searchtxt + "%' ";
-                var result = _services.GetAll("");
+                var result = _services.GetAll(cnd);
                 var data = result;
             }
             catch (Exception ex)

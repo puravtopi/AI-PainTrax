@@ -43,10 +43,10 @@ namespace PainTrax.Web.Services
                     " CAST(SUM(CASE WHEN compensation = 'LIEN' THEN 1 ELSE 0 END) AS SIGNED) AS LIEN," +
                     " CAST(SUM(isIE) AS SIGNED) AS NoOfIE,CAST(SUM(isFU) AS SIGNED) AS NoOfFU" +
                     " FROM(SELECT DATE(tblpat.DOE) AS DOE,tblLoc.Location,tblpat.compensation,1 AS isIE,0 AS isFU" +
-                    " FROM tbl_patient_ie tblpat INNER JOIN tbl_locations tblLoc ON tblpat.location_id = tblLoc.id WHERE tblLoc.cmp_id =" + cmp_id +
+                    " FROM tbl_patient_ie tblpat inner JOIN tbl_patient pt ON pt.id = tblpat.patient_id INNER JOIN tbl_locations tblLoc ON tblpat.location_id = tblLoc.id WHERE tblLoc.cmp_id =" + cmp_id +
                     " AND DATE(tblpat.DOE) BETWEEN " + cnd + " UNION ALL" +
                     " SELECT DATE(tblFUPat.DOE) AS DOE,tblLoc.Location,ie.compensation,0 AS isIE,1 AS isFU FROM tbl_patient_fu tblFUPat" +
-                    " INNER JOIN tbl_patient_ie ie ON ie.id = tblFUPat.patientIE_ID INNER JOIN tbl_locations tblLoc ON ie.location_id = tblLoc.id" +
+                    " INNER JOIN tbl_patient_ie ie ON ie.id = tblFUPat.patientIE_ID inner JOIN tbl_patient pt ON pt.id = ie.patient_id INNER JOIN tbl_locations tblLoc ON ie.location_id = tblLoc.id" +
                     " WHERE tblLoc.cmp_id =" + cmp_id + " AND DATE(tblFUPat.DOE) BETWEEN " + cnd + ") t" +
                     " GROUP BY DATE(DOE), Location" +
                     " ORDER BY DATE(DOE), Location";
