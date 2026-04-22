@@ -59,6 +59,7 @@ namespace PainTrax.Web.Controllers
         private readonly AttorneysService _attorneyservices = new AttorneysService();
         private readonly EmpService _empService = new EmpService();
         private readonly PatientIEService _ieService = new PatientIEService();
+        private readonly UserService _userService = new UserService();
         #endregion
 
         public ReportController(ILogger<ReportController> logger)
@@ -2133,6 +2134,7 @@ namespace PainTrax.Web.Controllers
             }
         }
 
+
         #region Patient Import Report   
 
         [HttpGet]
@@ -2140,6 +2142,10 @@ namespace PainTrax.Web.Controllers
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            var providers = _userService.GetProviders(cmpid.Value);
+            ViewBag.providerList = providers;
+
             // Nothing to load from DB on first visit — the user uploads the file.
             return View(new PatientImportReportVM());
         }
@@ -2176,10 +2182,14 @@ namespace PainTrax.Web.Controllers
                                                     string parsedJson,
                                                     IFormFile excelFile,
                                                     string locationId,     // ← new
-                                                    string locationName
+                                                    string locationName,
+                                                    string providerId,     // ← new
+                                                    string providerName,
+                                                    string fdate
                                                 )   // ← new (optional, for logging/display)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            int providerIDrec = Convert.ToInt32(providerId);
 
             // ── Re-populate ViewBag in case we need to return the view with errors ──
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
@@ -2226,6 +2236,8 @@ namespace PainTrax.Web.Controllers
                     }
 
                     // --- Parse Dates ---
+                    DateTime? DOEmain = DateTime.TryParse(fdate, out DateTime parsedDoemain) ? parsedDoemain : (DateTime?)null;
+
                     DateTime? dob = DateTime.TryParse(row.DOB, out DateTime parsedDob) ? parsedDob : (DateTime?)null;
                     DateTime? doa = DateTime.TryParse(row.DateOfAccident, out DateTime parsedDoa) ? parsedDoa : (DateTime?)null;
                     DateTime? DOE = DateTime.TryParse(row.DOE, out DateTime parsedDoe) ? parsedDoe : (DateTime?)null;
@@ -2265,7 +2277,9 @@ namespace PainTrax.Web.Controllers
                         attorney_phone = row.AttorneyPhone,
                         attorney_fax = row.AttorneyFax,
                         imported_at = DateTime.Now,
-                        DOE = DOE,
+                        // If maindoe is not null, use it; otherwise fall back to DOE
+                        DOE = DOE ?? DOEmain,
+                        // DOE =  DOE,
                         loc_id = Convert.ToInt32(locationId)
                     };
                 }).ToList();
@@ -2275,7 +2289,7 @@ namespace PainTrax.Web.Controllers
                     loc_id = Convert.ToInt16(locationId),
                     lstPatientImportReport = lstPatientImportReport
                 };
-                int result = PatientImportDataToDB(model);
+                int result = PatientImportDataToDB(model, providerIDrec);
 
                 if (result > 0)
                 {
@@ -2294,7 +2308,7 @@ namespace PainTrax.Web.Controllers
         }
 
 
-        public int PatientImportDataToDB(PatientImportReportVM model)
+        public int PatientImportDataToDB(PatientImportReportVM model, int providerID)
         {
             try
             {
@@ -2484,7 +2498,7 @@ namespace PainTrax.Web.Controllers
                         emp_id = empId,
                         is_active = true,
                         location_id = report.loc_id,
-                        //provider_id = model.providerid,
+                        provider_id = providerID,
                         patient_id = patientId,
                         primary_claim_no = report.claim_number,
                         primary_ins_cmp_id = priminsId,
@@ -2518,7 +2532,6 @@ namespace PainTrax.Web.Controllers
             }
 
         }
-
 
         #endregion
 

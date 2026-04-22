@@ -762,7 +762,13 @@ namespace PainTrax.Web.Controllers
                 }
             }
 
-            return PartialView("_IntakeQMPPC");
+            var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+
+            if (client_code.ToLower() == "qmppc")
+                return PartialView("_IntakeQMPPC");
+            else if (client_code.ToLower() == "bhfpc")
+                return PartialView("_IntakeBHF");
+            else return PartialView("_IntakeQMPPC");
             //return View();
         }
 
@@ -1218,7 +1224,7 @@ namespace PainTrax.Web.Controllers
                                   DaignoCodeId = c.Id.Value,
                                   Description = c.Description,
                                   DiagCode = c.DiagCode,
-                                  DiagCodeGroup= c.DiagCodeGroup==null?"" : c.DiagCodeGroup,
+                                  DiagCodeGroup = c.DiagCodeGroup == null ? "" : c.DiagCodeGroup,
                                   IsSelect = assetment != null ? (assetment.IndexOf(c.DiagCode) > 0 ? true : c.PreSelect) : c.PreSelect,
                                   Display_Order = c.display_order,
                                   cmp_id = c.cmp_id

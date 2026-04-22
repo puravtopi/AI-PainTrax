@@ -3978,185 +3978,328 @@ namespace PainTrax.Web.Controllers
             return pocDetails;
         }
 
+        //public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "", string provName = "")
+        //{
+        //    // Replace header in target document with header of source document.
+        //    using (WordprocessingDocument
+        //        wdDoc = WordprocessingDocument.Open(filepathTo, true))
+        //    {
+        //        MainDocumentPart mainPart = wdDoc.MainDocumentPart;
+
+        //        // Delete the existing header part.
+        //        mainPart.DeleteParts(mainPart.HeaderParts);
+
+        //        // Create a new header part.
+        //        DocumentFormat.OpenXml.Packaging.HeaderPart headerPart =
+        //    mainPart.AddNewPart<HeaderPart>();
+
+        //        // Get Id of the headerPart.
+        //        string rId = mainPart.GetIdOfPart(headerPart);
+
+        //        // Feed target headerPart with source headerPart.
+        //        using (WordprocessingDocument wdDocSource =
+        //            WordprocessingDocument.Open(filepathFrom, true))
+        //        {
+        //            DocumentFormat.OpenXml.Packaging.HeaderPart firstHeader =
+        //    wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
+
+        //            wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
+
+        //            if (firstHeader != null)
+        //            {
+
+        //                headerPart.FeedData(firstHeader.GetStream());
+        //            }
+
+        //            // Copy Image Parts
+        //            //foreach (var imagePart in firstHeader.ImageParts)
+        //            //{
+        //            //    // Add image part to the target header
+        //            //    ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
+
+        //            //    // Copy image stream
+        //            //    using (Stream imageStream = imagePart.GetStream())
+        //            //    {
+        //            //        newImagePart.FeedData(imageStream);
+        //            //    }
+        //            //}
+
+        //            // Copy Image Parts
+        //            Dictionary<string, string> imageRelMapping = new Dictionary<string, string>();
+
+        //            foreach (var imagePart in firstHeader.ImageParts)
+        //            {
+        //                // Add a new image part to the target header
+        //                ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
+
+        //                // Copy the image data
+        //                using (Stream imageStream = imagePart.GetStream(FileMode.Open, FileAccess.Read))
+        //                {
+        //                    newImagePart.FeedData(imageStream);
+        //                }
+
+        //                // Map the old relationship ID to the new image part ID
+        //                string oldRelId = firstHeader.GetIdOfPart(imagePart);
+        //                string newRelId = headerPart.GetIdOfPart(newImagePart);
+        //                imageRelMapping[oldRelId] = newRelId;
+        //            }
+
+        //            // Update relationships in header XML
+        //            UpdateHeaderXml(headerPart, imageRelMapping, provName);
+
+
+
+        //            foreach (var para in headerPart.Header.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+        //            {
+        //                // Normalize spacing
+        //                var pPr = para.Elements<DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties>().FirstOrDefault();
+        //                if (pPr == null)
+        //                {
+        //                    pPr = new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties();
+        //                    para.PrependChild(pPr);
+        //                }
+
+        //                var spacing = pPr.Elements<DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines>().FirstOrDefault();
+        //                if (spacing == null)
+        //                {
+        //                    spacing = new DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines();
+        //                    pPr.Append(spacing);
+        //                }
+
+        //                spacing.Before = "0";         // Remove space before
+        //                spacing.After = "0";          // Remove space after
+        //                spacing.Line = "240";         // 240 = single line spacing
+        //                spacing.LineRule = DocumentFormat.OpenXml.Wordprocessing.LineSpacingRuleValues.Auto;
+        //            }
+
+        //            //Dictionary<string, string> textReplacements = new Dictionary<string, string>
+        //            //    {
+        //            //            { "@drname@", "Dr. Patel" }  // Replace with your dynamic name
+        //            //    };
+        //            //ReplacePlaceholdersInHeader(headerPart, textReplacements);
+        //        }
+
+        //        int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+        //        var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
+        //        restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
+        //        if (cmpid == 7 || cmpid == 13 || cmpid == 18)
+        //        {
+        //            if (!string.IsNullOrEmpty(dos))
+        //            {
+        //                string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
+        //                if (cmpid == 18)
+        //                {
+        //                    restheaderPart.Header = CreateHeaderWithPageNumber("Re: " + patientName, "");
+        //                }
+        //                else
+        //                    restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
+        //            }
+        //        }
+        //        else
+        //        {
+
+        //            restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
+        //        }
+
+
+        //        //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
+        //        string restId = mainPart.GetIdOfPart(restheaderPart);
+        //        // Get SectionProperties and Replace HeaderReference with new Id.
+        //        IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs =
+        //    mainPart.Document.Body.Elements<SectionProperties>();
+        //        foreach (var sectPr in sectPrs)
+        //        {
+        //            // Delete existing references to headers.
+        //            sectPr.RemoveAllChildren<HeaderReference>();
+        //            sectPr.Append(new TitlePage());
+        //            // Create the new header reference node.
+        //            sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.First, Id = rId });
+        //            if (cmpid == 7 || cmpid == 13 || cmpid == 18)
+        //                sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.Default, Id = restId });
+        //        }
+        //    }
+        //}
+
         public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "", string provName = "")
         {
-            // Replace header in target document with header of source document.
-            using (WordprocessingDocument
-                wdDoc = WordprocessingDocument.Open(filepathTo, true))
+            using (WordprocessingDocument targetDoc = WordprocessingDocument.Open(filepathTo, true))
             {
-                MainDocumentPart mainPart = wdDoc.MainDocumentPart;
+                MainDocumentPart mainPart = targetDoc.MainDocumentPart;
 
-                // Delete the existing header part.
+                // Remove existing headers
                 mainPart.DeleteParts(mainPart.HeaderParts);
 
-                // Create a new header part.
-                DocumentFormat.OpenXml.Packaging.HeaderPart headerPart =
-            mainPart.AddNewPart<HeaderPart>();
+                // Create new header part
+                HeaderPart newHeaderPart = mainPart.AddNewPart<HeaderPart>();
+                string newHeaderRelId = mainPart.GetIdOfPart(newHeaderPart);
 
-                // Get Id of the headerPart.
-                string rId = mainPart.GetIdOfPart(headerPart);
-
-                // Feed target headerPart with source headerPart.
-                using (WordprocessingDocument wdDocSource =
-                    WordprocessingDocument.Open(filepathFrom, true))
+                using (WordprocessingDocument sourceDoc = WordprocessingDocument.Open(filepathFrom, false))
                 {
-                    DocumentFormat.OpenXml.Packaging.HeaderPart firstHeader =
-            wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
+                    var sourceHeader = sourceDoc.MainDocumentPart.HeaderParts.FirstOrDefault();
 
-                    wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
+                    if (sourceHeader == null)
+                        return;
 
-                    if (firstHeader != null)
+                    // Copy header XML
+                    newHeaderPart.FeedData(sourceHeader.GetStream());
+
+                    // Copy images with relationship mapping
+                    Dictionary<string, string> relMap = new Dictionary<string, string>();
+
+                    foreach (var imgPart in sourceHeader.ImageParts)
                     {
+                        ImagePart newImgPart = newHeaderPart.AddImagePart(imgPart.ContentType);
 
-                        headerPart.FeedData(firstHeader.GetStream());
+                        using (Stream stream = imgPart.GetStream(FileMode.Open, FileAccess.Read))
+                        {
+                            newImgPart.FeedData(stream);
+                        }
+
+                        string oldRelId = sourceHeader.GetIdOfPart(imgPart);
+                        string newRelId = newHeaderPart.GetIdOfPart(newImgPart);
+
+                        relMap[oldRelId] = newRelId;
                     }
 
-                    // Copy Image Parts
-                    //foreach (var imagePart in firstHeader.ImageParts)
-                    //{
-                    //    // Add image part to the target header
-                    //    ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
+                    // Update XML relationships + provider name
+                    UpdateHeaderXml(newHeaderPart, relMap, provName);
 
-                    //    // Copy image stream
-                    //    using (Stream imageStream = imagePart.GetStream())
-                    //    {
-                    //        newImagePart.FeedData(imageStream);
-                    //    }
-                    //}
-
-                    // Copy Image Parts
-                    Dictionary<string, string> imageRelMapping = new Dictionary<string, string>();
-
-                    foreach (var imagePart in firstHeader.ImageParts)
+                    // Normalize spacing
+                    foreach (var para in newHeaderPart.Header.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
                     {
-                        // Add a new image part to the target header
-                        ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
+                        var pPr = para.GetFirstChild<DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties>()
+                                  ?? para.PrependChild(new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties());
 
-                        // Copy the image data
-                        using (Stream imageStream = imagePart.GetStream(FileMode.Open, FileAccess.Read))
-                        {
-                            newImagePart.FeedData(imageStream);
-                        }
+                        var spacing = pPr.GetFirstChild<DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines>()
+                                      ?? pPr.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines());
 
-                        // Map the old relationship ID to the new image part ID
-                        string oldRelId = firstHeader.GetIdOfPart(imagePart);
-                        string newRelId = headerPart.GetIdOfPart(newImagePart);
-                        imageRelMapping[oldRelId] = newRelId;
-                    }
-
-                    // Update relationships in header XML
-                    UpdateHeaderXml(headerPart, imageRelMapping, provName);
-
-
-
-                    foreach (var para in headerPart.Header.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
-                    {
-                        // Normalize spacing
-                        var pPr = para.Elements<DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties>().FirstOrDefault();
-                        if (pPr == null)
-                        {
-                            pPr = new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties();
-                            para.PrependChild(pPr);
-                        }
-
-                        var spacing = pPr.Elements<DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines>().FirstOrDefault();
-                        if (spacing == null)
-                        {
-                            spacing = new DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines();
-                            pPr.Append(spacing);
-                        }
-
-                        spacing.Before = "0";         // Remove space before
-                        spacing.After = "0";          // Remove space after
-                        spacing.Line = "240";         // 240 = single line spacing
+                        spacing.Before = "0";
+                        spacing.After = "0";
+                        spacing.Line = "240";
                         spacing.LineRule = DocumentFormat.OpenXml.Wordprocessing.LineSpacingRuleValues.Auto;
                     }
-
-                    //Dictionary<string, string> textReplacements = new Dictionary<string, string>
-                    //    {
-                    //            { "@drname@", "Dr. Patel" }  // Replace with your dynamic name
-                    //    };
-                    //ReplacePlaceholdersInHeader(headerPart, textReplacements);
                 }
+
+                // Create default header (rest pages)
+                HeaderPart defaultHeaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
-                var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
-                restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
+                string formattedDos = "";
+                if (!string.IsNullOrEmpty(dos))
+                {
+                    formattedDos = Common.commonDate(
+                        Convert.ToDateTime(dos),
+                        HttpContext.Session.GetString(SessionKeys.SessionDateFormat)
+                    );
+                }
+
                 if (cmpid == 7 || cmpid == 13 || cmpid == 18)
                 {
-                    if (!string.IsNullOrEmpty(dos))
-                    {
-                        string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
-                        if (cmpid == 18)
-                        {
-                            restheaderPart.Header = CreateHeaderWithPageNumber("Re: " + patientName, "");
-                        }
-                        else
-                            restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
-                    }
+                    if (cmpid == 18)
+                        defaultHeaderPart.Header = CreateHeaderWithPageNumber("Re: " + patientName, "");
+                    else
+                        defaultHeaderPart.Header = CreateHeaderWithPageNumber(patientName, formattedDos);
                 }
                 else
                 {
-
-                    restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
+                    defaultHeaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
                 }
 
+                string defaultRelId = mainPart.GetIdOfPart(defaultHeaderPart);
 
-                //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
-                string restId = mainPart.GetIdOfPart(restheaderPart);
-                // Get SectionProperties and Replace HeaderReference with new Id.
-                IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs =
-            mainPart.Document.Body.Elements<SectionProperties>();
-                foreach (var sectPr in sectPrs)
+                // Ensure SectionProperties exists
+                var body = mainPart.Document.Body;
+                var sectPr = body.Elements<SectionProperties>().FirstOrDefault()
+                             ?? body.AppendChild(new SectionProperties());
+
+                // Clear old headers
+                sectPr.RemoveAllChildren<HeaderReference>();
+
+                // First page header
+                sectPr.PrependChild(new HeaderReference()
                 {
-                    // Delete existing references to headers.
-                    sectPr.RemoveAllChildren<HeaderReference>();
-                    sectPr.Append(new TitlePage());
-                    // Create the new header reference node.
-                    sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.First, Id = rId });
-                    if (cmpid == 7 || cmpid == 13 || cmpid == 18)
-                        sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.Default, Id = restId });
+                    Type = HeaderFooterValues.First,
+                    Id = newHeaderRelId
+                });
+
+                sectPr.PrependChild(new TitlePage());
+
+                // Default header
+                if (cmpid == 7 || cmpid == 13 || cmpid == 18)
+                {
+                    sectPr.AppendChild(new HeaderReference()
+                    {
+                        Type = HeaderFooterValues.Default,
+                        Id = defaultRelId
+                    });
                 }
             }
         }
 
-
-        // Method to update header XML to reference new image relationships
-        private static void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> imageRelMapping, string provName)
+        private void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> relMap, string provName)
         {
-            string headerXml;
+            var header = headerPart.Header;
 
-            // Read the existing header XML
-            using (StreamReader reader = new StreamReader(headerPart.GetStream(FileMode.Open, FileAccess.Read)))
+            // Fix image relationship IDs
+            foreach (var blip in header.Descendants<DocumentFormat.OpenXml.Drawing.Blip>())
             {
-                headerXml = reader.ReadToEnd();
-            }
-
-            // Replace old relationship IDs with new ones
-            foreach (var kvp in imageRelMapping)
-            {
-                headerXml = headerXml.Replace($"r:id=\"{kvp.Key}\"", $"r:id=\"{kvp.Value}\"");
-            }
-            //this 2 lines
-            //headerXml = headerXml
-            //         .Replace("<w:t>@</w:t><w:t>drname</w:t><w:t>@</w:t>", "<w:t>@drname@</w:t>");
-
-            // Step 3: Replace placeholders
-            headerXml = headerXml.Replace("drname", provName == null ? "" : provName);
-
-            // Write the updated XML back to the header part
-            using (MemoryStream memStream = new MemoryStream())
-            {
-                using (StreamWriter writer = new StreamWriter(memStream))
+                if (blip.Embed != null && relMap.ContainsKey(blip.Embed.Value))
                 {
-                    writer.Write(headerXml);
-                    writer.Flush();
-                    memStream.Position = 0;
-                    headerPart.FeedData(memStream);
+                    blip.Embed.Value = relMap[blip.Embed.Value];
                 }
             }
+
+            // Replace provider name placeholder (if exists)
+            if (!string.IsNullOrEmpty(provName))
+            {
+                foreach (var text in header.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>())
+                {
+                    if (text.Text.Contains("@provName@"))
+                    {
+                        text.Text = text.Text.Replace("@provName@", provName);
+                    }
+                }
+            }
+
+            header.Save();
         }
+        // Method to update header XML to reference new image relationships
+        //private static void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> imageRelMapping, string provName)
+        //{
+        //    string headerXml;
+
+        //    // Read the existing header XML
+        //    using (StreamReader reader = new StreamReader(headerPart.GetStream(FileMode.Open, FileAccess.Read)))
+        //    {
+        //        headerXml = reader.ReadToEnd();
+        //    }
+
+        //    // Replace old relationship IDs with new ones
+        //    foreach (var kvp in imageRelMapping)
+        //    {
+        //        headerXml = headerXml.Replace($"r:id=\"{kvp.Key}\"", $"r:id=\"{kvp.Value}\"");
+        //    }
+        //    //this 2 lines
+        //    //headerXml = headerXml
+        //    //         .Replace("<w:t>@</w:t><w:t>drname</w:t><w:t>@</w:t>", "<w:t>@drname@</w:t>");
+
+        //    // Step 3: Replace placeholders
+        //    headerXml = headerXml.Replace("drname", provName == null ? "" : provName);
+
+        //    // Write the updated XML back to the header part
+        //    using (MemoryStream memStream = new MemoryStream())
+        //    {
+        //        using (StreamWriter writer = new StreamWriter(memStream))
+        //        {
+        //            writer.Write(headerXml);
+        //            writer.Flush();
+        //            memStream.Position = 0;
+        //            headerPart.FeedData(memStream);
+        //        }
+        //    }
+        //}
 
 
         public Header CreateHeaderWithPageNumber(string text1, string text2)

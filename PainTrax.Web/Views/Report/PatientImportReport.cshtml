@@ -3,11 +3,19 @@
 <main id="main" class="main">
     <style>
         /* ── Table ── */
-        #tblPreview th, #tblPreview td { white-space: nowrap !important; }
+        #tblPreview th, #tblPreview td {
+            white-space: nowrap !important;
+        }
 
         /* ── Upload area ── */
-        #uploadSection { margin-bottom: 20px; }
-        #previewSection { display: none; }
+        #uploadSection {
+            margin-bottom: 20px;
+        }
+
+        #previewSection {
+            display: none;
+        }
+
         .upload-area {
             border: 2px dashed #ccc;
             border-radius: 8px;
@@ -16,45 +24,75 @@
             cursor: pointer;
             transition: border-color 0.3s;
         }
-        .upload-area:hover, .upload-area.drag-over {
-            border-color: #0d6efd;
-            background-color: #f0f4ff;
+
+            .upload-area:hover, .upload-area.drag-over {
+                border-color: #0d6efd;
+                background-color: #f0f4ff;
+            }
+
+            .upload-area i {
+                font-size: 48px;
+                color: #aaa;
+            }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
         }
-        .upload-area i { font-size: 48px; color: #aaa; }
-        .file-info { margin-top: 10px; font-size: 14px; color: #555; }
 
         /* ── Editable cells ── */
-        td.editable { padding: 2px !important; min-width: 90px; }
-        td.editable input[type="text"],
-        td.editable input[type="date"],
-        td.editable select {
-            width: 100%;
-            min-width: 80px;
-            border: 1px solid transparent;
-            background: transparent;
-            padding: 3px 5px;
-            font-size: 13px;
-            border-radius: 4px;
-            transition: border-color 0.2s, background 0.2s;
+        td.editable {
+            padding: 2px !important;
+            min-width: 90px;
         }
-        td.editable input[type="text"]:focus,
-        td.editable input[type="date"]:focus,
-        td.editable select:focus {
-            border-color: #0d6efd;
-            background: #fff;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(13,110,253,.15);
-        }
-        td.editable input[type="text"]:hover,
-        td.editable input[type="date"]:hover,
-        td.editable select:hover { border-color: #adb5bd; background: #f8f9fa; }
+
+            td.editable input[type="text"],
+            td.editable input[type="date"],
+            td.editable select {
+                width: 100%;
+                min-width: 80px;
+                border: 1px solid transparent;
+                background: transparent;
+                padding: 3px 5px;
+                font-size: 13px;
+                border-radius: 4px;
+                transition: border-color 0.2s, background 0.2s;
+            }
+
+                td.editable input[type="text"]:focus,
+                td.editable input[type="date"]:focus,
+                td.editable select:focus {
+                    border-color: #0d6efd;
+                    background: #fff;
+                    outline: none;
+                    box-shadow: 0 0 0 2px rgba(13,110,253,.15);
+                }
+
+                td.editable input[type="text"]:hover,
+                td.editable input[type="date"]:hover,
+                td.editable select:hover {
+                    border-color: #adb5bd;
+                    background: #f8f9fa;
+                }
 
         /* DOE column highlight */
-        th.doe-col { background-color: #198754 !important; color: #fff; }
-        td.doe-col input { min-width: 130px; }
+        th.doe-col {
+            background-color: #198754 !important;
+            color: #fff;
+        }
+
+        td.doe-col input {
+            min-width: 130px;
+        }
 
         /* Row index cell */
-        td.row-num { text-align: center; color: #888; font-size: 12px; min-width: 30px; }
+        td.row-num {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            min-width: 30px;
+        }
 
         /* ── Persistent location bar (always visible) ── */
         #locationBar {
@@ -68,21 +106,46 @@
             flex-wrap: wrap;
             gap: 14px;
         }
-        #locationBar .loc-label {
-            font-weight: 700;
-            font-size: 14px;
-            color: #1a237e;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding-top: 6px;
+
+            #locationBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #locationBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #locationBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        #ddlLocation {
+            font-weight: 500;
         }
-        #locationBar .loc-label i { font-size: 18px; color: #0d6efd; }
-        #locationBar .loc-control { display: flex; flex-direction: column; gap: 4px; flex: 1 1 220px; max-width: 360px; }
-        #ddlLocation { font-weight: 500; }
-        #ddlLocation.is-invalid { border-color: #dc3545; box-shadow: 0 0 0 2px rgba(220,53,69,.2); }
-        .location-required-hint { font-size: 12px; color: #dc3545; display: none; }
+
+            #ddlLocation.is-invalid {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 2px rgba(220,53,69,.2);
+            }
+
+        .location-required-hint {
+            font-size: 12px;
+            color: #dc3545;
+            display: none;
+        }
+
         #locationConfirmed {
             display: none;
             align-items: center;
@@ -97,7 +160,11 @@
             white-space: nowrap;
             align-self: center;
         }
-        #locationConfirmed i { font-size: 16px; }
+
+            #locationConfirmed i {
+                font-size: 16px;
+            }
+
         .location-badge {
             background: #0d6efd;
             color: #fff;
@@ -109,6 +176,175 @@
             margin-left: 8px;
             vertical-align: middle;
         }
+
+
+        /* ── Persistent Provider bar (always visible) ── */
+        #providerBar {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border: 1px solid #c2d0f8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+            #providerBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #providerBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #providerBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        #ddlprovider {
+            font-weight: 500;
+        }
+
+            #ddlprovider.is-invalid {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 2px rgba(220,53,69,.2);
+            }
+
+        .provider-required-hint {
+            font-size: 12px;
+            color: #dc3545;
+            display: none;
+        }
+
+        #providerConfirmed {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 6px 14px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+            #providerConfirmed i {
+                font-size: 16px;
+            }
+
+        .provider-badge {
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+
+        /* ── Persistent DOE bar (always visible) ── */
+        #doeBar {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border: 1px solid #c2d0f8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+            #doeBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #doeBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #doeBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        #ddldoe {
+            font-weight: 500;
+        }
+
+            #ddldoe.is-invalid {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 2px rgba(220,53,69,.2);
+            }
+
+        .doe-required-hint {
+            font-size: 12px;
+            color: #dc3545;
+            display: none;
+        }
+
+        #doeConfirmed {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 6px 14px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+            #doeConfirmed i {
+                font-size: 16px;
+            }
+
+        .doe-badge {
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
     </style>
 
     <div class="pagetitle">
@@ -131,27 +367,77 @@
                              PERSISTENT LOCATION BAR — always visible
                              stays on screen in both Step 1 and Step 2
                              ══════════════════════════════════════════════════ -->
-                        <div id="locationBar">
-                            <div class="loc-label">
-                                <i class="bi bi-geo-alt-fill"></i>
-                                Location <span class="text-danger">*</span>
-                            </div>
-                            <div class="loc-control">
-                                <select id="ddlLocation"
-                                        class="form-select"
-                                        asp-items="@ViewBag.locList"
-                                        onchange="onLocationChange()">
-                                </select>
-                                <div class="location-required-hint" id="locationHint">
-                                    <i class="bi bi-exclamation-triangle-fill"></i>
-                                    Please select a location before importing.
+                        <div class="row">
+                            <div class="col-md-4" id="locationBar">
+                                <div class="loc-label">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    Location <span class="text-danger">*</span>
+                                </div>
+                                <div class="loc-control">
+                                    <select id="ddlLocation"
+                                            class="form-select"
+                                            asp-items="@ViewBag.locList"
+                                            onchange="onLocationChange()">
+                                    </select>
+                                    <div class="location-required-hint" id="locationHint">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a location before importing.
+                                    </div>
+                                </div>
+                                <div id="locationConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="locationConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
                                 </div>
                             </div>
-                            <div id="locationConfirmed">
-                                <i class="bi bi-check-circle-fill text-success"></i>
-                                <span id="locationConfirmedName"></span>
-                                <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                            <div class="col-md-4" id="providerBar">
+                                <div class="provider-label">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    Provider <span class="text-danger">*</span>
+                                </div>
+                                <div class="provider-control">
+                                    <select id="ddlprovider"
+                                            class="form-select"
+                                            asp-items="@ViewBag.providerList"
+                                            onchange="onProviderChange()">
+                                    </select>
+                                    <div class="provider-required-hint" id="providerHint">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a Provider before importing.
+                                    </div>
+                                </div>
+                                <div id="providerConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="providerConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                                </div>
                             </div>
+                            <div class="col-md-4" id="doeBar">
+                                <div class="doe-label">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    DOE <span class="text-danger">*</span>
+                                </div>
+                                <div class="doe-control  d-flex align-items-center">
+
+                                    @* <label for="fdate" class="form-label me-2 mb-0">DOE</label> *@
+                                    <input type="date" class="form-control" onchange="doechange()" id="fdate" name="fdate" value="">
+                                   
+                                    <div class="doe-required-hint" id="doeHint">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a Provider before importing.
+                                    </div>
+                                </div>
+                                <div id="doeConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="doeConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                                </div>
+                            </div>
+
+                            @*  <div class="col-md-4 d-flex align-items-center">
+                            <label for="fdate" class="form-label me-2 mb-0">DOE</label>
+                            <input type="date" class="form-control" id="fdate" name="fdate" value="">
+                            </div> *@
                         </div>
 
                         <!-- ── STEP 1: File Upload ── -->
@@ -303,307 +589,386 @@
 <form id="frmImport" asp-action="PatientImportReport" asp-controller="Report"
       method="post" enctype="multipart/form-data" style="display:none">
     @Html.AntiForgeryToken()
-    <input type="file"   name="excelFile"    id="hiddenFileInput" />
-    <input type="hidden" name="parsedJson"    id="hiddenParsedJson" />
-    <input type="hidden" name="locationId"    id="hiddenLocationId" />
-    <input type="hidden" name="locationName"  id="hiddenLocationName" />
+    <input type="file" name="excelFile" id="hiddenFileInput" />
+    <input type="hidden" name="parsedJson" id="hiddenParsedJson" />
+    <input type="hidden" name="locationId" id="hiddenLocationId" />
+    <input type="hidden" name="locationName" id="hiddenLocationName" />
+    <input type="hidden" name="providerId" id="hiddenproviderId" />
+    <input type="hidden" name="providerName" id="hiddenproviderName" />
+    <input type="hidden" name="fdate" id="hiddenfdate" />
 </form>
 
 <!-- SheetJS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<link  rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <script>
-// ── Column definitions ────────────────────────────────────────────────────────
-const COL_DEFS = [
-    { key: "Patient Name",      type: "text"   },
-    { key: "DOB",               type: "date"   },
-    { key: "Sex",               type: "select", options: ["", "Male", "Female", "Other"] },
-    { key: "Address",           type: "text"   },
-    { key: "Phone",             type: "text"   },
-    { key: "Social Security #", type: "text"   },
-    { key: "Employer/Company",  type: "text"   },
-    { key: "Employer Address",  type: "text"   },
-    { key: "Emergency Name",    type: "text"   },
-    { key: "Work Phone",        type: "text"   },
-    { key: "Date of Accident",  type: "date"   },
-    { key: "CaseType",          type: "select", options: ["", "NF", "WC", "Other"] },
-    { key: "Insurance Company", type: "text"   },
-    { key: "Ins Address",       type: "text"   },
-    { key: "Ins Phone",         type: "text"   },
-    { key: "Claim #",           type: "text"   },
-    { key: "Claim Address",     type: "text"   },
-    { key: "NF-2",              type: "select", options: ["", "Yes", "No"] },
-    { key: "Policy #",          type: "text"   },
-    { key: "Policy Holder",     type: "text"   },
-    { key: "WCB #",             type: "text"   },
-    { key: "Carrier Case #",    type: "text"   },
-    { key: "Policy Adjuster",   type: "text"   },
-    { key: "Attorney",          type: "text"   },
-    { key: "Firm Name",         type: "text"   },
-    { key: "Attorney Address",  type: "text"   },
-    { key: "Attorney Phone",    type: "text"   },
-    { key: "Attorney Fax",      type: "text"   },
-    { key: "DOE",               type: "date",  extra: true }
-];
+    // ── Column definitions ────────────────────────────────────────────────────────
+    const COL_DEFS = [
+        { key: "Patient Name", type: "text" },
+        { key: "DOB", type: "date" },
+        { key: "Sex", type: "select", options: ["", "Male", "Female", "Other"] },
+        { key: "Address", type: "text" },
+        { key: "Phone", type: "text" },
+        { key: "Social Security #", type: "text" },
+        { key: "Employer/Company", type: "text" },
+        { key: "Employer Address", type: "text" },
+        { key: "Emergency Name", type: "text" },
+        { key: "Work Phone", type: "text" },
+        { key: "Date of Accident", type: "date" },
+        { key: "CaseType", type: "select", options: ["", "NF", "WC", "Other"] },
+        { key: "Insurance Company", type: "text" },
+        { key: "Ins Address", type: "text" },
+        { key: "Ins Phone", type: "text" },
+        { key: "Claim #", type: "text" },
+        { key: "Claim Address", type: "text" },
+        { key: "NF-2", type: "select", options: ["", "Yes", "No"] },
+        { key: "Policy #", type: "text" },
+        { key: "Policy Holder", type: "text" },
+        { key: "WCB #", type: "text" },
+        { key: "Carrier Case #", type: "text" },
+        { key: "Policy Adjuster", type: "text" },
+        { key: "Attorney", type: "text" },
+        { key: "Firm Name", type: "text" },
+        { key: "Attorney Address", type: "text" },
+        { key: "Attorney Phone", type: "text" },
+        { key: "Attorney Fax", type: "text" },
+        { key: "DOE", type: "date", extra: true }
+    ];
 
-let parsedRows = [];
-let dataTable  = null;
+    let parsedRows = [];
+    let dataTable = null;
 
-// ── Location change handler ───────────────────────────────────────────────────
-function onLocationChange() {
-    const sel  = document.getElementById('ddlLocation');
-    const val  = sel.value;
-    const text = val ? sel.options[sel.selectedIndex].text : '';
+    // ── Location change handler ───────────────────────────────────────────────────
+    function onLocationChange() {
+        const sel = document.getElementById('ddlLocation');
+        const val = sel.value;
+        const text = val ? sel.options[sel.selectedIndex].text : '';
 
-    const confirmed = document.getElementById('locationConfirmed');
-    const confName  = document.getElementById('locationConfirmedName');
-    const hint      = document.getElementById('locationHint');
-    const badge     = document.getElementById('previewLocationBadge');
-    const pName     = document.getElementById('previewLocationName');
+        const confirmed = document.getElementById('locationConfirmed');
+        const confName = document.getElementById('locationConfirmedName');
+        const hint = document.getElementById('locationHint');
+        const badge = document.getElementById('previewLocationBadge');
+        const pName = document.getElementById('previewLocationName');
 
-    if (val) {
-        sel.classList.remove('is-invalid');
-        hint.style.display      = 'none';
-        confirmed.style.display = 'flex';
-        confName.textContent    = text;
-        badge.style.display     = 'inline';
-        pName.textContent       = text;
-    } else {
-        confirmed.style.display = 'none';
-        badge.style.display     = 'none';
-    }
-}
-
-// ── Drag & drop ──────────────────────────────────────────────────────────────
-const dropZone = document.getElementById('dropZone');
-dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('drag-over'));
-dropZone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropZone.classList.remove('drag-over');
-    if (e.dataTransfer.files[0]) handleFileSelected(e.dataTransfer.files[0]);
-});
-document.getElementById('excelFile').addEventListener('change', function () {
-    if (this.files[0]) handleFileSelected(this.files[0]);
-});
-
-function handleFileSelected(file) {
-    const allowed = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                     'application/vnd.ms-excel'];
-    if (!allowed.includes(file.type) && !file.name.match(/\.(xlsx|xls)$/i)) {
-        alert('Please upload a valid Excel file (.xlsx or .xls)');
-        return;
-    }
-    document.getElementById('fileInfo').innerHTML =
-        `<i class="bi bi-check-circle text-success"></i> <strong>${file.name}</strong> selected (${(file.size / 1024).toFixed(1)} KB)`;
-    document.getElementById('btnPreview').disabled = false;
-    window._selectedFile = file;
-}
-
-// ── Parse Excel with SheetJS ─────────────────────────────────────────────────
-function previewExcel() {
-    if (!window._selectedFile) return;
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        try {
-            const data     = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array', cellDates: true });
-            const sheet    = workbook.Sheets[workbook.SheetNames[0]];
-            const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-
-            if (jsonData.length < 2) {
-                alert('The Excel file appears to be empty or has no data rows.');
-                return;
-            }
-
-            const headers = jsonData[0].map(h => String(h).trim());
-            parsedRows = [];
-
-            for (let i = 1; i < jsonData.length; i++) {
-                const row = jsonData[i];
-                if (row.every(cell => cell === '' || cell === null || cell === undefined)) continue;
-
-                const obj = {};
-                COL_DEFS.forEach(def => {
-                    if (def.extra) { obj[def.key] = ''; return; }
-
-                    const idx = headers.indexOf(def.key);
-                    let val   = idx >= 0 ? row[idx] : '';
-
-                    if (val instanceof Date) {
-                        val = val.getFullYear() + '-' +
-                              String(val.getMonth() + 1).padStart(2, '0') + '-' +
-                              String(val.getDate()).padStart(2, '0');
-                    } else if (def.type === 'date' && val) {
-                        val = toIsoDate(String(val));
-                    }
-                    obj[def.key] = (val !== null && val !== undefined) ? String(val) : '';
-                });
-                parsedRows.push(obj);
-            }
-
-            renderTable(parsedRows);
-        } catch (err) {
-            console.error(err);
-            alert('Error reading Excel file: ' + err.message);
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = text;
+            badge.style.display = 'inline';
+            pName.textContent = text;
+        } else {
+            confirmed.style.display = 'none';
+            badge.style.display = 'none';
         }
-    };
-    reader.readAsArrayBuffer(window._selectedFile);
-}
+    }
 
-function toIsoDate(str) {
-    if (!str) return '';
-    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-    const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    if (m) return `${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
-    return str;
-}
+    function onProviderChange() {
+        const sel = document.getElementById('ddlprovider');
+        const val = sel.value;
+        const text = val ? sel.options[sel.selectedIndex].text : '';
 
-// ── Render editable DataTable ────────────────────────────────────────────────
-function renderTable(rows) {
-    if (dataTable) { dataTable.destroy(); dataTable = null; }
+        const confirmed = document.getElementById('providerConfirmed');
+        const confName = document.getElementById('providerConfirmedName');
+        const hint = document.getElementById('providerHint');
+        const badge = document.getElementById('previewproviderBadge');
+        const pName = document.getElementById('previewproviderName');
 
-    const tbody = document.getElementById('tblPreviewBody');
-    tbody.innerHTML = '';
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = text;
+            badge.style.display = 'inline';
+            pName.textContent = text;
+        } else {
+            confirmed.style.display = 'none';
+            badge.style.display = 'none';
+        }
+    }
 
-    let nf = 0, wc = 0, other = 0;
+    function doechange() {
+        const sel = document.getElementById('fdate');
+        const val = sel.value;
+        const text = val;
 
-    rows.forEach((row, idx) => {
-        const ct = (row['CaseType'] || '').trim().toUpperCase();
-        if (ct === 'NF') nf++; else if (ct === 'WC') wc++; else other++;
+        const confirmed = document.getElementById('doeConfirmed');
+        const confName = document.getElementById('doeConfirmedName');
+        const hint = document.getElementById('doeHint');
+        const badge = document.getElementById('previewdoeBadge');
+        const pName = document.getElementById('previewdoeName');
 
-        const tr = document.createElement('tr');
-        tr.dataset.rowIndex = idx;
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = text;
+            badge.style.display = 'inline';
+            pName.textContent = text;
+        } else {
+            confirmed.style.display = 'none';
+            badge.style.display = 'none';
+        }
+    }
 
-        const tdNum = document.createElement('td');
-        tdNum.className   = 'row-num';
-        tdNum.textContent = idx + 1;
-        tr.appendChild(tdNum);
+    // ── Drag & drop ──────────────────────────────────────────────────────────────
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files[0]) handleFileSelected(e.dataTransfer.files[0]);
+    });
+    document.getElementById('excelFile').addEventListener('change', function () {
+        if (this.files[0]) handleFileSelected(this.files[0]);
+    });
 
-        COL_DEFS.forEach(def => {
-            const td     = document.createElement('td');
-            td.className = 'editable' + (def.extra ? ' doe-col' : '');
+    function handleFileSelected(file) {
+        const allowed = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel'];
+        if (!allowed.includes(file.type) && !file.name.match(/\.(xlsx|xls)$/i)) {
+            alert('Please upload a valid Excel file (.xlsx or .xls)');
+            return;
+        }
+        document.getElementById('fileInfo').innerHTML =
+            `<i class="bi bi-check-circle text-success"></i> <strong>${file.name}</strong> selected (${(file.size / 1024).toFixed(1)} KB)`;
+        document.getElementById('btnPreview').disabled = false;
+        window._selectedFile = file;
+    }
 
-            let input;
-            if (def.type === 'select') {
-                input = document.createElement('select');
-                input.className = 'form-select form-select-sm';
-                def.options.forEach(opt => {
-                    const o = document.createElement('option');
-                    o.value = opt; o.textContent = opt || '-- Select --';
-                    if (row[def.key] === opt) o.selected = true;
-                    input.appendChild(o);
-                });
-            } else {
-                input = document.createElement('input');
-                input.type      = def.type;
-                input.value     = row[def.key] || '';
-                input.className = 'form-control form-control-sm';
+    // ── Parse Excel with SheetJS ─────────────────────────────────────────────────
+    function previewExcel() {
+        if (!window._selectedFile) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+                if (jsonData.length < 2) {
+                    alert('The Excel file appears to be empty or has no data rows.');
+                    return;
+                }
+
+                const headers = jsonData[0].map(h => String(h).trim());
+                parsedRows = [];
+
+                for (let i = 1; i < jsonData.length; i++) {
+                    const row = jsonData[i];
+                    if (row.every(cell => cell === '' || cell === null || cell === undefined)) continue;
+
+                    const obj = {};
+                    COL_DEFS.forEach(def => {
+                        if (def.extra) { obj[def.key] = ''; return; }
+
+                        const idx = headers.indexOf(def.key);
+                        let val = idx >= 0 ? row[idx] : '';
+
+                        if (val instanceof Date) {
+                            val = val.getFullYear() + '-' +
+                                String(val.getMonth() + 1).padStart(2, '0') + '-' +
+                                String(val.getDate()).padStart(2, '0');
+                        } else if (def.type === 'date' && val) {
+                            val = toIsoDate(String(val));
+                        }
+                        obj[def.key] = (val !== null && val !== undefined) ? String(val) : '';
+                    });
+                    parsedRows.push(obj);
+                }
+
+                renderTable(parsedRows);
+            } catch (err) {
+                console.error(err);
+                alert('Error reading Excel file: ' + err.message);
             }
+        };
+        reader.readAsArrayBuffer(window._selectedFile);
+    }
 
-            input.addEventListener('input',  () => { parsedRows[idx][def.key] = input.value; });
-            input.addEventListener('change', () => { parsedRows[idx][def.key] = input.value; });
+    function toIsoDate(str) {
+        if (!str) return '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+        const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+        return str;
+    }
 
-            td.appendChild(input);
-            tr.appendChild(td);
+    // ── Render editable DataTable ────────────────────────────────────────────────
+    function renderTable(rows) {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+
+        const tbody = document.getElementById('tblPreviewBody');
+        tbody.innerHTML = '';
+
+        let nf = 0, wc = 0, other = 0;
+
+        rows.forEach((row, idx) => {
+            const ct = (row['CaseType'] || '').trim().toUpperCase();
+            if (ct === 'NF') nf++; else if (ct === 'WC') wc++; else other++;
+
+            const tr = document.createElement('tr');
+            tr.dataset.rowIndex = idx;
+
+            const tdNum = document.createElement('td');
+            tdNum.className = 'row-num';
+            tdNum.textContent = idx + 1;
+            tr.appendChild(tdNum);
+
+            COL_DEFS.forEach(def => {
+                const td = document.createElement('td');
+                td.className = 'editable' + (def.extra ? ' doe-col' : '');
+
+                let input;
+                if (def.type === 'select') {
+                    input = document.createElement('select');
+                    input.className = 'form-select form-select-sm';
+                    def.options.forEach(opt => {
+                        const o = document.createElement('option');
+                        o.value = opt; o.textContent = opt || '-- Select --';
+                        if (row[def.key] === opt) o.selected = true;
+                        input.appendChild(o);
+                    });
+                } else {
+                    input = document.createElement('input');
+                    input.type = def.type;
+                    input.value = row[def.key] || '';
+                    input.className = 'form-control form-control-sm';
+                }
+
+                input.addEventListener('input', () => { parsedRows[idx][def.key] = input.value; });
+                input.addEventListener('change', () => { parsedRows[idx][def.key] = input.value; });
+
+                td.appendChild(input);
+                tr.appendChild(td);
+            });
+
+            tbody.appendChild(tr);
         });
 
-        tbody.appendChild(tr);
-    });
+        document.getElementById('rowCount').textContent = rows.length + ' records';
+        document.getElementById('summTotal').textContent = rows.length;
+        document.getElementById('summNF').textContent = nf;
+        document.getElementById('summWC').textContent = wc;
+        document.getElementById('summOther').textContent = other;
 
-    document.getElementById('rowCount').textContent  = rows.length + ' records';
-    document.getElementById('summTotal').textContent = rows.length;
-    document.getElementById('summNF').textContent    = nf;
-    document.getElementById('summWC').textContent    = wc;
-    document.getElementById('summOther').textContent = other;
+        // Hide Step 1 body, show Step 2 — location bar stays untouched
+        document.getElementById('uploadSection').style.display = 'none';
+        document.getElementById('previewSection').style.display = 'block';
 
-    // Hide Step 1 body, show Step 2 — location bar stays untouched
-    document.getElementById('uploadSection').style.display  = 'none';
-    document.getElementById('previewSection').style.display = 'block';
-
-    dataTable = $('#tblPreview').DataTable({
-        paging: true, pageLength: 25, searching: true,
-        info: true, autoWidth: false, scrollX: true,
-        columnDefs: [{ targets: '_all', orderable: false }]
-    });
-}
-
-// ── Import ───────────────────────────────────────────────────────────────────
-function importToDatabase() {
-    if (parsedRows.length === 0) { alert('No data to import.'); return; }
-
-    const locSel  = document.getElementById('ddlLocation');
-    const locId   = locSel ? locSel.value : '';
-    const locText = locId ? locSel.options[locSel.selectedIndex].text : '';
-
-    // Location must be selected
-    if (!locId) {
-        locSel.classList.add('is-invalid');
-        document.getElementById('locationHint').style.display = 'block';
-        document.getElementById('locationBar').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        locSel.focus();
-        return;
+        dataTable = $('#tblPreview').DataTable({
+            paging: true, pageLength: 25, searching: true,
+            info: true, autoWidth: false, scrollX: true,
+            columnDefs: [{ targets: '_all', orderable: false }]
+        });
     }
 
-    if (!confirm(
-        `Import ${parsedRows.length} patient record(s)?\n\nLocation: ${locText}\n\nAll edits (including DOE) are included.`
-    )) return;
+    // ── Import ───────────────────────────────────────────────────────────────────
+    function importToDatabase() {
+        if (parsedRows.length === 0) { alert('No data to import.'); return; }
 
-    const btn = document.getElementById('btnImport');
-    btn.disabled  = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Importing...';
+        const locSel = document.getElementById('ddlLocation');
+        const locId = locSel ? locSel.value : '';
+        const locText = locId ? locSel.options[locSel.selectedIndex].text : '';
 
-    document.getElementById('hiddenParsedJson').value  = JSON.stringify(parsedRows);
-    document.getElementById('hiddenLocationId').value  = locId;
-    document.getElementById('hiddenLocationName').value = locText;
+        const providerSel = document.getElementById('ddlprovider');
+        const providerId = providerSel ? providerSel.value : '';
+        const providerText = providerId ? providerSel.options[providerSel.selectedIndex].text : '';
 
-    try {
-        const dt = new DataTransfer();
-        dt.items.add(window._selectedFile);
-        document.getElementById('hiddenFileInput').files = dt.files;
-    } catch (ex) { /* fallback — JSON is still sent */ }
+        const hdnfdate = document.getElementById('fdate');
+        const doeselected = hdnfdate.value;
 
-    document.getElementById('frmImport').submit();
-}
+        // Location must be selected
+        if (!locId) {
+            locSel.classList.add('is-invalid');
+            document.getElementById('locationHint').style.display = 'block';
+            document.getElementById('locationBar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            locSel.focus();
+            return;
+        }
 
-// ── Reset ────────────────────────────────────────────────────────────────────
-function resetAll() {
-    if (dataTable) { dataTable.destroy(); dataTable = null; }
-    document.getElementById('tblPreviewBody').innerHTML = '';
-    document.getElementById('fileInfo').innerHTML       = '';
-    document.getElementById('btnPreview').disabled      = true;
-    document.getElementById('excelFile').value          = '';
-    document.getElementById('previewSection').style.display = 'none';
-    document.getElementById('uploadSection').style.display  = 'block';
-    document.getElementById('importStatus').style.display   = 'none';
+        // Provider must be selected
+        if (!providerId) {
+            providerSel.classList.add('is-invalid');
+            document.getElementById('providerHint').style.display = 'block';
+            document.getElementById('providerBar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            providerSel.focus();
+            return;
+        }
 
-    // Keep location selection intact — user likely wants the same location
-    // but clear validation state
-    document.getElementById('ddlLocation').classList.remove('is-invalid');
-    document.getElementById('locationHint').style.display = 'none';
 
-    window._selectedFile = null;
-    parsedRows = [];
-}
+        if (!confirm(
+            `Import ${parsedRows.length} patient record(s)?\n\nLocation: ${locText}\n\nProvider: ${providerText}\n\n DOE for all will applied as ${doeselected}.\n\n if in edits (including DOE) are included seprately.`
+        )) return;
 
-// ── TempData result banners ──────────────────────────────────────────────────
-@if (TempData["ImportSuccess"] != null)
-{
-    <text>
-    document.getElementById('importStatus').innerHTML =
+
+
+
+        const btn = document.getElementById('btnImport');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Importing...';
+
+        document.getElementById('hiddenParsedJson').value = JSON.stringify(parsedRows);
+        document.getElementById('hiddenLocationId').value = locId;
+        document.getElementById('hiddenLocationName').value = locText;
+
+        document.getElementById('hiddenproviderId').value = providerId;
+        document.getElementById('hiddenproviderName').value = providerText;
+
+        //document.getElementById('hiddenfdate').value = hdnfdate;
+
+        var visibleDate = document.getElementById("fdate").value;
+        document.getElementById("hiddenfdate").value = visibleDate;
+
+        try {
+            const dt = new DataTransfer();
+            dt.items.add(window._selectedFile);
+            document.getElementById('hiddenFileInput').files = dt.files;
+        } catch (ex) { /* fallback — JSON is still sent */ }
+
+        document.getElementById('frmImport').submit();
+    }
+
+    // ── Reset ────────────────────────────────────────────────────────────────────
+    function resetAll() {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+        document.getElementById('tblPreviewBody').innerHTML = '';
+        document.getElementById('fileInfo').innerHTML = '';
+        document.getElementById('btnPreview').disabled = true;
+        document.getElementById('excelFile').value = '';
+        document.getElementById('previewSection').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+        document.getElementById('importStatus').style.display = 'none';
+
+        // Keep location selection intact — user likely wants the same location
+        // but clear validation state
+        document.getElementById('ddlLocation').classList.remove('is-invalid');
+        document.getElementById('locationHint').style.display = 'none';
+
+        window._selectedFile = null;
+        parsedRows = [];
+    }
+
+    // ── TempData result banners ──────────────────────────────────────────────────
+    @if (TempData["ImportSuccess"] != null)
+    {
+        <text>
+            document.getElementById('importStatus').innerHTML =
         '<div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @TempData["ImportSuccess"]</div>';
-    document.getElementById('importStatus').style.display = 'block';
-    </text>
-}
-@if (TempData["ImportError"] != null)
-{
-    <text>
-    document.getElementById('importStatus').innerHTML =
+        document.getElementById('importStatus').style.display = 'block';
+        </text>
+    }
+    @if (TempData["ImportError"] != null)
+    {
+        <text>
+            document.getElementById('importStatus').innerHTML =
         '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @TempData["ImportError"]</div>';
-    document.getElementById('importStatus').style.display = 'block';
-    </text>
-}
+        document.getElementById('importStatus').style.display = 'block';
+        </text>
+    }
 </script>

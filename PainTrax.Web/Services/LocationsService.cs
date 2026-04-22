@@ -10,7 +10,7 @@ namespace PainTrax.Web.Services
     {
         public List<tbl_locations> GetAll(string cnd = "")
         {
-            string query = "select * from tbl_locations where 1=1 ";
+            string query = "select * from tbl_locations where 1=1 and isactive=1 ";
 
             if (!string.IsNullOrEmpty(cnd))
                 query = query + cnd;
