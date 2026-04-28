@@ -3099,6 +3099,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult DownloadWord(string htmlContent, int ieId, int fuId, string provName = "")
         {
             htmlContent = htmlContent.Replace("<p>&nbsp;</p>", "");
+            htmlContent = htmlContent.Replace("src=\"data:image/jpg;base64,\"", "");
 
 
 

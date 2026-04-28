@@ -1,0 +1,1430 @@
+@model PainTrax.Web.ViewModel.PatientImportReportVM
+
+<main id="main" class="main">
+    <style>
+        /* ── Table ── */
+        #tblPreview th, #tblPreview td {
+            white-space: nowrap !important;
+        }
+
+        /* ── Upload area ── */
+        #uploadSection {
+            margin-bottom: 20px;
+        }
+
+        #previewSection {
+            display: none;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+            .upload-area:hover, .upload-area.drag-over {
+                border-color: #0d6efd;
+                background-color: #f0f4ff;
+            }
+
+            .upload-area i {
+                font-size: 48px;
+                color: #aaa;
+            }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* ── Editable cells ── */
+        td.editable {
+            padding: 2px !important;
+            min-width: 90px;
+        }
+
+            td.editable input[type="text"],
+            td.editable input[type="date"],
+            td.editable select {
+                width: 100%;
+                min-width: 80px;
+                border: 1px solid transparent;
+                background: transparent;
+                padding: 3px 5px;
+                font-size: 13px;
+                border-radius: 4px;
+                transition: border-color 0.2s, background 0.2s;
+            }
+
+                td.editable input[type="text"]:focus,
+                td.editable input[type="date"]:focus,
+                td.editable select:focus {
+                    border-color: #0d6efd;
+                    background: #fff;
+                    outline: none;
+                    box-shadow: 0 0 0 2px rgba(13,110,253,.15);
+                }
+
+                td.editable input[type="text"]:hover,
+                td.editable input[type="date"]:hover,
+                td.editable select:hover {
+                    border-color: #adb5bd;
+                    background: #f8f9fa;
+                }
+
+        /* DOE column highlight */
+        th.doe-col {
+            background-color: #198754 !important;
+            color: #fff;
+        }
+
+        td.doe-col input {
+            min-width: 130px;
+        }
+
+        /* Row index cell */
+        td.row-num {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            min-width: 30px;
+        }
+
+        /* ── Persistent location bar ── */
+        #locationBar {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border: 1px solid #c2d0f8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+            #locationBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #locationBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #locationBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        #ddlLocation {
+            font-weight: 500;
+        }
+
+            #ddlLocation.is-invalid {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 2px rgba(220,53,69,.2);
+            }
+
+        .location-required-hint {
+            font-size: 12px;
+            color: #dc3545;
+            display: none;
+        }
+
+        #locationConfirmed {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 6px 14px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+            #locationConfirmed i {
+                font-size: 16px;
+            }
+
+        .location-badge {
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* ── Persistent Provider bar ── */
+        #providerBar {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border: 1px solid #c2d0f8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+            #providerBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #providerBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #providerBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        #ddlprovider {
+            font-weight: 500;
+        }
+
+            #ddlprovider.is-invalid {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 2px rgba(220,53,69,.2);
+            }
+
+        .provider-required-hint {
+            font-size: 12px;
+            color: #dc3545;
+            display: none;
+        }
+
+        #providerConfirmed {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 6px 14px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+            #providerConfirmed i {
+                font-size: 16px;
+            }
+
+        /* ── Persistent DOE bar ── */
+        #doeBar {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border: 1px solid #c2d0f8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+            #doeBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #doeBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #doeBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        /* ── PDF parsing progress ── */
+        #pdfParseProgress {
+            display: none;
+        }
+
+        .pdf-file-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e9f5ff;
+            border: 1px solid #b6d4fe;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            margin: 3px;
+        }
+
+            .pdf-file-chip .remove-chip {
+                cursor: pointer;
+                color: #dc3545;
+                font-weight: bold;
+                margin-left: 4px;
+            }
+
+        #doeConfirmed {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 6px 14px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+        .doe-badge, .provider-badge {
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+
+    <div class="pagetitle">
+        <h1>Patient Import – PDF</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">Patient Import from PDF</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- ═══════════════════════════════════════════
+                             PERSISTENT BARS — Location / Provider / DOE
+                             ═══════════════════════════════════════════ -->
+                        <div class="row">
+                            <!-- Location -->
+                            <div class="col-md-4" id="locationBar">
+                                <div class="loc-label">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    Location <span class="text-danger">*</span>
+                                </div>
+                                <div class="loc-control">
+                                    <select id="ddlLocation"
+                                            class="form-select"
+                                            asp-items="@ViewBag.locList"
+                                            onchange="onLocationChange()">
+                                    </select>
+                                    <div class="location-required-hint" id="locationHint">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a location before importing.
+                                    </div>
+                                </div>
+                                <div id="locationConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="locationConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                                </div>
+                            </div>
+
+                            <!-- Provider -->
+                            <div class="col-md-4" id="providerBar">
+                                <div class="loc-label">
+                                    <i class="bi bi-person-badge-fill"></i>
+                                    Provider <span class="text-danger">*</span>
+                                </div>
+                                <div class="loc-control">
+                                    <select id="ddlprovider"
+                                            class="form-select"
+                                            asp-items="@ViewBag.providerList"
+                                            onchange="onProviderChange()">
+                                    </select>
+                                    <div class="provider-required-hint" id="providerHint">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a Provider before importing.
+                                    </div>
+                                </div>
+                                <div id="providerConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="providerConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                                </div>
+                            </div>
+
+                            <!-- DOE -->
+                            <div class="col-md-4" id="doeBar">
+                                <div class="loc-label">
+                                    <i class="bi bi-calendar-check-fill"></i>
+                                    DOE <span class="text-danger">*</span>
+                                </div>
+                                <div class="loc-control d-flex align-items-center">
+                                    <input type="date" class="form-control" onchange="doechange()" id="fdate" name="fdate" value="">
+                                    <div class="doe-required-hint" id="doeHint" style="display:none;">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a DOE before importing.
+                                    </div>
+                                </div>
+                                <div id="doeConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="doeConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ══════════════════════════════════════════════
+                             STEP 1 — Upload PDF Files
+                             ══════════════════════════════════════════════ -->
+                        <div id="uploadSection">
+                            <h5 class="card-title">Step 1 – Upload Patient PDF File(s)</h5>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-info-circle"></i>
+                                You can upload <strong>one or multiple</strong> PDF patient intake sheets at once.
+                                Each PDF page is parsed as one patient record.
+                            </p>
+
+                            <div class="upload-area" id="dropZone" onclick="document.getElementById('pdfFile').click()">
+                                <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                <p class="mt-2 mb-0"><strong>Click to browse</strong> or drag &amp; drop PDF file(s) here</p>
+                                <p class="text-muted small">Supported format: .pdf — multiple files allowed</p>
+                            </div>
+                            <input type="file" id="pdfFile" accept=".pdf" multiple style="display:none" />
+
+                            <!-- Chip list of selected files -->
+                            <div id="fileChips" class="mt-2"></div>
+
+                            <div class="file-info mt-1" id="fileInfo"></div>
+
+                            <!-- Parse progress -->
+                            <div id="pdfParseProgress" class="mt-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="spinner-border spinner-border-sm text-primary"></div>
+                                    <span id="parseProgressText">Parsing PDFs…</span>
+                                </div>
+                                <div class="progress mt-2" style="height:6px;">
+                                    <div id="parseProgressBar" class="progress-bar progress-bar-striped progress-bar-animated"
+                                         style="width:0%"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <button class="btn btn-primary" id="btnPreview" disabled onclick="previewPDFs()">
+                                    <i class="bi bi-eye"></i> Preview Data
+                                </button>
+                                <button class="btn btn-secondary ms-2" onclick="resetAll()">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ══════════════════════════════════════════════
+                             STEP 2 — Preview, Edit & Import
+                             ══════════════════════════════════════════════ -->
+                        <div id="previewSection">
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                                <div>
+                                    <h5 class="card-title mb-0">
+                                        Step 2 – Review, Edit &amp; Import Records
+                                        <span class="location-badge" id="previewLocationBadge">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            <span id="previewLocationName"></span>
+                                        </span>
+                                        <span class="provider-badge" id="previewproviderBadge">
+                                            <i class="bi bi-person-badge-fill"></i>
+                                            <span id="previewproviderName"></span>
+                                        </span>
+                                    </h5>
+                                    <small class="text-muted">
+                                        <i class="bi bi-pencil-square"></i>
+                                        All cells are editable — click any cell to modify.
+                                        Fill in <strong>DOE</strong> (Date of Evaluation) before importing.
+                                    </small>
+                                </div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-secondary align-self-center" id="rowCount">0 records</span>
+                                    <button class="btn btn-warning" onclick="resetAll()">
+                                        <i class="bi bi-upload"></i> Upload Different File
+                                    </button>
+                                    <button class="btn btn-success" id="btnImport" onclick="importToDatabase()">
+                                        <i class="bi bi-database-add"></i> Manage Records (Import to DB)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Summary cards -->
+                            <div class="row mb-3">
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-primary mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Total Patients</span>
+                                                <strong id="summTotal">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-info mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>NF Cases</span>
+                                                <strong id="summNF">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-success mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>WC Cases</span>
+                                                <strong id="summWC">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-secondary mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Other Cases</span>
+                                                <strong id="summOther">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id="tblPreview" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Patient Name</th>
+                                            <th>DOB</th>
+                                            <th>Sex</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Social Security #</th>
+                                            <th>Employer/Company</th>
+                                            <th>Employer Address</th>
+                                            <th>Emergency Name</th>
+                                            <th>Work Phone</th>
+                                            <th>Date of Accident</th>
+                                            <th>Case Type</th>
+                                            <th>Insurance Company</th>
+                                            <th>Ins Address</th>
+                                            <th>Ins Phone</th>
+                                            <th>Claim #</th>
+                                            <th>Claim Address</th>
+                                            <th>NF-2</th>
+                                            <th>Policy #</th>
+                                            <th>Policy Holder</th>
+                                            <th>WCB #</th>
+                                            <th>Carrier Case #</th>
+                                            <th>Policy Adjuster</th>
+                                            <th>Attorney</th>
+                                            <th>Firm Name</th>
+                                            <th>Attorney Address</th>
+                                            <th>Attorney Phone</th>
+                                            <th>Attorney Fax</th>
+                                            <th class="doe-col">DOE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblPreviewBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Import status alert -->
+                        <div id="importStatus" class="mt-3" style="display:none;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Hidden form: posts edited JSON + location/provider to controller -->
+<form id="frmImport" asp-action="PatientImportFromPDF" asp-controller="Report"
+      method="post" enctype="multipart/form-data" style="display:none">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="parsedJson" id="hiddenParsedJson" />
+    <input type="hidden" name="locationId" id="hiddenLocationId" />
+    <input type="hidden" name="locationName" id="hiddenLocationName" />
+    <input type="hidden" name="providerId" id="hiddenproviderId" />
+    <input type="hidden" name="providerName" id="hiddenproviderName" />
+    <input type="hidden" name="fdate" id="hiddenfdate" />
+  @*   <input type="hidden" name="sourceType" value="PDF" /> *@
+</form>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+@* Tesseract.js Library *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+    // ── Configure PDF.js worker ──────────────────────────────────────────────────
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    // ── Column definitions (identical to Excel import) ───────────────────────────
+    const COL_DEFS = [
+        { key: "Patient Name", type: "text" },
+        { key: "DOB", type: "date" },
+        { key: "Sex", type: "select", options: ["", "Male", "Female", "Other"] },
+        { key: "Address", type: "text" },
+        { key: "Phone", type: "text" },
+        { key: "Social Security #", type: "text" },
+        { key: "Employer/Company", type: "text" },
+        { key: "Employer Address", type: "text" },
+        { key: "Emergency Name", type: "text" },
+        { key: "Work Phone", type: "text" },
+        { key: "Date of Accident", type: "date" },
+        { key: "CaseType", type: "select", options: ["", "NF", "WC", "Other"] },
+        { key: "Insurance Company", type: "text" },
+        { key: "Ins Address", type: "text" },
+        { key: "Ins Phone", type: "text" },
+        { key: "Claim #", type: "text" },
+        { key: "Claim Address", type: "text" },
+        { key: "NF-2", type: "select", options: ["", "Yes", "No"] },
+        { key: "Policy #", type: "text" },
+        { key: "Policy Holder", type: "text" },
+        { key: "WCB #", type: "text" },
+        { key: "Carrier Case #", type: "text" },
+        { key: "Policy Adjuster", type: "text" },
+        { key: "Attorney", type: "text" },
+        { key: "Firm Name", type: "text" },
+        { key: "Attorney Address", type: "text" },
+        { key: "Attorney Phone", type: "text" },
+        { key: "Attorney Fax", type: "text" },
+        { key: "DOE", type: "date", extra: true }
+    ];
+
+    let parsedRows = [];
+    let dataTable = null;
+    let selectedFiles = [];   // Array of File objects
+
+    // ── Helpers ──────────────────────────────────────────────────────────────────
+
+    /** Convert M/D/YYYY or MM/DD/YYYY → YYYY-MM-DD. Returns '' on failure. */
+    function toIsoDate(str) {
+        if (!str) return '';
+        str = str.trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+        const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+        return str;
+    }
+
+    /** Grab the value that follows a label pattern in an array of text lines. */
+    function extractAfter(lines, labelRegex) {
+        for (let i = 0; i < lines.length; i++) {
+            const m = lines[i].match(labelRegex);
+            if (m) {
+                // value may be on same line after the label, or on the next line
+                const sameLine = lines[i].replace(labelRegex, '').trim();
+                if (sameLine) return sameLine;
+                if (i + 1 < lines.length) return lines[i + 1].trim();
+            }
+        }
+        return '';
+    }
+
+    /**
+     * Parse the raw text of ONE patient PDF page into a COL_DEFS-compatible object.
+     *
+     * The Clinic Demo PDFs follow a consistent layout:
+     *   (NNNNN)-LASTNAME FIRSTNAME          ← header with patient ID + name
+     *   Date of Birth - M/D/YYYY  Sex - X  Marital Status - Y
+     *   Address: ...
+     *   Phone #: ...
+     *   Social Security# - ...
+     *   Employer or Company Name: ... / Address: ... / Emergency Name: ...
+     *   Date of Accident - ...
+     *   Time/Place Accident - ...
+     *   Condition Related to : ...
+     *   Insurance Company : ...
+     *   Address: ...
+     *   Phone: ...   Fax: ...
+     *   Claim# - ...
+     *   Claim Address - ...
+     *   NF-2 - Yes/No   Sending Date - ...
+     *   Policy# - ...
+     *   Policy holder - ...
+     *   WCB# - ...
+     *   Carrier case # - ...
+     *   Attorney - ...   Firm Name - ...
+     *   Attorney Address - ...
+     *   Attorney Phone - ...   Fax - ...   Contact Person - ...
+     */
+   
+
+   
+    function parsePdfText(rawText) {
+        const obj = {};
+        if (typeof COL_DEFS !== 'undefined') {
+            COL_DEFS.forEach(d => obj[d.key] = '');
+        }
+
+        // ── Helper: convert date strings to YYYY-MM-DD ──────────────────────────
+        function toIsoDate(dateStr) {
+            if (!dateStr) return '';
+            dateStr = dateStr.trim();
+            // Already ISO
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+            // MM/DD/YYYY
+            const m = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            if (m) return `${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+            // Try native parse as last resort
+            const d = new Date(dateStr);
+            return isNaN(d.getTime()) ? dateStr : d.toISOString().split('T')[0];
+        }
+
+        // ── Helper: strip a dash/dot placeholder value ──────────────────────────
+        function notBlank(v) {
+            if (!v) return '';
+            const t = v.trim();
+            return (t === '-' || t === '.' || t === '…' || t === '...') ? '' : t;
+        }
+
+        
+        // ══════════════════════════════════════════════════════════════════════════
+        // STRATEGY 1 — greenyourbills.com 4-column table format
+        // ══════════════════════════════════════════════════════════════════════════
+        const isGreenYourBills = /greenyourbills\.com|Patient Information/i.test(rawText);
+        if (isGreenYourBills) {
+            // Flatten the whole text into one long string
+            const flat = rawText.replace(/\n/g, ' ').replace(/ {2,}/g, ' ');
+
+            // IMPROVED EXTRACTOR: Skips CSV artifacts (",") and cleans trailing junk
+            function grabAfter(labelRx, stopRx, sourceText = flat) {
+                // Find label, skip leading quotes/commas/colons, grab everything until stop word
+                const rx = new RegExp(labelRx + '["\\s:,]*([^]*?)(?=' + stopRx + '|$)', 'i');
+                const m = sourceText.match(rx);
+                if (!m) return '';
+
+                let val = m[1];
+                // Remove quotes
+                val = val.replace(/"/g, ' ');
+                // Strip leading/trailing commas, colons, and spaces
+                val = val.replace(/^[\s,:]+/, '').replace(/[\s,:]+$/, '');
+                // Collapse multiple spaces
+                val = val.replace(/\s{2,}/g, ' ');
+
+                return notBlank(val);
+            }
+
+            // ── Personal ──────────────────────────────────────────────────────────
+            const firstName = grabAfter('First Name', 'Middle Name|Last Name');
+            const lastName = grabAfter('Last Name', 'D\\.O\\.B|Gender|Address');
+            if (firstName || lastName) {
+                obj["Patient Name"] = (lastName + ', ' + firstName).trim();
+            }
+
+            const dobRaw = grabAfter('D\\.O\\.B', 'Gender|Address|City');
+            if (dobRaw) obj["DOB"] = toIsoDate(dobRaw);
+
+            const genderRaw = grabAfter('Gender', 'Address|City|Cell');
+            if (genderRaw) {
+                const g = genderRaw.toLowerCase();
+                obj["Sex"] = g.startsWith('f') ? 'Female' : g.startsWith('m') ? 'Male' : 'Other';
+            }
+
+            const addrRaw = grabAfter('Address', 'City|State|Zip|Cell|Home Phone|Work|Email|Attorney|Case');
+            const cityRaw = grabAfter('City', 'State|Zip|Cell|Home');
+            const stateRaw = grabAfter('State', 'Zip|Cell|Home');
+            const zipRaw = grabAfter('Zip', 'Cell|Home|Work|Email');
+
+            obj["Address"] = addrRaw;
+            if (cityRaw || stateRaw || zipRaw) {
+                const parts = [obj["Address"], cityRaw, stateRaw, zipRaw].filter(Boolean);
+                obj["Address"] = parts.join(', ');
+            }
+
+            obj["Phone"] = grabAfter('Cell Phone #', 'Home Phone|Work|Email|Attorney') || grabAfter('Home Phone', 'Work|Email|Attorney|Case');
+            obj["Work Phone"] = grabAfter('Work', 'Email|Attorney|Case|Zip');
+
+            // Added "Printed on|The following table" to stopRx to prevent capturing footer text
+            obj["Social Security #"] = grabAfter('SSN', 'Printed on|The following table|Insurance Information|Policy Holder|Name|Address|Accident');
+
+            // ── Case Type ─────────────────────────────────────────────────────────
+            const caseTypeRaw = grabAfter('Case Type', 'Case Status|SSN|Attorney Email|Attorney Fax');
+            if (caseTypeRaw) {
+                const ct = caseTypeRaw.toLowerCase();
+                if (ct.includes('nofault') || ct.includes('no fault') || ct.includes('nf')) obj["CaseType"] = 'NF';
+                else if (ct.includes('work') || ct.includes('wc')) obj["CaseType"] = 'WC';
+                else obj["CaseType"] = 'Other';
+            }
+
+            // ── Attorney ──────────────────────────────────────────────────────────
+            obj["Attorney"] = grabAfter('Attorney(?!\\s*(?:Address|Phone|Email|Fax))', 'Attorney Address|Attorney Phone|Case Type|Case Status');
+            obj["Attorney Address"] = grabAfter('Attorney Address', 'Attorney Phone|Attorney Email|Attorney Fax|Case');
+            obj["Attorney Phone"] = grabAfter('Attorney Phone', 'Attorney Email|Attorney Fax|Case');
+            obj["Attorney Fax"] = grabAfter('Attorney Fax', 'Case Status|SSN|Insurance');
+
+            // ── Insurance Information block ────────────────────────────────────────
+            const insSection = flat.match(/Insurance Information([^]*?)(?=Accident Information|Employer Information|$)/i);
+            if (insSection) {
+                const ins = insSection[1];
+                obj["Insurance Company"] = grabAfter('Name', 'Address|City|State|Phone|Contact|Claim|Policy|WCB', ins);
+
+                const insAddr = grabAfter('Address', 'City|State|Zip|Phone|Fax|Contact|Claim|Policy', ins);
+                const insCity = grabAfter('City', 'State|Zip|Phone|Fax|Contact', ins);
+                const insState = grabAfter('State', 'Zip|Phone|Fax|Contact', ins);
+                const insZip = grabAfter('Zip', 'Phone|Fax|Contact', ins);
+
+                const insParts = [insAddr, insCity, insState, insZip].filter(Boolean);
+                obj["Ins Address"] = insParts.join(', ');
+
+                obj["Ins Phone"] = grabAfter('Phone', 'Fax|Contact|Claim|Policy', ins);
+                obj["Claim #"] = grabAfter('Claim File #', 'Policy #|WCB|Contact|$', ins);
+                obj["Policy #"] = grabAfter('Policy #', 'WCB|Contact|$', ins);
+                obj["WCB #"] = grabAfter('WCB #', 'Contact|$', ins);
+                obj["Policy Holder"] = grabAfter('Policy Holder', 'Name|Address|City', ins);
+            }
+
+            // ── Accident Information block ─────────────────────────────────────────
+            const accSection = flat.match(/Accident Information([^]*?)(?=Employer Information|Adjuster Information|$)/i);
+            if (accSection) {
+                const acc = accSection[1];
+                const doaRaw = grabAfter('Accident Date', 'Plate Number|Report|Address|City|Hospital', acc);
+                if (doaRaw) obj["Date of Accident"] = toIsoDate(doaRaw);
+            }
+
+            obj["DOE"] = '';
+            return obj;
+        }
+        // ══════════════════════════════════════════════════════════════════════════
+        // STRATEGY 2 — Legacy flat / CSV / standard form formats
+        // ══════════════════════════════════════════════════════════════════════════
+        let textToParse = rawText
+            .replace(/"\s*,\s*"/g, ': ')
+            .replace(/"/g, '')
+            .replace(/,\n/g, '\n');
+
+        function clean(val) {
+            if (!val) return '';
+            const boundaries = [
+                "Date of Birth","DOB","D\\.O\\.B","Sex","Gender","Marital Status",
+                "Address:?","City","State","Zip","Phone\\s*#?","Cell Phone","Home Phone","Work Phone",
+                "Social Security","SSN","Employer","Emergency Name",
+                "Date of Accident","Accident Date","DOA","Time/Place",
+                "Condition Related","Case type","Case Type",
+                "Insurance Company","Primary Insurance","Secondary Insurance",
+                "Claim\\s*#?","Claim Number","Claim File #","Claim Address",
+                "NF-2","Policy Effective","Policy\\s*#?","Policy Number","Policy holder",
+                "WCB\\s*#?","Carrier case","Carrier Case",
+                "Attorney\\s*[-–:]?","BI Attorney","WC Attorney","Firm Name",
+                "Attorney Address","Attorney Phone","Fax",
+                "Other Insurance","Medicare","Contact Person","Referring Doctor"
+            ];
+            const regex = new RegExp(`\\s*(?:${boundaries.join('|')})[\\s\\S]*$`, 'i');
+            val = val.replace(regex, '');
+            return val.replace(/^[-–:\s]+/, '').replace(/[-–:\s]+$/, '').replace(/\n/g, ' ').trim();
+        }
+
+        function extract(regex) {
+            const m = textToParse.match(regex);
+            return m ? clean(m[1]) : '';
+        }
+
+        // Name
+        const fNameMatch   = textToParse.match(/First Name\s*[:\-]\s*([^\n]+)/i);
+        const lNameMatch   = textToParse.match(/Last Name\s*[:\-]\s*([^\n]+)/i);
+        const demoMatch    = textToParse.match(/PATIENT DEMOGRAPHIC FORM[^\n]*\n([a-zA-Z\s,]+?)(?=\n(?:DOB|Sex))/i);
+        const headerMatch  = textToParse.match(/(?:\(\s*[0-9O]+\s*\)|^[0-9O]+)?\s*[-–:]\s*([a-zA-Z\s]+?)(?=\s*\n|\s*\d+|$)/i);
+        const fallbackMatch= textToParse.match(/([a-zA-Z\s]+?)\s*(?:\n|\d+)*\s*(?:Date of Birth|DOB|D\.O\.B)/i);
+
+        if (fNameMatch && lNameMatch) {
+            obj["Patient Name"] = clean(lNameMatch[1]) + ', ' + clean(fNameMatch[1]);
+        } else if (demoMatch) {
+            let nameParts = clean(demoMatch[1]).split(',');
+            obj["Patient Name"] = nameParts.length > 1 ? (nameParts[0].trim() + ', ' + nameParts[1].trim()) : nameParts[0].trim();
+        } else if (headerMatch && headerMatch[1].trim().length > 0) {
+            let parts = headerMatch[1].trim().split(/\s+/);
+            obj["Patient Name"] = parts.length >= 2 ? parts.slice(0).join(' ') + ', ' + parts[1] : headerMatch[1].trim();
+        } else if (fallbackMatch) {
+            let parts = fallbackMatch[1].trim().split(/\s+/);
+            obj["Patient Name"] = parts.length >= 2 ? parts.slice(0).join(' ') + ', ' + parts[1] : fallbackMatch[1].trim();
+        }
+
+        const dobRaw2 = extract(/(?:Date of Birth|DOB|D\.O\.B)\s*[-–:]?\s*([\s\S]*?)(?=Sex|Gender|Marital|$)/i);
+        if (dobRaw2) obj["DOB"] = toIsoDate(dobRaw2);
+
+        const sexRaw2 = extract(/(?:Sex|Gender)\s*[-–:]?\s*([\s\S]*?)(?=Marital|Address|DOA|$)/i);
+        if (sexRaw2) obj["Sex"] = sexRaw2.charAt(0).toUpperCase() + sexRaw2.slice(1).toLowerCase();
+
+        obj["Address"]        = extract(/(?:^|\s)Address\s*[:\-]\s*([\s\S]*?)(?=Phone|City|Primary Insurance|$)/i);
+        obj["Phone"]          = extract(/(?:Phone\s*#?|Cell Phone\s*#?|Home phone)\s*[-–:]?\s*([\s\S]*?)(?=Social Security|SSN|Work|$)/i);
+        obj["Social Security #"] = extract(/(?:Social Security\s*#?|SSN)\s*[-–:]?\s*([\s\S]*?)(?=Employer|Claim|$)/i);
+        obj["Employer/Company"]  = extract(/Employer(?: or Company Name)?\s*[:\-]*\s*([\s\S]*?)(?=Address|Emergency|$)/i);
+        obj["Employer Address"]  = extract(/Employer[\s\S]*?Address\s*[:\-]*\s*([\s\S]*?)(?=Emergency Name|$)/i);
+        obj["Emergency Name"]    = extract(/Emergency Name\s*[:\-]*\s*([\s\S]*?)(?=Work Phone|Date of|$)/i);
+        obj["Work Phone"]        = extract(/Work Phone\s*#?\s*[:\-]*\s*([\s\S]*?)(?=Date of|$)/i);
+
+        const doaRaw2 = extract(/(?:Date of Accident|Accident Date|DOA)\s*[-–:]?\s*([\s\S]*?)(?=Time|Condition|Case|Plate|$)/i);
+        if (doaRaw2) obj["Date of Accident"] = toIsoDate(doaRaw2);
+
+        const condRaw2 = extract(/(?:Condition Related to|Case Type|Case type)\s*[:\-]\s*([\s\S]*?)(?=Insurance|Address|SSN|$)/i).toLowerCase();
+        if (condRaw2.includes('auto') || condRaw2.includes('nf') || condRaw2.includes('fault')) obj["CaseType"] = 'NF';
+        else if (condRaw2.includes('work') || condRaw2.includes('wc')) obj["CaseType"] = 'WC';
+        else if (condRaw2) obj["CaseType"] = 'Other';
+
+        obj["Insurance Company"] = extract(/(?:Insurance Company|Primary Insurance)\s*[:\-]\s*([\s\S]*?)(?=Address|Phone|City|$)/i);
+        if (!obj["Insurance Company"]) {
+            const altIns = textToParse.match(/Insurance Information[\s\S]*?Name\s*[:\-]\s*([^\n]+)/i);
+            if (altIns) obj["Insurance Company"] = clean(altIns[1]);
+        }
+        obj["Ins Address"]  = extract(/(?:Insurance[\s\S]*?Address|Primary Insurance[\s\S]*?Address)\s*[:\-]*\s*([\s\S]*?)(?=Phone|City|Claim|$)/i);
+        obj["Ins Phone"]    = extract(/(?:Insurance[\s\S]*?Phone|Primary Insurance[\s\S]*?Phone Number)\s*[:\-]*\s*([\s\S]*?)(?=Fax|Claim|$)/i);
+        obj["Claim #"]      = extract(/(?:Claim\s*#|Claim Number|Claim File #)\s*[-–:]?\s*([\s\S]*?)(?=Claim Address|NF-2|Policy|$)/i);
+        obj["Claim Address"]= extract(/Claim Address\s*[-–:]?\s*([\s\S]*?)(?=NF-2|Policy|JACKSON|$)/i);
+
+        const nf2Raw2 = extract(/NF-2\s*[-–:]?\s*([\s\S]*?)(?=Sending Date|Policy|$)/i);
+        if (nf2Raw2) obj["NF-2"] = nf2Raw2.charAt(0).toUpperCase() + nf2Raw2.slice(1).toLowerCase();
+
+        obj["Policy #"]      = extract(/(?:Policy\s*#|Policy Number)\s*[-–:]?\s*([\w\-\s]+?)(?=Policy holder|WCB|$)/i).replace(/\s/g, '');
+        obj["Policy Holder"] = extract(/Policy holder\s*[-–:]?\s*([\s\S]*?)(?=WCB|Phone|$)/i);
+        obj["WCB #"]         = extract(/(?:WCB\s*#|WCB Case)\s*[-–:]?\s*([\s\S]*?)(?=Carrier case|Secondary|$)/i);
+        obj["Carrier Case #"]= extract(/(?:Carrier case\s*#|Carrier Case)\s*[-–:]?\s*([\s\S]*?)(?=Attorney|WCB|$)/i);
+        obj["Attorney"]      = extract(/(?:Attorney\s*[-–:]|BI Attorney\s*[:\-])\s*([\s\S]*?)(?=Firm Name|Address|Case Type|$)/i);
+        obj["Firm Name"]     = extract(/Firm Name\s*[-–:]?\s*([\s\S]*?)(?=Attorney Address|$)/i);
+        obj["Attorney Address"] = extract(/(?:Attorney Address|BI Attorney[\s\S]*?Address)\s*[-–:]?\s*([\s\S]*?)(?=Attorney Phone|Phone number|$)/i);
+        obj["Attorney Phone"]   = extract(/(?:Attorney Phone|BI Attorney[\s\S]*?Phone number)\s*[-–:]?\s*([\s\S]*?)(?=Fax|WC Attorney|$)/i);
+        obj["Attorney Fax"]     = extract(/(?:Attorney Fax|Fax)\s*[-–:]?\s*([\s\S]*?)(?=Other Insurance|Medicare|Contact Person|Carrier|$)/i);
+
+        obj["DOE"] = '';
+        return obj;
+    }
+  
+
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        handleFilesSelected(Array.from(e.dataTransfer.files));
+    });
+    document.getElementById('pdfFile').addEventListener('change', function () {
+        if (this.files.length) handleFilesSelected(Array.from(this.files));
+    });
+
+    function handleFilesSelected(files) {
+        const pdfs = files.filter(f => f.type === 'application/pdf' || f.name.match(/\.pdf$/i));
+        if (!pdfs.length) { alert('Please upload valid PDF file(s).'); return; }
+
+        pdfs.forEach(f => {
+            if (!selectedFiles.find(x => x.name === f.name && x.size === f.size)) {
+                selectedFiles.push(f);
+            }
+        });
+        renderFileChips();
+        document.getElementById('btnPreview').disabled = selectedFiles.length === 0;
+        document.getElementById('fileInfo').innerHTML =
+            `<i class="bi bi-check-circle text-success"></i> <strong>${selectedFiles.length}</strong> PDF file(s) ready.`;
+    }
+
+    function renderFileChips() {
+        const container = document.getElementById('fileChips');
+        container.innerHTML = '';
+        selectedFiles.forEach((f, i) => {
+            const chip = document.createElement('span');
+            chip.className = 'pdf-file-chip';
+            chip.innerHTML = `<i class="bi bi-file-earmark-pdf text-danger"></i> ${f.name}
+                    <span class="remove-chip" onclick="removeFile(${i})">✕</span>`;
+            container.appendChild(chip);
+        });
+    }
+
+    function removeFile(idx) {
+        selectedFiles.splice(idx, 1);
+        renderFileChips();
+        document.getElementById('btnPreview').disabled = selectedFiles.length === 0;
+        if (!selectedFiles.length)
+            document.getElementById('fileInfo').innerHTML = '';
+    }
+
+    // ── Parse all selected PDFs ───────────────────────────────────────────────────
+
+    async function previewPDFs() {
+        if (!selectedFiles.length) return;
+
+        const progress = document.getElementById('pdfParseProgress');
+        const progressBar = document.getElementById('parseProgressBar');
+        const progressTxt = document.getElementById('parseProgressText');
+        const btnPreview = document.getElementById('btnPreview');
+
+        progress.style.display = 'block';
+        btnPreview.disabled = true;
+
+        parsedRows = [];
+        let processed = 0;
+        const total = selectedFiles.length;
+
+        for (const file of selectedFiles) {
+            progressTxt.textContent = `Parsing ${file.name} (${processed + 1}/${total})…`;
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({
+                    data: arrayBuffer,
+                    cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+                    cMapPacked: true
+                }).promise;
+
+                for (let p = 1; p <= pdf.numPages; p++) {
+                    const page = await pdf.getPage(p);
+                    const content = await page.getTextContent();
+
+                    // Build raw text from embedded text layer
+                    let rawText = '';
+                    content.items.forEach(item => {
+                        rawText += item.str + (item.hasEOL ? '\n' : ' ');
+                    });
+                    rawText = rawText.replace(/ +/g, ' ').trim();
+
+                    // ── OCR FALLBACK: if the page has no embedded text (scanned image PDF) ──
+                    if (rawText.length < 20) {
+                        progressTxt.textContent = `Scanning image on page ${p} of ${file.name} — this may take a few seconds…`;
+                        console.log(`Page ${p} of "${file.name}" has no text layer. Running OCR…`);
+
+                        try {
+                            // Render the PDF page to a canvas at 2× scale for better OCR accuracy
+                            const viewport = page.getViewport({ scale: 2.0 });
+                            const canvas = document.createElement('canvas');
+                            canvas.width = viewport.width;
+                            canvas.height = viewport.height;
+                            await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+                            // Run Tesseract OCR on the rendered canvas
+                            const worker = await Tesseract.createWorker('eng');
+                            const { data } = await worker.recognize(canvas);
+                            await worker.terminate();
+                            rawText = data.text || '';
+                            console.log(`OCR result for page ${p}:`, rawText);
+                        } catch (ocrErr) {
+                            console.error(`OCR failed for page ${p} of "${file.name}":`, ocrErr);
+                        }
+                    }
+
+                    if (rawText.trim().length > 20) {
+                        parsedRows.push(parsePdfText(rawText));
+                    }
+                }
+            } catch (err) {
+                console.error('Error parsing ' + file.name, err);
+                alert(`Could not parse "${file.name}": ${err.message}`);
+            }
+
+            processed++;
+            progressBar.style.width = Math.round((processed / total) * 100) + '%';
+        }
+
+        progress.style.display = 'none';
+        btnPreview.disabled = false;
+
+        if (!parsedRows.length) {
+            alert('No patient data could be extracted from the uploaded PDF(s).\n\nPossible causes:\n• The PDF pages are blank.\n• OCR could not read the scanned content.\n\nCheck the browser console (F12) for details.');
+            return;
+        }
+
+        renderTable(parsedRows);
+    }
+
+    // async function previewPDFs() {
+    //     if (!selectedFiles.length) return;
+    //     const progress = document.getElementById('pdfParseProgress');
+    //     const progressBar = document.getElementById('parseProgressBar');
+    //     const progressTxt = document.getElementById('parseProgressText');
+    //     const btnPreview = document.getElementById('btnPreview');
+    //     progress.style.display = 'block';
+    //     btnPreview.disabled = true;
+
+    //     parsedRows = [];
+    //     let processed = 0;
+    //     const total = selectedFiles.length;
+
+    //     for (const file of selectedFiles) {
+    //         try {
+    //             const arrayBuffer = await file.arrayBuffer();
+    //             const pdf = await pdfjsLib.getDocument({
+    //                 data: arrayBuffer,
+    //                 cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+    //                 cMapPacked: true
+    //             }).promise;
+
+    //             for (let p = 1; p <= pdf.numPages; p++) {
+    //                 progressTxt.textContent = `Reading ${file.name} (Page ${p})...`;
+
+    //                 const page = await pdf.getPage(p);
+    //                 const content = await page.getTextContent();
+
+    //                 let rawText = '';
+    //                 content.items.forEach(item => {
+    //                     rawText += item.str + (item.hasEOL ? '\n' : ' ');
+    //                 });
+    //                 rawText = rawText.replace(/ +/g, ' ').trim();
+
+    //                 // IF NO TEXT IS FOUND (It's a scanned image) -> USE OCR
+    //                 if (rawText.length < 20) {
+    //                     progressTxt.textContent = `Scanning image: ${file.name} (Takes a few seconds)...`;
+    //                     console.log(`Page ${p} is an image. Running OCR...`);
+
+    //                     // 1. Convert PDF page to an image (canvas)
+    //                     const viewport = page.getViewport({ scale: 2.0 }); // High scale for better reading
+    //                     const canvas = document.createElement('canvas');
+    //                     const context = canvas.getContext('2d');
+    //                     canvas.height = viewport.height;
+    //                     canvas.width = viewport.width;
+
+    //                     await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+    //                     // 2. Use Tesseract to read the image
+    //                     const worker = await Tesseract.createWorker('eng');
+    //                     const ret = await worker.recognize(canvas);
+    //                     rawText = ret.data.text;
+    //                     await worker.terminate();
+    //                 }
+
+    //                 console.log(`--- FINAL TEXT FOR PAGE ${p} ---`);
+    //                 console.log(rawText);
+
+    //                 if (rawText.length > 20) {
+    //                    // parsedRows.push(parsePdfText(rawText));
+
+    //                     parsedRows.push(parsePdfTextWithAI(rawText));
+
+
+    //                 }
+    //             }
+    //         } catch (err) {
+    //             console.error('Error parsing ' + file.name, err);
+    //             alert(`Could not parse "${file.name}": ${err.message}`);
+    //         }
+
+    //         processed++;
+    //         progressBar.style.width = Math.round((processed / total) * 100) + '%';
+    //     }
+
+    //     progress.style.display = 'none';
+    //     btnPreview.disabled = false;
+
+    //     if (!parsedRows.length) {
+    //         alert('No patient data could be extracted from the uploaded PDF(s).');
+    //         return;
+    //     }
+
+    //     renderTable(parsedRows);
+    // }
+
+    // ── Render editable DataTable ─────────────────────────────────────────────────
+
+    function renderTable(rows) {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+
+        const tbody = document.getElementById('tblPreviewBody');
+        tbody.innerHTML = '';
+
+        let nf = 0, wc = 0, other = 0;
+
+        rows.forEach((row, idx) => {
+            const ct = (row['CaseType'] || '').trim().toUpperCase();
+            if (ct === 'NF') nf++;
+            else if (ct === 'WC') wc++;
+            else other++;
+
+            const tr = document.createElement('tr');
+            tr.dataset.rowIndex = idx;
+
+            const tdNum = document.createElement('td');
+            tdNum.className = 'row-num';
+            tdNum.textContent = idx + 1;
+            tr.appendChild(tdNum);
+
+            COL_DEFS.forEach(def => {
+                const td = document.createElement('td');
+                td.className = 'editable' + (def.extra ? ' doe-col' : '');
+
+                let input;
+                if (def.type === 'select') {
+                    input = document.createElement('select');
+                    input.className = 'form-select form-select-sm';
+                    def.options.forEach(opt => {
+                        const o = document.createElement('option');
+                        o.value = opt; o.textContent = opt || '-- Select --';
+                        if (row[def.key] === opt) o.selected = true;
+                        input.appendChild(o);
+                    });
+                } else {
+                    input = document.createElement('input');
+                    input.type = def.type;
+                    input.value = row[def.key] || '';
+                    input.className = 'form-control form-control-sm';
+                }
+
+                input.addEventListener('input', () => { parsedRows[idx][def.key] = input.value; });
+                input.addEventListener('change', () => { parsedRows[idx][def.key] = input.value; });
+
+                td.appendChild(input);
+                tr.appendChild(td);
+            });
+
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('rowCount').textContent = rows.length + ' records';
+        document.getElementById('summTotal').textContent = rows.length;
+        document.getElementById('summNF').textContent = nf;
+        document.getElementById('summWC').textContent = wc;
+        document.getElementById('summOther').textContent = other;
+
+        document.getElementById('uploadSection').style.display = 'none';
+        document.getElementById('previewSection').style.display = 'block';
+
+        dataTable = $('#tblPreview').DataTable({
+            paging: true, pageLength: 25, searching: true,
+            info: true, autoWidth: false, scrollX: true,
+            columnDefs: [{ targets: '_all', orderable: false }]
+        });
+    }
+
+    // ── Location / Provider / DOE change handlers ────────────────────────────────
+
+    function onLocationChange() {
+        const sel = document.getElementById('ddlLocation');
+        const val = sel.value;
+        const text = val ? sel.options[sel.selectedIndex].text : '';
+
+        const confirmed = document.getElementById('locationConfirmed');
+        const confName = document.getElementById('locationConfirmedName');
+        const hint = document.getElementById('locationHint');
+        const badge = document.getElementById('previewLocationBadge');
+        const pName = document.getElementById('previewLocationName');
+
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = text;
+            badge.style.display = 'inline';
+            pName.textContent = text;
+        } else {
+            confirmed.style.display = 'none';
+            badge.style.display = 'none';
+        }
+    }
+
+    function onProviderChange() {
+        const sel = document.getElementById('ddlprovider');
+        const val = sel.value;
+        const text = val ? sel.options[sel.selectedIndex].text : '';
+
+        const confirmed = document.getElementById('providerConfirmed');
+        const confName = document.getElementById('providerConfirmedName');
+        const hint = document.getElementById('providerHint');
+        const badge = document.getElementById('previewproviderBadge');
+        const pName = document.getElementById('previewproviderName');
+
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = text;
+            badge.style.display = 'inline';
+            pName.textContent = text;
+        } else {
+            confirmed.style.display = 'none';
+            badge.style.display = 'none';
+        }
+    }
+
+    function doechange() {
+        const sel = document.getElementById('fdate');
+        const val = sel.value;
+
+        const confirmed = document.getElementById('doeConfirmed');
+        const confName = document.getElementById('doeConfirmedName');
+        const hint = document.getElementById('doeHint');
+        const badge = document.getElementById('previewdoeBadge');
+        const pName = document.getElementById('previewdoeName');
+
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = val;
+
+            // Apply the global DOE to every row's DOE cell (if not individually overridden)
+            document.querySelectorAll('#tblPreviewBody tr').forEach((tr, idx) => {
+                const doeCells = tr.querySelectorAll('td.doe-col input');
+                doeCells.forEach(inp => {
+                    if (!inp.dataset.manuallyEdited) {
+                        inp.value = val;
+                        parsedRows[idx]['DOE'] = val;
+                    }
+                });
+            });
+
+            if (badge) badge.style.display = 'inline';
+            if (pName) pName.textContent = val;
+        } else {
+            confirmed.style.display = 'none';
+            if (badge) badge.style.display = 'none';
+        }
+    }
+
+    // Mark DOE cell as manually edited so global DOE won't overwrite it
+    document.addEventListener('change', function (e) {
+        if (e.target.closest('td.doe-col')) {
+            e.target.dataset.manuallyEdited = 'true';
+        }
+    });
+
+    // ── Import ───────────────────────────────────────────────────────────────────
+
+    function importToDatabase() {
+        if (!parsedRows.length) { alert('No data to import.'); return; }
+
+        const locSel = document.getElementById('ddlLocation');
+        const locId = locSel ? locSel.value : '';
+        const locText = locId ? locSel.options[locSel.selectedIndex].text : '';
+
+        const provSel = document.getElementById('ddlprovider');
+        const provId = provSel ? provSel.value : '';
+        const provText = provId ? provSel.options[provSel.selectedIndex].text : '';
+
+        const doeselected = document.getElementById('fdate').value;
+
+        if (!locId) {
+            locSel.classList.add('is-invalid');
+            document.getElementById('locationHint').style.display = 'block';
+            document.getElementById('locationBar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            locSel.focus();
+            return;
+        }
+        if (!provId) {
+            provSel.classList.add('is-invalid');
+            document.getElementById('providerHint').style.display = 'block';
+            document.getElementById('providerBar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            provSel.focus();
+            return;
+        }
+
+        if (!confirm(
+            `Import ${parsedRows.length} patient record(s)?\n\nLocation: ${locText}\nProvider: ${provText}\nDOE applied to all: ${doeselected || '(per-row)'}\n\nIndividual DOE edits will be preserved.`
+        )) return;
+
+        const btn = document.getElementById('btnImport');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Importing…';
+
+        document.getElementById('hiddenParsedJson').value = JSON.stringify(parsedRows);
+        document.getElementById('hiddenLocationId').value = locId;
+        document.getElementById('hiddenLocationName').value = locText;
+        document.getElementById('hiddenproviderId').value = provId;
+        document.getElementById('hiddenproviderName').value = provText;
+        document.getElementById('hiddenfdate').value = doeselected;
+
+        document.getElementById('frmImport').submit();
+    }
+
+    // ── Reset ─────────────────────────────────────────────────────────────────────
+
+    function resetAll() {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+        document.getElementById('tblPreviewBody').innerHTML = '';
+        document.getElementById('fileChips').innerHTML = '';
+        document.getElementById('fileInfo').innerHTML = '';
+        document.getElementById('btnPreview').disabled = true;
+        document.getElementById('pdfFile').value = '';
+        document.getElementById('previewSection').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+        document.getElementById('importStatus').style.display = 'none';
+        document.getElementById('ddlLocation').classList.remove('is-invalid');
+        document.getElementById('locationHint').style.display = 'none';
+        selectedFiles = [];
+        parsedRows = [];
+    }
+
+    // ── TempData result banners ───────────────────────────────────────────────────
+    @if (TempData["ImportSuccess"] != null)
+    {
+        <text>
+            document.getElementById('importStatus').innerHTML =
+        '<div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @TempData["ImportSuccess"]</div>';
+        document.getElementById('importStatus').style.display = 'block';
+        </text>
+    }
+    @if (TempData["ImportError"] != null)
+    {
+        <text>
+            document.getElementById('importStatus').innerHTML =
+        '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @TempData["ImportError"]</div>';
+        document.getElementById('importStatus').style.display = 'block';
+        </text>
+    }
+</script>

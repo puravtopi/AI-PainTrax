@@ -83,7 +83,7 @@
                                     <div class="row mb-3">
                                         <label for="DiagCode" class="col-md-4 col-lg-3 col-form-label">Diag Code Group</label>
                                         <div class="col-md-8 col-lg-9 d-flex gap-2">
-                                            <select class="form-select searchable-dropdown" asp-for="DiagCodeGroup" asp-items="@ViewBag.groupList"></select>
+                                            <select class="form-select searchable-dropdown" asp-for="DiagCodeGroup"></select>
                                             <button type="button" class="btn btn-outline-secondary" id="btnOpenDiagModal" onclick="fnShowGroup()" title="Add Group">+</button>
                                         </div>
                                     </div>
@@ -130,9 +130,10 @@
         $("#diagCodeModal").modal('show');
     }
 
-    $("#btnSaveDiag").click(function () {
+     $("#btnSaveDiag").click(function () {
 
         var groupName = $("#newDiagName").val().trim();
+        var bodyPart = $("#BodyPart").val().trim();
 
         if (groupName === "") {
             $("#diagError").removeClass("d-none").text("Group name is required");
@@ -144,19 +145,16 @@
         $.ajax({
             url: url,
             type: 'POST',
-            data: { name: groupName },
+            data: { name: groupName,bodyName:bodyPart },
             success: function (res) {
                 if (res.success) {
                     $("#diagCodeModal").modal('hide');
                     $("#newDiagName").val("");
-
                       var newOption = new Option(groupName, groupName, true, true);
         $("#DiagCodeGroup").append(newOption).trigger('change');
 
         // Optional: select it
         $("#DiagCodeGroup").val(groupName);
-
-
                     // optional: refresh list or dropdown
                     alert("Saved successfully");
                 } else {
@@ -165,6 +163,33 @@
             },
             error: function () {
                 $("#diagError").removeClass("d-none").text("Something went wrong");
+            }
+        });
+
+    });
+
+    $(document).ready(function () {
+
+        var url= '@Url.Action("GetGroupByBodyPart", "Diagcode")';
+        $('#BodyPart').on('keyup change', function () {
+
+            var bodyPart = $(this).val();
+
+            if (bodyPart.length > 1) {
+                $.ajax({
+                    url:url,
+                    type: 'GET',
+                    data: { bodyPart: bodyPart },
+                    success: function (data) {
+
+                        var dropdown = $('select[name="DiagCodeGroup"]');
+                        dropdown.empty();
+
+                                             $.each(data, function (i, item) {
+                            dropdown.append('<option value="' + item.value + '">' + item.text + '</option>');
+                        });
+                    }
+                });
             }
         });
 

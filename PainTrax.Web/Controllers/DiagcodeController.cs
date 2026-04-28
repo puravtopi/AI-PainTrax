@@ -21,7 +21,7 @@ namespace PainTrax.Web.Controllers
     {
         private readonly IMapper _mapper;
         private readonly DiagcodesService _services = new DiagcodesService();
-        private readonly Common  _common = new Common();
+        private readonly Common _common = new Common();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IConfiguration Configuration;
         private readonly ILogger<DiagcodeController> _logger;
@@ -81,10 +81,10 @@ namespace PainTrax.Web.Controllers
                 data = _services.GetOne(obj);
 
                 ViewBag.groupList = new SelectList(
-    _common.GetDiagnoCodeGroup(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value),
+    _common.GetDiagnoCodeGroupByBodyPart(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value,data.BodyPart),
     "Text",
     "Text",
-    data.DiagCodeGroup     
+    data.DiagCodeGroup
 );
             }
             catch (Exception ex)
@@ -203,13 +203,14 @@ namespace PainTrax.Web.Controllers
                                 BodyPart = dt.Rows[i]["BodyPart"].ToString(),
                                 DiagCode = dt.Rows[i]["DiagCode"].ToString(),
                                 Description = dt.Rows[i]["Description"].ToString(),
+                                DiagCodeGroup = dt.Rows[i]["GroupName"].ToString(),
                                 PreSelect = false,
                                 display_order = string.IsNullOrEmpty(dt.Rows[i]["DisplayOrder"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DisplayOrder"].ToString()),
                                 CreatedBy = userid,
                                 CreatedDate = System.DateTime.Now
                             };
 
-                            string cnd = " and DiagCode=" + dt.Rows[i]["DiagCode"].ToString() + " and cmp_id=" + cmpid;
+                            string cnd = " and DiagCode='" + dt.Rows[i]["DiagCode"].ToString() + "' and cmp_id=" + cmpid;
 
                             var objIsExist = _services.GetAll(cnd);
 
@@ -219,6 +220,21 @@ namespace PainTrax.Web.Controllers
                             {
                                 obj.Id = objIsExist[0].Id;
                                 _services.Update(obj);
+                            }
+
+                            cnd = " and GroupName='" + dt.Rows[i]["GroupName"].ToString() + "' and BodyPart='" + dt.Rows[i]["BodyPart"].ToString() + "' and cmp_id=" + cmpid;
+
+                            var objGroupIsExist = _services.GetAllDiagCodeGroups(cnd);
+
+                            if (objGroupIsExist.Count == 0)
+                            {
+                                tbl_diagcodes_group objGroup = new tbl_diagcodes_group()
+                                {
+                                    Cmp_id = cmpid,
+                                    GroupName = dt.Rows[i]["GroupName"].ToString(),
+                                    BodyPart = dt.Rows[i]["BodyPart"].ToString()
+                                };
+                                _services.InsertDiagCodeGroup(objGroup);
                             }
 
                         }
@@ -306,23 +322,33 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveGroup(string name)
+        public IActionResult SaveGroup(string name, string bodyName)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
                 return Json(new { success = false, message = "Group name required" });
             }
-
+            if (string.IsNullOrWhiteSpace(bodyName))
+            {
+                return Json(new { success = false, message = "Body name required" });
+            }
             try
             {
-                int cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value;
-                var group = new tbl_diagcodes_group
-                {
-                    GroupName = name,
-                    Cmp_id = cmpid
-                };
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                string cnd = " and GroupName='" + name + "' and BodyPart='" + bodyName + "' and cmp_id=" + cmpid;
 
-                _services.InsertDiagCodeGroup(group);
+                var objGroupIsExist = _services.GetAllDiagCodeGroups(cnd);
+
+                if (objGroupIsExist.Count == 0)
+                {
+                    tbl_diagcodes_group objGroup = new tbl_diagcodes_group()
+                    {
+                        Cmp_id = cmpid,
+                        GroupName = name,
+                        BodyPart = bodyName
+                    };
+                    _services.InsertDiagCodeGroup(objGroup);
+                }
 
                 return Json(new { success = true });
             }
@@ -535,6 +561,14 @@ namespace PainTrax.Web.Controllers
             }
 
             return dataTable;
+        }
+
+
+        public JsonResult GetGroupByBodyPart(string bodyPart)
+        {
+            var data =_common.GetDiagnoCodeGroupByBodyPart(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value, bodyPart);
+
+            return Json(data);
         }
         #endregion
     }

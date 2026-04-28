@@ -3547,7 +3547,7 @@ namespace PainTrax.Web.Controllers
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
-            var dt = _locService.GetAll(" and cmp_id=" + cmpid + " and id=" + locId);
+            var dt = _locService.GetAllLocation(" and cmp_id=" + cmpid + " and id=" + locId);
 
             if (dt.Count > 0)
             {
@@ -4252,16 +4252,24 @@ namespace PainTrax.Web.Controllers
             }
 
             // Replace provider name placeholder (if exists)
-            if (!string.IsNullOrEmpty(provName))
+            //if (!string.IsNullOrEmpty(provName))
+            //{
+            foreach (var text in header.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>())
             {
-                foreach (var text in header.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>())
+                if (text.Text.Contains("@provName@"))
                 {
-                    if (text.Text.Contains("@provName@"))
-                    {
-                        text.Text = text.Text.Replace("@provName@", provName);
-                    }
+                    text.Text = text.Text.Replace("@provName@", provName == "null" ? "" : provName);
+                }
+                if (text.Text.Contains("@drname@"))
+                {
+                    text.Text = text.Text.Replace("@drname@", provName == "null" ? "" : provName);
+                }
+                if (text.Text.Contains("drname"))
+                {
+                    text.Text = text.Text.Replace("drname", provName == "null" ? "" : provName);
                 }
             }
+            //}
 
             header.Save();
         }

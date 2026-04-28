@@ -125,6 +125,32 @@ namespace PainTrax.Web.Helper
             return list;
         }
 
+        public List<SelectListItem> GetDiagnoCodeGroupByBodyPart(int cmp_id, string bodyPart)
+        {
+            string cnd = " and cmp_id=" + cmp_id + " and bodypart='" + bodyPart + "' order by GroupName";
+            var data = _diagcodesService.GetAllDiagCodeGroups(cnd);
+            var list = new List<SelectListItem>();
+
+
+            list.Add(new SelectListItem
+            {
+                Text = "--Select Group--",
+                Value = "0"
+            });
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item.GroupName,
+                    Value = item.GroupName
+                });
+            }
+
+            return list;
+        }
+
 
         //public List<SelectListItem> GetProSXReportDate(int cmp_id)
         //{

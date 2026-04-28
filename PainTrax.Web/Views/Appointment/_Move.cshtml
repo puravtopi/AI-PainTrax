@@ -1,0 +1,43 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var patient = ViewBag.patientData;
+}
+
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        Move
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+    <form id="MoveSave" method="post" asp-action="MoveSave">
+        <input type="hidden" id="appid" name="appid" value="@ViewBag.appid" />
+        <input type="date" id="appdate" class="form-control" name="appdate" value="@ViewBag.app_date"  required>
+        <br />
+        <select id="apptime" name="apptime" class="form-control" required>
+            @for (var time = new TimeSpan(8, 0, 0); time <= new TimeSpan(20, 0, 0); time = time.Add(TimeSpan.FromMinutes(30)))
+            {
+                var display = DateTime.Today.Add(time).ToString("hh:mm tt"); // 08:00 AM format
+                var value = time.ToString(@"hh\:mm"); // 08:00 format
+
+                var isSelected = ViewBag.app_time != null && ViewBag.app_time.ToString() == value;
+
+                <option value="@value" selected="@(isSelected ? "selected" : null)">
+                    @display
+                </option>
+            }
+        </select>
+        <div class="modal-footer">
+            <button class="btn btn-primary">
+                Move
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>

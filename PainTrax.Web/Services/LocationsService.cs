@@ -20,6 +20,18 @@ namespace PainTrax.Web.Services
             return dataList;
         }
 
+        public List<tbl_locations> GetAllLocation(string cnd = "")
+        {
+            string query = "select * from tbl_locations where 1=1  ";
+
+            if (!string.IsNullOrEmpty(cnd))
+                query = query + cnd;
+
+
+            List<tbl_locations> dataList = ConvertDataTable<tbl_locations>(GetData(query));
+            return dataList;
+        }
+
         public tbl_locations? GetOne(tbl_locations data)
         {
             DataTable dt = new DataTable();

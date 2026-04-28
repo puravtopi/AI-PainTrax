@@ -94,9 +94,10 @@ namespace PainTrax.Web.Services
         public void InsertDiagCodeGroup(tbl_diagcodes_group data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_diagcodes_group
-		(GroupName,Cmp_Id)Values
-				(@GroupName,@Cmp_Id)", conn);
+		(GroupName,BodyPart,Cmp_Id)Values
+				(@GroupName,@BodyPart,@Cmp_Id)", conn);
             cm.Parameters.AddWithValue("@GroupName", data.GroupName);
+            cm.Parameters.AddWithValue("@BodyPart", data.BodyPart);
             cm.Parameters.AddWithValue("@Cmp_Id", data.Cmp_id);
            
             Execute(cm);

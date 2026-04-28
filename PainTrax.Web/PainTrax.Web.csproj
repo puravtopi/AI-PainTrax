@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\kendo\**" />
+    <Content Remove="wwwroot\kendo\**" />
+    <EmbeddedResource Remove="wwwroot\kendo\**" />
+    <None Remove="wwwroot\kendo\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Controllers\MapPdfController.cs" />
   </ItemGroup>
 

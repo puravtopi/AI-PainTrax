@@ -2535,5 +2535,153 @@ namespace PainTrax.Web.Controllers
 
         #endregion
 
+        #region Patient Import Report  pdf
+
+        [HttpGet]
+        public IActionResult PatientImportFromPDF()
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            var providers = _userService.GetProviders(cmpid.Value);
+            ViewBag.providerList = providers;
+
+            // Nothing to load from DB on first visit — the user uploads the file.
+            return View(new PatientImportReportVM());
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PatientImportFromPDF(
+                                            string parsedJson,
+                                            string locationId,     // ← new
+                                            string locationName,
+                                            string providerId,     // ← new
+                                            string providerName,
+                                            string fdate
+                                        )   // ← new (optional, for logging/display)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            int providerIDrec = Convert.ToInt32(providerId);
+
+            // ── Re-populate ViewBag in case we need to return the view with errors ──
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            // ── Validate location ──
+            if (string.IsNullOrWhiteSpace(locationId) || !int.TryParse(locationId, out int locId))
+            {
+                TempData["ImportError"] = "Please select a location before importing.";
+                return RedirectToAction("PatientImportFromPDF");
+            }
+
+            if (string.IsNullOrWhiteSpace(parsedJson))
+            {
+                TempData["ImportError"] = "No data received. Please upload and preview the file first.";
+                return RedirectToAction("PatientImportFromPDF");
+            }
+
+            try
+            {
+                var rows = JsonConvert.DeserializeObject<List<PatientImportRowVM>>(parsedJson);
+
+                if (rows == null || rows.Count == 0)
+                {
+                    TempData["ImportError"] = "The uploaded file contained no valid rows.";
+                    return RedirectToAction("PatientImportFromPDF");
+                }
+
+                // 3. Map the data
+                List<PatientImportReportVM> lstPatientImportReport = rows.Select(row =>
+                {
+                    // --- Parse Name ---
+                    string lastName = string.Empty;
+                    string firstName = null;
+
+                    if (!string.IsNullOrWhiteSpace(row.PatientName))
+                    {
+                        var nameParts = row.PatientName.Split(',');
+
+                        if (nameParts.Length > 0)
+                            lastName = FormatNamePart(nameParts[0]);
+
+                        if (nameParts.Length > 1)
+                            firstName = FormatNamePart(nameParts[1]);
+                    }
+
+                    // --- Parse Dates ---
+                    DateTime? DOEmain = DateTime.TryParse(fdate, out DateTime parsedDoemain) ? parsedDoemain : (DateTime?)null;
+
+                    DateTime? dob = DateTime.TryParse(row.DOB, out DateTime parsedDob) ? parsedDob : (DateTime?)null;
+                    DateTime? doa = DateTime.TryParse(row.DateOfAccident, out DateTime parsedDoa) ? parsedDoa : (DateTime?)null;
+                    DateTime? DOE = DateTime.TryParse(row.DOE, out DateTime parsedDoe) ? parsedDoe : (DateTime?)null;
+                    // --- Create and Map Object ---
+                    return new PatientImportReportVM
+                    {
+                        // If last_name is entirely empty but required by the DB, provide a fallback to prevent DB validation errors
+                        last_name = string.IsNullOrEmpty(lastName) ? "Unknown" : lastName,
+                        first_name = firstName,
+
+                        dob = dob,
+                        doa = doa,
+
+                        sex = row.Sex,
+                        address = row.Address,
+                        phone = row.Phone,
+                        ssn = row.SocialSecurityNo,
+                        employer_company = row.EmployerCompany,
+                        employer_address = row.EmployerAddress,
+                        emergency_contact = row.EmergencyName,
+                        work_phone = row.WorkPhone,
+                        condition_related_to = row.CaseType, // Mapped CaseType to condition_related_to based on context
+                        insurance_company = row.InsuranceCompany,
+                        insurance_address = row.InsAddress,
+                        insurance_phone = row.InsPhone,
+                        claim_number = row.ClaimNo,
+                        claim_address = row.ClaimAddress,
+                        nf2 = row.NF2,
+                        policy_number = row.PolicyNo,
+                        policy_holder = row.PolicyHolder,
+                        wcb_number = row.WCBNo,
+                        carrier_case_number = row.CarrierCaseNo,
+                        policy_adjuster = row.PolicyAdjuster,
+                        attorney = row.Attorney,
+                        firm_name = row.FirmName,
+                        attorney_address = row.AttorneyAddress,
+                        attorney_phone = row.AttorneyPhone,
+                        attorney_fax = row.AttorneyFax,
+                        imported_at = DateTime.Now,
+                        // If maindoe is not null, use it; otherwise fall back to DOE
+                        DOE = DOE ?? DOEmain,
+                        // DOE =  DOE,
+                        loc_id = Convert.ToInt32(locationId)
+                    };
+                }).ToList();
+                PatientImportReportVM model = new PatientImportReportVM
+                {
+                    cmpy_id = cmpid,
+                    loc_id = Convert.ToInt16(locationId),
+                    lstPatientImportReport = lstPatientImportReport
+                };
+                int result = PatientImportDataToDB(model, providerIDrec);
+                //string locationName = "";
+                if (result > 0)
+                {
+                    TempData["ImportSuccess"] = $"Successfully imported {lstPatientImportReport.Count()} patient record(s) to location \"{Convert.ToString(locationName)}\".";
+                }
+                //TempData["ImportSuccess"] = $"Successfully imported {inserted} patient record(s) to location "{ locationName}".";
+                //TempData["ImportSuccess"] = "Success";// $"Successfully imported {inserted} patient record(s) to location "{ locationName}".";
+
+            }
+            catch (Exception ex)
+            {
+                TempData["ImportError"] = $"Import failed: {ex.Message}";
+            }
+
+            return RedirectToAction("PatientImportFromPDF");
+        }
+
+        #endregion
+
     }
 }

@@ -118,7 +118,7 @@
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
                         <h4 class="text-center mb-4 fw-bold">
                             Patient Injury Report
-                                                   </h4>
+                        </h4>
 
                         <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white">
                             <b><i>*Note: Please do not use single quot(') in any fields.</i></b>
@@ -226,7 +226,7 @@
                                             <p>
                                                 <b> Chief complaint:</b>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> Neck</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="mbSection" data-pe="mbPE" /> Mid back</label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="mbSection" data-pe="mbPE" /> Mid back</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="lbSection" data-pe="lbPE" /> Lower back</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" /> R/SH</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" /> L/SH</label>
@@ -245,7 +245,7 @@
                                                 <label><input type="radio" name="InjuryType" value="pi" /> PI</label>
                                             </p>
 
-                                            <div id="divWC" style="display:none;">
+                                            <div id="divMM" style="display:none;">
                                                 <!-- Paragraph Description -->
                                                 <p>
 
@@ -273,12 +273,77 @@
                                                     <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger sideswipe"> Passenger sideswipe</label>
                                                 </p>
                                                 <p>
+                                                    EMS arrived:
+                                                    <label><input type="radio" name="EMS" value="Yes"> Yes</label>
+                                                    <label><input type="radio" name="EMS" value="No"> No</label>
+                                                </p>
+                                                <p>
+                                                    Went to hospital?
+                                                    <label><input type="radio" name="Hospital" value="Yes"> Yes</label>
+                                                    <label><input type="radio" name="Hospital" value="No"> No</label>
+                                                    <div id="divHospital" style="display:none">
+
+                                                        Hospital name:
+                                                        <input id="HospitalName" class="form-control d-inline w-25" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
+                                                        @*  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        Records:
+                                                        <label><input type="radio" name="Records" value="Yes"> Yes</label>
+                                                        <label><input type="radio" name="Records" value="No"> No</label>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *@
+                                                        How did you get to hospital:
+                                                        <label><input type="radio" name="Transport" value="Ambulance"> Ambulance</label>
+                                                        <label><input type="radio" name="Transport" value="Car"> Car</label>
+                                                        <label><input type="radio" name="Transport" value="Uber"> Uber</label>
+                                                        <label><input type="radio" name="Transport" value="Cab"> Cab</label>
+                                                        <label><input type="radio" name="Transport" value="Friend"> Friend</label>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    Did you go on the same day?
+                                                    <label><input type="radio" name="SameDay" value="Yes"> Yes</label>
+                                                    <label><input type="radio" name="SameDay" value="No"> No</label>
+
+                                                    how many days later?
+                                                    <input id="DaysLater" name="DaysLater" class="form-control d-inline w-25" />
+
+                                                </p>
+                                                <p>
+                                                    In the hospital, Did they do any tests?
+                                                    <label><input type="radio" name="IsHospitalTest" value="Yes"> Yes</label>
+                                                    <label><input type="radio" name="IsHospitalTest" value="No"> No</label>
+                                                    If yes, what tests?
+                                                    <label><input type="checkbox" class="chkMulti" name="HospitalTest" value="X-rays"> X-rays </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="HospitalTest" value="CT"> CT </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="HospitalTest" value="MRI"> MRI </label>
+                                                    <input type="text" id="HospitalTestOther" name="HospitalTestOther" class="form-control d-inline w-auto" />
+                                                </p>
+                                                <p>
+                                                    Were you prescribed any medication?
+                                                    <label><input type="radio" name="IsHospitalMedication" value="Yes"> Yes</label>
+                                                    <label><input type="radio" name="IsHospitalMedication" value="No"> No</label>
+                                                    If yes, what medication?
+                                                    <input type="text" id="HospitalMedication" name="HospitalMedication" class="form-control d-inline w-auto" />
+                                                </p>
+                                                <p>
+                                                    Have you been involved in an accident in the past?
+                                                    <label><input type="radio" name="IsAccidentPast" value="Yes"> Yes</label>
+                                                    <label><input type="radio" name="IsAccidentPast" value="No"> No</label>
+                                                    If yes, when?
+                                                    <input type="text" id="AccidentPast" name="AccidentPast" class="form-control d-inline w-auto" />
+                                                    Body parts injured in that accident
+                                                    <input type="text" id="AccidentBodyPart" name="AccidentBodyPart" class="form-control d-inline w-auto" />
+                                                    Did you completely recover?
+                                                    <label><input type="radio" name="IsAccidentRecover" value="Yes"> Yes</label>
+                                                    <label><input type="radio" name="IsAccidentRecover" value="No"> No</label>
+                                                </p>
+                                                <p>
                                                     Please describe
                                                     <textarea id="WCDescription" name="WCDescription" class="form-control d-inline" style="width:95%"></textarea>
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'WCDescription')"></i>
                                                 </p>
                                             </div>
-                                            <div id="divMM" style="display:none;">
+                                            <div id="divWC" style="display:none;">
                                                 <!-- Paragraph Description -->
                                                 <p>
                                                     The patient states
@@ -295,6 +360,7 @@
                                                     <textarea id="MMDescription" name="MMDescription" class="form-control d-inline" style="width:95%"></textarea>
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MMDescription')"></i>
                                                 </p>
+
                                             </div>
                                             <p>
                                                 Accident Description
@@ -304,7 +370,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="accordion-item">
+                                <div class="accordion-item" style="display:none">
                                     <h2 class="accordion-header" id="headingThree">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                             Pre-Injury Functional Baseline
@@ -334,14 +400,14 @@
                                                 </span>
                                             </p>
 
-                                           
+
 
                                             <!-- Vehicle Hit -->
-                                           
+
                                         </div>
                                     </div>
                                 </div>
-                                <div class="accordion-item">
+                                <div class="accordion-item" style="display:none">
                                     <h2 class="accordion-header" id="headingFour">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
                                             Mechanism of Injury (Describe Forces & Body Position)
@@ -374,9 +440,7 @@
                                                 <label><input type="radio" name="Airbag" value="Yes"> Yes</label>
                                                 <label><input type="radio" name="Airbag" value="No"> No</label>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                EMS arrived:
-                                                <label><input type="radio" name="EMS" value="Yes"> Yes</label>
-                                                <label><input type="radio" name="EMS" value="No"> No</label>
+
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Police contacted:
                                                 <label><input type="radio" name="Police" value="Yes"> Yes</label>
@@ -388,29 +452,6 @@
                                             </p>
 
                                             <!-- Hospital -->
-                                            <p>
-                                                Went to hospital:
-                                                <label><input type="radio" name="Hospital" value="Yes"> Yes</label>
-                                                <label><input type="radio" name="Hospital" value="No"> No</label>
-                                                <div id="divHospital" style="display:none">
-
-                                                    Hospital name:
-                                                    <input id="HospitalName" class="form-control d-inline w-25" />
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    Records:
-                                                    <label><input type="radio" name="Records" value="Yes"> Yes</label>
-                                                    <label><input type="radio" name="Records" value="No"> No</label>
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    How did you get to hospital:
-                                                    <label><input type="radio" name="Transport" value="Ambulance"> Ambulance</label>
-                                                    <label><input type="radio" name="Transport" value="Car"> Car</label>
-                                                    <label><input type="radio" name="Transport" value="Uber"> Uber</label>
-                                                    <label><input type="radio" name="Transport" value="Cab"> Cab</label>
-                                                    <label><input type="radio" name="Transport" value="Friend"> Friend</label>
-                                                </div>
-                                            </p>
-
                                             <!-- Symptoms -->
                                             <p>
                                                 Symptoms began:
@@ -440,13 +481,17 @@
                                         <div class="accordion-body">
                                             <!-- PMH -->
                                             <p>
-                                                PMH:
-                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="None"> None</label>
+                                                Any Medication conditions?:
+                                                <label><input type="radio" name="IsPMH" value="Yes"> Yes</label>
+                                                <label><input type="radio" name="IsPMH" value="No"> No</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="Diabetes"> Diabetes</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="HTN"> HTN</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="HLD"> HLD</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="High BP"> High BP</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="Asthma"> Asthma</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Cardiac"> Cardiac</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Heart disease"> Heart disease</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Pregnant"> Pregnant</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Seizure History"> Seizure History</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Bleeding Problems/Bruise easily/Blood clotting Issues">Bleeding Problems/Bruise easily/Blood clotting Issues</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Immune Deficiency">Immune Deficiency</label>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Other:
                                                 <input id="PMHOther" class="form-control d-inline w-25" style="min-width:37%" />
@@ -455,16 +500,18 @@
 
                                             <!-- PSH -->
                                             <p>
-                                                PSH:
+                                                Have you ever had any surgeries?
+                                                <label><input type="radio" name="IsSMH" value="Yes"> Yes</label>
+                                                <label><input type="radio" name="IsSMH" value="No"> No</label>
                                                 <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i>
                                             </p>
 
                                             <!-- Meds -->
                                             <p>
-                                                Meds:
-                                                <label><input type="radio" name="Meds" value="The patient is not taking any medication at this time."> None</label>
-                                                <label><input type="radio" name="Meds" value="The patient is taking {{MedsOther}} pain medications p.r.n."> Pain meds PRN</label>
+                                                Are you taking any medications?
+                                                <label><input type="radio" name="Meds" value="Yes"> Yes</label>
+                                                <label><input type="radio" name="Meds" value="No"> No</label>
 
                                                 <input id="MedsOther" class="form-control d-inline w-25" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i>
@@ -488,7 +535,7 @@
                                             </p>
 
                                             <!-- Social History -->
-                                            <p>
+                                            <p style="display:none">
                                                 Smoke:
                                                 <label><input type="radio" name="Smoke" value="Yes"> Y</label>
                                                 <label><input type="radio" name="Smoke" value="No"> N</label>
@@ -569,7 +616,7 @@
                                             </p>
 
                                             <!-- Compliance -->
-                                            <p>
+                                            <p style="display:none">
                                                 Patient reports compliance with therapy:
                                                 <label><input type="radio" name="Compliance" value="Yes"> Y</label>
                                                 <label><input type="radio" name="Compliance" value="No"> N</label>
@@ -580,7 +627,7 @@
                                             </p>
 
                                             <!-- Functional Limitations -->
-                                            <p>
+                                            <p style="display:none">
                                                 <b>Difficulty</b> Walking:
                                                 <label><input type="radio" name="Walk" value="Yes"> Y</label>
                                                 <label><input type="radio" name="Walk" value="No"> N</label>
@@ -601,7 +648,7 @@
                                             </p>
 
                                             <!-- Unable -->
-                                            <p>
+                                            <p style="display:none">
                                                 Unable to:
                                                 <label><input type="checkbox" class="chkMulti" name="Unable" value="Garden"> Garden</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Unable" value="Play sports"> Play sports</label>
@@ -619,21 +666,21 @@
                                                 <label><input type="checkbox" class="chkMulti" name="Unable" value="Exercise"> Exercise</label>
 
                                             </p>
-                                            <p>
+                                            <p style="display:none">
                                                 Based on the patient’s history, symptom duration, prior treatment, and reported functional limitations:
                                             </p>
-                                            <p>
+                                            <p style="display:none">
 
                                                 <input type="checkbox" name="TreatmentPlan" value="Initial" />
                                                 Initial conservative management is indicated and will be initiated or continued in accordance with Medical Treatment Guidelines (MTG).
 
                                             </p>
-                                            <p>
+                                            <p style="display:none">
 
                                                 <input type="checkbox" name="TreatmentPlan" value="Completed" />
                                                 The patient reports completion of an adequate trial of conservative treatment prior to presentation, consisting of physical therapy, chiropractic care, medications, and/or activity modification for a duration of ≥ <input id="PTDuration" class="form-control d-inline w-25" /> weeks, with persistent functional limitation despite treatment.
                                             </p>
-                                            <p>
+                                            <p style="display:none">
                                                 Accordingly, further diagnostic evaluation and/or discussion of escalation of care, including interventional or surgical options, may be appropriate if supported by physical examination and imaging findings.
                                             </p>
                                         </div>
@@ -642,11 +689,300 @@
                                 <div class="accordion-item" id="acordPresentComp" style="display:none">
                                     <h2 class="accordion-header" id="headingSix">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseTwo">
-                                            Present Complaint
+                                            Present Complaints
                                         </button>
                                     </h2>
                                     <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
+                                            <div id="neckSection" style="display:none;">
+                                                <h6 class="fw-bold">Neck</h6>
+                                                <p>
+                                                    Pain:
+                                                    <input id="NeckPain" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckPain')"></i>/10
+
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Constant"> Constant</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Sharp"> Sharp</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Electric"> Electric</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Shooting"> Shooting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Throbbing"> Throbbing</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Pulsating"> Pulsating</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Dull"> Dull</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Achy"> Achy</label>
+                                                </p>
+                                                <p>
+                                                    Neck pain radiates to
+                                                    <label><input type="radio" name="NeckRadiatesTo" value="Left"> L</label>
+                                                    <label><input type="radio" name="NeckRadiatesTo" value="Right"> R</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="arm"> arm</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="forearm"> forearm</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="hand"> hand</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="wrist"> wrist</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="fingers"> fingers. </label>
+                                                    Neck pain is associated with
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="numbness"> numbness</label>
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="NeckAssociated" value="forearm"> tingling to
+                                                        <label><input type="radio" name="NeckAssociatedTo" value="Left"> L</label>
+                                                        <label><input type="radio" name="NeckAssociatedTo" value="Right"> R</label>
+                                                    </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="arm"> arm</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="forearm"> forearm</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="hand"> hand</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="wrist"> wrist</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="fingers"> fingers. </label>
+                                                </p>
+                                                <p>
+                                                    Neck pain worsens with
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="looking up"> looking up</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="looking down"> looking down</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="turning head to right"> turning head to right</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="turning head to left"> turning head to left</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="driving"> driving</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="twisting"> twisting.</label>
+                                                </p>
+                                                <p>
+                                                    Neck pain improves with
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckImproves" value="Resting"> Resting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckImproves" value="Medication"> Medication</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckImproves" value="Therapy"> Therapy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckImproves" value="Sleeping"> Sleeping</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckImproves" value="Others"> Others</label>
+                                                    <input id="NeckImprovesOther" class="form-control d-inline " style="width:300px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckImprovesOther')"></i>
+                                                </p>
+                                                <p>
+                                                    Patient has pain and tenderness over the   <input id="NeckTenderness" class="form-control d-inline " style="width:100px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i> facet joints. Facet loading maneuvers are positive.
+                                                    Spurling’s Test:
+                                                    <label><input type="radio" name="NeckSpurlingTest" value="Positive"> +</label>
+                                                    <label><input type="radio" name="NeckSpurlingTest" value="Negative"> -</label>
+
+                                                </p>
+                                                <table style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>ROM</td>
+                                                            <td>Normal</td>
+                                                            <td></td>
+                                                            <td>Left</td>
+                                                            <td>Right</td>
+                                                            <td>Normal</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Forward Flexion</td>
+                                                            <td><input id="NeckFFROM" class="form-control d-inline " style="width:100px" /> </td>
+                                                            <td>50</td>
+                                                            <td>Rotation</td>
+                                                            <td><input id="NeckFFLeft" class="form-control d-inline " style="width:100px" /></td>
+                                                            <td><input id="NeckFFRight" class="form-control d-inline " style="width:100px" /></td>
+                                                            <td>80</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Extension</td>
+                                                            <td><input id="NeckExt" class="form-control d-inline " style="width:100px" /> </td>
+                                                            <td>60</td>
+                                                            <td>Lateral Flexion</td>
+                                                            <td><input id="NeckExtLeft" class="form-control d-inline " style="width:100px" /></td>
+                                                            <td><input id="NeckExtRight" class="form-control d-inline " style="width:100px" /></td>
+                                                            <td>45</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div id="mbSection" style="display:none;">
+                                                <br />
+                                                <h6 class="fw-bold">Mid back </h6>
+                                                <p>
+                                                    Pain:
+                                                    <input id="MbPain" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MbPain')"></i>/10
+
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Constant"> Constant</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Sharp"> Sharp</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Electric"> Electric</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Shooting"> Shooting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Throbbing"> Throbbing</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Pulsating"> Pulsating</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Dull"> Dull</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Achy"> Achy</label>
+                                                </p>
+
+                                                <p>
+                                                    Neck pain worsens with
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sitting"> sitting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="standing"> standing</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="bending forward"> bending forward</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="bending backwards"> bending backwards</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sleeping"> sleeping</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="twisting"> twisting.</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="lifting"> lifting.</label>
+                                                </p>
+                                                <p>
+                                                    Mid back pain improves with
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Resting"> Resting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Medication"> Medication</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Therapy"> Therapy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Sleeping"> Sleeping</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Others"> Others</label>
+                                                    <input id="MbImprovesOther" class="form-control d-inline " style="width:300px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MbImprovesOther')"></i>
+                                                </p>
+                                                <table style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>ROM</td>
+                                                            <td>Normal</td>
+                                                            <td></td>
+                                                            <td>Left</td>
+                                                            <td>Right</td>
+                                                            <td>Normal</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Forward Flexion</td>
+                                                            <td><input id="MbFFROM" class="form-control d-inline " style="width:100px" /> </td>
+                                                            <td>45</td>
+                                                            <td>Rotation</td>
+                                                            <td><input id="MbFFLeft" class="form-control d-inline " style="width:100px" /></td>
+                                                            <td><input id="MbFFRight" class="form-control d-inline " style="width:100px" /></td>
+                                                            <td>30</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Extension</td>
+                                                            <td><input id="MbExt" class="form-control d-inline " style="width:100px" /> </td>
+                                                            <td>0</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <div id="lbSection" style="display:none;">
+                                                <h6 class="fw-bold">Lower back</h6>
+                                                <p>
+                                                    Pain:
+                                                    <input id="LBPain" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBPain')"></i>/10
+
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Constant"> Constant</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Sharp"> Sharp</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Electric"> Electric</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Shooting"> Shooting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Throbbing"> Throbbing</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Pulsating"> Pulsating</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Dull"> Dull</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Achy"> Achy</label>
+                                                </p>
+                                                <p>
+                                                    Lower back pain radiates to
+                                                    <label><input type="radio" name="LBRadiatesTo" value="Left"> L</label>
+                                                    <label><input type="radio" name="LBRadiatesTo" value="Right"> R</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="hip"> hip</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="thigh"> thigh</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="knee"> knee</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="leg"> leg</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="ankle"> ankle</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="foot"> foot. </label>
+                                                    Lower back pain is associated with
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="numbness"> numbness</label>
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LBAssociated" value="forearm"> tingling to
+                                                        <label><input type="radio" name="LBAssociatedTo" value="Left"> L</label>
+                                                        <label><input type="radio" name="LBAssociatedTo" value="Right"> R</label>
+                                                    </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="hip"> hip</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="thigh"> thigh</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="knee"> knee</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="leg"> leg</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="ankle"> ankle</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="foot"> foot. </label>
+                                                </p>
+                                                <p>
+                                                    Lower back pain worsens with
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sitting"> sitting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="standing"> standing</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="bending forward"> bending forward</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="bending backwards"> bending backwards</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sleeping"> sleeping</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="twisting right"> twisting right</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="twisting left"> twisting left</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="lifting"> lifting</label>
+                                                </p>
+                                                <p>
+                                                    Lower back pain improves with
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Resting"> Resting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Medication"> Medication</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Therapy"> Therapy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Sleeping"> Sleeping</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Others"> Others</label>
+                                                    <input id="LBImprovesOther" class="form-control d-inline " style="width:300px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBImprovesOther')"></i>
+                                                </p>
+                                                <p>
+                                                    Patient has pain and tenderness over the   <input id="LBTenderness" class="form-control d-inline " style="width:100px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i> facet joints. Facet loading maneuvers are positive.
+                                                </p>
+                                                <p>
+                                                    On exam, patient has tenderness over the   <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> bilateral SI joints. 
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> Faber's</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"> Gaenslen's </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Yeoman"> Yeoman's </label> sign are positive.
+                                                </p>
+                                                <p>
+                                                    SLR Test:
+                                                    <label><input type="radio" name="LBSlrTest" value="Positive"> +</label>
+                                                    <label><input type="radio" name="LBSlrTest" value="Negative"> -</label>
+
+                                                </p>
+                                                <table style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>ROM</td>
+                                                            <td>Normal</td>
+                                                            <td></td>
+                                                            <td>Left</td>
+                                                            <td>Right</td>
+                                                            <td>Normal</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Forward Flexion</td>
+                                                            <td><input id="LBFFROM" class="form-control d-inline " style="width:100px" /> </td>
+                                                            <td>60</td>
+                                                            <td>Lateral Flexion</td>
+                                                            <td><input id="LBFFLeft" class="form-control d-inline " style="width:100px" /></td>
+                                                            <td><input id="LBFFRight" class="form-control d-inline " style="width:100px" /></td>
+                                                            <td>25</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Extension</td>
+                                                            <td><input id="NeckExt" class="form-control d-inline " style="width:100px" /> </td>
+                                                            <td>25</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             <div id="rshSection" style="display:none;">
                                                 <h6 class="fw-bold">Right Shoulder (R/Sh)</h6>
 
@@ -1723,7 +2059,8 @@
 
                if (data.InjuryType === "work-related") {
                     $("#divWC").show();
-                           html = html.replace('[WC_START]', '').replace('[WC_END]', '');
+                    $("#divMM").hide();
+                    html = html.replace('[WC_START]', '').replace('[WC_END]', '');
                     html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
                 }
                 else if (data.InjuryType === "motor vehicle") {
@@ -1731,11 +2068,11 @@
                     html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
                     html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
                     $("#divWC").hide();
-                    $("#divMM").hide();
+                    $("#divMM").show();
                 }
                 else if (data.InjuryType === "mm") {
                     $("#divWC").hide();
-                    $("#divMM").show();
+                    $("#divMM").hide();
                 }
                 else {
                     // Remove both

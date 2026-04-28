@@ -766,7 +766,7 @@ namespace PainTrax.Web.Controllers
 
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
-            else if (client_code.ToLower() == "bhfpc")
+            else if (client_code.ToLower() == "ipmc")
                 return PartialView("_IntakeBHF");
             else return PartialView("_IntakeQMPPC");
             //return View();
@@ -1212,7 +1212,11 @@ namespace PainTrax.Web.Controllers
 
                 var formatted = string.Join("','", _bodyparts.Split(',').Select(x => x.Trim()));
 
-                string cnd = " and cmp_id=" + cmpid + " and (BodyPart IN ('" + formatted + "') or Description like '%" + _bodyparts + "%') order by display_order ASC";
+                var parts = formatted.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                string result = parts.Length > 1 ? parts[1] : parts[0];
+
+                string cnd = " and cmp_id=" + cmpid + " and (BodyPart IN ('" + result + "') or Description like '%" + _bodyparts + "%') order by display_order ASC";
 
                 var data = _diagcodesService.GetAll(cnd);
 

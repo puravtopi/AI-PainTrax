@@ -108,6 +108,91 @@ public class AppointmentService: ParentService {
 		Execute(cm);
 	}
 
+    public void InsertNew(AppointmentsVM data)
+    {
+        MySqlCommand cm = new MySqlCommand(@"
+				INSERT INTO tbl_appointments
+				(provider_id, patient_id, location_id, app_date, app_time, app_note, tags,status_id,cmp_id)
+				VALUES
+				(@provider_id, @patient_id, @location_id, @app_date, @app_time, @app_note,@tags, @status_id,@cmp_id)
+				", conn);
+
+        cm.Parameters.AddWithValue("@provider_id", data.provider_id);
+        cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+        cm.Parameters.AddWithValue("@location_id", data.location_id);
+        cm.Parameters.AddWithValue("@app_date", data.app_date);
+        cm.Parameters.AddWithValue("@app_time", data.app_time);
+        cm.Parameters.AddWithValue("@app_note", data.app_note);
+        cm.Parameters.AddWithValue("@tags", data.tags ?? (object)DBNull.Value);
+        cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+        cm.Parameters.AddWithValue("@status_id", 1); 
+		Execute(cm);
+    }
+	public void UpdateNew(AppointmentsVM data)
+	{
+        MySqlCommand cm = new MySqlCommand(@"
+					UPDATE tbl_appointments SET
+						provider_id = @provider_id,  patient_id = @patient_id,  location_id = @location_id,  app_date = @app_date,
+						app_time = @app_time,  app_note = @app_note,  tags = @tags,  cmp_id = @cmp_id 	WHERE app_id = @app_id", conn);
+
+        cm.Parameters.AddWithValue("@provider_id", data.provider_id);
+        cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+        cm.Parameters.AddWithValue("@location_id", data.location_id);
+        cm.Parameters.AddWithValue("@app_date", data.app_date);
+        cm.Parameters.AddWithValue("@app_time", data.app_time);
+        cm.Parameters.AddWithValue("@app_note", data.app_note);
+        cm.Parameters.AddWithValue("@tags", data.tags ?? (object)DBNull.Value);
+        cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+        cm.Parameters.AddWithValue("@app_id", data.app_id); 
+
+        Execute(cm);
+    }
+	public void DeleteNew(AppointmentsVM data)
+	{
+		MySqlCommand cm = new MySqlCommand(@"DELETE FROM tbl_appointments
+		where app_id=@app_id", conn);
+		cm.Parameters.AddWithValue("@app_id", data.app_id);
+		Execute(cm);
+	}
+
+    public void UpdateStatusNew(AppointmentsVM data)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_appointments SET
+		status_id=@status_id		where app_id=@app_id", conn);
+        cm.Parameters.AddWithValue("@app_id", data.app_id);
+        cm.Parameters.AddWithValue("@status_id", data.status_id);
+        Execute(cm);
+    }
+
+    public void Move(AppointmentsVM data)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_appointments SET
+		app_date=@app_date,app_time=@app_time		where app_id=@app_id", conn);
+        cm.Parameters.AddWithValue("@app_id", data.app_id);
+        cm.Parameters.AddWithValue("@app_date", data.app_date);
+        cm.Parameters.AddWithValue("@app_time", data.app_time);
+        
+        Execute(cm);
+    }
+
+
+    public List<AppointmentsVM> GetAllNew(int cmp_id)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("select * from tbl_appointments where cmp_id=@cmpid ", conn);
+        cm.Parameters.AddWithValue("@cmp_id", cmp_id);
+        var datalist = ConvertDataTable<AppointmentsVM>(GetData(cm));
+        return datalist;
+    }
+
+    public AppointmentsVM? GetOneNew(int appointment_id)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("select * from tbl_appointments where app_id=@app_id ", conn);
+        cm.Parameters.AddWithValue("@app_id", appointment_id);
+        var datalist = ConvertDataTable<AppointmentsVM>(GetData(cm)).FirstOrDefault();
+        return datalist;
+    }
 
 
 }
