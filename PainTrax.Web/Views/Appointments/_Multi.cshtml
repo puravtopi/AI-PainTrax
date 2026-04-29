@@ -1,0 +1,177 @@
+﻿@using PainTrax.Web.ViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var patient = ViewBag.patientData;
+}
+@model AppointmentsVM
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        @(Model.isEdit == 1 ? "Edit Appointment" : "Add Appointment")
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+    <form id="appointmentForm" method="post" asp-action="AppointmentSave">
+
+        <div class="alert" style="padding:5px;" runat="server" id="divText" Visible="false">
+            <input type="hidden" ID="patientid" asp-for="patient_id" value="@patient?.id" />
+
+            <input type="hidden" ID="app_id" asp-for="app_id" value="@Model.app_id" />
+            <input type="hidden" ID="isEdit" asp-for="isEdit" value="@Model.isEdit" />
+
+
+            Patinet Name:
+
+            <input type="text" id="txtPatientName" value="@patient?.fname  @patient?.lname" @(Model.isEdit == 1 ? "readonly" : "") class="form-control" required />
+            <div id="container">
+            </div>
+            @*              <input type="button"  class="btn btn-primary" value="New" onclick="newShow()" />
+*@               
+
+           <br />
+
+            Note
+            <textarea id="app_note" name="app_note" asp-for="app_note" class="form-control"></textarea>
+
+
+            <div>
+                Location :
+                <select name="location_id" class="form-control" asp-items="@ViewBag.locList" disabled></select>
+
+                <input type="hidden" asp-for="provider_id" />
+                <input type="hidden" asp-for="location_id" />
+
+            </div>
+
+            <div>
+
+                <br />
+                <table id="single">
+                    <tr>
+                        <td><label for="date">Date:</label></td>
+                        <td><label for="time">Time:</label></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="app_date" asp-for="app_date" class="form-control" name="app_date" readonly required></td>
+                        <td>
+                            <input type="text" asp-for="app_time" class="form-control" readonly required />
+                            @*                             <select id="appointmentStart" name="time" asp-for="appointmentStart" class="form-control"  required>
+                                @for (var time = new TimeSpan(8, 0, 0); time <= new TimeSpan(20, 0, 0); time = time.Add(TimeSpan.FromMinutes(30)))
+                                {
+                                    var display = DateTime.Today.Add(time).ToString("hh:mm tt"); // 08:00 AM format
+                                    var value = time.ToString(@"hh\:mm"); // 08:00 format
+
+                                    <option value="@value">@display</option>
+                                }
+                            </select>
+ *@                        </td>
+                    </tr>
+
+                </table>
+                <br />
+                <table id="multiple" style="display:none">
+                    <tr>
+                        <td><label for="date">From Date:</label></td>
+                        <td><label for="date">To Date:</label></td>
+                        <td><label for="time">Time:</label></td>
+                    </tr>
+                    <tr>
+                        <td><input type="date" id="app_fromdate" asp-for="app_fromdate" class="form-control"></td>
+                        <td><input type="date" id="app_todate" asp-for="app_todate" class="form-control"></td>
+                        <td>
+                            <select id="app_multitime" asp-for="app_multitime" class="form-control">
+                                @for (var time = new TimeSpan(8, 0, 0); time <= new TimeSpan(20, 0, 0); time = time.Add(TimeSpan.FromMinutes(30)))
+                                {
+                                    var display = DateTime.Today.Add(time).ToString("hh:mm tt"); // 08:00 AM format
+                                    var value = time.ToString(@"hh\:mm"); // 08:00 format
+
+                                    <option value="@value">@display</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <td><input type="hidden" id="app_days" asp-for="app_days" class="form-control"></td>
+                    <tr>
+                        <td colspan="3">
+                            <div>
+                                <input type="checkbox" id="chkMon" value="Mon" /> &nbsp;Monday
+                                <input type="checkbox" id="chkTue" value="Tue" /> &nbsp;Tuesday
+                                <input type="checkbox" id="chkWed" value="Wed" /> &nbsp;Wednesday
+                                <input type="checkbox" id="chkThr" value="Thr" /> &nbsp;Thursday
+                                <input type="checkbox" id="chkFri" value="Fri" /> &nbsp;Friday
+                                <input type="checkbox" id="chkSat" value="Sat" /> &nbsp;Satday
+                                <input type="checkbox" id="chkSun" value="Sun" /> &nbsp;Sunday
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+
+
+
+            </div>
+            <input type="button" class="btn @ViewBag.btnClass" style="float:right" runat="server" value="@ViewBag.btnTitle" onclick="btnAppointments(this.value)" />
+
+
+        </div>
+
+
+        <!-- Extra fields -->
+
+
+        <div class="modal-footer">
+            <button class="btn btn-primary">
+                @(Model.isEdit == 1 ? "Update" : "Save")
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    $("#txtPatientName").autocomplete({
+        appendTo: "#container",
+        source: function (request, response) {
+            var str = request.term;
+            var url = '@Url.Action("SearchPatients", "Appointment")';
+            if (str.length < 3) {
+                return;
+            }
+            $.ajax({
+                url: url+'?prefix=' +str  ,
+                //data: "{ 'prefix': '" + str + "'}",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        console.log(item)
+                        return {
+                            label: item.split('_')[0],
+                            val: item.split('_')[1]
+                        }
+                    }))
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        },
+        select: function (e, i) {
+                        $("#patientid").val(i.item.val);
+                        $('#xtPatientName').val(i.item.label);
+
+        },
+        minLength: 3
+    });
+
+</script>
+

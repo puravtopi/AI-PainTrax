@@ -1,0 +1,160 @@
+﻿@using PainTrax.Web.ViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var patient = ViewBag.patientData;    
+}
+@model AppointmentsVM
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        @(Model.isEdit == 1 ? "Edit Appointment" : "Add Appointment")
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+    <form id="appointmentForm" method="post" asp-action="AppointmentSave" >
+
+        <div class="alert" style="padding:5px;" runat="server" id="divText" Visible="false">
+            <input type="hidden" ID="patientid" asp-for="patient_id" value="@patient?.id" />
+
+            <input type="hidden" ID="app_id" asp-for="app_id" value="@Model.app_id" />
+            <input type="hidden" ID="isEdit" asp-for="isEdit" value="@Model.isEdit" />
+            <input type="hidden" ID="location_id" asp-for="location_id" value="@Model.location_id" />
+            <input type="hidden" ID="provider_id" asp-for="provider_id" value="@Model.provider_id" />
+            <input type="hidden" ID="app_date" asp-for="app_date" value="@Model.app_date" />
+            <input type="hidden" ID="app_time" asp-for="app_time" value="@Model.app_time" />
+            <div class="d-flex flex-column flex-md-row align-items-md-center gap-2 mb-2 fw-medium">
+
+                <!-- Location -->
+                <div class="d-flex align-items-center">
+                    <span class="me-1">Location:</span>
+                    <select id="locationDisplay"
+                            asp-items="@ViewBag.locList"
+                            class="form-control"
+                            disabled
+                            style="border:none; background:transparent; padding:0; width:auto; appearance:none !important;" >
+                    </select>
+                </div>
+
+                <!-- Date -->
+                <div>
+                    <span class="me-1">Date:</span>
+                    @(string.IsNullOrEmpty(Model.app_date) ? "" : DateTime.Parse(Model.app_date).ToString("MM/dd/yyyy"))
+                </div>
+
+                <!-- Time -->
+                <div>
+                    <span class="me-1">Time:</span>
+                    @(string.IsNullOrEmpty(Model.app_time) ? "" : DateTime.Parse(Model.app_time).ToString("hh:mm tt"))
+                </div>
+
+            </div>
+            Patinet Name:
+
+            <input type="text" id="txtPatientName" value="@patient?.fname  @patient?.lname" @(Model.isEdit ==1 ? "readonly" : "" ) class="form-control" required />
+            <div id="container">
+            </div>
+            @*              <input type="button" class="btn btn-primary" value="New" onclick="newShow()" />
+            *@
+
+            <br />
+
+            Note
+            <textarea id="app_note" name="app_note" asp-for="app_note" class="form-control"></textarea>
+
+            
+        </div>
+
+
+<!-- Extra fields -->
+   
+
+        <div class="modal-footer d-flex justify-content-between">
+            @if (Model.isEdit == 1)
+            {
+                <button type="button" class="btn btn-danger"
+                        onclick="deleteAppointment('@ViewBag.appointmentId')">
+                    Delete
+                </button>
+            }  
+            else
+            {
+                <div></div> <!-- keeps spacing when no delete -->
+            }
+            <div>
+                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button class="btn btn-primary">
+                    @(Model.isEdit == 1 ? "Update" : "Save")
+                </button>
+          
+            </div>
+     
+        </div>
+    </form>
+</div>
+<script>
+    $("#txtPatientName").autocomplete({
+        appendTo: "#container",
+        source: function (request, response) {
+            var str = request.term;
+            var url = '@Url.Action("SearchPatients", "Appointment")';
+            if (str.length < 3) {
+                return;
+            }
+            $.ajax({
+                url: url+'?prefix=' +str  ,
+                //data: "{ 'prefix': '" + str + "'}",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        console.log(item)
+                        return {
+                            label: item.split('_')[0],
+                            val: item.split('_')[1]
+                        }
+                    }))
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        },
+        select: function (e, i) {
+                        $("#patientid").val(i.item.val);
+                        $('#xtPatientName').val(i.item.label);
+
+        },
+        minLength: 3
+    });
+        function deleteAppointment(id) {
+
+        if (!confirm("Are you sure you want to delete this appointment?")) {
+            return;
+        }
+
+        $.ajax({
+            url: '/Appointments/DeleteAppointment', 
+            type: 'POST',
+            data: { appid: id },
+            success: function (res) {
+                $("#appointmentModal").modal('hide');
+                $("#scheduler").data("kendoScheduler").dataSource.read();                
+            },
+            error: function () {
+                alert("Error deleting appointment");
+            }
+        });
+    }
+</script>
+

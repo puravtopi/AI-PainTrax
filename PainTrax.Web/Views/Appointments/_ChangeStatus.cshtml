@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var patient = ViewBag.patientData;
+}
+
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        Change Status
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+    <form id="ChangeStatus" method="post" asp-action="ChangeStatusSave">
+        <input type="hidden" id="appid" name="appid" value="@ViewBag.appid" />
+        <select id="statusid" name="statusid" asp-items=" ViewBag.statusList" class="form-control">  </select>
+        <div class="modal-footer">
+            <button class="btn btn-primary">
+                Change
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancel
+            </button>
+        </div>
+
+     </form>
+</div>

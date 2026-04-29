@@ -4,726 +4,455 @@
 @{
 }
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<link rel="stylesheet" href="~/kendo/kendo.default-v2.min.css" />
-<script src="~/kendo/kendo.all.min.js"></script>
-<style>
-    /* remove grey background */
-    .k-scheduler .k-nonwork-hour {
-        background: transparent !important;
-    }
+ <script src="~/assets/js/evtCalender.js" asp-append-version="true"></script>
+ <link href="~/assets/css/calendar.css" rel="stylesheet" asp-append-version="true" />
+ <script>
+     var daystart =480;
+     var dayend = 480;
+     var  selectDate = new Date();
+     document.addEventListener('DOMContentLoaded', function () {            
+            setData(getData());
+       });
 
-    #scheduler {
-        font-family: "Segoe UI", Arial, sans-serif;
-        font-size: 14px;
-    }
+     function locationChange() {
+            setData(getData());
+     }
+     
+     
+     function TransferDate() {
+            var url = '@Url.Action("TransferDate","Appointment")';
+            var model = {
+            "Fromdate": document.getElementById("txtFDate").value,
+            "Todate": document.getElementById("txtTDate").value,
+            "Location_Id": document.getElementById("location_id").value
+            }
+            $.ajax({
+                url: url,
+                data: model,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
+            success: function (data) {
+                calClicked();
+                setData(getData());
+               // alert(data.d);
+            },
+            error: function (data, status, jqXHR) { alert("Error " + jqXHR); }
+        });
+     }
 
-    /* Event text */
-    .k-event {
-        font-family: "Calibri", sans-serif;
-        font-size: 13px;
-    }
-
-    /* Header (time / dates) */
-    .k-scheduler-header,
-    .k-scheduler-toolbar {
-        font-family: "Verdana", sans-serif;
-        font-weight: 600;
-        padding-right: 0px !important;
-    }
-
-    .k-scheduler-monthview .k-scheduler-content {
-        overflow-y: hidden !important;
-        height: auto !important;
-    }
-
-    /* Selected slot background */
-    .k-event {
-        background-color: #b6e5fc !important;
-        /* green */
-        color: #4154f1 !important;
-    }
-
-    .k-view-month.k-selected,
-    .k-view-day.k-selected {
-        background-color: #0d6efd !important;
-        /* green */
-        color: white !important;
-        border: none !important;
-    }
-
-
-    .k-scheduler-fullday {
-        display: none !important;
-    }
-
-    .k-scheduler-table td {
-        height: 40px !important;
-        /* default ~25-30px */
-    }
-
-    .k-scheduler-table th {
-        height: 40px !important;
-        /* default ~25-30px */
-    }
-
-    select{
-        padding-top: 0.175rem !important;
-        padding-bottom: 0.275rem !important;
-        appearance: auto !important;
-    }
-</style>
-
-<main id="main" class="main">
-    <section class="section dashboard">
-        <div class="row">
-            <!-- Cards -->
-            <div class="col-12">
-                <div class="row" id="calhead">
-
-                    
-                    <!-- Location Card -->
-                    <div class="col-md-8 ">
-                        <div class="card info-card revenue-card">
-
-                            <div class="card-body">
-
-                                <h5 class="card-title"> Providers/ Doctors</h5>
-
-                                <div class="row">
-                                    <div>
-                                   
-                                        <select name="provider_id" id="provider_id" class="form-control" ></select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div><!-- End Location Card -->
-
-                    <!-- Provider Card -->
-                    <div class="col-md-4 ">
-                        <div class="card info-card revenue-card">
-
-                            <div class="card-body">
-
-                                <h5 class="card-title">Location </h5>
-
-                                <div class="row">
-                                    <div>
-                                   
-                                        <select name="location_id" id="location_id" class="form-control" onchange="locationChange()" asp-items="@ViewBag.locList"></select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div><!-- End Provider Card -->
-
-                    <!-- Transfer Card -->
-               @*      <div class="col-xxl-4 col-xl-12">
-
-                        <div class="card info-card customers-card">
-
-
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <h5 class="card-title">Transfer</h5>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <input type="button" value="Transfer" class="btn btn-primary mt-2" onclick="TransferDate()" style="float:right">
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <h5>From</h5>
-                                        <input type="date" class="form-control" name="txtFDate" id="txtFDate">
-                                    </div>
-                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <h5>To</h5>
-                                        <input type="date" class="form-control" name="txtTDate" id="txtTDate">
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <div class="d-flex align-items-center">
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div><!-- End Transfer Card -->
- *@
-
-
-
-                </div>
-
-                <div class="card recent-sales overflow-auto" id="caltab">
-
-               @*      <div class="filter" style="margin-right:10px" >
-                        <input type="button" value="Transfer" class="btn btn-primary" onclick="transApp()">
-                        <input type="button" value="Multiple" class="btn btn-primary" onclick="multiApp()">
-                        <a asp-action="Reports" asp-controller="Appointment" class="btn btn-primary"> Reports </a>                    
-                    
-
-                    </div>
- *@
+     function getData() {
+         var apps = [];
+         //alert(document.getElementById("location_id").value);
+           var url = '@Url.Action("GetAppointmentCounts","Appointment")';
+           $.ajax({
+            type: "Get",
+            url: url+'?location_id='+document.getElementById("location_id").value,            
+            contentType: "application/json; charset=utf-8",
+            
+             async: false,
+            success: function (data, status) {
+                apps = JSON.parse( data);
+                console.log(data);
                 
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+         
+         return apps;
+     }
+     function getApp(sDate) {
+         var apps = [];
+         //alert(document.getElementById("location_id").value);
+           var url = '@Url.Action("GetDayAppointments","Appointment")';
+           $.ajax({
+            type: "Get",
+            url: url+'?selected_date='+sDate+'&location_id='+document.getElementById("location_id").value,            
+            contentType: "application/json; charset=utf-8",
+            
+             async: false,
+            success: function (data, status) {
+                apps = JSON.parse( data);
+                console.log(data);
+                
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+         
+         return apps;
+     }
+     function dateClicked(sDate) {
+            
+            var cal = document.getElementById("cal");
+            var app = document.getElementById("app");
+            cal.style.visibility = "collapse";
+            app.style.visibility = "visible";
+           
+            showApp(sDate, "app");
+            setAppData(getApp(sDate));
+            selectDate = sDate;
+            //alert('Link ' + text+ ' clicked');
+        }
+        function calClicked() {
+            var cal = document.getElementById("cal");
+            var app = document.getElementById("app");
+            app.style.visibility = "collapse";
+            cal.style.visibility = "visible";
+            
+        }
+         function closemodal() {
+            //$('#ModalStatus').modal('hide');
+              document.querySelector("#newAppModal").classList.remove("show");
+              document.querySelector("#newAppModal").style.display = "none";
+             //alert(selectDate);
+              showApp(selectDate, "app");
+              setAppData(getApp(selectDate));
+            
+            setData(getdata());
+              document.getElementById('modelContent').style.height = "600px";
+          }
+          calAdd = function (appoint,seldate) {
+            var newappurl = '@Url.Action("New","Appointment")';
+              console.log(appoint);
+           document.getElementById('target').src = newappurl +  "?caladd=true&selecteddate=" +  seldate + "&selectedtime=" + appoint + "&locationid=" + document.getElementById("location_id").value;
+            //setTimeout(function () {
+            //    var iframe = document.getElementById("target");
+            //    iframe.contentWindow.document.form1.txtFollowedUpOn.focus();
+            //}, 300);
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+          }
+           calChangeStatus = function (appoint) {
+              document.getElementById('modelTitle').innerText = "Change Status";
+              document.getElementById('modelContent').style.height = "300px";
+              var newappurl = '@Url.Action("ChangeStatus","Appointment")';
+               console.log(appoint);
+              document.getElementById('target').src = newappurl + "?appid="+ appoint.appointment_id +"&statusid=" + appoint.status_id ;   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+             
+             
+
+        }
+         calRemove = function (appoint) {
+            document.getElementById('modelTitle').innerText = "Delete Appoinment";
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById   ('target').src = newappurl + "?appid="+ appoint.appointment_id   +"&type=remove" ;   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+        }
+         
+         calChange = function (appoint) {
+             // alert(id);
+              document.getElementById('modelTitle').innerText = "Edit Appoinment";
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById('target').src = newappurl + "?appid="+ appoint.appointment_id    +"&type=update";   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+          }  
+         function multiApp() {
+              //id = document.getElementById("<%= hfPatientId.ClientID %>").value;
+              //name = document.getElementById("<%= lblPatientDetail.ClientID %>").innerText;
+              var newappurl = '@Url.Action("New","Appointment")';
+              document.getElementById('target').src = newappurl + "?caladd=true&type=multiple";   //?newAppPid=" + id + "&newAppName="+name;
+              document.querySelector("#newAppModal").classList.add("show");
+              document.querySelector("#newAppModal").style.display = "block";
+             //$j('#largeModel').modal('show');           
+          }
+
+     </script>
+
+ <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Scheduler</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">Home</li>
+          <li class="breadcrumb-item active">Scheduler</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+         <div class="modal fade" id="newAppModal" tabindex="-1" >
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content" id="modelContent" style="height:650px">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modelTitle">New Appointment </h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closemodal()" ></button>
+                    </div>
+                    <div class="modal-body">
+                      <iframe id="target" style="width: 100%; height: 100%" frameborder="0"></iframe>
+                    </div>
+                    @*<div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closemodal()" >Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>*@
+                  </div>
+                </div>
+              </div><!-- End Large Modal-->
+    
+    <section class="section dashboard">
+      <div class="row" >
+    <!-- Recent Sales -->
+            <div class="col-12" >
+              <div class="row"  id="calhead">
+
+                <!-- Sales Card -->
+                <div class="col-xxl-4 col-md-6">
+                  <div class="card info-card sales-card">
+    
+                   
                     <div class="card-body">
-                        <div style="width:100%;margin:auto;margin-top:70px">
+                      <h5 class="card-title">Select Month Year</h5>
+                      <div class="row">
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="cal_month">
+                         <h5>Month</h5>
+                    
+                      </div>
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="cal_year">
+                        <h5>Year</h5>
+                      </div>
+                    </div>
 
-                            <div id="scheduler"></div>
-                            <div id="noProviderMsg" style="text-align:center; padding:20px;">
-                                Please select provider and location
-                            </div>
+                      <div class="d-flex align-items-center">
+                      </div>
+                    </div>
+    
+                  </div>
+                </div><!-- End Sales Card -->
+    
+                <!-- Revenue Card -->
+                <div class="col-xxl-4 col-md-6">
+                  <div class="card info-card revenue-card">
+    
+                    <div class="card-body">
+
+                      <h5 class="card-title">Location </h5>
+                      
+                      <div class="row">
+                        <div>
+                          <h5>&nbsp;</h5> 
+                        <select name="location_id" id="location_id" class="form-control" onchange="locationChange()"  asp-items="@ViewBag.locList"></select>
+                      </div>
+                    </div>
+
+                      </div>
+    
+                  </div>
+                </div><!-- End Revenue Card -->
+    
+                <!-- Customers Card -->
+                <div class="col-xxl-4 col-xl-12">
+    
+                  <div class="card info-card customers-card">
+    
+                   
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                          <h5 class="card-title">Transfer</h5>    
                         </div>
-                        
-                        
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                          <input type="button" value="Transfer"  class="btn btn-primary mt-2" onclick="TransferDate()" style="float:right">
+                        </div>
+                      
+                      </div>
+                      <div class="row">
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                         <h5>From</h5>
+                         <input type="date" class="form-control" name="txtFDate" id="txtFDate">
+                      </div>
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <h5>To</h5>
+                        <input type="date"  class="form-control" name="txtTDate" id="txtTDate">
+                       </select>
+                       
+                      </div>
                     </div>
+
+                      <div class="d-flex align-items-center">
+                      </div>
+                    </div>
+    
+                  </div>
+          
+                </div><!-- End Customers Card -->
+    
+    
+    
+          
+              </div>
+          
+              <div class="card recent-sales overflow-auto" id="caltab" >
+
+                <div class="filter">
+                  <input type="button" value="Multiple"  class="btn btn-primary" onclick="multiApp()" >
+                  <a asp-action="Reports" asp-controller="Appointment" class="btn btn-primary" > Reports </a>   
+                  
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Options</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Multiple</a></li>
+                    <li><a class="dropdown-item" href="#">Reports</a></li>
+                  </ul>
 
                 </div>
 
+            @*    <div class="card-body">
+                 
+                  <table class="table table-bordered mytable">
+                    
+                    <thead>
+                      <tr >
+                        <th colspan="7" style="font-size: 30px;" >March 2023</th>
+                      </tr>
+                      <tr >
+                        <th  >Sun</th>
+                        <th  >Mon</th>
+                        <th  >Tue</th>
+                        <th  >Wed</th>
+                        <th  >Thr</th>
+                        <th  >Fri</th>
+                        <th  >Sat</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr >
+                        <td class="cell-grey" >26</td>
+                        <td class="cell-grey">27</td>
+                        <td class="cell-grey">28</td>
+                        <td  >1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>10</td>
+                        <td>11</td>
+                      </tr>
+                      <tr>                        
+                        <td>12</td>
+                        <td>13</td>
+                        <td>14</td>
+                        <td>15</td>
+                        <td>16</td>
+                        <td>
+                          
+                             <span class="badge bg-primary ">4</span>
+                          
+                          17
+                        </td>
+                        <td>
+                          
+                             <span class="badge bg-primary">2</span>
+                          
+                          18
+                        </td>
+                      </tr>
+                      <tr>                        
+                        <td>19</td>
+                        <td>20</td>
+                        <td>21</td>
+                        <td>22</td>
+                        <td>23</td>
+                        <td>24</td>
+                        <td>25</td>
+                      </tr>
+                      <tr>                        
+                        <td>26</td>
+                        <td>27</td>
+                        <td>28</td>
+                        <td>29</td>
+                        <td>30</td>
+                        <td>31</td>
+                        <td class="cell-grey">1</td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+                </div>*@
+                <div class="card-body">
+                  <div id="cal" style="margin:auto"></div>  
+                    <div id="app" style="visibility:collapse" class="container">
+                             
+                  </div>
+                </div>
+
+              </div>
+
+@*              <div class="card recent-sales overflow-auto"  id="daytab" >
+
+                <div class="filter">
+                  <input type="button" value="Show Calender"  class="btn btn-primary" style="margin-right: 30px;" id="btncal" >
+                </div>
+
+                <div class="card-body">
+                 
+                  <table class="table table-bordered daytable">
+                    <tbody>
+                      <tr >
+                        <th colspan="7" style="font-size: 30px;" >06/15/2023</th>
+                      </tr>
+                      <tr  >
+                        <td width="150px" class="time"   >8:00 AM</td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Add" class="btn  btn-sm btnadd"> </td>
+                        <td>
+                           <!-- <input type="button" value="X" class="btn btn-danger btn-sm" > -->
+                            <span>Lorem Spsum</span>
+                             
+                        </td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Scheduled" class="btn  btn-sm btnadd"> </td>
+                      </tr>
+                      <tr>
+                        <td width="150px" class="time" >8:30 AM</td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Add" class="btn  btn-sm btnadd"> </td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>                        
+                        <td width="150px" class="time">9:00 AM</td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Add" class="btn  btn-sm btnadd"> </td>
+                        <td>  </td>
+                        <td></td>
+                      </tr>
+                      <tr>                        
+                        <td width="150px" class="time">9:30 AM</td>
+                        <td width="100px" style="text-align: center;"><input type="button" value="Add" class="btn  btn-sm btnadd"> </td>
+                        <td>  </td>
+                        <td></td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+*@
+              
             </div><!-- End Recent Sales -->
-        </div>
+
+    
+          </div>
         </div><!-- End Left side columns -->
-        <!-- Appointment Modal -->
-        <div class="modal fade" id="appointmentModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content" id="appointmentModalContent">
 
-                    <!-- Default loader (optional) -->
-                    <div class="modal-body text-center p-5">
-                        <div class="spinner-border text-primary"></div>
-                        <p class="mt-2">Loading...</p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
+        <!-- Right side columns -->
+  
+      </div>
     </section>
 
-   
-</main>
-<script id="dayTemplate" type="text/x-kendo-template">
-     <span class="badge
-        # if(status == 'Schedule') { # bg-success
-        # } else if(status == 'Reschedule') { # bg-warning text-dark
-        # } else if(status == 'Cancelled') { # bg-danger
-        # } else if(status == 'Completed') { # bg-primary
-        # } else { # bg-secondary # } #"
-
-        style="cursor:pointer;"
-        onclick="onStatusClick('#= id #', '#= status_id #')">
-
-        #= status #
-    </span>
-    <span class="badge rounded-pill bg-info text-dark"
-        onclick="onMoveClick('#= id #',  '#= start #' )"
-        style="cursor:pointer;">
-        Move
-    </span>
-    <div style="cursor:pointer;padding:2px 10px">
-        <strong>#= title #</strong>
-    </div>
-
-   
-</script>
-
-<script id="monthTemplate" type="text/x-kendo-template">
-    <div style="text-align:center;">
-        <strong>#= count #</strong>
-    </div>
-</script>
-
-    <script>
-         function locationChange(){
-
-                  //   var locationId = $("#location_id").val();
-
-                  //   // ❌ No location selected
-                  //   if (!locationId || locationId === "0") {
-
-                  //       $("#scheduler").hide();
-                  //       $("#noProviderMsg").show(); // create this message div
-
-                  //       return;
-                  //   }
-                  //   var multiSelect = $("#provider_id").data("kendoMultiSelect");
-                  //   var selectedItems = multiSelect.dataItems();
-                  //   if (selectedItems.length === 0) {
-
-                  //     $("#scheduler").hide();
-                  //     $("#noProviderMsg").show();
-
-                  //     return;
-                  // }
-                  // sessionStorage.setItem("locationId", locationId);
-                  // initKendo();
-                  //   // ✅ PROVIDER SELECTED
-                  // $("#noProviderMsg").hide();
-                  // $("#scheduler").show();
-                    var locationId = $("#location_id").val();
-                    sessionStorage.setItem("locationId", locationId);
-                    initKendo();
-             }
-             function providerChange() {
-                var multiSelect = $("#provider_id").data("kendoMultiSelect");
-                var selectedItems = multiSelect.dataItems();
-
-                // ✅ store providers
-                sessionStorage.setItem("providers", JSON.stringify(selectedItems));
-
-                initKendo();
-                
-            }
-
-         function initKendo()
-            {
-                var locationId = sessionStorage.getItem("locationId");
-                var providers = JSON.parse(sessionStorage.getItem("providers") || "[]");
-                var savedView = sessionStorage.getItem("schedulerView") || "month";
-                var savedDate = sessionStorage.getItem("schedulerDate");
-
-                var currentDate = savedDate ? new Date(savedDate) : new Date();
-
-                // ❌ validation
-                if (!locationId || locationId === "0" || providers.length === 0) {
-                    $("#scheduler").hide();
-                    $("#noProviderMsg").show();
-                    return;
-                }
-                    var selectedProviders = providers.map(item => ({
-                        text: item.text,
-                        value: Number(item.value)
-                }));
-
-                var scheduler = $("#scheduler").data("kendoScheduler");
-
-                if (scheduler) {
-                    scheduler.destroy();
-                    $("#scheduler").empty();
-                }
-
-                 var dayTemplate = kendo.template($("#dayTemplate").html());
-                var monthTemplate = kendo.template($("#monthTemplate").html());
-
-                $("#scheduler").kendoScheduler({
-
-                        date: new Date(),
-
-                        views: [
-                            {
-                                type: "day",
-                                allDaySlot: false,
-                                 selected: true,
-
-                            },
-                            {
-                                type: "month"
-
-                            }
-                        ],
-
-                      eventTemplate: savedView === "month" ? monthTemplate : dayTemplate,
-
-                        
-                        editable: {
-                            resize: false,
-                            create: true,   
-                            update: true,  
-                            destroy: false ,
-                            move:false
-                        },
-
-                        resources: [{
-                            field: "providerId",
-                            title: "name",
-                            dataSource: selectedProviders
-                        }],
-
-                        group: {
-                            resources: ["providerId"],
-                            orientation: "horizontal"
-                        },
-
-                        add: function (e) {
-
-                            e.preventDefault();
-
-                                var startTime = e.event.start;
-                                var endTime = e.event.end;
-                                var providerId = e.event.providerId; // resource field
-
-                            // var fullDateTime = kendo.toString(startTime, "dd/MM/yyyy hh:mm tt");
-
-                            // console.log("DateTime:", fullDateTime);
-                            // console.log("Provider:", providerId);
-
-                            // alert(
-                            //     "Provider: " + providerId +
-                            //     "\nDate: " + kendo.toString(startTime, "dd/MM/yyyy") +
-                            //     "\nTime: " + kendo.toString(startTime, "hh:mm tt")
-                            // );
-                                var startTime = e.event.start;
-                            var providerId = e.event.providerId;
-                            debugger
-                            $("#appointmentModalContent").load("/Appointments/Appointment", {
-                                providerId: providerId,
-                                date: kendo.toString(startTime, "yyyy-MM-dd"),
-                                time: kendo.toString(startTime, "HH:mm"),
-                                locationId : locationId
-                            }, function () {
-
-                                var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
-                                modal.show();
-                            });
-                            // you can call API / open custom modal here
-                        },
-
-                        edit: function (e) {
-
-                            e.preventDefault(); // ❌ stop default update popup/save
-
-                            var startTime = e.event.start;
-                            var endTime = e.event.end;
-                            var providerId = e.event.providerId;
-
-                            // var id = e.event.id;
-                            // alert(
-                            //     "EDIT EVENT\n\n" +
-                            //     "Id: " + id +
-                            //     "Provider: " + providerId +
-                            //     "\nDate: " + kendo.toString(startTime, "dd/MM/yyyy") +
-                            //     "\nTime: " + kendo.toString(startTime, "hh:mm tt")
-                            // );
-                            debugger
-                            $("#appointmentModalContent").load("/Appointments/Appointment", {
-                                id: e.event.id,   // 👈 important for edit
-                                    providerId: providerId,
-                                date: kendo.toString(startTime, "yyyy-MM-dd"),
-                                time: kendo.toString(startTime, "HH:mm"),
-                                locationId : locationId
-                            }, function () {
-
-                                var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
-                                modal.show();
-                            });
-                            // 👉 open custom modal OR call API
-                        },
-
-                        dataSource: {
-                            data: [],
-                            schema: {
-                                model: {
-                                    id: "id",
-                                    fields: {
-                                        id: { type: "number" },
-                                        title: { type: "string" },
-                                        start: { type: "date" },
-                                        end: { type: "date" },
-                                        providerId: { type: "number" },
-                                        status: { type: "string" },
-                                        count: { type: "number" }
-                                    }
-                                }
-                            }
-                        },
-
-                        
-
-                        dataBound: function () {
-                            setShortDayNames(); 
-                             
-                        },
-                        startTime: new Date(2026, 0, 1, 8, 0, 0),   // 8:00 AM
-                        endTime: new Date(2026, 0, 1, 20, 30, 0),    // 6:00 PM
-
-                        // ✅ 30 MINUTE SLOT
-                        majorTick: 30,   // 1 hour label
-                        minorTickCount: 1, // divide into 2 parts → 30 min each
-
-                        showWorkHours: false,
-
-                        navigate: function (e) {
-                            sessionStorage.setItem("schedulerView", e.view);
-                            sessionStorage.setItem("schedulerDate", e.date.toISOString());
-                            loadDataByView(e.view);
-                        }
-
-                           
-
-                });
-
-                setTimeout(function () {
-                var scheduler = $("#scheduler").data("kendoScheduler");
-                    if (scheduler && scheduler.view()) {
-                        scheduler.view(savedView);
-                         scheduler.date(currentDate);
-                        loadDataByView(scheduler.view().name);
-                    }
-                }, 100);
-
-                // ✅ PROVIDER SELECTED
-                $("#noProviderMsg").hide();
-                $("#scheduler").show();
-
-            }
-
-             function setShortDayNames() {
-                var shortDays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-                $(".k-scheduler-monthview tr:eq(2) th").each(function (index) {
-                    $(this).text(shortDays[index % 7]);
-                });
-            }
-
-
-            function loadDataByView(viewName) {
-
-                var scheduler = $("#scheduler").data("kendoScheduler");
-
-                var location_id = $("#location_id").val();
-                var cmp_id = 13;
-
-                var multiSelect = $("#provider_id").data("kendoMultiSelect");
-                var selectedItems = multiSelect.dataItems();
-
-                var provider_ids = selectedItems.map(x => x.value).join(",");
-
-                var storedDate = sessionStorage.getItem("schedulerDate");
-
-                var selectedDate;
-
-                if (storedDate) {
-                    let d = new Date(storedDate);
-                    selectedDate =
-                        d.getFullYear().toString() +
-                        String(d.getMonth() + 1).padStart(2, '0') +
-                        String(d.getDate()).padStart(2, '0');
-                } else {
-                    selectedDate = kendo.toString(scheduler.date(), "yyyyMMdd");
-                }
-
-                console.log("View:", viewName);
-                console.log("Date:", selectedDate);
-                  scheduler.setOptions({
-                        eventTemplate: $("#dayTemplate").html()
-                    });
-                    scheduler.setOptions({
-                        eventTemplate: $("#monthTemplate").html()
-                    });
-
-
-                if (viewName === "day") {
-
-                    scheduler.setOptions({
-                        eventTemplate: $("#dayTemplate").html()
-                    });
-
-                    $.get("/Appointments/GetAppointmentsDay", {
-                        selected_date: selectedDate,
-                        cmp_id: cmp_id,
-                        location_id: location_id,
-                        provider_ids: provider_ids
-                    }, function (data) {
-
-                        var parsed = JSON.parse(data);
-                        console.log(data);
-                        // convert string date → JS Date
-                        parsed.forEach(e => {
-                            e.start = new Date(e.start);
-                            e.end = new Date(e.end);
-                        });
-
-                        scheduler.dataSource.data(parsed);
-                    });
-                }
-
-                if (viewName === "month") {
-
-                    scheduler.setOptions({
-                        eventTemplate: $("#monthTemplate").html()
-                    });
-
-                    $.get("/Appointments/GetAppointmentsMonth", {
-                        cmp_id: cmp_id,
-                        location_id: location_id,
-                        provider_ids: provider_ids
-                    }, function (data) {
-                        console.log(data);
-                        var parsed = JSON.parse(data);
-
-                        parsed.forEach(e => {
-                            e.start = new Date(e.start);
-                            e.end = new Date(e.end);
-                        });
-
-                        scheduler.dataSource.data(parsed);
-                    });
-                }
-                // if (viewName === "day") {
-
-                //     scheduler.setOptions({
-                //         eventTemplate: $("#dayTemplate").html()
-                //     });
-
-                //     scheduler.dataSource.data([
-                //         {
-                //             id: 1,
-                //             title: "Patient A",
-                //             start: new Date(2026, 3, 20, 16, 0, 0),  // 20 April 2026, 4:00 PM
-                //             end: new Date(2026, 3, 20, 16, 30, 0), // 4:30 PM
-                //             providerId: 292,
-                //             patientName: "Ravi Patel",
-                //             status: "Completed",
-                //             count: 0
-                //         },
-                //         {
-                //             id: 2,
-                //             title: "Patient B",
-                //             start: new Date(2026, 3, 20, 16, 0, 0),  // 20 April 2026, 4:00 PM
-                //             end: new Date(2026, 3, 20, 16, 30, 0), //
-                //             providerId: 281,
-                //             patientName: "Amit Shah",
-                //             status: "Pending",
-                //             count: 0
-
-                //         }
-
-                //     ]);
-                // }
-
-                // if (viewName === "month") {
-
-                //     scheduler.setOptions({
-                //         eventTemplate: $("#monthTemplate").html()
-                //     });
-
-                //     // 👉 Simulate aggregated data (count per day)
-                //     scheduler.dataSource.data([
-                //         {
-                //             id: 3,
-                //             title: "5",
-                //             start: new Date(),
-                //             end: new Date(),
-                //             providerId: 292,
-                //             patientName: "",
-                //             count: 5
-                //         },
-                //         {
-                //             id: 4,
-                //             title: "3",
-                //             start: new Date(new Date().setDate(new Date().getDate() + 1)),
-                //             end: new Date(new Date().setDate(new Date().getDate() + 1)),
-                //             providerId: 281,
-                //             patientName: "",
-                //             count: 3
-                //         }
-                //     ]);
-                // }
-            }
-
-        $(document).ready(function () {
-
-           var providerData = @Html.Raw(Json.Serialize(ViewBag.provList));
-             
-            
-
-            $("#provider_id").kendoMultiSelect({
-                dataTextField: "text",
-                dataValueField: "value",
-                dataSource: providerData,
-                placeholder: "Select providers...",
-                change: providerChange
-            });
-            var savedLocation = sessionStorage.getItem("locationId");
-            if (savedLocation) {
-                $("#location_id").val(savedLocation);
-            }
-
-            // ✅ restore providers
-            var savedProviders = JSON.parse(sessionStorage.getItem("providers") || "[]");
-            if (savedProviders.length > 0) {
-                var multiSelect = $("#provider_id").data("kendoMultiSelect");
-                multiSelect.value(savedProviders.map(x => x.value));
-                providerChange();
-            }
-            else {
-                $("#scheduler").hide();
-                $("#noProviderMsg").show();
-            }
-            
-            //initKendo();
-            
-
-            //  function providerChange() {
-            //      var locationId = $("#location_id").val();
-            //     var multiSelect = $("#provider_id").data("kendoMultiSelect");
-            //      var selectedItems = multiSelect.dataItems();
-            //      console.log(selectedItems);
-
-
-            //       //  NO PROVIDER SELECTED
-            //       if (selectedItems.length === 0) {
-
-            //           $("#scheduler").hide();
-            //           $("#noProviderMsg").show();
-
-            //           return;
-            //       }
-             
-            //    //    $("#scheduler").data("kendoScheduler").destroy();
-            //      //   $("#scheduler").empty();
-
-            //          sessionStorage.setItem("providers", JSON.stringify(selectedItems));
-            //         initKendo();    
-
-            //         if (!locationId || locationId === "0") {
-
-            //             $("#scheduler").hide();
-            //             $("#noProviderMsg").show(); // create this message div
-            //             return;
-
-            //         }
-                  
-            // }
-
-        
-
-    
-
-    });
-    function onMoveClick(id,start) {
-        var dt = new Date(start);
-
-          // format date & time
-          var app_date = kendo.toString(dt, "yyyy-MM-dd");
-          var app_time = kendo.toString(dt, "HH:mm");
-          debugger
-          $("#appointmentModalContent").load("/Appointments/Move", {
-                appid: id,
-                app_date :app_date,
-                app_time :app_time
-          }, function () {
-               var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
-                 modal.show();
-          });
-        }
-       function onStatusClick(id, statusId) {
-           debugger
-        $("#appointmentModalContent").load("/Appointments/ChangeStatus", {
-                appid: id,
-                statusid: statusId
-        }, function () {
-               var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
-                 modal.show();
-        });
-        
-    }
-    </script>
-
-    
+  </main><!-- End #main -->
+<script> showCalendar("cal","cal_month","cal_year")</script>
