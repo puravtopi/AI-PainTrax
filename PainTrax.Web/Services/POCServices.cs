@@ -540,7 +540,7 @@ namespace PainTrax.Web.Services
             try
             {
                 DataTable dt = new DataTable();
-                MySqlCommand cm = new MySqlCommand("CALL sp_Get_Suregory_Dashboard(" + cmpId + ", '" + fDate + "','" + tDate + "')", conn);
+                MySqlCommand cm = new MySqlCommand("CALL sp_Get_Suregory_Dashboard_New(" + cmpId + ", '" + fDate + "','" + tDate + "')", conn);
 
                 var datalist = ConvertDataTable<SurgoryCenterDashboardVM>(GetData(cm));
                 return datalist;
