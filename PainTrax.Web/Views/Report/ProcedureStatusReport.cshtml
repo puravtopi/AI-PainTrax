@@ -1,0 +1,232 @@
+﻿@model PainTrax.Web.ViewModel.SurgoryCenterDashboardVM
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Procedure Status Report List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">ProcedureStatus Report</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="ProcedureStatusReport" asp-controller="Report" id="frmPOC">
+                            <br />
+                            <div class="row mb-3">
+                                <div class="col-md-3 col-lg-3">
+
+                                    <label class="col-md-12 col-lg-12 col-form-label">FromDate</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="fdate" class="form-control">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">ToDate</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <input type="date" asp-for="tdate" class="form-control">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">&nbsp;</label>
+                                    <div class="col-md-12 col-lg-12">
+
+                                        <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
+                                        @* <button class="btn btn-success" style="float:right; margin-left:10px;" type="button" onclick="fnSearch()">Search</button> *@
+                                        <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
+
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            @* <div class="clearfix"></div>
+                            <br />
+                            <div class="col-md-12 col-lg-12">
+
+
+
+                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcelProSXDetails" asp-controller="Report">Export</a>
+                                <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
+                                <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
+                            </div> *@
+                            <div class="clearfix"></div>
+                        </form>
+                        <br />
+                        <div class="table-responsive">
+                        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                        <th scope="col">Dates</th>
+                                        <th scope="col">Surg Center</th>
+                                        <th scope="col">Surgeon</th>
+                                        <th scope="col">Schedule</th>
+                                        <th scope="col">Booked</th>
+                                        <th scope="col">Proc Done</th>
+                                        @* <th scope="col">Report</th>
+                                        <th scope="col">Billed</th>
+                                        <th scope="col">Comment</th> *@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    @if (Model.lstSurgoryCenterDashboardVM.Count > 0)
+                                    {
+                                        @foreach (var item in Model.lstSurgoryCenterDashboardVM)
+                                        {
+                                            <tr>
+                                                <td>@item.ScheduledDate</td>
+
+                                               
+                                               
+                                                <td>@item.SurgerycenterName</td>
+                                                <td>@item.SurgonName</td>
+                                                <td>@item.ScheduledCnt</td>
+                                                <td>@item.BookedCnt</td>
+                                                <td>@item.ExecutedCnt</td>
+                                                <td>
+                                                    <a onclick="fnShowModel(@item.ProcedureDetailIDs, @item.SurgerycenterId + '@item.ScheduledDate')"><i class="ri-add-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Suregory Center"></i></a>
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr><td colspan="12"><p>No data found</p></td></tr>
+
+                                    }
+                               @*  @if (Model!=null)
+                                {
+                                        @foreach (var item in Model.lstSurgoryCenterDashboardVM)
+                                        {
+                                   
+                                        <tr>
+                                                <td>@item.ScheduledDate</td>
+                                                <td>@item.SurgerycenterName</td>
+                                                <td>@item.SurgonName</td>
+                                                <td>@item.ScheduledCnt</td>
+                                                <td>@item.BookedCnt</td>
+                                                <td>@item.ExecutedCnt</td>
+                                                <td>
+                                                    <a onclick="fnShowModel(@item.ProcedureDetailIDs, @item.SurgerycenterId + '@item.ScheduledDate')"><i class="ri-add-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Suregory Center"></i></a>
+                                           </td>
+                                        </tr>
+
+                                   }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="12"><p>No data found</p></td></tr>
+
+                                } *@
+
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="SCModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle">Surgery Center Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="ProcedureDetailIDs" />
+                    <select id="ddlSC" class="form-select" asp-items="@ViewBag.surgoryList"></select>
+                    <p id="p_error" style="color:red"></p>
+                    <input id="txtSurgonName" class="form-control" placeholder="Surgon Name" />
+                    <p id="sn_error" style="color:red"></p>
+                    <input id="txtAssistant" class="form-control" placeholder="Assistant Name" />
+                    <p id="a_error" style="color:red"></p>
+                    <input type="hidden" id="hdDate" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnUpdateSC()">Save</button>
+                </div>
+            </div><!-- End Large Modal-->
+        </div>
+    </div>
+</main>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+    function fnShowModel(procedureDetailIDs, sCenterId,sDate) {
+        $('#ProcedureDetailIDs').val(procedureDetailIDs);
+        debugger
+        if (sCenterId != 'null') {
+            $("#ddlSC").val(sCenterId);
+            $("#hdDate").val(sDate);
+        }
+        $('#SCModal').modal('show');
+    }
+
+    function fnUpdateSC() {
+        var sProcedureDetailIDs = $('#ProcedureDetailIDs').val();
+        var sId = $('#ddlSC').val();
+        var scName = $('#ddlSC option:selected').text();
+        var sSurgeon = $('#txtSurgonName').val();
+        var sAssistant = $('#txtAssistant').val();
+
+        var isValid = true;
+
+        if (sSurgeon == '' || sSurgeon == null) {
+            isValid = false;
+            $("#sn_error").text("Please Enter Surgon Name");
+        }
+        else {
+            $("#sn_error").text("");
+        }
+        // if (sAssistant == '' || sAssistant == null) {
+        //     $("#a_error").text("Please Enter Assistant Name");
+        //     isValid = false;
+        // }else{
+        //     $("#a_error").text("");
+        // }
+
+        if (!isValid)
+            return;
+        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSurgeon=' + sSurgeon + '&sAssistant=' + sAssistant + '&sSCName=' + scName + '&sDate=' + $('#hdDate').val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                if (data) {
+                    $('#txtSurgonName').val('');
+                    $('#txtAssistant').val('');
+                    $('#ddlSC').prop('selectedIndex', 0);
+                    $('#SCModal').modal('hide');
+                    bindList("", "");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnReset() {
+        $('#frmPOC').trigger("reset");
+        $("#frmPOC")[0].reset();
+        window.location = '@Url.Action("ProcedureStatusReport", "Report")';
+    }
+</script>

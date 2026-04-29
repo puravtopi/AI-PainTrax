@@ -9,5 +9,9 @@
         public int? SurgerycenterId { get; set; }
         public long? ScheduledCnt { get; set; }
         public long? BookedCnt { get; set; }
+        public long? ExecutedCnt { get; set; }
+        public DateTime? fdate { get; set; }
+        public DateTime? tdate { get; set; }
+        public List<SurgoryCenterDashboardVM> lstSurgoryCenterDashboardVM { get; set; } = new();
     }
 }

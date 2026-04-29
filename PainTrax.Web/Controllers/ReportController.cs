@@ -169,7 +169,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.Columns = data1.Select(x => x.columns).ToList();
 
 
-            var sdata = _surgeryCentreService.GetAll(cnd);
+            var sdata = _surgeryCentreService.GetAll(cnd + " ORDER BY Surgerycenter_name asc");
             var list = new List<SelectListItem>();
 
 
@@ -682,7 +682,7 @@ namespace PainTrax.Web.Controllers
 
             string cnd = " and cmp_id=" + cmpid;
 
-            var surgoryList = _surgeryCentreService.GetAll(cnd);
+            var surgoryList = _surgeryCentreService.GetAll(cnd + " ORDER BY Surgerycenter_name asc");
 
             ViewBag.surgoryList = new SelectList(surgoryList, "Surgerycenter_name", "Surgerycenter_name");
             return View(objPOC);
@@ -2682,6 +2682,70 @@ namespace PainTrax.Web.Controllers
         }
 
         #endregion
+
+        [HttpGet]
+        public IActionResult ProcedureStatusReport()
+        {
+            DateTime? fdate = null;
+            DateTime? tdate = null;
+            int locationid = 0;
+
+
+            //objPro.lstSurgoryCenterDashboardVM = new List<SurgoryCenterDashboardVM>();
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            DateTime fDate = fdate == null ? new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, 1) : Convert.ToDateTime(fdate);
+            DateTime tDate = tdate == null ? fDate.AddMonths(1).AddDays(-1) : Convert.ToDateTime(tdate);
+
+
+            var Data = _services.GetSurgoryDashboardData(fDate.ToString("yyyy-MM-dd"), tDate.ToString("yyyy-MM-dd"), cmpid.ToString());
+            var objPOC = new SurgoryCenterDashboardVM
+            {
+                fdate = fDate,
+                tdate = tDate,
+                lstSurgoryCenterDashboardVM = Data
+            };
+
+            string cnd = " and cmp_id=" + cmpid;
+            var data = _surgeryCentreService.GetAll(cnd);
+            var list = new List<SelectListItem>();
+
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item.Surgerycenter_name.ToString(),
+                    Value = item.Id.ToString()
+                });
+            }
+            ViewBag.surgoryList = list;
+
+            return View(objPOC); // 
+        }
+
+        [HttpPost]
+        public IActionResult ProcedureStatusReport(DateTime? fdate, DateTime? tdate, int locationid = 0)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var data = _services.GetSurgoryDashboardData(fdate.Value.ToString("yyyy-MM-dd"), tdate.Value.ToString("yyyy-MM-dd"), cmpid.ToString());
+
+
+            //var data = _servicesProSXDetails.GetPtsIEReport(query);
+
+            var objPOC = new SurgoryCenterDashboardVM
+            {
+                fdate = fdate,
+                tdate = tdate,
+                lstSurgoryCenterDashboardVM = data
+            };
+
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            return View(objPOC);
+
+        }
 
     }
 }
