@@ -17,6 +17,7 @@ public class TreatmentMasterService : ParentService
         return dataList;
     }
 
+
     public tbl_treatment_master? GetOne(int id)
     {
         DataTable dt = new DataTable();
