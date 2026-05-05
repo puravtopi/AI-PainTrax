@@ -144,7 +144,7 @@ namespace PainTrax.Web.Helper
                 list.Add(new SelectListItem
                 {
                     Text = item.GroupName,
-                    Value = item.GroupName
+                    Value = item.Id.ToString()
                 });
             }
 

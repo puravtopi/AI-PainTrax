@@ -37,6 +37,23 @@ namespace PainTrax.Web.Services
 
         }
 
+        public List<tbl_diagcodes> GetAllWithGroups(string cnd = "")
+        {
+            try
+            {
+                string query = "SELECT d.*,g.GroupName,g.DisplayOrder AS GroupDisplayOrder  from tbl_diagcodes d LEFT JOIN tbl_diagcodes_group g ON d.DiagCodeGroup=g.Id where 1=1 ";
+                query = query + cnd;
+                List<tbl_diagcodes> dataList = ConvertDataTable<tbl_diagcodes>(GetData(query));
+                return dataList;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+
+        }
+
         public tbl_diagcodes? GetOne(tbl_diagcodes data)
         {
             DataTable dt = new DataTable();
@@ -91,16 +108,30 @@ namespace PainTrax.Web.Services
             Execute(cm);
         }
 
-        public void InsertDiagCodeGroup(tbl_diagcodes_group data)
+        public int InsertDiagCodeGroup(tbl_diagcodes_group data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_diagcodes_group
-		(GroupName,BodyPart,Cmp_Id)Values
-				(@GroupName,@BodyPart,@Cmp_Id)", conn);
+		(GroupName,BodyPart,Cmp_Id,DisplayOrder)Values
+				(@GroupName,@BodyPart,@Cmp_Id,@DisplayOrder);select @@identity;", conn);
             cm.Parameters.AddWithValue("@GroupName", data.GroupName);
             cm.Parameters.AddWithValue("@BodyPart", data.BodyPart);
             cm.Parameters.AddWithValue("@Cmp_Id", data.Cmp_id);
-           
-            Execute(cm);
+            cm.Parameters.AddWithValue("@DisplayOrder", data.DisplayOrder);
+            var result = ExecuteScalar(cm);
+            return result;
+        }
+
+        public int UpdateDiagCodeGroup(tbl_diagcodes_group data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"Update tbl_diagcodes_group SET
+		        GroupName=@GroupName,BodyPart=@BodyPart,DisplayOrder=@DisplayOrder 
+                where Id=@Id;", conn);
+            cm.Parameters.AddWithValue("@GroupName", data.GroupName);
+            cm.Parameters.AddWithValue("@BodyPart", data.BodyPart);
+            cm.Parameters.AddWithValue("@Id", data.Id);
+            cm.Parameters.AddWithValue("@DisplayOrder", data.DisplayOrder);
+            var result = ExecuteScalar(cm);
+            return result;
         }
         public List<tbl_diagcodes_group> GetAllDiagCodeGroups(string cnd = "")
         {

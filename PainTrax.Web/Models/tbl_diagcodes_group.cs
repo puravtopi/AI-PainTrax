@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int? Cmp_id { get; set; }
+        public int? DisplayOrder { get; set; }
         public string GroupName { get; set; }
         public string BodyPart { get; set; }
     }

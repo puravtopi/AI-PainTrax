@@ -768,6 +768,8 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeQMPPC");
             else if (client_code.ToLower() == "ipmc")
                 return PartialView("_IntakeBHF");
+            else if (client_code.ToLower() == "hposm")
+                return PartialView("_IntakeHPOSM");
             else return PartialView("_IntakeQMPPC");
             //return View();
         }
@@ -1216,9 +1218,9 @@ namespace PainTrax.Web.Controllers
 
                 string result = parts.Length > 1 ? parts[1] : parts[0];
 
-                string cnd = " and cmp_id=" + cmpid + " and (BodyPart IN ('" + result + "') or Description like '%" + _bodyparts + "%') order by display_order ASC";
+                string cnd = " and d.cmp_id=" + cmpid + " and (d.BodyPart IN ('" + result + "') or d.Description like '%" + _bodyparts + "%') order by d.display_order ASC";
 
-                var data = _diagcodesService.GetAll(cnd);
+                var data = _diagcodesService.GetAllWithGroups(cnd);
 
                 var cmpIdInt = Convert.ToInt32(cmpid);
 
@@ -1227,17 +1229,20 @@ namespace PainTrax.Web.Controllers
                               {
                                   DaignoCodeId = c.Id.Value,
                                   Description = c.Description,
+                                  GroupDisplayOrder= c.GroupDisplayOrder.HasValue ? c.GroupDisplayOrder.Value : 100,
                                   DiagCode = c.DiagCode,
-                                  DiagCodeGroup = c.DiagCodeGroup == null ? "" : c.DiagCodeGroup,
+                                  DiagCodeGroup = c.DiagCodeGroup == null ? "0" : c.DiagCodeGroup.ToString(),
+                                  GroupName= c.GroupName == null ? "NA" : c.GroupName.ToString(),
                                   IsSelect = assetment != null ? (assetment.IndexOf(c.DiagCode) > 0 ? true : c.PreSelect) : c.PreSelect,
                                   Display_Order = c.display_order,
                                   cmp_id = c.cmp_id
 
-                              }).ToList().Where(x => x.cmp_id == cmpIdInt).OrderBy(x => x.Display_Order);
+                              }).ToList().Where(x => x.cmp_id == cmpIdInt).OrderBy(x => x.GroupDisplayOrder);
 
 
                 var groupedData = datavm
-                .GroupBy(x => x.DiagCodeGroup)
+                .GroupBy(x => x.GroupName)
+                .OrderBy(g => g.First().GroupDisplayOrder)
                 .ToList();
 
                 return PartialView("_DaignoCode", groupedData);

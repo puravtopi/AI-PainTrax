@@ -611,7 +611,7 @@
     <input type="hidden" name="providerId" id="hiddenproviderId" />
     <input type="hidden" name="providerName" id="hiddenproviderName" />
     <input type="hidden" name="fdate" id="hiddenfdate" />
-  @*   <input type="hidden" name="sourceType" value="PDF" /> *@
+    @*   <input type="hidden" name="sourceType" value="PDF" /> *@
 </form>
 
 <!-- PDF.js -->
@@ -721,9 +721,9 @@
      *   Attorney Address - ...
      *   Attorney Phone - ...   Fax - ...   Contact Person - ...
      */
-   
 
-   
+
+
     function parsePdfText(rawText) {
         const obj = {};
         if (typeof COL_DEFS !== 'undefined') {
@@ -751,7 +751,7 @@
             return (t === '-' || t === '.' || t === '…' || t === '...') ? '' : t;
         }
 
-        
+
         // ══════════════════════════════════════════════════════════════════════════
         // STRATEGY 1 — greenyourbills.com 4-column table format
         // ══════════════════════════════════════════════════════════════════════════
@@ -960,7 +960,7 @@
         obj["DOE"] = '';
         return obj;
     }
-  
+
 
     const dropZone = document.getElementById('dropZone');
     dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
@@ -1374,6 +1374,54 @@
             return;
         }
 
+        // ── Patient Name validation: must be "Lastname, Firstname" ──────────────
+        const invalidNameRows = [];
+        parsedRows.forEach((row, idx) => {
+            const name = (row['Patient Name'] || '').trim();
+            // Must contain a comma with non-empty text on both sides
+            const parts = name.split(',');
+            const lastName  = parts[0] ? parts[0].trim() : '';
+            const firstName = parts[1] ? parts[1].trim() : '';
+            if (!lastName || !firstName) {
+                invalidNameRows.push({ rowNum: idx + 1, name: name || '(empty)' });
+            }
+        });
+
+        if (invalidNameRows.length > 0) {
+            const rowList = invalidNameRows
+                .map(r => `  • Row ${r.rowNum}: "${r.name}"`)
+                .join('\n');
+            alert(
+                `Import blocked — the following patient name(s) are not in the required format "Lastname, Firstname":\n\n${rowList}\n\nPlease correct the Patient Name field(s) and try again.`
+            );
+
+            // Highlight the offending rows in the table
+            invalidNameRows.forEach(r => {
+                const rows = document.querySelectorAll('#tblPreviewBody tr');
+                // DataTables may reorder display rows; find by data index stored on tr
+                rows.forEach(tr => {
+                    const numCell = tr.querySelector('td.row-num');
+                    if (numCell && parseInt(numCell.textContent) === r.rowNum) {
+                        const nameInput = tr.querySelector('td.editable input[type="text"]');
+                        if (nameInput) {
+                            nameInput.style.borderColor = '#dc3545';
+                            nameInput.style.background  = '#fff5f5';
+                            nameInput.addEventListener('input', function clearHighlight() {
+                                nameInput.style.borderColor = '';
+                                nameInput.style.background  = '';
+                                nameInput.removeEventListener('input', clearHighlight);
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Scroll to the preview table so the user can see the highlighted rows
+            document.getElementById('tblPreview').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        // ── End name validation ──────────────────────────────────────────────────
+
         if (!confirm(
             `Import ${parsedRows.length} patient record(s)?\n\nLocation: ${locText}\nProvider: ${provText}\nDOE applied to all: ${doeselected || '(per-row)'}\n\nIndividual DOE edits will be preserved.`
         )) return;
@@ -1413,18 +1461,18 @@
     // ── TempData result banners ───────────────────────────────────────────────────
     @if (TempData["ImportSuccess"] != null)
     {
-        <text>
-            document.getElementById('importStatus').innerHTML =
-        '<div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @TempData["ImportSuccess"]</div>';
-        document.getElementById('importStatus').style.display = 'block';
-        </text>
+            <text>
+                document.getElementById('importStatus').innerHTML =
+            '<div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @TempData["ImportSuccess"]</div>';
+            document.getElementById('importStatus').style.display = 'block';
+            </text>
     }
     @if (TempData["ImportError"] != null)
     {
-        <text>
-            document.getElementById('importStatus').innerHTML =
-        '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @TempData["ImportError"]</div>';
-        document.getElementById('importStatus').style.display = 'block';
-        </text>
+            <text>
+                document.getElementById('importStatus').innerHTML =
+            '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @TempData["ImportError"]</div>';
+            document.getElementById('importStatus').style.display = 'block';
+            </text>
     }
 </script>

@@ -241,49 +241,23 @@
 </script>
 
     <script>
-         function locationChange(){
+         function locationChange()
+         {
 
-                  //   var locationId = $("#location_id").val();
-
-                  //   // ❌ No location selected
-                  //   if (!locationId || locationId === "0") {
-
-                  //       $("#scheduler").hide();
-                  //       $("#noProviderMsg").show(); // create this message div
-
-                  //       return;
-                  //   }
-                  //   var multiSelect = $("#provider_id").data("kendoMultiSelect");
-                  //   var selectedItems = multiSelect.dataItems();
-                  //   if (selectedItems.length === 0) {
-
-                  //     $("#scheduler").hide();
-                  //     $("#noProviderMsg").show();
-
-                  //     return;
-                  // }
-                  // sessionStorage.setItem("locationId", locationId);
-                  // initKendo();
-                  //   // ✅ PROVIDER SELECTED
-                  // $("#noProviderMsg").hide();
-                  // $("#scheduler").show();
-                    var locationId = $("#location_id").val();
-                    sessionStorage.setItem("locationId", locationId);
-                    initKendo();
-             }
-             function providerChange() {
-                var multiSelect = $("#provider_id").data("kendoMultiSelect");
-                var selectedItems = multiSelect.dataItems();
-
-                // ✅ store providers
-                sessionStorage.setItem("providers", JSON.stringify(selectedItems));
-
-                initKendo();
-                
-            }
+            var locationId = $("#location_id").val();
+            sessionStorage.setItem("locationId", locationId);
+            initKendo();
+         }
+         function providerChange() 
+         {
+            var multiSelect = $("#provider_id").data("kendoMultiSelect");
+            var selectedItems = multiSelect.dataItems();
+            sessionStorage.setItem("providers", JSON.stringify(selectedItems));
+            initKendo();
+          }
 
          function initKendo()
-            {
+         {
                 var locationId = sessionStorage.getItem("locationId");
                 var providers = JSON.parse(sessionStorage.getItem("providers") || "[]");
                 var savedView = sessionStorage.getItem("schedulerView") || "month";
@@ -355,24 +329,21 @@
 
                             e.preventDefault();
 
+                            var scheduler = $("#scheduler").data("kendoScheduler");
+                            if (scheduler.view().name === "month") {
+                                    sessionStorage.setItem("schedulerView", "day");
+                                    sessionStorage.setItem("schedulerDate", e.event.start);
+                                    initKendo();
+                                    return;
+                            }
+
                                 var startTime = e.event.start;
                                 var endTime = e.event.end;
-                                var providerId = e.event.providerId; // resource field
-
-                            // var fullDateTime = kendo.toString(startTime, "dd/MM/yyyy hh:mm tt");
-
-                            // console.log("DateTime:", fullDateTime);
-                            // console.log("Provider:", providerId);
-
-                            // alert(
-                            //     "Provider: " + providerId +
-                            //     "\nDate: " + kendo.toString(startTime, "dd/MM/yyyy") +
-                            //     "\nTime: " + kendo.toString(startTime, "hh:mm tt")
-                            // );
+                                var providerId = e.event.providerId; 
                                 var startTime = e.event.start;
                             var providerId = e.event.providerId;
                             debugger
-                            $("#appointmentModalContent").load("/Appointments/Appointment", {
+                            $("#appointmentModalContent").load('@Url.Action("Appointment", "Appointments")', {
                                 providerId: providerId,
                                 date: kendo.toString(startTime, "yyyy-MM-dd"),
                                 time: kendo.toString(startTime, "HH:mm"),
@@ -382,27 +353,26 @@
                                 var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
                                 modal.show();
                             });
-                            // you can call API / open custom modal here
                         },
 
                         edit: function (e) {
 
-                            e.preventDefault(); // ❌ stop default update popup/save
+                            e.preventDefault(); 
+
+                            var scheduler = $("#scheduler").data("kendoScheduler");
+                            if (scheduler.view().name === "month") {
+                                    sessionStorage.setItem("schedulerView", "day");
+                                    sessionStorage.setItem("schedulerDate", e.event.start);
+                                    initKendo();
+                                    return;
+                            }
+
 
                             var startTime = e.event.start;
                             var endTime = e.event.end;
                             var providerId = e.event.providerId;
 
-                            // var id = e.event.id;
-                            // alert(
-                            //     "EDIT EVENT\n\n" +
-                            //     "Id: " + id +
-                            //     "Provider: " + providerId +
-                            //     "\nDate: " + kendo.toString(startTime, "dd/MM/yyyy") +
-                            //     "\nTime: " + kendo.toString(startTime, "hh:mm tt")
-                            // );
-                            debugger
-                            $("#appointmentModalContent").load("/Appointments/Appointment", {
+                            $("#appointmentModalContent").load( '@Url.Action("Appointment", "Appointments")' , {
                                 id: e.event.id,   // 👈 important for edit
                                     providerId: providerId,
                                 date: kendo.toString(startTime, "yyyy-MM-dd"),
@@ -443,7 +413,6 @@
                         startTime: new Date(2026, 0, 1, 8, 0, 0),   // 8:00 AM
                         endTime: new Date(2026, 0, 1, 20, 30, 0),    // 6:00 PM
 
-                        // ✅ 30 MINUTE SLOT
                         majorTick: 30,   // 1 hour label
                         minorTickCount: 1, // divide into 2 parts → 30 min each
 
@@ -452,6 +421,8 @@
                         navigate: function (e) {
                             sessionStorage.setItem("schedulerView", e.view);
                             sessionStorage.setItem("schedulerDate", e.date.toISOString());
+                          
+
                             loadDataByView(e.view);
                         }
 
@@ -468,7 +439,6 @@
                     }
                 }, 100);
 
-                // ✅ PROVIDER SELECTED
                 $("#noProviderMsg").hide();
                 $("#scheduler").show();
 
@@ -498,6 +468,7 @@
 
                 var selectedDate;
 
+            
                 if (storedDate) {
                     let d = new Date(storedDate);
                     selectedDate =
@@ -523,8 +494,8 @@
                     scheduler.setOptions({
                         eventTemplate: $("#dayTemplate").html()
                     });
-
-                    $.get("/Appointments/GetAppointmentsDay", {
+                    
+                    $.get('@Url.Action("GetAppointmentsDay", "Appointments")', {
                         selected_date: selectedDate,
                         cmp_id: cmp_id,
                         location_id: location_id,
@@ -548,8 +519,8 @@
                     scheduler.setOptions({
                         eventTemplate: $("#monthTemplate").html()
                     });
-
-                    $.get("/Appointments/GetAppointmentsMonth", {
+                    
+                    $.get('@Url.Action("GetAppointmentsMonth", "Appointments")', {
                         cmp_id: cmp_id,
                         location_id: location_id,
                         provider_ids: provider_ids
@@ -565,66 +536,6 @@
                         scheduler.dataSource.data(parsed);
                     });
                 }
-                // if (viewName === "day") {
-
-                //     scheduler.setOptions({
-                //         eventTemplate: $("#dayTemplate").html()
-                //     });
-
-                //     scheduler.dataSource.data([
-                //         {
-                //             id: 1,
-                //             title: "Patient A",
-                //             start: new Date(2026, 3, 20, 16, 0, 0),  // 20 April 2026, 4:00 PM
-                //             end: new Date(2026, 3, 20, 16, 30, 0), // 4:30 PM
-                //             providerId: 292,
-                //             patientName: "Ravi Patel",
-                //             status: "Completed",
-                //             count: 0
-                //         },
-                //         {
-                //             id: 2,
-                //             title: "Patient B",
-                //             start: new Date(2026, 3, 20, 16, 0, 0),  // 20 April 2026, 4:00 PM
-                //             end: new Date(2026, 3, 20, 16, 30, 0), //
-                //             providerId: 281,
-                //             patientName: "Amit Shah",
-                //             status: "Pending",
-                //             count: 0
-
-                //         }
-
-                //     ]);
-                // }
-
-                // if (viewName === "month") {
-
-                //     scheduler.setOptions({
-                //         eventTemplate: $("#monthTemplate").html()
-                //     });
-
-                //     // 👉 Simulate aggregated data (count per day)
-                //     scheduler.dataSource.data([
-                //         {
-                //             id: 3,
-                //             title: "5",
-                //             start: new Date(),
-                //             end: new Date(),
-                //             providerId: 292,
-                //             patientName: "",
-                //             count: 5
-                //         },
-                //         {
-                //             id: 4,
-                //             title: "3",
-                //             start: new Date(new Date().setDate(new Date().getDate() + 1)),
-                //             end: new Date(new Date().setDate(new Date().getDate() + 1)),
-                //             providerId: 281,
-                //             patientName: "",
-                //             count: 3
-                //         }
-                //     ]);
-                // }
             }
 
         $(document).ready(function () {
@@ -644,8 +555,10 @@
             if (savedLocation) {
                 $("#location_id").val(savedLocation);
             }
-
-            // ✅ restore providers
+                debugger
+                if (!sessionStorage.getItem("locationId")) {
+                        sessionStorage.setItem("locationId", $("#location_id").val());
+                }
             var savedProviders = JSON.parse(sessionStorage.getItem("providers") || "[]");
             if (savedProviders.length > 0) {
                 var multiSelect = $("#provider_id").data("kendoMultiSelect");
@@ -657,44 +570,6 @@
                 $("#noProviderMsg").show();
             }
             
-            //initKendo();
-            
-
-            //  function providerChange() {
-            //      var locationId = $("#location_id").val();
-            //     var multiSelect = $("#provider_id").data("kendoMultiSelect");
-            //      var selectedItems = multiSelect.dataItems();
-            //      console.log(selectedItems);
-
-
-            //       //  NO PROVIDER SELECTED
-            //       if (selectedItems.length === 0) {
-
-            //           $("#scheduler").hide();
-            //           $("#noProviderMsg").show();
-
-            //           return;
-            //       }
-             
-            //    //    $("#scheduler").data("kendoScheduler").destroy();
-            //      //   $("#scheduler").empty();
-
-            //          sessionStorage.setItem("providers", JSON.stringify(selectedItems));
-            //         initKendo();    
-
-            //         if (!locationId || locationId === "0") {
-
-            //             $("#scheduler").hide();
-            //             $("#noProviderMsg").show(); // create this message div
-            //             return;
-
-            //         }
-                  
-            // }
-
-        
-
-    
 
     });
     function onMoveClick(id,start) {
@@ -704,7 +579,8 @@
           var app_date = kendo.toString(dt, "yyyy-MM-dd");
           var app_time = kendo.toString(dt, "HH:mm");
           debugger
-          $("#appointmentModalContent").load("/Appointments/Move", {
+
+          $("#appointmentModalContent").load('@Url.Action("Move", "Appointments")', {
                 appid: id,
                 app_date :app_date,
                 app_time :app_time
@@ -715,7 +591,7 @@
         }
        function onStatusClick(id, statusId) {
            debugger
-        $("#appointmentModalContent").load("/Appointments/ChangeStatus", {
+        $("#appointmentModalContent").load('@Url.Action("ChangeStatus", "Appointments")', {
                 appid: id,
                 statusid: statusId
         }, function () {

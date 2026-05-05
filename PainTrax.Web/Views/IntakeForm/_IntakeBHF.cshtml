@@ -370,43 +370,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="accordion-item" style="display:none">
-                                    <h2 class="accordion-header" id="headingThree">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                            Pre-Injury Functional Baseline
-                                        </button>
-                                    </h2>
-                                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <p>
-                                                Prior to the patient’s
-                                                <select class="form-select d-inline" style="width:200px" name="AccidentType" id="AccidentType">
 
-                                                    <option value="work incident">accident</option>
-                                                    <option value="work incident">work incident</option>
-
-                                                </select>
-                                                , the patient reports being able to perform normal activities.
-
-                                                <br />
-
-                                                <label><input type="radio" name="PreInjury" value="Yes"> Yes</label>
-                                                <label><input type="radio" name="PreInjury" value="No"> No</label>
-                                            </p>
-                                            <p>
-                                                <span id="preInjuryDetailsBox" style="display:none;">
-                                                    <textarea id="PreInjuryDetails" class="form-control d-inline" style="width:95%" placeholder="Specify details"></textarea>
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PreInjuryDetails')"></i>
-                                                </span>
-                                            </p>
-
-
-
-                                            <!-- Vehicle Hit -->
-
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="accordion-item" style="display:none">
                                     <h2 class="accordion-header" id="headingFour">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
@@ -938,7 +902,7 @@
                                                 </p>
                                                 <p>
                                                     On exam, patient has tenderness over the   <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" />
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> bilateral SI joints. 
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> bilateral SI joints.
                                                     <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> Faber's</label>
                                                     <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"> Gaenslen's </label>
                                                     <label><input type="checkbox" class="chkMulti" name="LBSign" value="Yeoman"> Yeoman's </label> sign are positive.
@@ -1141,6 +1105,57 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                            Pre-Injury Functional Baseline
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <h6>ROS</h6>
+                                            <p>
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="headaches"> Headaches</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="chest pain/shortness of breath"> Chest pain / Shortness of breath</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="abdominal pain"> Abdominal pain</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="dizziness"> Dizziness</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="nausea"> Nausea</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="ringing in ears"> Ringing in ears</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="bladder incontinence"> Bladder incontinence</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="bowel incontinence"> Bowel incontinence</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="seizure history"> Seizure history</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="sleep issues/difficulty"> Sleep issues / difficulty</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="ROS" value="anxiety/depression"> Anxiety / depression</label>
+                                            </p>
+                                            <p>
+                                                <strong>GAIT:</strong>
+
+                                                <label><input type="checkbox" class="chkMulti" name="GAIT" value="Normal"> Normal</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="GAIT" value="Antalgic"> Antalgic</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="GAIT" value="Ambulates with a cane"> Ambulates with a cane</label>
+
+                                                <label><input type="checkbox" class="chkMulti" name="GAIT" value="Other"> Other</label>
+
+                                                <input id="GAITOther" class="form-control d-inline w-25" style="min-width:37%" placeholder="Specify other" />
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOther')"></i>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="accordion-item" id="acordPhyExam" style="display:none">
                                     <h2 class="accordion-header" id="headingSeven">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseTwo">
@@ -1556,6 +1571,268 @@
                                             <ol> <div class="row" id="divDiagnosis"></div></ol>
                                             @Html.Raw(ViewBag.Diagnosis)
 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingNE">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
+                                            Neuro Exam
+                                        </button>
+                                    </h2>
+                                    <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <h6>REFLEX EXAMINATION</h6>
+                                            <table style="width:100%">
+                                                <thead>
+                                                    <tr style="font-weight:bold">
+                                                        <td>Upper Extremity</td>
+                                                        <td>Left</td>
+                                                        <td>Right</td>
+                                                        <td>Lower Extremity</td>
+                                                        <td>Left</td>
+                                                        <td>Right</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Triceps</td>
+                                                        <td><input id="TricepsLeft" class="form-control d-inline " style="width:100px" value="2+" /> </td>
+                                                        <td><input id="TricepsRight" class="form-control d-inline " style="width:100px" value="2+" /> </td>
+                                                        <td>Knee</td>
+                                                        <td><input id="KneeRELeft" class="form-control d-inline " style="width:100px" value="2+"/></td>
+                                                        <td><input id="KneeRERight" class="form-control d-inline " style="width:100px" value="2+"/></td>
+                                                       
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Biceps</td>
+                                                        <td><input id="BicepsLeft" class="form-control d-inline " style="width:100px" value="2+"/> </td>
+                                                        <td><input id="BicepsRight" class="form-control d-inline " style="width:100px" value="2+"/> </td>
+                                                        <td>Ankle</td>
+                                                        <td><input id="AnkleRELeft" class="form-control d-inline " style="width:100px" value="2+"/></td>
+                                                        <td><input id="AnkleRERight" class="form-control d-inline " style="width:100px" value="2+"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Brachioradialis</td>
+                                                        <td><input id="BrachioradialisLeft" class="form-control d-inline " style="width:100px" value="2+" /> </td>
+                                                        <td><input id="BrachioradialisRight" class="form-control d-inline " style="width:100px" value="2+" /> </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <br />
+                                            <p><b>SENSORY EXAMINATION</b>
+                                                To
+                                                <label><input type="checkbox" class="chkMulti" name="SE" value="light touch"> light touch</label>
+                                                <label><input type="checkbox" class="chkMulti" name="SE" value="pinprick"> pinprick.</label>
+
+                                            </p>
+                                            <table style="width:100%">
+                                                <thead>
+                                                    <tr style="font-weight:bold">
+                                                        <td>Upper Extremity</td>
+                                                        <td>Left</td>
+                                                        <td>Right</td>
+                                                        <td>Lower Extremity</td>
+                                                        <td>Left</td>
+                                                        <td>Right</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Upper shoulder (C4)</td>
+                                                        <td><input id="UpperShoulderLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="UpperShoulderRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td>Distal medial thigh (L3)</td>
+                                                        <td><input id="ThighLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="ThighRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Lateral arm (C5)</td>
+                                                        <td><input id="LateralArmLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="LateralArmRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td>Medial left foot (L4)</td>
+                                                        <td><input id="FootMedialLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="FootMedialRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Lateral forearm, thumb, index (C6)</td>
+                                                        <td><input id="ForearmC6Left" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="ForearmC6Right" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td>Dorsum of the foot (L5)</td>
+                                                        <td><input id="FootDorsumLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="FootDorsumRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Middle finger (C7)</td>
+                                                        <td><input id="MiddleFingerLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="MiddleFingerRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td>Lateral foot (S1)</td>
+                                                        <td><input id="FootLateralLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="FootLateralRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Medial forearm, ring, little finger (C8)</td>
+                                                        <td><input id="ForearmC8Left" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="ForearmC8Right" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td>Lumbar paraspinals</td>
+                                                        <td><input id="LumbarLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="LumbarRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Medial arm (T1)</td>
+                                                        <td><input id="MedialArmLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="MedialArmRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Cervical paraspinals</td>
+                                                        <td><input id="CervicalLeft" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td><input id="CervicalRight" class="form-control d-inline" style="width:100px" value="Normal" /></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <br>
+                                            <h6>MOTOR EXAMINATION</h6>
+                                            <table style="width:100%">
+                                                <thead>
+                                                    <tr style="font-weight:bold">
+                                                        <td>Upper Extremity</td>
+                                                        <td>Movement</td>
+                                                        <td>Left</td>
+                                                        <td>Right</td>
+                                                        <td>Lower Extremity</td>
+                                                        <td>Movement</td>
+                                                        <td>Left</td>
+                                                        <td>Right</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Shoulder</td>
+                                                        <td>Abduction</td>
+                                                        <td><input id="ShoulderAbductionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="ShoulderAbductionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td>Hip</td>
+                                                        <td>Flexion</td>
+                                                        <td><input id="HipFlexionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="HipFlexionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>Flexion</td>
+                                                        <td><input id="ShoulderFlexionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="ShoulderFlexionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td></td>
+                                                        <td>Abduction</td>
+                                                        <td><input id="HipAbductionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="HipAbductionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Elbow</td>
+                                                        <td>Extension</td>
+                                                        <td><input id="ElbowExtensionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="ElbowExtensionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td>Knee</td>
+                                                        <td>Extension</td>
+                                                        <td><input id="KneeExtensionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="KneeExtensionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>Flexion</td>
+                                                        <td><input id="ElbowFlexionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="ElbowFlexionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td></td>
+                                                        <td>Flexion</td>
+                                                        <td><input id="KneeFlexionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="KneeFlexionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>Supination</td>
+                                                        <td><input id="ElbowSupinationLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="ElbowSupinationRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td>Ankle</td>
+                                                        <td>Dorsiflexion</td>
+                                                        <td><input id="AnkleDorsiLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="AnkleDorsiRight" class="form-control" style="width:100px" value="5" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>Pronation</td>
+                                                        <td><input id="ElbowPronationLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="ElbowPronationRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td></td>
+                                                        <td>Plantar Flexion</td>
+                                                        <td><input id="AnklePlantarLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="AnklePlantarRight" class="form-control" style="width:100px" value="5" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Wrist</td>
+                                                        <td>Flexion</td>
+                                                        <td><input id="WristFlexionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="WristFlexionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td></td>
+                                                        <td>Extensor hallucis longus</td>
+                                                        <td><input id="EHLLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="EHLRight" class="form-control" style="width:100px" value="5" /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>Extension</td>
+                                                        <td><input id="WristExtensionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="WristExtensionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Hand</td>
+                                                        <td>Grip Strength</td>
+                                                        <td><input id="GripLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="GripRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>Hand</td>
+                                                        <td>Finger Abduction</td>
+                                                        <td><input id="FingerAbductionLeft" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td><input id="FingerAbductionRight" class="form-control" style="width:100px" value="5" /></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -2383,10 +2660,11 @@
 
                 contentType: "application/x-www-form-urlencoded",
                 success: function (data, status, xhr) {
+                    debugger
                     $('#modelDaignoCode').html(data);
                 },
                 error: function (xhr, status, error) {
-                    alert("Error!" + xhr.status);
+                    alert("Error!" + error);
                 },
             });
 

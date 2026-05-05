@@ -81,8 +81,8 @@ namespace PainTrax.Web.Controllers
                 data = _services.GetOne(obj);
 
                 ViewBag.groupList = new SelectList(
-    _common.GetDiagnoCodeGroupByBodyPart(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value,data.BodyPart),
-    "Text",
+    _common.GetDiagnoCodeGroupByBodyPart(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value, data.BodyPart),
+    "Value",
     "Text",
     data.DiagCodeGroup
 );
@@ -203,7 +203,7 @@ namespace PainTrax.Web.Controllers
                                 BodyPart = dt.Rows[i]["BodyPart"].ToString(),
                                 DiagCode = dt.Rows[i]["DiagCode"].ToString(),
                                 Description = dt.Rows[i]["Description"].ToString(),
-                                DiagCodeGroup = dt.Rows[i]["GroupName"].ToString(),
+                                // DiagCodeGroup = dt.Rows[i]["GroupName"].ToString(),
                                 PreSelect = false,
                                 display_order = string.IsNullOrEmpty(dt.Rows[i]["DisplayOrder"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DisplayOrder"].ToString()),
                                 CreatedBy = userid,
@@ -322,7 +322,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveGroup(string name, string bodyName)
+        public IActionResult SaveGroup(string name, string bodyName, string displayOrder)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -338,19 +338,20 @@ namespace PainTrax.Web.Controllers
                 string cnd = " and GroupName='" + name + "' and BodyPart='" + bodyName + "' and cmp_id=" + cmpid;
 
                 var objGroupIsExist = _services.GetAllDiagCodeGroups(cnd);
-
+                var result = 0;
                 if (objGroupIsExist.Count == 0)
                 {
                     tbl_diagcodes_group objGroup = new tbl_diagcodes_group()
                     {
                         Cmp_id = cmpid,
                         GroupName = name,
-                        BodyPart = bodyName
+                        BodyPart = bodyName,
+                        DisplayOrder = string.IsNullOrEmpty(displayOrder) ? 0 : Convert.ToInt16(displayOrder)
                     };
-                    _services.InsertDiagCodeGroup(objGroup);
+                    result = _services.InsertDiagCodeGroup(objGroup);
                 }
 
-                return Json(new { success = true });
+                return Json(new { success = true, id = result });
             }
             catch (Exception ex)
             {
@@ -566,7 +567,7 @@ namespace PainTrax.Web.Controllers
 
         public JsonResult GetGroupByBodyPart(string bodyPart)
         {
-            var data =_common.GetDiagnoCodeGroupByBodyPart(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value, bodyPart);
+            var data = _common.GetDiagnoCodeGroupByBodyPart(HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value, bodyPart);
 
             return Json(data);
         }

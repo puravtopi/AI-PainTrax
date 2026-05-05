@@ -111,6 +111,15 @@ namespace PainTrax.Web.Controllers
             return PartialView("_Appointment", model);
         }
 
+        public JsonResult SearchPatients(string prefix)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            List<string> _patients = new List<string>();
+            _patients = _patientservices.GetPatientSearchList(cmpid.Value, prefix);
+            return Json(_patients);
+
+        }
+
         [HttpPost]
         public IActionResult AppointmentSave(AppointmentsVM data)
         {

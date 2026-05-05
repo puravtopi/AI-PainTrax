@@ -109,6 +109,11 @@
                         <input id="newDiagName" class="form-control" />
                     </div>
                     <div id="diagError" class="text-danger small d-none"></div>
+                    <div class="mb-3">
+                        <label for="newDisplayOrder" class="form-label">DisplayOrder</label>
+                        <input id="newDisplayOrder" class="form-control" />
+                    </div>
+                    <div id="diagDisplayError" class="text-danger small d-none"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="btnSaveDiag" class="btn btn-primary">Save</button>
@@ -133,28 +138,34 @@
      $("#btnSaveDiag").click(function () {
 
         var groupName = $("#newDiagName").val().trim();
+        var displayOrder = $("#newDisplayOrder").val().trim();
         var bodyPart = $("#BodyPart").val().trim();
 
         if (groupName === "") {
             $("#diagError").removeClass("d-none").text("Group name is required");
             return;
         }
+        if (displayOrder === "") {
+            $("#diagDisplayError").removeClass("d-none").text("Display Order  is required");
+            return;
+        }
 
+        $("#diagDisplayError").addClass("d-none");
         $("#diagError").addClass("d-none");
         var url="@Url.Action("SaveGroup", "Diagcode")";
         $.ajax({
             url: url,
             type: 'POST',
-            data: { name: groupName,bodyName:bodyPart },
+            data: { name: groupName,bodyName:bodyPart,displayOrder:displayOrder },
             success: function (res) {
                 if (res.success) {
                     $("#diagCodeModal").modal('hide');
                     $("#newDiagName").val("");
-                      var newOption = new Option(groupName, groupName, true, true);
-        $("#DiagCodeGroup").append(newOption).trigger('change');
+                    var newOption = new Option(groupName,res.id,  true, true);
+                    $("#DiagCodeGroup").append(newOption).trigger('change');
 
-        // Optional: select it
-        $("#DiagCodeGroup").val(groupName);
+                    // Optional: select it
+                    $("#DiagCodeGroup").val(res.id);
                     // optional: refresh list or dropdown
                     alert("Saved successfully");
                 } else {
@@ -182,10 +193,10 @@
                     data: { bodyPart: bodyPart },
                     success: function (data) {
 
-                        var dropdown = $('select[name="DiagCodeGroup"]');
-                        dropdown.empty();
+                            var dropdown = $('select[name="DiagCodeGroup"]');
+                            dropdown.empty();
 
-                                             $.each(data, function (i, item) {
+                            $.each(data, function (i, item) {
                             dropdown.append('<option value="' + item.value + '">' + item.text + '</option>');
                         });
                     }
