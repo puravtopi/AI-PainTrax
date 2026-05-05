@@ -4118,7 +4118,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
+                        strDaignosis = strDaignosis + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
                         stradddaigno = stradddaigno + "Cervical herniated nucleus pulposis at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
@@ -4165,7 +4166,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
                         stradddaigno = stradddaigno + "Thoracic herniated nucleus pulposis at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
@@ -4212,7 +4214,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
                         stradddaigno = stradddaigno + "Lumbar herniated nucleus pulposis at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
@@ -4517,7 +4520,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
+                        strDaignosis = strDaignosis + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
                         stradddaigno = stradddaigno + " Cervical herniated nucleus pulposis at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
@@ -4564,7 +4568,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
                         stradddaigno = stradddaigno + "Thoracic herniated nucleus pulposis at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
@@ -4611,7 +4616,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
                         stradddaigno = stradddaigno + " Lumbar herniated nucleus pulposis at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }

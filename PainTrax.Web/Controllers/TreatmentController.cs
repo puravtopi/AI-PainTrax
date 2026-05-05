@@ -133,18 +133,18 @@ namespace PainTrax.Web.Controllers
                 var Data = _services.GetAll(cnd);
 
                 //Sorting
-                if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
-                {
-                    var property = typeof(tbl_treatment_master).GetProperties()[Convert.ToInt32(sortColumn)];
-                    if (sortColumnDirection.ToUpper() == "ASC")
-                    {
-                        Data = Data.OrderBy(x => property.GetValue(x, null)).ToList();
-                    }
-                    else
-                    {
-                        Data = Data.OrderByDescending(x => property.GetValue(x, null)).ToList();
-                    }
-                }
+                //if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
+                //{
+                //    var property = typeof(tbl_treatment_master).GetProperties()[Convert.ToInt32(sortColumn)];
+                //    if (sortColumnDirection.ToUpper() == "ASC")
+                //    {
+                //        Data = Data.OrderBy(x => property.GetValue(x, null)).ToList();
+                //    }
+                //    else
+                //    {
+                //        Data = Data.OrderByDescending(x => property.GetValue(x, null)).ToList();
+                //    }
+                //}
 
                 //Search
 

@@ -40,9 +40,9 @@
                                         <th scope="col">Location</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Telephone</th>
-                                        <th scope="col">Fax</th>
+                                        @* <th scope="col">Fax</th> *@
                                         <th scope="col">Contact Person</th>
-                                        @* <th scope="col">Active?</th>*@
+                                        <th scope="col">Active</th>
                                         <th style="width:5%">Action</th>
                                     </tr>
                                 </thead>
@@ -133,8 +133,9 @@
                     { "data": "location", "location": "location", "autoWidth": true },
                     { "data": "emailid", "emailid": "emailid", "autoWidth": true },
                     { "data": "telephone", "telephone": "telephone", "autoWidth": true },
-                    { "data": "fax", "fax": "fax", "autoWidth": true },
+                    // { "data": "fax", "fax": "fax", "autoWidth": true },
                     { "data": "contactpersonname", "contactpersonname": "contactpersonname", "autoWidth": true },
+                    { "data": "isactive", "isactive": "isactive", "isactive": true },
                     {
                         "render": function (data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'

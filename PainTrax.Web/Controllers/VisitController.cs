@@ -777,7 +777,9 @@ namespace PainTrax.Web.Controllers
                     data.allergies = defaultPage1.allergies;
                     data.dd = defaultPage1.dd;
                     data.daignosis_desc = defaultPage1.daignosis_desc;
-                    data.assessment = defaultPage1.daignosis_desc;
+                    string assessment = defaultPage1.daignosis_desc; ;
+                    assessment = assessment.Replace("#sex", gender);
+                    data.assessment = assessment;
                     data.cc = defaultPage1.cc;
                     data.pe = defaultPage1.pe;
                     data.family_history = defaultPage1.family_history;
@@ -4578,7 +4580,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
+                        strDaignosis = strDaignosis + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
                         stradddaigno = stradddaigno + "Cervical herniated nucleus pulposis at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
@@ -4625,7 +4628,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
                         stradddaigno = stradddaigno + "Thoracic herniated nucleus pulposis at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
@@ -4671,7 +4675,8 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp1))
                     {
-                        strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
+                        //strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
                         stradddaigno = stradddaigno + "Lumbar herniated nucleus pulposis at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
