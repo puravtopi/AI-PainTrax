@@ -22,6 +22,7 @@
         public string company_name { get; set; }
         public string client_code { get; set; }
         public bool? is_newuser { get; set; }
+        public bool isactive { get; set; }
 
     }
 }

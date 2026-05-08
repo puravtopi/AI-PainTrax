@@ -43,6 +43,7 @@ namespace PainTrax.Web.Models
         public string? providername { get; set; }
         public string? assistant_providername { get; set; }
         public bool? is_newuser { get; set; }
+        public bool isactive { get; set; }
 
     }
 }

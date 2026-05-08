@@ -135,10 +135,14 @@
                     {
                         "render": function (data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
-                            index += '<a href="#" onclick="DeleteData(' + full.id + ')"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                                if (!full.desig_name || full.desig_name.trim() !== "Provider") {
+                                index += '<a href="#" onclick="DeleteData(' + full.id + ')"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" title="Remove"></i></a> &nbsp; &nbsp;';
+                                }
+                            // index += '<a href="#" onclick="DeleteData(' + full.id + ')"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
                             return index;
                         }
                     }
+
                     ,
 
                 ]
