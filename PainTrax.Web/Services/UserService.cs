@@ -62,8 +62,8 @@ namespace PainTrax.Web.Services
             data.fullname = fullName;
             data.password = EncryptionHelper.Encrypt(data.password);
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_users
-		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno,signature,providername,assistant_providername)Values
-				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmpid,@createdby,@createddate,@phoneno,@signature,@providername,@assistant_providername)", conn);
+		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno,signature,providername,assistant_providername,isactive)Values
+				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmpid,@createdby,@createddate,@phoneno,@signature,@providername,@assistant_providername,@isactive)", conn);
             cm.Parameters.AddWithValue("@fname", data.fname);
             cm.Parameters.AddWithValue("@lname", data.lname);
             cm.Parameters.AddWithValue("@emailid", data.emailid);
@@ -80,11 +80,12 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@signature", data.signature);
             cm.Parameters.AddWithValue("@providername", data.providername);
             cm.Parameters.AddWithValue("@assistant_providername", data.assistant_providername);
+            cm.Parameters.AddWithValue("@isactive", data.isactive);
 
             Execute(cm);
         }
         public void Update(tbl_users data)
-        {
+        {            
             string fullName = data.fname + " " + data.lname;
             data.fullname = fullName;
             MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_users SET
@@ -102,7 +103,8 @@ namespace PainTrax.Web.Services
 		updatedby=@updatedby,
         signature=@signature,
         providername=@providername,
-        assistant_providername=@assistant_providername
+        assistant_providername=@assistant_providername,
+        isactive=@isactive
         where Id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.Id);
             cm.Parameters.AddWithValue("@fname", data.fname);
@@ -120,6 +122,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@signature", data.signature);
             cm.Parameters.AddWithValue("@providername", data.providername);
             cm.Parameters.AddWithValue("@assistant_providername", data.assistant_providername);
+            cm.Parameters.AddWithValue("@isactive", data.isactive);
             Execute(cm);
         }
 
@@ -164,7 +167,7 @@ namespace PainTrax.Web.Services
 
         public List<SelectListItem> GetProviders(int cmpid)
         {
-            string query = "SELECT Id,fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid+" order by fullname";
+            string query = "SELECT Id,fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid+ " and isactive=1 order by fullname";
             DataTable dataTable = GetData(query);
 
             List<SelectListItem> providers = new List<SelectListItem>();
