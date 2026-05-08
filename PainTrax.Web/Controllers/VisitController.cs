@@ -777,7 +777,7 @@ namespace PainTrax.Web.Controllers
                     data.allergies = defaultPage1.allergies;
                     data.dd = defaultPage1.dd;
                     data.daignosis_desc = defaultPage1.daignosis_desc;
-                    string assessment = defaultPage1.daignosis_desc; ;
+                    string assessment = defaultPage1.daignosis_desc==null?"":defaultPage1.daignosis_desc; 
                     assessment = assessment.Replace("#sex", gender);
                     data.assessment = assessment;
                     data.cc = defaultPage1.cc;

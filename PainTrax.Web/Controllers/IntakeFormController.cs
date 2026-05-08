@@ -766,11 +766,11 @@ namespace PainTrax.Web.Controllers
 
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
-            else if (client_code.ToLower() == "ipmc")
+            else if (client_code.ToLower() == "bhfpc")
                 return PartialView("_IntakeBHF");
             else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
-            else return PartialView("_IntakeQMPPC");
+            else return PartialView("_IntakeBHF");
             //return View();
         }
 

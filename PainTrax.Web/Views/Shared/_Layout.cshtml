@@ -679,6 +679,16 @@
                             <i class="bi bi-circle"></i><span>Patient Import Pdf</span>
                         </a>
                     </li>
+                    @{
+                        if (pageAccess.ToLower().Contains("patient import pdf ai"))
+                        {
+                            <li>
+                                <a class="nav-link collapsed" asp-action="PatientImportFromPDFAI" asp-controller="Report">
+                                    <i class="bi bi-circle"></i><span>Patient Import Pdf AI</span>
+                                </a>
+                            </li>
+                        }
+                    }
                     <li>
                         <a class="nav-link collapsed" asp-action="ProBSReport" asp-controller="Report">
                             <i class="bi bi-circle"></i><span>ProBS Report</span>

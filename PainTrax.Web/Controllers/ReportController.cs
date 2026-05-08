@@ -28,6 +28,10 @@ using System.Globalization;
 using MS.Models;
 using MS.Services;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Net.Http;
 
 namespace PainTrax.Web.Controllers
 {
@@ -2747,5 +2751,347 @@ namespace PainTrax.Web.Controllers
 
         }
 
+        #region Patient Import Report  pdf AI
+
+        [HttpGet]
+        public IActionResult PatientImportFromPDFAI()
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            var providers = _userService.GetProviders(cmpid.Value);
+            ViewBag.providerList = providers;
+
+            ////ViewBag.ClaudeApiKey = _configuration["Claude:ApiKey"];
+            //var config = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            //ViewBag.ClaudeApiKey = config["Claude:ApiKey"];
+
+            // Nothing to load from DB on first visit — the user uploads the file.
+            return View(new PatientImportReportVM());
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExtractPdfPages([FromBody] PdfExtractRequest request)
+        {
+            if (request?.Pages == null || request.Pages.Count == 0)
+                return BadRequest(new { error = "No page images provided." });
+
+            // ── Read API key securely from appsettings.json ──────────────────────────
+
+            var config = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            var apiKey = config["Claude:ApiKey"];
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+                return StatusCode(500, new { error = "Claude API key is not configured on the server." });
+
+            const string model = "claude-opus-4-5"; // best for handwritten / scanned forms
+
+            const string prompt = @"You are a medical data extraction assistant. The images below are ALL pages of a single patient intake form (it may be handwritten, typed, or scanned across multiple pages).
+
+Read ALL pages together and extract the patient's information into ONE single JSON object.
+Do NOT create one record per page — the entire PDF is for ONE patient.
+
+Return ONLY a valid JSON object — no markdown, no explanation, no backticks — with exactly these keys:
+{
+  ""Patient Name"": ""Lastname, Firstname"",
+  ""DOB"": ""YYYY-MM-DD or empty string"",
+  ""Sex"": ""Male or Female or Other or empty string"",
+  ""Address"": ""full address including city state zip"",
+  ""Phone"": """",
+  ""Social Security #"": """",
+  ""Employer/Company"": """",
+  ""Employer Address"": """",
+  ""Emergency Name"": """",
+  ""Work Phone"": """",
+  ""Date of Accident"": ""YYYY-MM-DD or empty string"",
+  ""CaseType"": ""NF or WC or Other or empty string"",
+  ""Insurance Company"": """",
+  ""Ins Address"": """",
+  ""Ins Phone"": """",
+  ""Claim #"": """",
+  ""Claim Address"": """",
+  ""NF-2"": ""Yes or No or empty string"",
+  ""Policy #"": """",
+  ""Policy Holder"": """",
+  ""WCB #"": """",
+  ""Carrier Case #"": """",
+  ""Policy Adjuster"": """",
+  ""Attorney"": """",
+  ""Firm Name"": """",
+  ""Attorney Address"": """",
+  ""Attorney Phone"": """",
+  ""Attorney Fax"": """",
+  ""DOE"": """"
+}
+
+Rules:
+- ONE JSON object total — not an array, not one per page.
+- Patient Name MUST be ""Lastname, Firstname"". If only one name is found, use it as lastname.
+- All dates must be YYYY-MM-DD. Leave empty string if unclear.
+- CaseType: ""NF"" for No-Fault/Auto, ""WC"" for Workers Comp, ""Other"" for everything else.
+- If a field is not found on any page, use empty string """".
+- Never include extra keys. Never add comments or explanation.";
+
+            // ── Build the Claude request body ────────────────────────────────────────
+            var contentBlocks = new List<object>();
+
+            // Add each page as an image block
+            foreach (var pageBase64 in request.Pages)
+            {
+                contentBlocks.Add(new
+                {
+                    type = "image",
+                    source = new
+                    {
+                        type = "base64",
+                        media_type = "image/png",
+                        data = pageBase64
+                    }
+                });
+            }
+
+            // Add the extraction prompt last
+            contentBlocks.Add(new { type = "text", text = prompt });
+
+            var claudeRequest = new
+            {
+                model = model,
+                max_tokens = 1500,
+                messages = new[]
+                {
+            new { role = "user", content = contentBlocks }
+        }
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(claudeRequest);
+
+            // ── Call Anthropic API server-side ───────────────────────────────────────
+
+            var httpClientFactory = HttpContext.RequestServices.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.Timeout = TimeSpan.FromMinutes(3);
+
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post,
+                "https://api.anthropic.com/v1/messages");
+
+            httpRequest.Headers.Add("x-api-key", apiKey);
+            httpRequest.Headers.Add("anthropic-version", "2023-06-01");
+            httpRequest.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage httpResponse;
+            try
+            {
+                httpResponse = await httpClient.SendAsync(httpRequest);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(502, new { error = $"Could not reach Anthropic API: {ex.Message}" });
+            }
+
+            var responseBody = await httpResponse.Content.ReadAsStringAsync();
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                // Parse Anthropic error message and return it (without leaking the API key)
+                string claudeError;
+                try
+                {
+                    using var errDoc = JsonDocument.Parse(responseBody);
+                    claudeError = errDoc.RootElement
+                        .GetProperty("error")
+                        .GetProperty("message")
+                        .GetString() ?? responseBody;
+                }
+                catch
+                {
+                    claudeError = $"HTTP {(int)httpResponse.StatusCode}";
+                }
+
+                return StatusCode((int)httpResponse.StatusCode, new { error = claudeError });
+            }
+
+            // ── Parse the Claude response ────────────────────────────────────────────
+            string extractedText;
+            try
+            {
+                using var doc = JsonDocument.Parse(responseBody);
+                var contentArray = doc.RootElement.GetProperty("content");
+                extractedText = string.Empty;
+
+                foreach (var block in contentArray.EnumerateArray())
+                {
+                    if (block.GetProperty("type").GetString() == "text")
+                    {
+                        extractedText = block.GetProperty("text").GetString() ?? string.Empty;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = $"Failed to parse Claude response: {ex.Message}" });
+            }
+
+            // ── Strip any accidental markdown fences and parse JSON ─────────────────
+            var clean = extractedText
+                .Trim()
+                .TrimStart('`')
+                .TrimEnd('`');
+
+            // Remove ```json or ``` prefix/suffix if present
+            if (clean.StartsWith("json", StringComparison.OrdinalIgnoreCase))
+                clean = clean[4..].Trim();
+
+            try
+            {
+                // Validate it's proper JSON, then return it as-is to the browser
+                using var resultDoc = JsonDocument.Parse(clean);
+                return Content(clean, "application/json");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = $"Claude returned invalid JSON: {ex.Message}. Raw: {clean[..Math.Min(200, clean.Length)]}" });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PatientImportFromPDFAI(
+                                            string parsedJson,
+                                            string locationId,     // ← new
+                                            string locationName,
+                                            string providerId,     // ← new
+                                            string providerName,
+                                            string fdate
+                                        )   // ← new (optional, for logging/display)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            int providerIDrec = Convert.ToInt32(providerId);
+
+            // ── Re-populate ViewBag in case we need to return the view with errors ──
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            // ── Validate location ──
+            if (string.IsNullOrWhiteSpace(locationId) || !int.TryParse(locationId, out int locId))
+            {
+                TempData["ImportError"] = "Please select a location before importing.";
+                return RedirectToAction("PatientImportFromPDF");
+            }
+
+            if (string.IsNullOrWhiteSpace(parsedJson))
+            {
+                TempData["ImportError"] = "No data received. Please upload and preview the file first.";
+                return RedirectToAction("PatientImportFromPDF");
+            }
+
+            try
+            {
+                var rows = JsonConvert.DeserializeObject<List<PatientImportRowVM>>(parsedJson);
+
+                if (rows == null || rows.Count == 0)
+                {
+                    TempData["ImportError"] = "The uploaded file contained no valid rows.";
+                    return RedirectToAction("PatientImportFromPDF");
+                }
+
+                // 3. Map the data
+                List<PatientImportReportVM> lstPatientImportReport = rows.Select(row =>
+                {
+                    // --- Parse Name ---
+                    string lastName = string.Empty;
+                    string firstName = null;
+
+                    if (!string.IsNullOrWhiteSpace(row.PatientName))
+                    {
+                        var nameParts = row.PatientName.Split(',');
+
+                        if (nameParts.Length > 0)
+                            lastName = FormatNamePart(nameParts[0]);
+
+                        if (nameParts.Length > 1)
+                            firstName = FormatNamePart(nameParts[1]);
+                    }
+
+                    // --- Parse Dates ---
+                    DateTime? DOEmain = DateTime.TryParse(fdate, out DateTime parsedDoemain) ? parsedDoemain : (DateTime?)null;
+
+                    DateTime? dob = DateTime.TryParse(row.DOB, out DateTime parsedDob) ? parsedDob : (DateTime?)null;
+                    DateTime? doa = DateTime.TryParse(row.DateOfAccident, out DateTime parsedDoa) ? parsedDoa : (DateTime?)null;
+                    DateTime? DOE = DateTime.TryParse(row.DOE, out DateTime parsedDoe) ? parsedDoe : (DateTime?)null;
+                    // --- Create and Map Object ---
+                    return new PatientImportReportVM
+                    {
+                        // If last_name is entirely empty but required by the DB, provide a fallback to prevent DB validation errors
+                        last_name = string.IsNullOrEmpty(lastName) ? "Unknown" : lastName,
+                        first_name = firstName,
+
+                        dob = dob,
+                        doa = doa,
+
+                        sex = row.Sex,
+                        address = row.Address,
+                        phone = row.Phone,
+                        ssn = row.SocialSecurityNo,
+                        employer_company = row.EmployerCompany,
+                        employer_address = row.EmployerAddress,
+                        emergency_contact = row.EmergencyName,
+                        work_phone = row.WorkPhone,
+                        condition_related_to = row.CaseType, // Mapped CaseType to condition_related_to based on context
+                        insurance_company = row.InsuranceCompany,
+                        insurance_address = row.InsAddress,
+                        insurance_phone = row.InsPhone,
+                        claim_number = row.ClaimNo,
+                        claim_address = row.ClaimAddress,
+                        nf2 = row.NF2,
+                        policy_number = row.PolicyNo,
+                        policy_holder = row.PolicyHolder,
+                        wcb_number = row.WCBNo,
+                        carrier_case_number = row.CarrierCaseNo,
+                        policy_adjuster = row.PolicyAdjuster,
+                        attorney = row.Attorney,
+                        firm_name = row.FirmName,
+                        attorney_address = row.AttorneyAddress,
+                        attorney_phone = row.AttorneyPhone,
+                        attorney_fax = row.AttorneyFax,
+                        imported_at = DateTime.Now,
+                        // If maindoe is not null, use it; otherwise fall back to DOE
+                        DOE = DOE ?? DOEmain,
+                        // DOE =  DOE,
+                        loc_id = Convert.ToInt32(locationId)
+                    };
+                }).ToList();
+                PatientImportReportVM model = new PatientImportReportVM
+                {
+                    cmpy_id = cmpid,
+                    loc_id = Convert.ToInt16(locationId),
+                    lstPatientImportReport = lstPatientImportReport
+                };
+                int result = PatientImportDataToDB(model, providerIDrec);
+                //string locationName = "";
+                if (result > 0)
+                {
+                    TempData["ImportSuccess"] = $"Successfully imported {lstPatientImportReport.Count()} patient record(s) to location \"{Convert.ToString(locationName)}\".";
+                }
+                //TempData["ImportSuccess"] = $"Successfully imported {inserted} patient record(s) to location "{ locationName}".";
+                //TempData["ImportSuccess"] = "Success";// $"Successfully imported {inserted} patient record(s) to location "{ locationName}".";
+
+            }
+            catch (Exception ex)
+            {
+                TempData["ImportError"] = $"Import failed: {ex.Message}";
+            }
+
+            return RedirectToAction("PatientImportFromPDFAI");
+        }
+
+        #endregion
+
     }
+}
+public class PdfExtractRequest
+{
+    public List<string> Pages { get; set; } = new(); // base64 PNG strings, one per page
+    public string FileName { get; set; } = string.Empty;
 }

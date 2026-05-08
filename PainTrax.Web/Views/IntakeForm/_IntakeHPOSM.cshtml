@@ -341,41 +341,35 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingThree">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                            Pre-Injury Functional Baseline
+                                            HPI
                                         </button>
                                     </h2>
                                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <p>
-                                                Prior to the patient’s
-                                                <select class="form-select d-inline" style="width:200px" name="AccidentType" id="AccidentType">
-
-                                                    <option value="work incident">accident</option>
-                                                    <option value="work incident">work incident</option>
-
-                                                </select>
-                                                , the patient reports being able to perform normal activities.
-
-                                                <br />
-
-                                                <label><input type="radio" name="PreInjury" value="Yes"> Yes</label>
-                                                <label><input type="radio" name="PreInjury" value="No"> No</label>
-                                            </p>
-                                            <p>
-                                                <span id="preInjuryDetailsBox" style="display:none;">
-                                                    <textarea id="PreInjuryDetails" class="form-control d-inline" style="width:95%" placeholder="Specify details"></textarea>
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PreInjuryDetails')"></i>
-                                                </span>
+                                                Type of Injury:
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryType" value="MVA"> MVA</label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryType" value="Work-Related"> Work-Related </label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryType" value="Slip and fall"> Slip and fall </label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryType" value="Pedestrian-struck"> Pedestrian-struck </label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryType" value="Cyclist-struck"> Cyclist-struck</label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryType" value="e-bike"> e-bike </label>
+                                                accident Others
+                                                <input type="text" class="form-control d-inline w-25" name="InjuryTypeOther" id="InjuryTypeOther" />.
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'InjuryTypeOther')"></i>
                                             </p>
 
                                             <!-- Patient Type -->
                                             <p>
                                                 Patient reports being:
-                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bicyclist"> Bicyclist</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Pedestrian"> Pedestrian</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Pedestrian"> Pedestrian </label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bicyclist"> Bicyclist </label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientType" value="Motorcyclist"> Motorcyclist</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bus Passenger"> Bus Passenger </label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientType" value="Driver"> Driver</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Passenger"> Passenger</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Front Passenger"> Front Passenger </label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Rear Passenger"> Rear Passenger </label>
+
                                             </p>
 
                                             <!-- Vehicle Hit -->
@@ -383,12 +377,12 @@
                                                 Vehicle hit:
                                                 <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Rear"> Rear</label>
                                                 <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Front"> Front</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side front/rear"> Driver-side front/rear</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver sideswipe"> Driver sideswipe</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side T-boned"> Driver side T-boned</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side front/rear"> Passenger-side front/rear</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger-side swiped"> Passenger-side swiped</label>
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned"> T-boned</label>
+                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side front"> Driver-side front</label>
+                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side Rear"> Driver-side rear</label>
+                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side front"> Passenger-side front</label>
+                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side rear"> Passenger-side rear</label>
+                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned Driver side"> T-boned Driver side</label>
+                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned Passenger side"> T-boned Passenger side</label>
                                             </p>
                                         </div>
                                     </div>
@@ -430,11 +424,11 @@
                                                 <label><input type="radio" name="EMS" value="Yes"> Yes</label>
                                                 <label><input type="radio" name="EMS" value="No"> No</label>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Police contacted:
+                                                Police arrived:
                                                 <label><input type="radio" name="Police" value="Yes"> Yes</label>
                                                 <label><input type="radio" name="Police" value="No"> No</label>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Police report:
+                                                LOC:
                                                 <label><input type="radio" name="PoliceReport" value="Yes"> Yes</label>
                                                 <label><input type="radio" name="PoliceReport" value="No"> No</label>
                                             </p>

@@ -1,0 +1,1180 @@
+@model PainTrax.Web.ViewModel.PatientImportReportVM
+
+<main id="main" class="main">
+    <style>
+        /* ── Table ── */
+        #tblPreview th, #tblPreview td {
+            white-space: nowrap !important;
+        }
+
+        /* ── Upload area ── */
+        #uploadSection {
+            margin-bottom: 20px;
+        }
+
+        #previewSection {
+            display: none;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+            .upload-area:hover, .upload-area.drag-over {
+                border-color: #0d6efd;
+                background-color: #f0f4ff;
+            }
+
+            .upload-area i {
+                font-size: 48px;
+                color: #aaa;
+            }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* ── Editable cells ── */
+        td.editable {
+            padding: 2px !important;
+            min-width: 90px;
+        }
+
+            td.editable input[type="text"],
+            td.editable input[type="date"],
+            td.editable select {
+                width: 100%;
+                min-width: 80px;
+                border: 1px solid transparent;
+                background: transparent;
+                padding: 3px 5px;
+                font-size: 13px;
+                border-radius: 4px;
+                transition: border-color 0.2s, background 0.2s;
+            }
+
+                td.editable input[type="text"]:focus,
+                td.editable input[type="date"]:focus,
+                td.editable select:focus {
+                    border-color: #0d6efd;
+                    background: #fff;
+                    outline: none;
+                    box-shadow: 0 0 0 2px rgba(13,110,253,.15);
+                }
+
+                td.editable input[type="text"]:hover,
+                td.editable input[type="date"]:hover,
+                td.editable select:hover {
+                    border-color: #adb5bd;
+                    background: #f8f9fa;
+                }
+
+        /* DOE column highlight */
+        th.doe-col {
+            background-color: #198754 !important;
+            color: #fff;
+        }
+
+        td.doe-col input {
+            min-width: 130px;
+        }
+
+        /* Row index cell */
+        td.row-num {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            min-width: 30px;
+        }
+
+        /* ── Persistent location bar ── */
+        #locationBar {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border: 1px solid #c2d0f8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+            #locationBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #locationBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #locationBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        #ddlLocation {
+            font-weight: 500;
+        }
+
+            #ddlLocation.is-invalid {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 2px rgba(220,53,69,.2);
+            }
+
+        .location-required-hint {
+            font-size: 12px;
+            color: #dc3545;
+            display: none;
+        }
+
+        #locationConfirmed {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 6px 14px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+            #locationConfirmed i {
+                font-size: 16px;
+            }
+
+        .location-badge {
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* ── Persistent Provider bar ── */
+        #providerBar {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border: 1px solid #c2d0f8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+            #providerBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #providerBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #providerBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        #ddlprovider {
+            font-weight: 500;
+        }
+
+            #ddlprovider.is-invalid {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 2px rgba(220,53,69,.2);
+            }
+
+        .provider-required-hint {
+            font-size: 12px;
+            color: #dc3545;
+            display: none;
+        }
+
+        #providerConfirmed {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 6px 14px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+            #providerConfirmed i {
+                font-size: 16px;
+            }
+
+        /* ── Persistent DOE bar ── */
+        #doeBar {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border: 1px solid #c2d0f8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+            #doeBar .loc-label {
+                font-weight: 700;
+                font-size: 14px;
+                color: #1a237e;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-top: 6px;
+            }
+
+                #doeBar .loc-label i {
+                    font-size: 18px;
+                    color: #0d6efd;
+                }
+
+            #doeBar .loc-control {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex: 1 1 220px;
+                max-width: 360px;
+            }
+
+        /* ── PDF parsing progress ── */
+        #pdfParseProgress {
+            display: none;
+        }
+
+        .pdf-file-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e9f5ff;
+            border: 1px solid #b6d4fe;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            margin: 3px;
+        }
+
+            .pdf-file-chip .remove-chip {
+                cursor: pointer;
+                color: #dc3545;
+                font-weight: bold;
+                margin-left: 4px;
+            }
+
+        #doeConfirmed {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 6px 14px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+        .doe-badge, .provider-badge {
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+
+    <div class="pagetitle">
+        <h1>Patient Import – PDF</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">Patient Import from PDF</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- ═══════════════════════════════════════════
+                             PERSISTENT BARS — Location / Provider / DOE
+                             ═══════════════════════════════════════════ -->
+                        <div class="row">
+                            <!-- Location -->
+                            <div class="col-md-4" id="locationBar">
+                                <div class="loc-label">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    Location <span class="text-danger">*</span>
+                                </div>
+                                <div class="loc-control">
+                                    <select id="ddlLocation"
+                                            class="form-select"
+                                            asp-items="@ViewBag.locList"
+                                            onchange="onLocationChange()">
+                                    </select>
+                                    <div class="location-required-hint" id="locationHint">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a location before importing.
+                                    </div>
+                                </div>
+                                <div id="locationConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="locationConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                                </div>
+                            </div>
+
+                            <!-- Provider -->
+                            <div class="col-md-4" id="providerBar">
+                                <div class="loc-label">
+                                    <i class="bi bi-person-badge-fill"></i>
+                                    Provider <span class="text-danger">*</span>
+                                </div>
+                                <div class="loc-control">
+                                    <select id="ddlprovider"
+                                            class="form-select"
+                                            asp-items="@ViewBag.providerList"
+                                            onchange="onProviderChange()">
+                                    </select>
+                                    <div class="provider-required-hint" id="providerHint">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a Provider before importing.
+                                    </div>
+                                </div>
+                                <div id="providerConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="providerConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                                </div>
+                            </div>
+
+                            <!-- DOE -->
+                            <div class="col-md-4" id="doeBar">
+                                <div class="loc-label">
+                                    <i class="bi bi-calendar-check-fill"></i>
+                                    DOE <span class="text-danger">*</span>
+                                </div>
+                                <div class="loc-control d-flex align-items-center">
+                                    <input type="date" class="form-control" onchange="doechange()" id="fdate" name="fdate" value="">
+                                    <div class="doe-required-hint" id="doeHint" style="display:none;">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Please select a DOE before importing.
+                                    </div>
+                                </div>
+                                <div id="doeConfirmed">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span id="doeConfirmedName"></span>
+                                    <span class="text-muted fw-normal" style="font-size:11px;">— applied to all records</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ══════════════════════════════════════════════
+                             STEP 1 — Upload PDF Files
+                             ══════════════════════════════════════════════ -->
+                        <div id="uploadSection">
+                            <h5 class="card-title">Step 1 – Upload Patient PDF File(s)</h5>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-info-circle"></i>
+                                You can upload <strong>one or multiple</strong> PDF patient intake sheets at once.
+                                Each PDF page is parsed as one patient record.
+                            </p>
+
+                            <div class="upload-area" id="dropZone">
+                                <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                <p class="mt-2 mb-0"><strong>Click to browse</strong> or drag &amp; drop PDF file(s) here</p>
+                                <p class="text-muted small">Supported format: .pdf — multiple files allowed</p>
+                            </div>
+                            <input type="file" id="pdfFile" accept=".pdf" multiple style="display:none" />
+
+                            <!-- Chip list of selected files -->
+                            <div id="fileChips" class="mt-2"></div>
+
+                            <div class="file-info mt-1" id="fileInfo"></div>
+
+                            <!-- Parse progress -->
+                            <div id="pdfParseProgress" class="mt-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="spinner-border spinner-border-sm text-primary"></div>
+                                    <span id="parseProgressText">Parsing PDFs…</span>
+                                </div>
+                                <div class="progress mt-2" style="height:6px;">
+                                    <div id="parseProgressBar" class="progress-bar progress-bar-striped progress-bar-animated"
+                                         style="width:0%"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <button class="btn btn-primary" id="btnPreview" disabled onclick="previewPDFs()">
+                                    <i class="bi bi-eye"></i> Preview Data
+                                </button>
+                                <button class="btn btn-secondary ms-2" onclick="resetAll()">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ══════════════════════════════════════════════
+                             STEP 2 — Preview, Edit & Import
+                             ══════════════════════════════════════════════ -->
+                        <div id="previewSection">
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                                <div>
+                                    <h5 class="card-title mb-0">
+                                        Step 2 – Review, Edit &amp; Import Records
+                                        <span class="location-badge" id="previewLocationBadge">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            <span id="previewLocationName"></span>
+                                        </span>
+                                        <span class="provider-badge" id="previewproviderBadge">
+                                            <i class="bi bi-person-badge-fill"></i>
+                                            <span id="previewproviderName"></span>
+                                        </span>
+                                    </h5>
+                                    <small class="text-muted">
+                                        <i class="bi bi-pencil-square"></i>
+                                        All cells are editable — click any cell to modify.
+                                        Fill in <strong>DOE</strong> (Date of Evaluation) before importing.
+                                    </small>
+                                </div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-secondary align-self-center" id="rowCount">0 records</span>
+                                    <button class="btn btn-warning" onclick="resetAll()">
+                                        <i class="bi bi-upload"></i> Upload Different File
+                                    </button>
+                                    <button class="btn btn-success" id="btnImport" onclick="importToDatabase()">
+                                        <i class="bi bi-database-add"></i> Manage Records (Import to DB)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Summary cards -->
+                            <div class="row mb-3">
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-primary mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Total Patients</span>
+                                                <strong id="summTotal">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-info mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>NF Cases</span>
+                                                <strong id="summNF">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-success mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>WC Cases</span>
+                                                <strong id="summWC">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-secondary mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Other Cases</span>
+                                                <strong id="summOther">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id="tblPreview" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Patient Name</th>
+                                            <th>DOB</th>
+                                            <th>Sex</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Social Security #</th>
+                                            <th>Employer/Company</th>
+                                            <th>Employer Address</th>
+                                            <th>Emergency Name</th>
+                                            <th>Work Phone</th>
+                                            <th>Date of Accident</th>
+                                            <th>Case Type</th>
+                                            <th>Insurance Company</th>
+                                            <th>Ins Address</th>
+                                            <th>Ins Phone</th>
+                                            <th>Claim #</th>
+                                            <th>Claim Address</th>
+                                            <th>NF-2</th>
+                                            <th>Policy #</th>
+                                            <th>Policy Holder</th>
+                                            <th>WCB #</th>
+                                            <th>Carrier Case #</th>
+                                            <th>Policy Adjuster</th>
+                                            <th>Attorney</th>
+                                            <th>Firm Name</th>
+                                            <th>Attorney Address</th>
+                                            <th>Attorney Phone</th>
+                                            <th>Attorney Fax</th>
+                                            <th class="doe-col">DOE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblPreviewBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Import status alert -->
+                        <div id="importStatus" class="mt-3" style="display:none;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Hidden form: posts edited JSON + location/provider to controller -->
+<form id="frmImport" asp-action="PatientImportFromPDFAI" asp-controller="Report"
+      method="post" enctype="multipart/form-data" style="display:none">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="parsedJson" id="hiddenParsedJson" />
+    <input type="hidden" name="locationId" id="hiddenLocationId" />
+    <input type="hidden" name="locationName" id="hiddenLocationName" />
+    <input type="hidden" name="providerId" id="hiddenproviderId" />
+    <input type="hidden" name="providerName" id="hiddenproviderName" />
+    <input type="hidden" name="fdate" id="hiddenfdate" />
+  @*   <input type="hidden" name="sourceType" value="PDF" /> *@
+</form>
+
+<!-- PDF.js (used to render image-based pages to canvas for Claude) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+    // ── Configure PDF.js worker (used for image-PDF page rendering) ─────────────
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    // ── Claude extraction endpoint ────────────────────────────────────────────────
+    // The API key lives in appsettings.json on the server only.
+    // The browser posts base64 page images to /Report/ExtractPdfPages
+    // and the server proxies the call to Anthropic — the key never reaches the client.
+    const EXTRACT_ENDPOINT = '@Url.Action("ExtractPdfPages", "Report")';
+
+    // ── Column definitions (identical to Excel import) ───────────────────────────
+    const COL_DEFS = [
+        { key: "Patient Name", type: "text" },
+        { key: "DOB", type: "date" },
+        { key: "Sex", type: "select", options: ["", "Male", "Female", "Other"] },
+        { key: "Address", type: "text" },
+        { key: "Phone", type: "text" },
+        { key: "Social Security #", type: "text" },
+        { key: "Employer/Company", type: "text" },
+        { key: "Employer Address", type: "text" },
+        { key: "Emergency Name", type: "text" },
+        { key: "Work Phone", type: "text" },
+        { key: "Date of Accident", type: "date" },
+        { key: "CaseType", type: "select", options: ["", "NF", "WC", "Other"] },
+        { key: "Insurance Company", type: "text" },
+        { key: "Ins Address", type: "text" },
+        { key: "Ins Phone", type: "text" },
+        { key: "Claim #", type: "text" },
+        { key: "Claim Address", type: "text" },
+        { key: "NF-2", type: "select", options: ["", "Yes", "No"] },
+        { key: "Policy #", type: "text" },
+        { key: "Policy Holder", type: "text" },
+        { key: "WCB #", type: "text" },
+        { key: "Carrier Case #", type: "text" },
+        { key: "Policy Adjuster", type: "text" },
+        { key: "Attorney", type: "text" },
+        { key: "Firm Name", type: "text" },
+        { key: "Attorney Address", type: "text" },
+        { key: "Attorney Phone", type: "text" },
+        { key: "Attorney Fax", type: "text" },
+        { key: "DOE", type: "date", extra: true }
+    ];
+
+    let parsedRows = [];
+    let dataTable = null;
+    let selectedFiles = [];   // Array of File objects
+
+    // ── Helpers ──────────────────────────────────────────────────────────────────
+
+    /** Convert M/D/YYYY or MM/DD/YYYY → YYYY-MM-DD. Returns '' on failure. */
+    function toIsoDate(str) {
+        if (!str) return '';
+        str = str.trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+        const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+        return str;
+    }
+
+    /** Grab the value that follows a label pattern in an array of text lines. */
+    function extractAfter(lines, labelRegex) {
+        for (let i = 0; i < lines.length; i++) {
+            const m = lines[i].match(labelRegex);
+            if (m) {
+                // value may be on same line after the label, or on the next line
+                const sameLine = lines[i].replace(labelRegex, '').trim();
+                if (sameLine) return sameLine;
+                if (i + 1 < lines.length) return lines[i + 1].trim();
+            }
+        }
+        return '';
+    }
+
+    // ── Drop zone & file input wiring ────────────────────────────────────────────
+    (function initFileHandlers() {
+        const dropZone  = document.getElementById('dropZone');
+        const fileInput = document.getElementById('pdfFile');
+
+        // Remove the inline onclick so it doesn't double-fire
+        dropZone.removeAttribute('onclick');
+
+        // Click anywhere on the drop zone → open file picker
+        dropZone.addEventListener('click', function () {
+            fileInput.value = '';   // reset so same file can be re-selected
+            fileInput.click();
+        });
+
+        // Drag-over highlight
+        dropZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+        dropZone.addEventListener('dragleave', function () {
+            dropZone.classList.remove('drag-over');
+        });
+
+        // Drop files
+        dropZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFilesSelected(Array.from(e.dataTransfer.files));
+        });
+
+        // File picker selection
+        fileInput.addEventListener('change', function () {
+            if (this.files && this.files.length) {
+                handleFilesSelected(Array.from(this.files));
+            }
+        });
+    })();
+
+    function handleFilesSelected(files) {
+        const pdfs = files.filter(f => f.type === 'application/pdf' || f.name.match(/\.pdf$/i));
+        if (!pdfs.length) { alert('Please upload valid PDF file(s).'); return; }
+
+        pdfs.forEach(function (f) {
+            if (!selectedFiles.find(x => x.name === f.name && x.size === f.size)) {
+                selectedFiles.push(f);
+            }
+        });
+        renderFileChips();
+        document.getElementById('btnPreview').disabled = selectedFiles.length === 0;
+        document.getElementById('fileInfo').innerHTML =
+            '<i class="bi bi-check-circle text-success"></i> <strong>' + selectedFiles.length + '</strong> PDF file(s) ready.';
+    }
+
+    function renderFileChips() {
+        const container = document.getElementById('fileChips');
+        container.innerHTML = '';
+        selectedFiles.forEach(function (f, i) {
+            const chip = document.createElement('span');
+            chip.className = 'pdf-file-chip';
+            chip.innerHTML = '<i class="bi bi-file-earmark-pdf text-danger"></i> ' + f.name +
+                '<span class="remove-chip" onclick="removeFile(' + i + ')">✕</span>';
+            container.appendChild(chip);
+        });
+    }
+
+    function removeFile(idx) {
+        selectedFiles.splice(idx, 1);
+        renderFileChips();
+        document.getElementById('btnPreview').disabled = selectedFiles.length === 0;
+        if (!selectedFiles.length)
+            document.getElementById('fileInfo').innerHTML = '';
+    }
+
+    // ── Render ONE PDF page to a base64 PNG via canvas ───────────────────────────
+    async function renderPageToBase64(pdfPage) {
+        const viewport = pdfPage.getViewport({ scale: 2.0 });
+        const canvas   = document.createElement('canvas');
+        canvas.width   = viewport.width;
+        canvas.height  = viewport.height;
+        await pdfPage.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        const dataUrl = canvas.toDataURL('image/png');
+        return dataUrl.split(',')[1];
+    }
+
+    // ── Secure extraction: browser → your server → Anthropic ─────────────────────
+    // Page images are posted to your own controller action.
+    // The Anthropic API key never leaves the server.
+    async function extractPdfWithClaude(pageBase64Array, fileName) {
+        try {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+
+            const response = await fetch(EXTRACT_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({ pages: pageBase64Array, fileName: fileName })
+            });
+
+            if (!response.ok) {
+                const errBody = await response.json().catch(() => ({}));
+                throw new Error(errBody?.error || `Server error ${response.status}`);
+            }
+
+            const obj = await response.json();
+
+            // Ensure every COL_DEF key exists
+            const result = {};
+            COL_DEFS.forEach(d => { result[d.key] = obj[d.key] !== undefined ? String(obj[d.key]) : ''; });
+            return result;
+
+        } catch (err) {
+            console.error(`Extraction failed for "${fileName}":`, err);
+            const empty = {};
+            COL_DEFS.forEach(d => { empty[d.key] = ''; });
+            empty['_error'] = err.message;
+            return empty;
+        }
+    }
+
+    // ── Preview: one server call per PDF file → one patient row per file ─────────
+    async function previewPDFs() {
+        if (!selectedFiles.length) return;
+
+        const progress    = document.getElementById('pdfParseProgress');
+        const progressBar = document.getElementById('parseProgressBar');
+        const progressTxt = document.getElementById('parseProgressText');
+        const btnPreview  = document.getElementById('btnPreview');
+
+        progress.style.display = 'block';
+        btnPreview.disabled = true;
+        parsedRows = [];
+
+        const total = selectedFiles.length;
+
+        for (let fi = 0; fi < selectedFiles.length; fi++) {
+            const file = selectedFiles[fi];
+            progressTxt.textContent = `Reading "${file.name}" (${fi + 1} of ${total})…`;
+            progressBar.style.width = Math.round((fi / total) * 100) + '%';
+
+            try {
+                // 1. Open PDF
+                const ab  = await file.arrayBuffer();
+                const doc = await pdfjsLib.getDocument({ data: ab }).promise;
+
+                // 2. Render ALL pages to base64 PNG
+                const pageBase64Array = [];
+                for (let p = 1; p <= doc.numPages; p++) {
+                    progressTxt.textContent =
+                        `Rendering "${file.name}" — page ${p} of ${doc.numPages}…`;
+                    const page = await doc.getPage(p);
+                    const b64  = await renderPageToBase64(page);
+                    pageBase64Array.push(b64);
+                }
+
+                // 3. Send ALL pages in ONE Claude request → ONE patient row
+                progressTxt.textContent =
+                    `Claude is extracting patient data from "${file.name}"…`;
+                const row = await extractPdfWithClaude(pageBase64Array, file.name);
+                parsedRows.push(row);
+
+            } catch (e) {
+                console.error('Error processing ' + file.name, e);
+                alert(`Could not process "${file.name}": ${e.message}`);
+            }
+
+            progressBar.style.width = Math.round(((fi + 1) / total) * 100) + '%';
+        }
+
+        progress.style.display = 'none';
+        btnPreview.disabled = false;
+
+        if (!parsedRows.length) {
+            alert('No data could be extracted from the uploaded PDF(s).\n\nCheck your API key and browser console (F12) for details.');
+            return;
+        }
+
+        const errorRows = parsedRows.filter(r => r['_error']);
+        if (errorRows.length) {
+            console.warn(`${errorRows.length} file(s) had extraction errors:`,
+                errorRows.map(r => r['_error']));
+        }
+
+        renderTable(parsedRows);
+    }
+
+    // ── Render editable DataTable ─────────────────────────────────────────────────
+
+    function renderTable(rows) {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+
+        const tbody = document.getElementById('tblPreviewBody');
+        tbody.innerHTML = '';
+
+        let nf = 0, wc = 0, other = 0;
+
+        rows.forEach((row, idx) => {
+            const ct = (row['CaseType'] || '').trim().toUpperCase();
+            if (ct === 'NF') nf++;
+            else if (ct === 'WC') wc++;
+            else other++;
+
+            const tr = document.createElement('tr');
+            tr.dataset.rowIndex = idx;
+
+            const tdNum = document.createElement('td');
+            tdNum.className = 'row-num';
+            tdNum.textContent = idx + 1;
+            tr.appendChild(tdNum);
+
+            COL_DEFS.forEach(def => {
+                const td = document.createElement('td');
+                td.className = 'editable' + (def.extra ? ' doe-col' : '');
+
+                let input;
+                if (def.type === 'select') {
+                    input = document.createElement('select');
+                    input.className = 'form-select form-select-sm';
+                    def.options.forEach(opt => {
+                        const o = document.createElement('option');
+                        o.value = opt; o.textContent = opt || '-- Select --';
+                        if (row[def.key] === opt) o.selected = true;
+                        input.appendChild(o);
+                    });
+                } else {
+                    input = document.createElement('input');
+                    input.type = def.type;
+                    input.value = row[def.key] || '';
+                    input.className = 'form-control form-control-sm';
+                }
+
+                input.addEventListener('input', () => { parsedRows[idx][def.key] = input.value; });
+                input.addEventListener('change', () => { parsedRows[idx][def.key] = input.value; });
+
+                td.appendChild(input);
+                tr.appendChild(td);
+            });
+
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('rowCount').textContent = rows.length + ' records';
+        document.getElementById('summTotal').textContent = rows.length;
+        document.getElementById('summNF').textContent = nf;
+        document.getElementById('summWC').textContent = wc;
+        document.getElementById('summOther').textContent = other;
+
+        document.getElementById('uploadSection').style.display = 'none';
+        document.getElementById('previewSection').style.display = 'block';
+
+        dataTable = $('#tblPreview').DataTable({
+            paging: true, pageLength: 25, searching: true,
+            info: true, autoWidth: false, scrollX: true,
+            columnDefs: [{ targets: '_all', orderable: false }]
+        });
+    }
+
+    // ── Location / Provider / DOE change handlers ────────────────────────────────
+
+    function onLocationChange() {
+        const sel = document.getElementById('ddlLocation');
+        const val = sel.value;
+        const text = val ? sel.options[sel.selectedIndex].text : '';
+
+        const confirmed = document.getElementById('locationConfirmed');
+        const confName = document.getElementById('locationConfirmedName');
+        const hint = document.getElementById('locationHint');
+        const badge = document.getElementById('previewLocationBadge');
+        const pName = document.getElementById('previewLocationName');
+
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = text;
+            badge.style.display = 'inline';
+            pName.textContent = text;
+        } else {
+            confirmed.style.display = 'none';
+            badge.style.display = 'none';
+        }
+    }
+
+    function onProviderChange() {
+        const sel = document.getElementById('ddlprovider');
+        const val = sel.value;
+        const text = val ? sel.options[sel.selectedIndex].text : '';
+
+        const confirmed = document.getElementById('providerConfirmed');
+        const confName = document.getElementById('providerConfirmedName');
+        const hint = document.getElementById('providerHint');
+        const badge = document.getElementById('previewproviderBadge');
+        const pName = document.getElementById('previewproviderName');
+
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = text;
+            badge.style.display = 'inline';
+            pName.textContent = text;
+        } else {
+            confirmed.style.display = 'none';
+            badge.style.display = 'none';
+        }
+    }
+
+    function doechange() {
+        const sel = document.getElementById('fdate');
+        const val = sel.value;
+
+        const confirmed = document.getElementById('doeConfirmed');
+        const confName = document.getElementById('doeConfirmedName');
+        const hint = document.getElementById('doeHint');
+        const badge = document.getElementById('previewdoeBadge');
+        const pName = document.getElementById('previewdoeName');
+
+        if (val) {
+            sel.classList.remove('is-invalid');
+            hint.style.display = 'none';
+            confirmed.style.display = 'flex';
+            confName.textContent = val;
+
+            // Apply the global DOE to every row's DOE cell (if not individually overridden)
+            document.querySelectorAll('#tblPreviewBody tr').forEach((tr, idx) => {
+                const doeCells = tr.querySelectorAll('td.doe-col input');
+                doeCells.forEach(inp => {
+                    if (!inp.dataset.manuallyEdited) {
+                        inp.value = val;
+                        parsedRows[idx]['DOE'] = val;
+                    }
+                });
+            });
+
+            if (badge) badge.style.display = 'inline';
+            if (pName) pName.textContent = val;
+        } else {
+            confirmed.style.display = 'none';
+            if (badge) badge.style.display = 'none';
+        }
+    }
+
+    // Mark DOE cell as manually edited so global DOE won't overwrite it
+    document.addEventListener('change', function (e) {
+        if (e.target.closest('td.doe-col')) {
+            e.target.dataset.manuallyEdited = 'true';
+        }
+    });
+
+    // ── Import ───────────────────────────────────────────────────────────────────
+
+    function importToDatabase() {
+        if (!parsedRows.length) { alert('No data to import.'); return; }
+
+        const locSel = document.getElementById('ddlLocation');
+        const locId = locSel ? locSel.value : '';
+        const locText = locId ? locSel.options[locSel.selectedIndex].text : '';
+
+        const provSel = document.getElementById('ddlprovider');
+        const provId = provSel ? provSel.value : '';
+        const provText = provId ? provSel.options[provSel.selectedIndex].text : '';
+
+        const doeselected = document.getElementById('fdate').value;
+
+        if (!locId) {
+            locSel.classList.add('is-invalid');
+            document.getElementById('locationHint').style.display = 'block';
+            document.getElementById('locationBar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            locSel.focus();
+            return;
+        }
+        if (!provId) {
+            provSel.classList.add('is-invalid');
+            document.getElementById('providerHint').style.display = 'block';
+            document.getElementById('providerBar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            provSel.focus();
+            return;
+        }
+
+        // ── Patient Name validation: must be "Lastname, Firstname" ──────────────
+        const invalidNameRows = [];
+        parsedRows.forEach((row, idx) => {
+            const name = (row['Patient Name'] || '').trim();
+            // Must contain a comma with non-empty text on both sides
+            const parts = name.split(',');
+            const lastName  = parts[0] ? parts[0].trim() : '';
+            const firstName = parts[1] ? parts[1].trim() : '';
+            if (!lastName || !firstName) {
+                invalidNameRows.push({ rowNum: idx + 1, name: name || '(empty)' });
+            }
+        });
+
+        if (invalidNameRows.length > 0) {
+            const rowList = invalidNameRows
+                .map(r => `  • Row ${r.rowNum}: "${r.name}"`)
+                .join('\n');
+            alert(
+                `Import blocked — the following patient name(s) are not in the required format "Lastname, Firstname":\n\n${rowList}\n\nPlease correct the Patient Name field(s) and try again.`
+            );
+
+            // Highlight the offending rows in the table
+            invalidNameRows.forEach(r => {
+                const rows = document.querySelectorAll('#tblPreviewBody tr');
+                // DataTables may reorder display rows; find by data index stored on tr
+                rows.forEach(tr => {
+                    const numCell = tr.querySelector('td.row-num');
+                    if (numCell && parseInt(numCell.textContent) === r.rowNum) {
+                        const nameInput = tr.querySelector('td.editable input[type="text"]');
+                        if (nameInput) {
+                            nameInput.style.borderColor = '#dc3545';
+                            nameInput.style.background  = '#fff5f5';
+                            nameInput.addEventListener('input', function clearHighlight() {
+                                nameInput.style.borderColor = '';
+                                nameInput.style.background  = '';
+                                nameInput.removeEventListener('input', clearHighlight);
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Scroll to the preview table so the user can see the highlighted rows
+            document.getElementById('tblPreview').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        // ── End name validation ──────────────────────────────────────────────────
+
+        if (!confirm(
+            `Import ${parsedRows.length} patient record(s)?\n\nLocation: ${locText}\nProvider: ${provText}\nDOE applied to all: ${doeselected || '(per-row)'}\n\nIndividual DOE edits will be preserved.`
+        )) return;
+
+        const btn = document.getElementById('btnImport');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Importing…';
+
+        document.getElementById('hiddenParsedJson').value = JSON.stringify(parsedRows);
+        document.getElementById('hiddenLocationId').value = locId;
+        document.getElementById('hiddenLocationName').value = locText;
+        document.getElementById('hiddenproviderId').value = provId;
+        document.getElementById('hiddenproviderName').value = provText;
+        document.getElementById('hiddenfdate').value = doeselected;
+
+        document.getElementById('frmImport').submit();
+    }
+
+    // ── Reset ─────────────────────────────────────────────────────────────────────
+
+    function resetAll() {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+        document.getElementById('tblPreviewBody').innerHTML = '';
+        document.getElementById('fileChips').innerHTML = '';
+        document.getElementById('fileInfo').innerHTML = '';
+        document.getElementById('btnPreview').disabled = true;
+        document.getElementById('pdfFile').value = '';
+        document.getElementById('previewSection').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+        document.getElementById('importStatus').style.display = 'none';
+        document.getElementById('ddlLocation').classList.remove('is-invalid');
+        document.getElementById('locationHint').style.display = 'none';
+        selectedFiles = [];
+        parsedRows = [];
+    }
+
+    // ── TempData result banners ───────────────────────────────────────────────────
+    @if (TempData["ImportSuccess"] != null)
+    {
+        <text>
+            document.getElementById('importStatus').innerHTML =
+        '<div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @TempData["ImportSuccess"]</div>';
+        document.getElementById('importStatus').style.display = 'block';
+        </text>
+    }
+    @if (TempData["ImportError"] != null)
+    {
+        <text>
+            document.getElementById('importStatus').innerHTML =
+        '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @TempData["ImportError"]</div>';
+        document.getElementById('importStatus').style.display = 'block';
+        </text>
+    }
+</script>
