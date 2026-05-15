@@ -888,6 +888,7 @@ namespace PainTrax.Web.Controllers
             var json = System.Text.Json.JsonSerializer.Serialize(formData);
             var model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var result = "0";
             if (model != null)
             {
                 InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
@@ -909,7 +910,7 @@ namespace PainTrax.Web.Controllers
                     TreatmentIds = model.TreatmentIds,
                     TreatmentDelimitDesc = model.TreatmentDelimitDesc
                 };
-                var result = service.SaveInitialIntakeAI(initialIntakeAI);
+                result = service.SaveInitialIntakeAI(initialIntakeAI);
 
                 if (initialIntakeAI.Id == 0)
                 {
@@ -948,6 +949,8 @@ namespace PainTrax.Web.Controllers
                                 InjuryType = "WC";
                             else if (model.InjuryType == "lien")
                                 InjuryType = "Lien";
+                            else
+                                InjuryType = model.InjuryType;
 
 
                             var objIE = new tbl_patient_ie()
@@ -1000,7 +1003,7 @@ namespace PainTrax.Web.Controllers
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully." });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId });
         }
 
         [HttpPost]
@@ -1218,7 +1221,7 @@ namespace PainTrax.Web.Controllers
 
                 string result = parts.Length > 1 ? parts[1] : parts[0];
 
-                string cnd = " and d.cmp_id=" + cmpid + " and (d.BodyPart IN ('" + result + "') or d.Description like '%" + _bodyparts + "%') order by d.display_order ASC";
+                string cnd = " and d.cmp_id=" + cmpid + " and (d.Description like '%" + _bodyparts + "%') order by d.display_order ASC";
 
                 var data = _diagcodesService.GetAllWithGroups(cnd);
 
@@ -1229,10 +1232,10 @@ namespace PainTrax.Web.Controllers
                               {
                                   DaignoCodeId = c.Id.Value,
                                   Description = c.Description,
-                                  GroupDisplayOrder= c.GroupDisplayOrder.HasValue ? c.GroupDisplayOrder.Value : 100,
+                                  GroupDisplayOrder = c.GroupDisplayOrder.HasValue ? c.GroupDisplayOrder.Value : 100,
                                   DiagCode = c.DiagCode,
                                   DiagCodeGroup = c.DiagCodeGroup == null ? "0" : c.DiagCodeGroup.ToString(),
-                                  GroupName= c.GroupName == null ? "NA" : c.GroupName.ToString(),
+                                  GroupName = c.GroupName == null ? "NA" : c.GroupName.ToString(),
                                   IsSelect = assetment != null ? (assetment.IndexOf(c.DiagCode) > 0 ? true : c.PreSelect) : c.PreSelect,
                                   Display_Order = c.display_order,
                                   cmp_id = c.cmp_id

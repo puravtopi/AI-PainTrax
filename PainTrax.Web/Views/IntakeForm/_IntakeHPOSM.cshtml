@@ -196,33 +196,13 @@
                                                 <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
                                             </p>
 
-                                            <!-- Work -->
-                                            <p>
-                                                Currently working:
-                                                <input type="radio" name="IsWorking" value="The patient is currently working." /> Yes
-                                                <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." /> No
-                                                <br />
-                                                Job title:
-                                                <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:90%;" />
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i>
-                                            </p>
-
-                                            <p>
-                                                If not working, stopped immediately after accident:
-                                                <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
-                                                <input type="radio" name="StoppedAfterAccident" value="No" /> No
-                                                <br />
-                                                Reason:
-                                                <textarea id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTwo">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                            Chief complaint
+                                            History
                                         </button>
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
@@ -241,7 +221,34 @@
                                                 <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
                                             </p>
 
+                                            
+                                            <!-- Work -->
+                                            <p>
+                                                Currently working:
+                                                <input type="radio" name="IsWorking" value="The patient is currently working." /> Yes
+                                                <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." /> No
+                                                <br />
+                                                Degree of Disability:
 
+                                                <input id="DisabilityPercentage"
+                                                       class="form-control d-inline"
+                                                       style="width:100px"
+                                                       type="number"
+                                                       min="0"
+                                                       max="100" />
+
+                                                % temporarily disabled
+                                                <br />
+                                                Occupation:
+                                                <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
+                                                <br />
+                                                Job title:
+                                                <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:90%;" />
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i>
+                                            </p>
+
+                                           
 
                                             <div id="divWC" style="display:none;">
                                                 <!-- Paragraph Description -->
@@ -330,11 +337,7 @@
                                                     </select>
                                                 </p>
                                             </div>
-                                            <p>
-                                                Accident Description
-                                                <textarea id="AccidentDescription" name="AccidentDescription" class="form-control d-inline" style="width:95%"></textarea>
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
-                                            </p>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -369,7 +372,9 @@
                                                 <label><input type="checkbox" class="chkMulti" name="PatientType" value="Driver"> Driver</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientType" value="Front Passenger"> Front Passenger </label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientType" value="Rear Passenger"> Rear Passenger </label>
-
+                                                Restrained:
+                                                <label><input type="radio" name="PatientTypeYN" value="Yes"> Yes</label>
+                                                <label><input type="radio" name="PatientTypeYN" value="No"> No</label>
                                             </p>
 
                                             <!-- Vehicle Hit -->
@@ -384,6 +389,12 @@
                                                 <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned Driver side"> T-boned Driver side</label>
                                                 <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned Passenger side"> T-boned Passenger side</label>
                                             </p>
+
+                                            <p>
+                                                Accident Description
+                                                <textarea id="AccidentDescription" name="AccidentDescription" class="form-control d-inline" style="width:95%"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -396,7 +407,7 @@
                                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
 
-                                            <p>
+                                            @* <p>
                                                 Patient describes sudden forceful impact involving
                                                 <select id="MechanismInvolving" class="form-select d-inline" style="width:150px">
                                                     <option>acceleration</option>
@@ -412,7 +423,7 @@
 
                                                 </select>
                                                 onset of pain to the body parts described in chief complaint.
-                                            </p>
+                                            </p> *@
 
                                             <!-- Airbag -->
                                             <p>
@@ -444,9 +455,9 @@
                                                     <input id="HospitalName" class="form-control d-inline w-25" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    Records:
-                                                    <label><input type="radio" name="Records" value="Yes"> Yes</label>
-                                                    <label><input type="radio" name="Records" value="No"> No</label>
+                                                   
+                                                    <label><input type="radio" name="Records" value="Yes"> Discharged the same day</label>
+                                                    <label><input type="radio" name="Records" value="No"> Admitted</label>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     How did you get to hospital:
                                                     <label><input type="radio" name="Transport" value="Ambulance"> Ambulance</label>
@@ -457,8 +468,80 @@
                                                 </div>
                                             </p>
 
+                                            <div class="patient-history">
+
+                                                <p>
+                                                    <strong>Any symptoms prior to accident:</strong>
+
+                                                    <label>
+                                                        <input type="radio" name="PriorSymptoms" value="Y"> Yes
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="radio" name="PriorSymptoms" value="N"> No
+                                                    </label>
+                                                </p>
+
+                                                <p>
+                                                    <strong>History of Prior Trauma:</strong>
+
+                                                    <label>
+                                                        <input type="radio" name="PriorTrauma" value="Y"> Yes
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="radio" name="PriorTrauma" value="N"> No
+                                                    </label>
+                                                </p>
+
+                                                <p>
+                                                    <strong>Transportation: How did you get to the office today?</strong>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="Transportation" value="Self"> Self
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="Transportation" value="Drove"> Drove
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="Transportation" value="Family member"> Family member
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="Transportation" value="Uber"> Uber
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="Transportation" value="Self transportation"> Self transportation
+                                                    </label>
+
+                                                    Others:
+                                                    <input id="TransportationOther" class="form-control d-inline w-25" style="min-width:250px" />
+
+                                                    <i class="fa fa-microphone d-inline mic-btn"
+                                                       onclick="startVoice(this,'TransportationOther')"></i>
+                                                </p>
+
+                                                <p>
+                                                    <strong>Needs daily life activity assistance:</strong>
+
+                                                    <label>
+                                                        <input type="radio" name="DailyLifeAssistance" value="Y"> Yes
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="radio" name="DailyLifeAssistance" value="N"> No
+                                                        <input id="DailyLifeAssistanceOther" class="form-control d-inline" style="min-width:250px" />
+                                                    </label>
+                                                     
+                                                </p>
+
+                                            </div>
+
                                             <!-- Symptoms -->
-                                            <p>
+                                            @* <p>
                                                 Symptoms began:
                                                 <label><input type="radio" name="SymptomsStart" value="Immediately"> Immediately</label>
                                                 <label><input type="radio" name="SymptomsStart" value="Hours"> Within hours</label>
@@ -472,7 +555,7 @@
                                                 <label><input type="radio" name="SymptomsProgress" value="Worsened"> Worsened</label>
                                                 <label><input type="radio" name="SymptomsProgress" value="Improved"> Improved partially</label>
                                                 <label><input type="radio" name="SymptomsProgress" value="Fluctuated"> Fluctuated</label>
-                                            </p>
+                                            </p> *@
                                         </div>
                                     </div>
                                 </div>
@@ -546,12 +629,12 @@
                                                 Alcohol:
                                                 <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."> Y</label>
                                                 <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol."> N</label>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                               @*  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Cannabis:
                                                 <label><input type="radio" name="Cannabis" value="The patient smokes cannabis."> Y</label>
-                                                <label><input type="radio" name="Cannabis" value="The patient does not smoke cannabis."> N</label>
+                                                <label><input type="radio" name="Cannabis" value="The patient does not smoke cannabis."> N</label> *@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Other Drugs:
+                                                Recreational Drugs:
                                                 <label><input type="radio" name="OtherDrugs" value="Yes"> Y</label>
                                                 <label><input type="radio" name="OtherDrugs" value="No"> N</label>
                                                 <span id="divDrugs" style="display:none">
@@ -566,15 +649,19 @@
                                                 <label><input type="radio" name="PT" value="Yes"> Y</label>
                                                 <label><input type="radio" name="PT" value="The patient has not had physical therapy."> N</label>
                                                 <span id="divPT" style="display:none">
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    Frequency:
-                                                    <input id="PTFreq" class="form-control d-inline" placeholder="x/week" style="width:150px" />
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTFreq')"></i>
+                                                   
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     Duration:
-                                                    <input id="PTDuration" class="form-control d-inline" style="width:150px" />
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTDuration')"></i>
-
+                                                    <input id="PTWeek" class="form-control d-inline" style="width:50px" />
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    Week
+                                                    <input id="PTMonth" class="form-control d-inline" style="width:50px" />
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    Month
+                                                    <input id="PTYear" class="form-control d-inline" style="width:50px" />
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    Years
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     Relief:
                                                     <select id="PTRelief" class="form-select d-inline" style="width:150px">
                                                         <option>None</option>
@@ -582,15 +669,12 @@
                                                         <option>Minimal</option>
                                                         <option>Good</option>
                                                     </select>
-                                                    @* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    Compliance:
-                                    <label><input type="radio" name="PTCompliance" value="The patient reports compliance with therapy."> Y</label>
-                                    <label><input type="radio" name="PTCompliance" value="The patient reports noncompliance with therapy."> N</label> *@
+                                                   
                                                 </span>
                                             </p>
 
                                             <!-- Chiropractor -->
-                                            <p>
+                                            <p style="display:none">
                                                 Chiropractor:
                                                 <label><input type="radio" name="Chiro" value="Yes"> Y</label>
                                                 <label><input type="radio" name="Chiro" value="No"> N</label>
@@ -614,74 +698,6 @@
                                                 </span>
                                             </p>
 
-                                            <!-- Compliance -->
-                                            <p>
-                                                Patient reports compliance with therapy:
-                                                <label><input type="radio" name="Compliance" value="Yes"> Y</label>
-                                                <label><input type="radio" name="Compliance" value="No"> N</label>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                If discontinued (why):
-                                                <input id="DiscontinueReason" class="form-control d-inline w-50" />
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiscontinueReason')"></i>
-                                            </p>
-
-                                            <!-- Functional Limitations -->
-                                            <p>
-                                                <b>Difficulty</b> Walking:
-                                                <label><input type="radio" name="Walk" value="Yes"> Y</label>
-                                                <label><input type="radio" name="Walk" value="No"> N</label>
-                                                <input id="WalkBlocks" class="form-control d-inline" style="width:100px" placeholder="blocks" />
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'WalkBlocks')"></i>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Standing:
-                                                <label><input type="radio" name="Stand" value="Yes"> Y</label>
-                                                <label><input type="radio" name="Stand" value="No"> N</label>
-                                                <input id="StandMin" class="form-control d-inline" style="width:100px" placeholder="min" />
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'StandMin')"></i>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Sitting:
-                                                <label><input type="radio" name="Sit" value="Yes"> Y</label>
-                                                <label><input type="radio" name="Sit" value="No"> N</label>
-                                                <input id="SitMin" class="form-control d-inline " style="width:100px" placeholder="min" />
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SitMin')"></i>
-                                            </p>
-
-                                            <!-- Unable -->
-                                            <p>
-                                                Unable to:
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Garden"> Garden</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Play sports"> Play sports</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Drive"> Drive</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Lift"> Lift</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Carry"> Carry</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Laundry"> Laundry</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Reach overhead"> Reach overhead</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Shopping"> Shopping</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Errands"> Errands</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Kneel"> Kneel</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Squat">Squat</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Jog">Jog</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Going up / down stairs"> Going up / down stairs</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Exercise"> Exercise</label>
-
-                                            </p>
-                                            <p>
-                                                Based on the patient’s history, symptom duration, prior treatment, and reported functional limitations:
-                                            </p>
-                                            <p>
-
-                                                <input type="checkbox" name="TreatmentPlan" value="Initial" />
-                                                Initial conservative management is indicated and will be initiated or continued in accordance with Medical Treatment Guidelines (MTG).
-
-                                            </p>
-                                            <p>
-
-                                                <input type="checkbox" name="TreatmentPlan" value="Completed" />
-                                                The patient reports completion of an adequate trial of conservative treatment prior to presentation, consisting of physical therapy, chiropractic care, medications, and/or activity modification for a duration of ≥ <input id="PTDuration" class="form-control d-inline w-25" /> weeks, with persistent functional limitation despite treatment.
-                                            </p>
-                                            <p>
-                                                Accordingly, further diagnostic evaluation and/or discussion of escalation of care, including interventional or surgical options, may be appropriate if supported by physical examination and imaging findings.
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -1466,6 +1482,72 @@
                                                     <input id="LShElbowPronation" class="form-control d-inline" style="width:70px;" /> /50
                                                 </p>
                                             </div>
+
+                                            <div class="imaging-section">
+
+                                                <p>
+                                                    <strong>IMAGING:</strong>
+                                                </p>
+
+                                                <p>
+                                                    X-ray done in the office of
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="XrayOffice" value="R/Sh"> R/Sh
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="XrayOffice" value="L/RSh"> L/RSh
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="XrayOffice" value="Right Knee"> Right Knee
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="XrayOffice" value="Left Knee"> Left Knee
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="XrayOffice" value="Right Hip"> Right Hip
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="XrayOffice" value="Left Hip"> Left Hip
+                                                    </label>
+
+                                                    <input id="XrayViews"
+                                                           class="form-control d-inline"
+                                                           style="width:100px"
+                                                           placeholder="Views" />
+
+                                                    views.
+                                                </p>
+
+                                                <p>
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti"
+                                                               name="ImagingFindings"
+                                                               value="No acute fracture or dislocation">
+                                                        Shows no acute fracture or dislocation.
+                                                    </label>
+
+                                                    It shows
+
+                                                    <input id="ImagingFindingsDetails"
+                                                           class="form-control d-inline"
+                                                           style="min-width:350px; width:50%;" />
+                                                </p>
+
+                                                <p>
+                                                    <strong>MRI / CT:</strong>
+
+                                                    <textarea id="MRICTDetails"
+                                                              class="form-control"
+                                                              rows="3"></textarea>
+                                                </p>
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1492,10 +1574,189 @@
                                     </h2>
                                     <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            <a href="javascript:void(0)" onclick="fnshowTreatment()">Add / Edit </a>
+                                            @*  <a href="javascript:void(0)" onclick="fnshowTreatment()">Add / Edit </a>
                                             <br />
                                             <div id="divTreatment">
                                                 @Html.Raw(ViewBag.TreatmentHTML)
+                                            </div> *@
+
+                                            <div class="treatment-plan">
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Plan Non-surgical"> Plan Non-surgical</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Plan Surgical"> Plan Surgical</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="R/SH"> R/SH</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="L/SH"> L/SH</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="R/KN"> R/KN</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="L/KN"> L/KN</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="R/HIP"> R/HIP</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="L/HIP"> L/HIP</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Surgical Risk"> Surgical Risk</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Imaging reviewed"> Imaging studies and clinical examinations were reviewed with the patient</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Treatment options discussed"> All treatment options discussed with the patient.</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Continue anti-inflammatory medications"> Continue anti-inflammatory medications p.r.n.</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Start Physical Therapy"> Start Physical Therapy.</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Continue physical therapy"> Continue physical therapy</label>
+
+                                                    <input id="ContinuePT" class="form-control d-inline w-25" placeholder="Specify" />
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Recommend steroid injection"> Recommend steroid injection for pain management</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionStatus" value="Patient accepts"> Patient accepts</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionStatus" value="Patient refused injection"> Patient refused injection</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/SH"> R/SH</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/SH"> L/SH</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/KN"> R/KN</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/KN"> L/KN</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/HIP"> R/HIP</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/HIP"> L/HIP</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/ANK"> R/ANK</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/ANK"> L/ANK</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/WRI"> R/WRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/WRI"> L/WRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/ELB"> R/ELB</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/ELB"> L/ELB</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Cortisone injection template"> Cortisone injection template</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Will get authorization"> Will get authorization</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="R HIP/L HIP ultrasound guided cortisone injection"> R HIP/L HIP ultrasound guided cortisone injection</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Recommend gel injection"> Recommend gel injection to</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="GelInjection" value="R KN"> R KN</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="GelInjection" value="L KN"> L KN</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Will get authorization"> Will get authorization</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Euflexxa template"> Euflexxa template</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Patient received gel injection"> Patient received the</label>
+
+                                                    <input id="GelInjectionNo" class="form-control d-inline" style="width:80px" placeholder="#" />
+
+                                                    gel injection to the
+
+                                                    <label><input type="checkbox" class="chkMulti" name="GelInjectionOffice" value="R KN"> R KN</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="GelInjectionOffice" value="L KN"> L KN</label>
+
+                                                    in the office today.
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Euflexxa template"> Euflexxa template</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="MRI ordered"> MRI ordered</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/SH"> R/SH</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/SH"> L/SH</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/KN"> R/KN</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/KN"> L/KN</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/HIP"> R/HIP</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/HIP"> L/HIP</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/ANK"> R/ANK</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/ANK"> L/ANK</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/WRI"> R/WRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/WRI"> L/WRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/ELB"> R/ELB</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/ELB"> L/ELB</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="C Spine"> C Spine</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L Spine"> L Spine</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="X-ray ordered"> X-ray ordered</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/SH"> R/SH</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/SH"> L/SH</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/KN"> R/KN</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/KN"> L/KN</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/HIP"> R/HIP</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/HIP"> L/HIP</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/ANK"> R/ANK</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/ANK"> L/ANK</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/WRI"> R/WRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/WRI"> L/WRI</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Follow-up"> Follow-up in</label>
+
+                                                    <input id="FollowUpDuration" class="form-control d-inline" style="width:100px" />
+
+                                                    <label><input type="checkbox" class="chkMulti" name="FollowUpType" value="weeks"> Weeks</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="FollowUpType" value="months"> Months</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="FollowUpType" value="PRN"> PRN</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="FollowUpType" value="After imaging completed"> After imaging studies are completed</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Proceed with surgery"> Proceed with surgery</label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Wants to think about it"> Wants to think about it</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Patient consents to surgery"> Patient consents to surgery</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Medical clearance needed"> Medical clearance needed prior to Surgery</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="WC authorization needed"> W/C authorization needed prior to Surgery</label>
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="Refer to pain management/spine surgeon"> Refer to pain management/spine surgeon for</label>
+
+                                                    <input id="PainManagementReason" class="form-control d-inline w-25" placeholder="Specify" />
+                                                </p>
+
+                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlan" value="PA statement"> PA statement</label>
+                                                </p>
+
                                             </div>
                                         </div>
                                     </div>
