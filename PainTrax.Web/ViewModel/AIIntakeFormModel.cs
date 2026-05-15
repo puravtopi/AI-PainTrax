@@ -161,6 +161,224 @@
         public string TreatmentDelimitDesc { get; set; }
         public string Treatment { get; set; }
         public string AccidentAudio { get; set; }
+
+
+        // Saranya
+        public string Occupation { get; set; }
+        public string YesWork { get; set; }
+        public string degree { get; set; }
+        public string Asymptomatic { get; set; }
+        public string Priortrauma { get; set; }
+        public List<string> PatientAccidentType { get; set; }
+        public string SeatBelt { get; set; }
+        public string Airbagsdeployed { get; set; }
+        public string LOC { get; set; }
+        public string Bruises { get; set; }
+        public string privatecar { get; set; }
+        public string OtherBodyPart { get; set; }
+        public string PT { get; set; }
+        public string PProcedures { get; set; }
+        public string NeckPain { get; set; }
+        public List<string> NeckStiffness { get; set; }
+        public string NeckDiffturning { get; set; }
+        public string Neckrotatinghead { get; set; }
+        public string NeckDiffgrippinghand { get; set; }
+        public string Necksustained { get; set; }
+        public string NeckRadiatesTo { get; set; }
+        public List<string> NeckRadiates { get; set; }
+        public List<string> NeckAssociated { get; set; }
+        public List<string> NeckWorsens { get; set; }
+        public List<string> NeckImproves { get; set; }
+
+        public string MidbackSection { get; set; }
+        public List<string> mdbackPain { get; set; }
+        public string mdbackDiffsleeping { get; set; }
+        public string mdbackDifflifting { get; set; }
+        public string mdbackDiffbending { get; set; }
+        public string mdbacksustained { get; set; }
+        public string MidbackRadiatesTo { get; set; }
+        public List<string> MidbackRadiates { get; set; }
+        public List<string> MidbackWorsens { get; set; }
+        public List<string> MidbackImproves { get; set; }
+
+        public string LowBackPain { get; set; }
+        public List<string> lbackPain { get; set; }
+        public string lbackDiffsleeping { get; set; }
+        public string lbackDifflifting { get; set; }
+        public string lbackDiffbending { get; set; }
+        public string lbacksustained { get; set; }
+        public string LowBackRadiatesTo { get; set; }
+        public List<string> LowBackRadiates { get; set; }
+        public List<string> LowBackAssociated { get; set; }
+        public List<string> LowBackWorsens { get; set; }
+        public List<string> LowBackImproves { get; set; }
+
+        public string GeneralNormal { get; set; }
+        public string GeneralROS { get; set; }
+        public string SkinNormal { get; set; }
+        public string SkinROS { get; set; }
+        public string HEENTNormal { get; set; }
+        public string HEENTROS { get; set; }
+
+        public string NeckNormal { get; set; }
+        public string NeckROS { get; set; }
+        public string CardiovascularNormal { get; set; }
+        public string CardiovascularROS { get; set; }
+        public string RespiratoryNormal { get; set; }
+        public string RespiratoryROS { get; set; }
+
+        public string GastrointestinalNormal { get; set; }
+        public string GastrointestinalROS { get; set; }
+        public string UrinaryNormal { get; set; }
+        public string UrinaryROS { get; set; }
+        public string PeripheralvascularNormal { get; set; }
+        public string PeripheralvascularROS { get; set; }
+
+        public string MusculoskeletalNormal { get; set; }
+        public string MusculoskeletalROS { get; set; }
+        public string NeurologicalNormal { get; set; }
+        public string NeurologicalROS { get; set; }
+        public string EndocrineNormal { get; set; }
+        public string EndocrineROS { get; set; }
+
+        public List<string> CervicalPE { get; set; }
+        public string Palpation { get; set; }
+        public string PETriggerCervical { get; set; }
+        public string PEMuscleCervical { get; set; }
+
+        public string CervicalFlexion { get; set; }
+        public string CervicalExtension { get; set; }
+        public string CervicalLeftRotation { get; set; }
+        public string CervicalRightRotation { get; set; }
+        public string CervicalLeftLateralbending { get; set; }
+        public string CervicalrightLateralbending { get; set; }
+
+        public string CERVICALRightDeltoid { get; set; }
+        public string CERVICALRightBiceps { get; set; }
+        public string CERVICALRightTriceps { get; set; }
+        public string CERVICALRightWristext { get; set; }
+        public string CERVICALRightWristflex { get; set; }
+        public string CERVICALRightIntrinsic { get; set; }
+        public string CERVICALLEFTDeltoid { get; set; }
+        public string CERVICALLEFTBiceps { get; set; }
+        public string CERVICALLEFTTriceps { get; set; }
+        public string CERVICALLeftWristext { get; set; }
+        public string CERVICALLEFTWristflex { get; set; }
+        public string CERVICALLEFTIntrinsic { get; set; }
+
+        public string CERVICALRightC5 { get; set; }
+        public string CERVICALRightC6 { get; set; }
+        public string CERVICALRightC7 { get; set; }
+        public string CERVICALRightC8 { get; set; }
+        public string CERVICALRightT1 { get; set; }
+
+        public string CERVICALLeftC5 { get; set; }
+        public string CERVICALLeftC6 { get; set; }
+        public string CERVICALLeftC7 { get; set; }
+        public string CERVICALLeftC8 { get; set; }
+        public string CERVICALLeftT1 { get; set; }
+
+        public string CevicalSpurling { get; set; }
+        public string CevicalSpurlingRight { get; set; }
+        public string CERVICALRighttxt { get; set; }
+        public string CERVICALLefttxt { get; set; }
+
+        public string CevicalCompression { get; set; }
+        public string CevicalCompressionRight { get; set; }
+
+        public string THORACICBicepstendonright { get; set; }
+        public string THORACICBicepstendonleft { get; set; }
+
+        public string THORACICTricepstendonright { get; set; }
+        public string THORACICTricepstendonleft { get; set; }
+
+        public List<string> THORACICPE { get; set; }
+        public string THORACICPalpation { get; set; }
+        public string THORACICPalpationmidline { get; set; }
+        public string PETriggerTHORACIC { get; set; }
+        public string PEMuscleTHORACIC { get; set; }
+
+        public string THORACICFlexion { get; set; }
+        public string THORACICExtension { get; set; }
+        public string THORACICLeftRotation { get; set; }
+        public string THORACICRightRotation { get; set; }
+        public string THORACICLeftLateralbending { get; set; }
+        public string THORACICrightLateralbending { get; set; }
+
+        public List<string> LUMBARPE { get; set; }
+        public string LUMBARPalpation { get; set; }
+        public string LUMBARPalpationmidline { get; set; }
+        public string PETriggerLUMBAR { get; set; }
+        public string PEMuscleLUMBAR { get; set; }
+
+        public string LUMBARFlexion { get; set; }
+        public string LUMBARExtension { get; set; }
+        public string LUMBARLeftRotation { get; set; }
+        public string LUMBARRightRotation { get; set; }
+        public string LUMBARLeftLateralbending { get; set; }
+        public string LUMBARightLateralbending { get; set; }
+
+        public string LUMBARRightIliopsoas { get; set; }
+        public string LUMBARRightQuadriceps { get; set; }
+        public string LUMBARRightHamstrings { get; set; }
+        public string LUMBARRightTibant { get; set; }
+        public string LUMBARRightEHL { get; set; }
+        public string LUMBARRightGS { get; set; }
+
+        public string LUMBARLEFTIliopsoas { get; set; }
+        public string LUMBARLEFTQuadriceps { get; set; }
+        public string LUMBARLEFTHamstrings { get; set; }
+        public string LUMBARLEFTTibant { get; set; }
+        public string LUMBARLEFTEHL { get; set; }
+        public string LUMBARLEFTGS { get; set; }
+
+        public string LUMBARRightL2 { get; set; }
+        public string LUMBARRightL3 { get; set; }
+        public string LUMBARRightL4 { get; set; }
+        public string LUMBARRightL5 { get; set; }
+        public string LUMBARRightS1 { get; set; }
+
+        public string LUMBARLeftL2 { get; set; }
+        public string LUMBARLeftL3 { get; set; }
+        public string LUMBARLeftL4 { get; set; }
+        public string LUMBARLeftL5 { get; set; }
+        public string LUMBARLeftS1 { get; set; }
+
+        public string LumbarStraight { get; set; }
+        public string LumbarStraightRight { get; set; }
+        public string LumbarStraightRighttxt { get; set; }
+        public string LumbarStraightLefttxt { get; set; }
+
+        public string LumbarFacetloading { get; set; }
+        public string LumbarFacetloadingRight { get; set; }
+
+        public string LUMBARPatellartendonright { get; set; }
+        public string LUMBARPatellartendonleft { get; set; }
+
+        public string LUMBARAchillestendonright { get; set; }
+        public string LUMBARAchillestendonleft { get; set; }
+
+        public List<string> GAIT { get; set; }
+
+        public List<string> PlanConservativeTx { get; set; }
+        public string PlanStart { get; set; }
+
+        public List<string> PlanPT { get; set; }
+        public List<string> MedicationRx { get; set; }
+        public List<string> PlanMedication { get; set; }
+        public List<string> PlanOrderMRI { get; set; }
+        public List<string> PlanMRI { get; set; }
+        public List<string> PlanCT { get; set; }
+        public List<string> PlanXray { get; set; }
+        public string PlanOrder { get; set; }
+        public List<string> PlanOrderEMG { get; set; }
+        public List<string> PlanEMG { get; set; }
+        public List<string> PlanNCV { get; set; }
+        public List<string> PlanUTPI { get; set; }
+        public List<string> PlanRecommendation { get; set; }
+        public List<string> Recommendation { get; set; }
+        public string FollowUpOther { get; set; }
+        public string FollowUp { get; set; }
     }
 }
 
