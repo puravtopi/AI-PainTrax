@@ -33,6 +33,7 @@ namespace PainTrax.Web.Controllers
         private readonly Common _commonservices = new Common();
         private readonly IntakeService service = new IntakeService();
         private readonly LocationsService _locservices = new LocationsService();
+        private readonly ProviderService _povservices = new ProviderService();
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientService _patientservices = new PatientService();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
@@ -724,7 +725,7 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index", "Visit");
         }
 
-        public IActionResult AIInitialIntake(int? locId, int? id)
+        public IActionResult AIInitialIntake(int? locId, int? id, string providerName)
         {
             var templatePath = $"{Request.Scheme}://{Request.Host}/v2/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
             //var templatePath = $"{Request.Scheme}://{Request.Host}/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
@@ -742,6 +743,9 @@ namespace PainTrax.Web.Controllers
             var loc = _locservices.GetOne(objLoc);
 
             ViewBag.LocName = loc?.location;
+            ViewBag.ProviderName = providerName == "--Select Provider--" ? "" : providerName;
+
+
             ViewBag.CmpId = cmpid.ToString();
 
             var _dataTreatment = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
@@ -914,6 +918,17 @@ namespace PainTrax.Web.Controllers
                 };
                 result = service.SaveInitialIntakeAI(initialIntakeAI);
 
+                var InjuryType = "MM";
+
+
+                if (model.InjuryType == "work-related")
+                    InjuryType = "WC";
+                else if (model.InjuryType == "lien")
+                    InjuryType = "Lien";
+                else
+                    InjuryType = model.InjuryType;
+
+
                 if (initialIntakeAI.Id == 0)
                 {
                     if (result != "0")
@@ -945,15 +960,6 @@ namespace PainTrax.Web.Controllers
 
                         if (patientId > 0)
                         {
-                            var InjuryType = "MM";
-
-                            if (model.InjuryType == "work-related")
-                                InjuryType = "WC";
-                            else if (model.InjuryType == "lien")
-                                InjuryType = "Lien";
-                            else
-                                InjuryType = model.InjuryType;
-
 
                             var objIE = new tbl_patient_ie()
                             {
@@ -998,9 +1004,20 @@ namespace PainTrax.Web.Controllers
 
                                 _ieService.InsertOtherPage(objOther);
                             }
-
                         }
                     }
+                }
+                else
+                {
+                    var objIE = new tbl_patient_ie()
+                    {
+
+                        doa = string.IsNullOrEmpty(model.DOA) ? null : Convert.ToDateTime(model.DOA),
+                        doe = string.IsNullOrEmpty(model.DOE) ? null : Convert.ToDateTime(model.DOE),
+                        compensation = InjuryType,
+                        intakeid = initialIntakeAI.Id
+                    };
+                    _ieService.UpdateFromIntake(objIE);
                 }
 
                 //return RedirectToAction("Index", "Visit");
@@ -1214,7 +1231,7 @@ namespace PainTrax.Web.Controllers
                 bodyparts = bodyparts.Replace("_", " ");
                 bodyparts = bodyparts.TrimEnd();
                 ViewBag.BodyPart = bodyparts.ToUpper();
-                var _bodyparts = _commonservices.GetBodyPart(bodyparts);
+                var _bodyparts = _commonservices.GetBodyPartIntake(bodyparts);
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
                 var formatted = string.Join("','", _bodyparts.Split(',').Select(x => x.Trim()));
@@ -1223,7 +1240,7 @@ namespace PainTrax.Web.Controllers
 
                 string result = parts.Length > 1 ? parts[1] : parts[0];
 
-                string cnd = " and d.cmp_id=" + cmpid + " and (d.Description like '%" + _bodyparts + "%') order by d.display_order ASC";
+                string cnd = " and d.cmp_id=" + cmpid + " and (d.Description like '%" + _bodyparts + "%' or d.Description like '%" + bodyparts + "%') order by d.display_order ASC";
 
                 var data = _diagcodesService.GetAllWithGroups(cnd);
 
@@ -1701,7 +1718,7 @@ namespace PainTrax.Web.Controllers
                 if (!string.IsNullOrEmpty(cc_rsh_difficulty))
                     cc_rsh = cc_rsh + "The patient has difficulty " + cc_rsh_difficulty + " on the right shoulder. ";
 
-                if (model.RShImprove.Count > 0)
+                if (model.RShImprove?.Count > 0)
                     cc_rsh = cc_rsh + "There has been improvement with " + string.Join(", ", model.RShImprove) + ".";
                 else
                     cc_rsh = cc_rsh + "There has been no improvement with physical therapy.";
@@ -1722,7 +1739,7 @@ namespace PainTrax.Web.Controllers
                 if (!string.IsNullOrEmpty(cc_lsh_difficulty))
                     cc_lsh = cc_lsh + "The patient has difficulty " + cc_lsh_difficulty + " on the left shoulder. ";
 
-                if (model.LShImprove.Count > 0)
+                if (model.LShImprove?.Count > 0)
                     cc_lsh = cc_lsh + "There has been improvement with " + string.Join(", ", model.LShImprove) + ".";
                 else
                     cc_lsh = cc_lsh + "There has been no improvement with physical therapy.";
@@ -1744,7 +1761,7 @@ namespace PainTrax.Web.Controllers
                 if (!string.IsNullOrEmpty(cc_rkn_difficulty))
                     cc_rkn = cc_rkn + "The patient has difficulty " + cc_rkn_difficulty.TrimStart(',') + " on the right knee. ";
 
-                if (model.RKnImprove.Count > 0)
+                if (model.RKnImprove?.Count > 0)
                     cc_rkn = cc_rkn + "There has been improvement with " + string.Join(", ", model.RKnImprove) + ".";
                 else
                     cc_rkn = cc_rkn + "There has been no improvement with physical therapy.";
@@ -1752,7 +1769,7 @@ namespace PainTrax.Web.Controllers
                 //left knee
                 if (!string.IsNullOrEmpty(model.LKnPain))
                     cc_lkn = "The patient’s left knee pain level is " + model.LKnPain + "/10. ";
-                if (model.LKnSymptoms.Count > 0)
+                if (model.LKnSymptoms?.Count > 0)
                     cc_lkn = cc_lkn + "The patient complains of " + string.Join(", ", model.LKnSymptoms) + ". ";
 
 
@@ -1766,7 +1783,7 @@ namespace PainTrax.Web.Controllers
                 if (!string.IsNullOrEmpty(cc_lkn_difficulty))
                     cc_lkn = cc_lkn + "The patient has difficulty " + cc_lkn_difficulty.TrimStart(',') + " on the left knee. ";
 
-                if (model.LKnImprove.Count > 0)
+                if (model.LKnImprove?.Count > 0)
                     cc_lkn = cc_lkn + "There has been improvement with " + string.Join(", ", model.LKnImprove) + ".";
                 else
                     cc_lkn = cc_lkn + "There has been no improvement with physical therapy.";

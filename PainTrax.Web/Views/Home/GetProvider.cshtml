@@ -80,7 +80,7 @@
                                             <option value="#" selected>--Select--</option>
                                             <option value="@Url.Action("AIInitialIntake", "IntakeForm")">Initial</option>
                                             <option value="@Url.Action("Create", "FollowupForm")">Follow Up</option>
-                                          
+
                                         </select>
 
                                     </div>
@@ -101,7 +101,8 @@
             debugger
         var baseUrl = $(this).val(); // AIInitialIntake URL
         var locId = $('#locationid').val();
-        
+        var providerName = $("#providerid option:selected").text();
+
         if(locId==='0')
         {
             alert('Please select location');
@@ -110,7 +111,7 @@
         else
         {
             if (baseUrl) {
-                var finalUrl = baseUrl + '?locid=' + locId;
+                var finalUrl = baseUrl + '?locid=' + locId+'&providerName='+ encodeURIComponent(providerName);
                 // Redirect
                 window.location.href = finalUrl;
             }

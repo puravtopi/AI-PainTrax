@@ -80,6 +80,15 @@ public class PatientIEService : ParentService
         return datalist;
     }
 
+    public vm_patient_ie? GetOnebyPatientIdNew(int patient_id)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("select * from vm_patient_ie where patient_id=@patient_id ", conn);
+        cm.Parameters.AddWithValue("@patient_id", patient_id);
+        var datalist = ConvertDataTable<vm_patient_ie>(GetData(cm)).FirstOrDefault();
+        return datalist;
+    }
+
     public int Insert(tbl_patient_ie data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient_ie
@@ -171,6 +180,24 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
         cm.Parameters.AddWithValue("@physicianid", data.physicianid);
+        Execute(cm);
+    }
+
+    public void UpdateFromIntake(tbl_patient_ie data)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET
+		
+		doe=@doe,
+		doa=@doa,
+	    compensation=@compensation
+			where intakeid=@intakeid", conn);
+        cm.Parameters.AddWithValue("@intakeid", data.intakeid);
+       
+        cm.Parameters.AddWithValue("@doe", data.doe);
+        cm.Parameters.AddWithValue("@doa", data.doa);
+       
+        cm.Parameters.AddWithValue("@compensation", data.compensation);
+      
         Execute(cm);
     }
 

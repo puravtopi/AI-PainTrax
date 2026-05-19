@@ -89,7 +89,7 @@
         public string Mechanism { get; set; }
         public string MedsOther { get; set; }
         public string PreInjury { get; set; }
-        public List<string> Transport { get; set; }
+        public string Transport { get; set; }
         public List<string> Complaints { get; set; }
         public string Compliance { get; set; }
         public string InjuryType { get; set; }

@@ -16,16 +16,56 @@
             <div class="row">
                 <!-- LEFT: FORM -->
                 <div class="col-md-12 col-12" id="formSection" name="formSection">
-                    <button id="openPreview"
-                            class="btn btn-sm btn-outline-primary mt-3"
-                            style="display:none;">
-                        Show Preview
-                    </button>
+                    <div class="d-flex justify-content-end mb-2">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Export
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                @*   <li><a class="dropdown-item" href="javascript:void(0)" onclick="fnExportDOC()">Export as DOC</a></li> *@
+                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="downloadPDF()">Export as PDF</a></li>
+                            </ul>
+                        </div>
+                    </div>
                     <button id="uploadDL"
-                            class="btn btn-sm btn-outline-primary mt-3" onclick="fnshowDLPopup()">
+                            class="btn btn-sm btn-outline-primary mt-3" onclick="fnshowDLPopup()" style="display:none;">
                         Upload Driving License
                     </button>
+                    <!-- Loader -->
+                    <div id="pdfLoader" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,0.8);
+    z-index:99999;
+    text-align:center;
+">
+                        <div style="
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+    ">
+                            <div class="spinner-border text-primary" role="status"
+                                 style="width:4rem;height:4rem;">
+                            </div>
+
+                            <div style="margin-top:15px;font-size:18px;font-weight:bold;">
+                                Generating PDF...
+                            </div>
+                        </div>
+                    </div>
                     <form method="post" id="patientForm" name="patientForm" class="container my-4">
+
+
+
+
+
+
+
                         <input type="hidden" id="hdId" name="hdId" value="@ViewBag.Id" />
                         <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
                         <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
@@ -52,7 +92,9 @@
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            <br />
+
+                                            <h6>Provider Name:  @ViewBag.ProviderName</h6>
+
                                             <!-- Patient Info -->
                                             <p>
                                                 Patient LName:
@@ -80,6 +122,7 @@
                                                 <span id="lblLocation">
                                                     @ViewBag.LocName
                                                 </span>
+
                                             </p>
 
                                             <p>
@@ -96,23 +139,27 @@
                                             <div class="select-group">
                                                 <strong>Case Type:</strong>
                                                 <label>
-                                                    <input type="radio" name="CaseType" value="NF">
+                                                    <input type="radio" name="InjuryType" value="NF">
                                                     <span class="select-btn">NF</span>
                                                 </label>
 
                                                 <label>
-                                                    <input type="radio" name="CaseType" value="WC">
+                                                    <input type="radio" name="InjuryType" value="WC">
                                                     <span class="select-btn">WC</span>
                                                 </label>
 
                                                 <label>
-                                                    <input type="radio" name="CaseType" value="MM">
+                                                    <input type="radio" name="InjuryType" value="MM">
                                                     <span class="select-btn">MM</span>
                                                 </label>
 
                                                 <label>
-                                                    <input type="radio" name="CaseType" value="PI">
+                                                    <input type="radio" name="InjuryType" value="PI">
                                                     <span class="select-btn">PI</span>
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="InjuryType" value="LIEN">
+                                                    <span class="select-btn">LIEN</span>
                                                 </label>
                                             </div>
                                             <p>
@@ -279,7 +326,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger-side T-boned"> <span class="select-btn">Passenger-side T-boned</span>   </label>
                                                     <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger sideswipe"> <span class="select-btn">Passenger sideswipe</span></label>
                                                 </div>
-                                                <p>
+                                                 <p>
                                                     Please describe
                                                     <textarea id="MMDescription" name="MMDescription" class="form-control d-inline" style="width:95%"></textarea>
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MMDescription')"></i>
@@ -287,6 +334,13 @@
 
 
 
+                                            </div>
+                                            <div id="divPI" style="display:none;">
+                                                <p>
+                                                    Please describe
+                                                    <textarea id="MMDescription" name="PIDescription" class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PIDescription')"></i>
+                                                </p>
                                             </div>
                                             <div id="divWC" style="display:none;">
                                                 <!-- Paragraph Description -->
@@ -303,9 +357,9 @@
 
 
                                             </div>
-                                            <div class="accident-impact-section">
+                                            <div class="accident-impact-section mmClass">
 
-                                                <div class="select-group">
+                                                <div class="select-group ">
                                                     <strong>At the time of the accident, did you have direct impact on any body part?</strong>
 
                                                     <label>
@@ -327,7 +381,7 @@
                                                               rows="2"></textarea>
                                                 </p>
 
-                                                <div class="select-group">
+                                                <div class="select-group ">
                                                     <strong>Did you lose consciousness?</strong>
 
 
@@ -352,7 +406,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="select-group">
+                                            <div class="select-group mmClass">
                                                 EMS arrived:
                                                 <label>
                                                     <input type="radio" class="chkMulti" name="EMS" value="Yes">
@@ -411,6 +465,7 @@
                                                         <input type="radio" class="chkMulti" name="Transport" value="Friend">
                                                         <span class="select-btn">Friend</span>
                                                     </label>
+                                                    <input id="TransportOther" name="TransportOther" class="form-control d-inline w-50" />
                                                 </div>
                                             </div>
                                             <div class="select-group">
@@ -818,7 +873,7 @@
                                                 </label>
 
                                                 <label>
-                                                    <input type="checkbox" class="chkMulti" name="ROS" value="ringing in ears" checked>
+                                                    <input type="checkbox" class="chkMulti" name="ROS" value="ringing in ears">
                                                     <span class="select-btn">Ringing in ears</span>
                                                 </label>
 
@@ -1170,7 +1225,7 @@
                                                         <span class="select-btn">twisting.</span>
                                                     </label>
                                                 </div>
-                                                 <div class="select-group">
+                                                <div class="select-group">
                                                     Neck pain improves with
                                                     <label>
                                                         <input type="checkbox" class="chkMulti" name="NeckImproves" value="Resting">
@@ -1209,34 +1264,34 @@
                                                     <input id="MbPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MbPain')"></i>/10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Intermittent"> Intermittent</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Sharp"> Sharp</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Electric"> Electric</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Shooting"> Shooting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Throbbing"> Throbbing</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Pulsating"> Pulsating</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Dull"> Dull</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Achy"> Achy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Constant">  <span class="select-btn">Therapy</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Intermittent">  <span class="select-btn">Intermittent</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Sharp">  <span class="select-btn">Sharp</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Electric">  <span class="select-btn">Electric</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Shooting">  <span class="select-btn">Shooting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Throbbing">  <span class="select-btn">Throbbing</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Pulsating">  <span class="select-btn">Pulsating</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Dull">  <span class="select-btn">Dull</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbSymptoms" value="Achy">  <span class="select-btn">Achy</span></label>
                                                 </div>
 
-                                                <div class="select-group>
+                                                <div class="select-group">
                                                     Mid back worsens with
-                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sitting"> sitting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="standing"> standing</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="bending forward"> bending forward</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="bending backwards"> bending backwards</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sleeping"> sleeping</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="twisting"> twisting.</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="lifting"> lifting.</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sitting">  <span class="select-btn">sitting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="standing">  <span class="select-btn">standing</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="bending forward">  <span class="select-btn">bending forward</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="bending backwards"> <span class="select-btn">bending backwards</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sleeping">  <span class="select-btn">sleeping</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="twisting">  <span class="select-btn">twisting</span>.</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="lifting">  <span class="select-btn">lifting</span>.</label>
                                                 </div>
                                                 <div class="select-group">
                                                     Mid back pain improves with
-                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Resting"> Resting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Medication"> Medication</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Therapy"> Therapy</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Sleeping"> Sleeping</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Others"> Others</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Resting"> <span class="select-btn">Resting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Medication"> <span class="select-btn">Medication</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Therapy"> <span class="select-btn">Therapy</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Sleeping"> <span class="select-btn">Sleeping</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="MbImproves" value="Others"> <span class="select-btn">Others</span></label>
                                                     <input id="MbImprovesOther" class="form-control d-inline " style="width:300px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MbImprovesOther')"></i>
                                                 </div>
@@ -1250,61 +1305,61 @@
                                                     <input id="LBPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBPain')"></i>/10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Intermittent"> Intermittent</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Sharp"> Sharp</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Electric"> Electric</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Shooting"> Shooting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Throbbing"> Throbbing</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Pulsating"> Pulsating</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Dull"> Dull</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Achy"> Achy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Sharp"> <span class="select-btn">Sharp</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Electric"> <span class="select-btn">Electric</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Shooting"> <span class="select-btn">Shooting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Throbbing"> <span class="select-btn">Throbbing</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Pulsating"> <span class="select-btn">Pulsating</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Dull"> <span class="select-btn">Dull</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Achy"> <span class="select-btn">Achy</span></label>
                                                 </div>
                                                 <div class="select-group">
                                                     Lower back pain radiates to
-                                                    <label><input type="radio" name="LBRadiatesTo" value="Left"> L</label>
-                                                    <label><input type="radio" name="LBRadiatesTo" value="Right"> R</label>
-                                                    <label><input type="radio" name="LBRadiatesTo" value="Bilateral"> B</label>
+                                                    <label><input type="radio" name="LBRadiatesTo" value="Left"> <span class="select-btn">L</span></label>
+                                                    <label><input type="radio" name="LBRadiatesTo" value="Right"> <span class="select-btn">R</span></label>
+                                                    <label><input type="radio" name="LBRadiatesTo" value="Bilateral"> <span class="select-btn">B</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="hip"> hip</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="thigh"> thigh</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="knee"> knee</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="leg"> leg</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="ankle"> ankle</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="foot"> foot. </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="hip"> <span class="select-btn">hip</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="thigh"> <span class="select-btn">thigh</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="knee"> <span class="select-btn">knee</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="leg"> <span class="select-btn">leg</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="ankle"> <span class="select-btn">ankle</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="foot"> <span class="select-btn">foot</span>. </label>
                                                     Lower back pain is associated with
                                                     <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="numbness"> numbness</label>
                                                     <label>
                                                         <input type="checkbox" class="chkMulti" name="LBAssociated" value="forearm"> tingling to
-                                                        <label><input type="radio" name="LBAssociatedTo" value="Left"> L</label>
-                                                        <label><input type="radio" name="LBAssociatedTo" value="Right"> R</label>
-                                                        <label><input type="radio" name="LBAssociatedTo" value="Bilateral"> B</label>
+                                                        <label><input type="radio" name="LBAssociatedTo" value="Left">  <span class="select-btn">L</span></label>
+                                                        <label><input type="radio" name="LBAssociatedTo" value="Right">  <span class="select-btn">R</span></label>
+                                                        <label><input type="radio" name="LBAssociatedTo" value="Bilateral">  <span class="select-btn">B</span></label>
                                                     </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="hip"> hip</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="thigh"> thigh</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="knee"> knee</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="leg"> leg</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="ankle"> ankle</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="foot"> foot. </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="hip"> <span class="select-btn">hip</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="thigh"> <span class="select-btn">thigh</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="knee"> <span class="select-btn">knee</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="leg"> <span class="select-btn">leg</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="ankle"> <span class="select-btn">ankle</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="foot"> <span class="select-btn">foot</span>. </label>
                                                 </div>
                                                 <div class="select-group">
                                                     Lower back pain worsens with
-                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sitting"> sitting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="standing"> standing</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="bending forward"> bending forward</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="bending backwards"> bending backwards</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sleeping"> sleeping</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="twisting right"> twisting right</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="twisting left"> twisting left</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="lifting"> lifting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sitting"> <span class="select-btn">sitting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="standing"> <span class="select-btn">standing</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="bending forward"><span class="select-btn">bending forward</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="bending backwards"> <span class="select-btn">bending backwards</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sleeping"> <span class="select-btn">sleeping</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="twisting right"> <span class="select-btn">twisting right</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="twisting left"> <span class="select-btn">twisting left</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="lifting"> <span class="select-btn">lifting</span></label>
                                                 </div>
                                                 <div class="select-group">
                                                     Lower back pain improves with
-                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Resting"> Resting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Medication"> Medication</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Therapy"> Therapy</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Sleeping"> Sleeping</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Others"> Others</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Resting"> <span class="select-btn">Resting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Medication"> <span class="select-btn">Medication</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Therapy"> <span class="select-btn">Therapy</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Sleeping"> <span class="select-btn">Sleeping</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBImproves" value="Others"> <span class="select-btn">Others</span></label>
                                                     <input id="LBImprovesOther" class="form-control d-inline " style="width:300px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBImprovesOther')"></i>
                                                 </div>
@@ -1318,27 +1373,55 @@
                                                     <input id="RShPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShPain')"></i>/10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Constant">  <span class="select-btn">Constant</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Intermittent">  <span class="select-btn">Intermittent</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Sharp"> Sharp</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Electric"> Electric</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Shooting"> Shooting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Throbbing"> Throbbing</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Pulsating"> Pulsating</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Dull"> Dull</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Achy"> Achy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Sharp">  <span class="select-btn">Sharp</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Electric">  <span class="select-btn">Electric</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Shooting">  <span class="select-btn">Shooting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Throbbing">  <span class="select-btn">Throbbing</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Pulsating">  <span class="select-btn">Pulsating</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Dull">  <span class="select-btn">Dull</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Achy">  <span class="select-btn">Achy</span></label>
                                                 </div>
 
                                                 <div class="select-group">
                                                     Right Shoulder pain worsens with
-                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="raising Arm"> raising Arm </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="lifting"> lifting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="working"> working</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="rotation"> rotation </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="raising arm"> raising arm </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="overhead activities"> overhead activities</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="raising Arm"> <span class="select-btn">raising Arm</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="lifting"> <span class="select-btn">lifting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="working"> <span class="select-btn">working</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="rotation"> <span class="select-btn">rotation</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShWorsens" value="overhead activities"> <span class="select-btn">overhead activities</span></label>
 
+                                                </div>
+                                                <div class="select-group">
+                                                    Right Shoulder pain improves with
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RSHImproves" value="Resting">
+                                                        <span class="select-btn">Resting</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RSHImproves" value="Medication">
+                                                        <span class="select-btn">Medication</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RSHImproves" value="Therapy">
+                                                        <span class="select-btn">Therapy</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RSHImproves" value="Sleeping">
+                                                        <span class="select-btn">Sleeping</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RSHImproves" value="Others">
+                                                        <span class="select-btn">Others</span>
+                                                    </label>
+                                                    <input id="RSHImprovesOther" class="form-control d-inline " style="width:300px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RSHImprovesOther')"></i>
                                                 </div>
 
                                             </div>
@@ -1351,29 +1434,57 @@
                                                     <input id="LShPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LShPain')"></i> /10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Constant">  <span class="select-btn">Others</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Intermittent">  <span class="select-btn">Others</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Sharp"> Sharp</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Electric"> Electric</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Shooting"> Shooting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Throbbing"> Throbbing</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Pulsating"> Pulsating</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Dull"> Dull</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Achy"> Achy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Sharp">  <span class="select-btn">Sharp</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Electric">  <span class="select-btn">Electric</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Shooting">  <span class="select-btn">Shooting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Throbbing">  <span class="select-btn">Throbbing</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Pulsating">  <span class="select-btn">Pulsating</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Dull">  <span class="select-btn">Dull</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Achy">  <span class="select-btn">Achy</span></label>
                                                 </div>
 
                                                 <div class="select-group">
                                                     Left Shoulder pain worsens with
-                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="raising Arm"> raising Arm </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="lifting"> lifting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="working"> working</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="rotation"> rotation </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="raising arm"> raising arm </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="overhead activities"> overhead activities</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="raising Arm"> <span class="select-btn">raising Arm</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="lifting"> <span class="select-btn">lifting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="working"> <span class="select-btn">working</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="rotation"> <span class="select-btn">rotation</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LShWorsens" value="overhead activities"> <span class="select-btn">overhead activities</span></label>
+
 
                                                 </div>
+                                                <div class="select-group">
+                                                    Left Shoulder pain improves with
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LSHImproves" value="Resting">
+                                                        <span class="select-btn">Resting</span>
+                                                    </label>
 
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LSHImproves" value="Medication">
+                                                        <span class="select-btn">Medication</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LSHImproves" value="Therapy">
+                                                        <span class="select-btn">Therapy</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LSHImproves" value="Sleeping">
+                                                        <span class="select-btn">Sleeping</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LSHImproves" value="Others">
+                                                        <span class="select-btn">Others</span>
+                                                    </label>
+                                                    <input id="LSHImprovesOther" class="form-control d-inline " style="width:300px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LSHImprovesOther')"></i>
+                                                </div>
                                             </div>
 
                                             <div id="rknSection" style="display:none;">
@@ -1384,28 +1495,57 @@
                                                     <input id="RKnPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RKnPain')"></i> /10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Sharp"> Sharp</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Electric"> Electric</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Shooting"> Shooting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Throbbing"> Throbbing</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Pulsating"> Pulsating</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Dull"> Dull</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Achy"> Achy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Sharp"> <span class="select-btn">Sharp</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Electric"> <span class="select-btn">Electric</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Shooting"> <span class="select-btn">Shooting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Throbbing"> <span class="select-btn">Throbbing</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Pulsating"> <span class="select-btn">Pulsating</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Dull"> <span class="select-btn">Dull</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Achy"> <span class="select-btn">Achy</span></label>
                                                 </div>
 
                                                 <div class="select-group">
                                                     Right Knee pain worsens with
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="squatting"> squatting </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="walking"> walking</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="climb stairs"> climb stairs </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="going downstairs"> going downstairs </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="standing"> standing </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="get up from chair"> get up from chair  </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="get out of car"> get out of car  </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="squatting">  <span class="select-btn">squatting</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="walking">  <span class="select-btn">walking</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="climb stairs">  <span class="select-btn">climb stairs</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="going downstairs">  <span class="select-btn">going downstairs</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="standing">  <span class="select-btn">standing</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="get up from chair">  <span class="select-btn">get up from chair</span>  </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RKnWorsens" value="get out of car"> <span class="select-btn">get out of car</span>  </label>
 
+                                                </div>
+                                                <div class="select-group">
+                                                    Right Knee pain improves with
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RKNImproves" value="Resting">
+                                                        <span class="select-btn">Resting</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RKNImproves" value="Medication">
+                                                        <span class="select-btn">Medication</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RKNImproves" value="Therapy">
+                                                        <span class="select-btn">Therapy</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RKNImproves" value="Sleeping">
+                                                        <span class="select-btn">Sleeping</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="RKNImproves" value="Others">
+                                                        <span class="select-btn">Others</span>
+                                                    </label>
+                                                    <input id="RKNImprovesOther" class="form-control d-inline " style="width:300px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RKNImprovesOther')"></i>
                                                 </div>
 
                                             </div>
@@ -1418,35 +1558,63 @@
                                                     <input id="LKnPain" class="form-control d-inline w-auto" style="width:80px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LKnPain')"></i>  /10
 
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnType" value="Constant"> Constant</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnType" value="Intermittent"> Intermittent</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Sharp"> Sharp</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Electric"> Electric</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Shooting"> Shooting</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Throbbing"> Throbbing</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Pulsating"> Pulsating</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Dull"> Dull</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Achy"> Achy</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Sharp"> <span class="select-btn">Sharp</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Electric"> <span class="select-btn">Electric</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Shooting"> <span class="select-btn">Shooting</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Throbbing"> <span class="select-btn">Throbbing</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Pulsating"> <span class="select-btn">Pulsating</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Dull"> <span class="select-btn">Dull</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Achy"> <span class="select-btn">Achy</span></label>
                                                 </div>
 
                                                 <div class="select-group">
                                                     Left Knee pain worsens with
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="squatting"> squatting </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="walking"> walking</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="climb stairs"> climb stairs </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="going downstairs"> going downstairs </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="standing"> standing </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="get up from chair"> get up from chair  </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="get out of car"> get out of car  </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="squatting">  <span class="select-btn">squatting</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="walking">  <span class="select-btn">walking</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="climb stairs">  <span class="select-btn">climb stairs</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="going downstairs">  <span class="select-btn">going downstairs</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="standing">  <span class="select-btn">standing</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="get up from chair">  <span class="select-btn">get up from chair</span>  </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LKnWorsens" value="get out of car"> <span class="select-btn">get out of car</span>  </label>
 
                                                 </div>
+                                                <div class="select-group">
+                                                    Left Knee pain improves with
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LKNImproves" value="Resting">
+                                                        <span class="select-btn">Resting</span>
+                                                    </label>
 
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LKNImproves" value="Medication">
+                                                        <span class="select-btn">Medication</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LKNImproves" value="Therapy">
+                                                        <span class="select-btn">Therapy</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LKNImproves" value="Sleeping">
+                                                        <span class="select-btn">Sleeping</span>
+                                                    </label>
+
+                                                    <label>
+                                                        <input type="checkbox" class="chkMulti" name="LKNImproves" value="Others">
+                                                        <span class="select-btn">Others</span>
+                                                    </label>
+                                                    <input id="LKNImprovesOther" class="form-control d-inline " style="width:300px" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LKNImprovesOther')"></i>
+                                                </div>
                                             </div>
 
                                             <div>
                                                 <h6 class="fw-bold">Other Complaints</h6>
-                                                <p>
+                                                <div class="select-group">
                                                     <input type="text"
                                                            id="OtherPainScale"
                                                            class="form-control d-inline"
@@ -1456,49 +1624,49 @@
 
                                                     <label style="margin-left:15px;">
                                                         <input type="checkbox" id="OtherConstant" name="OtherPainType" value="Constant" />
-                                                        Constant
+                                                        <span class="select-btn">Constant</span>
                                                     </label>
 
                                                     <label>
                                                         <input type="checkbox" id="OtherIntermittent" name="OtherPainType" value="Intermittent" />
-                                                        Intermittent
+                                                        <span class="select-btn">Intermittent</span>
                                                     </label>
 
                                                     <label>
                                                         <input type="checkbox" id="OtherSharp" name="OtherPainType" value="Sharp" />
-                                                        Sharp
+                                                        <span class="select-btn">Sharp</span>
                                                     </label>
 
                                                     <label>
                                                         <input type="checkbox" id="OtherElectric" name="OtherPainType" value="Electric" />
-                                                        Electric
+                                                        <span class="select-btn">Electric</span>
                                                     </label>
 
                                                     <label>
                                                         <input type="checkbox" id="OtherShooting" name="OtherPainType" value="Shooting" />
-                                                        Shooting
+                                                        <span class="select-btn">Shooting</span>
                                                     </label>
 
                                                     <label>
                                                         <input type="checkbox" id="OtherThrobbing" name="OtherPainType" value="Throbbing" />
-                                                        Throbbing
+                                                        <span class="select-btn">Throbbing</span>
                                                     </label>
 
                                                     <label>
                                                         <input type="checkbox" id="OtherPulsating" name="OtherPainType" value="Pulsating" />
-                                                        Pulsating
+                                                        <span class="select-btn">Pulsating</span>
                                                     </label>
 
                                                     <label>
                                                         <input type="checkbox" id="OtherDull" name="OtherPainType" value="Dull" />
-                                                        Dull
+                                                        <span class="select-btn">Dull</span>
                                                     </label>
 
                                                     <label>
                                                         <input type="checkbox" id="OtherAchy" name="OtherPainType" value="Achy" />
-                                                        Achy
+                                                        <span class="select-btn">Achy</span>
                                                     </label>
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1515,14 +1683,14 @@
                                         <div class="accordion-body">
                                             <div id="neckPE" style="display:none">
                                                 <h6 class="fw-bold">Neck</h6>
-                                                <p>
+                                                <div class="select-group">
                                                     Patient has pain and tenderness over the   <input id="NeckTenderness" class="form-control d-inline " style="width:100px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i> facet joints. Facet loading maneuvers are positive.
                                                     Spurling’s Test:
-                                                    <label><input type="radio" name="NeckSpurlingTest" value="Positive"> +</label>
-                                                    <label><input type="radio" name="NeckSpurlingTest" value="Negative"> -</label>
+                                                    <label><input type="radio" name="NeckSpurlingTest" value="Positive">  <span class="select-btn">+</span></label>
+                                                    <label><input type="radio" name="NeckSpurlingTest" value="Negative">  <span class="select-btn">-</span></label>
                                                     <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:100px" placeholder="Other" />
-                                                </p>
+                                                </div>
                                                 <table style="width:100%">
                                                     <thead>
                                                         <tr>
@@ -1599,19 +1767,19 @@
                                                     Patient has pain and tenderness over the   <input id="LBTenderness" class="form-control d-inline " style="width:100px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i> facet joints. Facet loading maneuvers are positive.
                                                 </p>
-                                                <p>
+                                                <div class="select-group">
                                                     On exam, patient has tenderness over the   <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> bilateral SI joints.
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> Faber's</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"> Gaenslen's </label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Yeoman"> Yeoman's </label> sign are positive.
-                                                </p>
-                                                <p>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> <span class="select-btn">Faber</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"><span class="select-btn">Gaenslen</span> </label>
+                                                    <label><input type="checkbox" class="chkMulti" name="LBSign" value="Yeoman"> <span class="select-btn">Yeoman</span></label> sign are positive.
+                                                </div>
+                                                <div class="select-group">
                                                     SLR Test:
-                                                    <label><input type="radio" name="LBSlrTest" value="Positive"> +</label>
-                                                    <label><input type="radio" name="LBSlrTest" value="Negative"> -</label>
+                                                    <label><input type="radio" name="LBSlrTest" value="Positive"> <span class="select-btn">+</span></label>
+                                                    <label><input type="radio" name="LBSlrTest" value="Negative"> <span class="select-btn">-</span></label>
                                                     <input id="LBSlrTestOther" class="form-control d-inline " style="width:100px" placeholder="Other" />
-                                                </p>
+                                                </div>
                                                 <table style="width:100%">
                                                     <thead>
                                                         <tr>
@@ -1636,7 +1804,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Extension</td>
-                                                            <td><input id="NeckExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                                                            <td><input id="LBExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                                                             <td>25</td>
                                                             <td></td>
                                                             <td></td>
@@ -1777,10 +1945,10 @@
                                                         <tr>
                                                             <td>Flexion</td>
                                                             <td><input id="RKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                                                            <td><input id="RKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                                                            <td>150</td>
                                                             <td>Extension</td>
                                                             <td><input id="RKNExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                                                            <td><input id="RKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                                                            <td>0</td>
                                                         </tr>
 
                                                     </tbody>
@@ -1803,11 +1971,11 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td>Flexion</td>
+                                                            <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Flexion" /></td>
                                                             <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                                                             <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                                                            <td>Extension</td>
-                                                            <td><input id="LKNExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                                                            <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Extension" /></td>
+                                                            <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                                                             <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                                                         </tr>
 
@@ -1842,20 +2010,21 @@
                                                     </tbody>
                                                 </table>
                                                 <br>
-                                                <p>
+
+                                                <div class="select-group">
                                                     <strong>GAIT:</strong>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Normal"> Normal</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Normal"> <span class="select-btn">Normal</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Antalgic"> Antalgic</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Ambulates with a cane"> Ambulates with a cane</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Ambulates with a cane"> <span class="select-btn">Ambulates with a cane</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Other"> Other</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Other"> <span class="select-btn">Other</span></label>
 
                                                     <input id="GAITOther" class="form-control d-inline w-25" style="min-width:37%" placeholder="Specify other" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOther')"></i>
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1871,7 +2040,9 @@
 
                                             <ol> <div class="row" id="divDiagnosis"></div></ol>
                                             @Html.Raw(ViewBag.Diagnosis)
-
+                                            <br>
+                                            <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
+                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -1948,13 +2119,13 @@
                                             </table>
 
                                             <br />
-                                            <p>
+                                            <div class="select-group">
                                                 <b>SENSORY EXAMINATION</b>
                                                 To
-                                                <label><input type="checkbox" class="chkMulti" name="SE" value="light touch"> light touch</label>
-                                                <label><input type="checkbox" class="chkMulti" name="SE" value="pinprick"> pinprick.</label>
+                                                <label><input type="checkbox" class="chkMulti" name="SE" value="light touch"> <span class="select-btn">light touch</span> </label>
+                                                <label><input type="checkbox" class="chkMulti" name="SE" value="pinprick"> <span class="select-btn">pinprick</span> .</label>
 
-                                            </p>
+                                            </div>
                                             <table style="width:100%">
                                                 <tr>
                                                     <td>
@@ -2265,8 +2436,10 @@
 
                                                         <td>
                                                             <input type="text"
+                                                                   id="ADLPersonalHygieneDifficulty"
                                                                    name="ADLPersonalHygieneDifficulty"
                                                                    class="form-control d-inline w-50" />
+                                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLPersonalHygieneDifficulty')"></i>
                                                         </td>
                                                     </tr>
 
@@ -2288,8 +2461,10 @@
 
                                                         <td>
                                                             <input type="text"
+                                                                   id="ADLWalkingDifficulty"
                                                                    name="ADLWalkingDifficulty"
                                                                    class="form-control d-inline w-50" />
+                                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLWalkingDifficulty')"></i>
                                                         </td>
                                                     </tr>
 
@@ -2311,8 +2486,10 @@
 
                                                         <td>
                                                             <input type="text"
+                                                                   id="ADLEatingDifficulty"
                                                                    name="ADLEatingDifficulty"
                                                                    class="form-control d-inline w-50" />
+                                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLEatingDifficulty')"></i>
                                                         </td>
                                                     </tr>
 
@@ -2335,7 +2512,9 @@
                                                         <td>
                                                             <input type="text"
                                                                    name="ADLHouseholdDifficulty"
+                                                                   id="ADLHouseholdDifficulty"
                                                                    class="form-control d-inline w-50" />
+                                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLHouseholdDifficulty')"></i>
                                                         </td>
                                                     </tr>
 
@@ -2358,7 +2537,9 @@
                                                         <td>
                                                             <input type="text"
                                                                    name="ADLShoppingDifficulty"
+                                                                   id="ADLShoppingDifficulty"
                                                                    class="form-control d-inline w-50" />
+                                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLShoppingDifficulty')"></i>
                                                         </td>
                                                     </tr>
 
@@ -2381,7 +2562,9 @@
                                                         <td>
                                                             <input type="text"
                                                                    name="ADLSleepingDifficulty"
+                                                                   id="ADLSleepingDifficulty"
                                                                    class="form-control d-inline w-50" />
+                                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLSleepingDifficulty')"></i>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -2407,61 +2590,61 @@
                                                 <b>RECOMMENDATIONS</b>
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="RecommendTreatment" name="TreatmentPlan" value="Recommend" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Recommend" />
                                                         Recommend
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="RecommendPT" name="RecommendType" value="PT" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="PT" />
                                                         PT
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="RecommendChiro" name="RecommendType" value="Chiro" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Chiro" />
                                                         Chiro
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="RecommendAcupuncture" name="RecommendType" value="Acupuncture" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Acupuncture" />
                                                         Acupuncture
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="RecommendHEP" name="RecommendType" value="HEP" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="HEP" />
                                                         HEP
                                                     </label>
                                                 </p>
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="ContinueTreatment" name="TreatmentPlan" value="Recommend to continue" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Recommend to continue" />
                                                         Recommend to continue
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="ContinuePT" name="ContinueType" value="PT" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="PT" />
                                                         PT
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="ContinueChiro" name="ContinueType" value="Chiro" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Chiro" />
                                                         Chiro
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="ContinueAcupuncture" name="ContinueType" value="Acupuncture" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Acupuncture" />
                                                         Acupuncture
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="ContinueHEP" name="ContinueType" value="HEP" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="HEP" />
                                                         HEP
                                                     </label>
                                                 </p>
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="ContinueMedication" name="TreatmentPlan" value="Continue current medications" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Continue current medications" />
                                                         Recommend to continue current medications
                                                     </label>
                                                 </p>
@@ -2476,31 +2659,31 @@
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="ReferOrthopedist" name="TreatmentPlan" value="Refer to orthopedist" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Refer to orthopedist" />
                                                         Refer to orthopedist.
                                                     </label>
                                                 </p>
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="FollowupOrthopedist" name="TreatmentPlan" value="Follow-up with orthopedist" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Follow-up with orthopedist" />
                                                         Follow-up with orthopedist.
                                                     </label>
                                                 </p>
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="ScheduleEMG" name="TreatmentPlan" value="Schedule EMG" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule EMG" />
                                                         Schedule EMG
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="ScheduleEMGUE" name="EMGType" value="UE" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="UE" />
                                                         UE
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="ScheduleEMGLE" name="EMGType" value="LE" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LE" />
                                                         LE
                                                     </label>
 
@@ -2511,27 +2694,27 @@
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="ScheduleCervicalInjection" name="TreatmentPlan" value="Schedule Cervical Injection" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule Cervical Injection" />
                                                         Schedule
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="CESI" name="CervicalInjectionType" value="CESI" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CESI" />
                                                         CESI
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="CMBB" name="CervicalInjectionType" value="CMBB" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CMBB" />
                                                         CMBB
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="CFB" name="CervicalInjectionType" value="CFB" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CFB" />
                                                         CFB
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="CervicalInjectionOtherCheck" name="CervicalInjectionType" value="Other" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CInjOther" />
                                                     </label>
 
                                                     <input type="text"
@@ -2541,37 +2724,37 @@
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="ScheduleLumbarInjection" name="TreatmentPlan" value="Schedule Lumbar Injection" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule Lumbar Injection" />
                                                         Schedule
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="LESI" name="LumbarInjectionType" value="LESI" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LESI" />
                                                         LESI
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="LMBB" name="LumbarInjectionType" value="LMBB" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LMBB" />
                                                         LMBB
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="LFB" name="LumbarInjectionType" value="LFB" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LFB" />
                                                         LFB
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="LPDA" name="LumbarInjectionType" value="LPDA" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LPDA" />
                                                         LPDA
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="LED" name="LumbarInjectionType" value="LED" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LED" />
                                                         LED
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" id="LumbarInjectionOtherCheck" name="LumbarInjectionType" value="Other" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="ScheduleOther" />
                                                     </label>
 
                                                     <input type="text"
@@ -2585,16 +2768,16 @@
                                                         Request
                                                     </label>
 
-                                                    <label><input type="checkbox" id="CMRI" name="MRIType" value="CMRI" /> CMRI</label>
-                                                    <label><input type="checkbox" id="TMRI" name="MRIType" value="TMRI" /> TMRI</label>
-                                                    <label><input type="checkbox" id="LMRI" name="MRIType" value="LMRI" /> LMRI</label>
-                                                    <label><input type="checkbox" id="LSMRI" name="MRIType" value="LSMRI" /> LSMRI</label>
-                                                    <label><input type="checkbox" id="RSMRI" name="MRIType" value="RSMRI" /> RSMRI</label>
-                                                    <label><input type="checkbox" id="LKMRI" name="MRIType" value="LKMRI" /> LKMRI</label>
-                                                    <label><input type="checkbox" id="RKMRI" name="MRIType" value="RKMRI" /> RKMRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CMRI" /> CMRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TMRI" /> TMRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LMRI" /> LMRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LSMRI" /> LSMRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="RSMRI" /> RSMRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LKMRI" /> LKMRI</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="RKMRI" /> RKMRI</label>
 
                                                     <label>
-                                                        <input type="checkbox" id="MRIRequestOtherCheck" name="MRIType" value="Other" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="MRIOther" />
                                                     </label>
 
                                                     <input type="text"
@@ -2604,16 +2787,16 @@
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="RequestCT" name="TreatmentPlan" value="Request CT" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Request CT" />
                                                         Request
                                                     </label>
 
-                                                    <label><input type="checkbox" id="CSCT" name="CTType" value="CSCT" /> CSCT</label>
-                                                    <label><input type="checkbox" id="TSCT" name="CTType" value="TSCT" /> TSCT</label>
-                                                    <label><input type="checkbox" id="LSCT" name="CTType" value="LSCT" /> LSCT</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CSCT" /> CSCT</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TSCT" /> TSCT</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LSCT" /> LSCT</label>
 
                                                     <label>
-                                                        <input type="checkbox" id="CTRequestOtherCheck" name="CTType" value="Other" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CTOther" />
                                                     </label>
 
                                                     <input type="text"
@@ -2623,16 +2806,16 @@
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="RequestXR" name="TreatmentPlan" value="Request XR" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Request XR" />
                                                         Request
                                                     </label>
 
-                                                    <label><input type="checkbox" id="CSXR" name="XRType" value="CSXR" /> CSXR</label>
-                                                    <label><input type="checkbox" id="TSXR" name="XRType" value="TSXR" /> TSXR</label>
-                                                    <label><input type="checkbox" id="LSXR" name="XRType" value="LSXR" /> LSXR</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CSXR" /> CSXR</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TSXR" /> TSXR</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LSXR" /> LSXR</label>
 
                                                     <label>
-                                                        <input type="checkbox" id="XRRequestOtherCheck" name="XRType" value="Other" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="XROther" />
                                                     </label>
 
                                                     <input type="text"
@@ -2642,16 +2825,16 @@
 
                                                 <p>
                                                     <label>
-                                                        <input type="checkbox" id="ExecutedTPI" name="TreatmentPlan" value="Executed TPI" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Executed TPI" />
                                                         Executed TPI
                                                     </label>
 
-                                                    <label><input type="checkbox" id="TPICS" name="TPIType" value="CS" /> CS</label>
-                                                    <label><input type="checkbox" id="TPITS" name="TPIType" value="TS" /> TS</label>
-                                                    <label><input type="checkbox" id="TPILS" name="TPIType" value="LS" /> LS</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CS" /> CS</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TS" /> TS</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LS" /> LS</label>
 
                                                     <label>
-                                                        <input type="checkbox" id="TPIOtherCheck" name="TPIType" value="Other" />
+                                                        <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="ETOther" />
                                                     </label>
 
                                                     <input type="text"
@@ -2702,7 +2885,7 @@
 
 
                         </div>
-                        <p>
+                        <p id="btnSection">
                             <button type="submit" class="btn btn-primary mt-3  d-inline" style="width:45% !important">Submit</button>
                             <button type="button" class="btn btn-outline-primary mt-3  d-inline" style="width:45% !important" onclick='saveForm(false)'>Save</button>
                         </p>
@@ -3121,9 +3304,12 @@
                     year: 'numeric'
                 };
 
-                var formattedDate = today.toLocaleDateString('en-US', options);
+                // var formattedDate = today.toLocaleDateString('en-US', options);
 
-                values["DOE"] = formattedDate.replace(',', '');
+                // values["DOE"] = formattedDate.replace(',', '');
+
+                 if ($("#DOE").val() != '')
+                    values["DOE"] = formatDate($("#DOE").val());
 
                 if ($("#DOB").val() != '')
                     values["DOB"] = formatDate($("#DOB").val());
@@ -3203,26 +3389,36 @@
                     else
                         $("#divChiro").hide();
 
-
-                   if (data.CaseType === "WC") {
+                   $(".mmClass").show();
+                   if (data.InjuryType === "WC") {
                         $("#divWC").show();
                         $("#divWC1").show();
                         $("#divNF").hide();
+                        $("#divPI").hide();
                         html = html.replace('[WC_START]', '').replace('[WC_END]', '');
                         html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
                     }
-                    else if (data.CaseType === "NF") {
+                    else if (data.InjuryType === "NF") {
                         // Keep MVA, remove WC
                         html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
                         html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
                         $("#divWC").hide();
                         $("#divWC1").hide();
                         $("#divNF").show();
+                        $("#divPI").hide();
                     }
-                    else if (data.CaseType === "mm") {
+                    else if (data.InjuryType === "MM") {
+                        // $("#divNF").hide();
+                        // $("#divMM").hide();
+                        // $("#divWC1").hide();
+                        $(".mmClass").hide();
+                         $("#divPI").hide();
+                    }
+                    else if (data.InjuryType === "PI") {
+                        $("#divWC").hide();
+                        $("#divWC1").hide();
                         $("#divNF").hide();
-                        $("#divMM").hide();
-                         $("#divWC1").hide();
+                        $("#divPI").show();
                     }
                     else {
                         // Remove both
@@ -3230,7 +3426,8 @@
                         html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
                         $("#divNF").hide();
                         $("#divMM").hide();
-                         $("#divWC1").hide();
+                        $("#divWC1").hide();
+                         $("#divPI").hide();
                     }
 
                     $('#previewText').html(html);
@@ -3905,5 +4102,119 @@
         }
 
         return true;
+    }
+</script>
+
+<!-- html2pdf library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+    async function downloadPDF() {
+
+          $('#pdfLoader').show();
+          try {
+        // Store current accordion state
+        let accordionStates = [];
+
+        $('.accordion-collapse').each(function () {
+            accordionStates.push($(this).hasClass('show'));
+        });
+
+        // Open all accordions
+        $('.accordion-collapse').addClass('show');
+
+        // Hide accordion buttons/icons if needed
+        $('.accordion-button').hide();
+
+        // Hide microphone buttons
+        $('.mic-btn').hide();
+        $('#btnSection').hide();
+
+        // Optional: remove borders/shadows for clean PDF
+        $('.accordion-item').css({
+            'border': 'none',
+            'box-shadow': 'none'
+        });
+
+    //         $('#patientForm').css({
+    //     'font-size': '11px',
+    //     'line-height': '1.3'
+    // });
+
+    // $('#patientForm input, #patientForm textarea, #patientForm select, #patientForm p, #patientForm label').css({
+    //     'font-size': '11px',
+    //     'padding': '2px 4px',
+    //     'height': 'auto'
+    // });
+
+    // $('h4, h5, h6').css({
+    //     'font-size': '14px'
+    // });
+
+        // Wait for rendering
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Target form/div
+        const element = document.getElementById('patientForm');
+
+        // PDF options
+        const opt = {
+            margin: 0.3,
+            filename: 'Patient_Injury_Report.pdf',
+            image: {
+                type: 'jpeg',
+                quality: 1
+            },
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                scrollY: 0
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            },
+            pagebreak: {
+                mode: ['avoid-all', 'css', 'legacy']
+            }
+        };
+
+        // Generate PDF
+        await html2pdf().set(opt).from(element).save();
+
+        // Restore accordion state
+        $('.accordion-collapse').each(function (index) {
+
+            if (!accordionStates[index]) {
+                $(this).removeClass('show');
+            }
+        });
+
+    //         $('#patientForm').css({
+    //     'font-size': '',
+    //     'line-height': ''
+    // });
+
+    // $('#patientForm input, #patientForm textarea, #patientForm select,#patientForm p, #patientForm label').css({
+    //     'font-size': '',
+    //     'padding': '',
+    //     'height': ''
+    // });
+
+    // $('h4, h5, h6').css({
+    //     'font-size': ''
+    // });
+
+        // Show hidden buttons again
+        $('.accordion-button').show();
+        $('.mic-btn').show();
+        $('#btnSection').show();
+        }
+    finally {
+
+        // HIDE LOADER
+        $('#pdfLoader').hide();
+    }
     }
 </script>

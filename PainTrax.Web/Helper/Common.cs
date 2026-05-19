@@ -989,6 +989,30 @@ namespace PainTrax.Web.Helper
                 return "Midback";
             if (bodyPart.ToLower() == "lumbar")
                 return "Lowback";
+            //if (bodyPart.ToLower() == "neck")
+            //    return "cervical";
+            //if (bodyPart.ToLower() == "midback")
+            //    return "thoracic";
+            //if (bodyPart.ToLower() == "lowback")
+            //    return "lumbar";
+
+            return bodyPart;
+        }
+
+        public string GetBodyPartIntake(string bodyPart = "")
+        {
+            if (bodyPart.ToLower() == "cervical")
+                return "Neck";
+            if (bodyPart.ToLower() == "thoracic")
+                return "Midback";
+            if (bodyPart.ToLower() == "lumbar")
+                return "Lowback";
+            if (bodyPart.ToLower() == "neck")
+                return "cervical";
+            if (bodyPart.ToLower() == "midback")
+                return "thoracic";
+            if (bodyPart.ToLower() == "lowback")
+                return "lumbar";
 
             return bodyPart;
         }

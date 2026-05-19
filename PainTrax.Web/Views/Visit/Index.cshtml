@@ -515,7 +515,8 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="checkAuthorizationForm(' + full.patient_id + ',' + '\'' + `${full.email}` + '\')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Send Authorization" data-bs-original-title="Send Authorization"></i><span>Send Authorization</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + intakeurl + '?id=' + full.intakeid +'&locid='+ full.location_id + '" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Intake Form</span></a></li>';
-                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + `${full.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${full.lname.replace(/'/g, "\\'")}` + '\')" href="#"  ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Print Demo</span></a></li></ul></a>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + `${full.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${full.lname.replace(/'/g, "\\'")}` + '\')" href="#"  ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Print Demo</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="DownloadExcel(' + full.patient_id  + ')" href="#"  ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Export Excel "></i><span> Export Excel</span></a></li></ul></a>';
 
 
                             return index;
@@ -1023,6 +1024,10 @@
                     console.error('Error downloading Excel file:', error);
                 });
 
+        }
+
+        function DownloadExcel(id) {
+              window.location.href = '@Url.Action("Index", "ExportExcel")?id=' + id;
         }
 
         function fnPrint() {
