@@ -180,10 +180,10 @@
         public string PProcedures { get; set; }
         public string NeckPain { get; set; }
         public List<string> NeckStiffness { get; set; }
-        public string NeckDiffturning { get; set; }
-        public string Neckrotatinghead { get; set; }
-        public string NeckDiffgrippinghand { get; set; }
-        public string Necksustained { get; set; }
+        //public string NeckDiffturning { get; set; }
+        //public string Neckrotatinghead { get; set; }
+        //public string NeckDiffgrippinghand { get; set; }
+        //public string Necksustained { get; set; }
         public string NeckRadiatesTo { get; set; }
         public List<string> NeckRadiates { get; set; }
         public List<string> NeckAssociated { get; set; }
@@ -203,47 +203,47 @@
 
         public string LowBackPain { get; set; }
         public List<string> lbackPain { get; set; }
-        public string lbackDiffsleeping { get; set; }
-        public string lbackDifflifting { get; set; }
-        public string lbackDiffbending { get; set; }
-        public string lbacksustained { get; set; }
+        //public string lbackDiffsleeping { get; set; }
+        //public string lbackDifflifting { get; set; }
+        //public string lbackDiffbending { get; set; }
+        //public string lbacksustained { get; set; }
         public string LowBackRadiatesTo { get; set; }
         public List<string> LowBackRadiates { get; set; }
         public List<string> LowBackAssociated { get; set; }
         public List<string> LowBackWorsens { get; set; }
         public List<string> LowBackImproves { get; set; }
 
-        public string GeneralNormal { get; set; }
+        //public string GeneralNormal { get; set; }
         public string GeneralROS { get; set; }
-        public string SkinNormal { get; set; }
+        //public string SkinNormal { get; set; }
         public string SkinROS { get; set; }
-        public string HEENTNormal { get; set; }
+       // public string HEENTNormal { get; set; }
         public string HEENTROS { get; set; }
 
-        public string NeckNormal { get; set; }
+        //public string NeckNormal { get; set; }
         public string NeckROS { get; set; }
-        public string CardiovascularNormal { get; set; }
+        //public string CardiovascularNormal { get; set; }
         public string CardiovascularROS { get; set; }
-        public string RespiratoryNormal { get; set; }
+        //public string RespiratoryNormal { get; set; }
         public string RespiratoryROS { get; set; }
 
-        public string GastrointestinalNormal { get; set; }
+       // public string GastrointestinalNormal { get; set; }
         public string GastrointestinalROS { get; set; }
-        public string UrinaryNormal { get; set; }
+       // public string UrinaryNormal { get; set; }
         public string UrinaryROS { get; set; }
-        public string PeripheralvascularNormal { get; set; }
+        //public string PeripheralvascularNormal { get; set; }
         public string PeripheralvascularROS { get; set; }
 
-        public string MusculoskeletalNormal { get; set; }
+        //public string MusculoskeletalNormal { get; set; }
         public string MusculoskeletalROS { get; set; }
-        public string NeurologicalNormal { get; set; }
+        //public string NeurologicalNormal { get; set; }
         public string NeurologicalROS { get; set; }
-        public string EndocrineNormal { get; set; }
+       // public string EndocrineNormal { get; set; }
         public string EndocrineROS { get; set; }
 
         public List<string> CervicalPE { get; set; }
         public string Palpation { get; set; }
-        public string PETriggerCervical { get; set; }
+        public List<string> PETriggerCervical { get; set; }
         public string PEMuscleCervical { get; set; }
 
         public string CervicalFlexion { get; set; }
@@ -295,7 +295,7 @@
         public List<string> THORACICPE { get; set; }
         public string THORACICPalpation { get; set; }
         public string THORACICPalpationmidline { get; set; }
-        public string PETriggerTHORACIC { get; set; }
+        public List<string> PETriggerTHORACIC { get; set; }
         public string PEMuscleTHORACIC { get; set; }
 
         public string THORACICFlexion { get; set; }
@@ -308,7 +308,7 @@
         public List<string> LUMBARPE { get; set; }
         public string LUMBARPalpation { get; set; }
         public string LUMBARPalpationmidline { get; set; }
-        public string PETriggerLUMBAR { get; set; }
+        public List<string> PETriggerLUMBAR { get; set; }
         public string PEMuscleLUMBAR { get; set; }
 
         public string LUMBARFlexion { get; set; }
@@ -360,22 +360,22 @@
 
         public List<string> GAIT { get; set; }
 
-        public List<string> PlanConservativeTx { get; set; }
+        //public List<string> PlanConservativeTx { get; set; }
         public string PlanStart { get; set; }
 
         public List<string> PlanPT { get; set; }
-        public List<string> MedicationRx { get; set; }
+        //public List<string> MedicationRx { get; set; }
         public List<string> PlanMedication { get; set; }
-        public List<string> PlanOrderMRI { get; set; }
+        //public List<string> PlanOrderMRI { get; set; }
         public List<string> PlanMRI { get; set; }
         public List<string> PlanCT { get; set; }
         public List<string> PlanXray { get; set; }
         public string PlanOrder { get; set; }
-        public List<string> PlanOrderEMG { get; set; }
+        //public List<string> PlanOrderEMG { get; set; }
         public List<string> PlanEMG { get; set; }
         public List<string> PlanNCV { get; set; }
         public List<string> PlanUTPI { get; set; }
-        public List<string> PlanRecommendation { get; set; }
+        //public List<string> PlanRecommendation { get; set; }
         public List<string> Recommendation { get; set; }
         public string FollowUpOther { get; set; }
         public string FollowUp { get; set; }

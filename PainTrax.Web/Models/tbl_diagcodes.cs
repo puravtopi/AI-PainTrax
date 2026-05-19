@@ -6,7 +6,7 @@ namespace PainTrax.Web.Models
 	{
 		public string? BodyPart { get; set; }		
 		public string? DiagCode { get; set; }
-		public int? DiagCodeGroup { get; set; }
+		public string? DiagCodeGroup { get; set; }
 		public string? Description { get; set; }
 		public int? display_order { get; set; }
 		public int? GroupDisplayOrder { get; set; }

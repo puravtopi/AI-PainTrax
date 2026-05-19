@@ -221,20 +221,23 @@ namespace PainTrax.Web.Controllers
                                 obj.Id = objIsExist[0].Id;
                                 _services.Update(obj);
                             }
-
-                            cnd = " and GroupName='" + dt.Rows[i]["GroupName"].ToString() + "' and BodyPart='" + dt.Rows[i]["BodyPart"].ToString() + "' and cmp_id=" + cmpid;
-
-                            var objGroupIsExist = _services.GetAllDiagCodeGroups(cnd);
-
-                            if (objGroupIsExist.Count == 0)
+                            if (dt.Columns.Contains("GroupName") && dt.Rows[i] != null && dt.Rows[i]["GroupName"] != DBNull.Value)
                             {
-                                tbl_diagcodes_group objGroup = new tbl_diagcodes_group()
+
+                                cnd = " and GroupName='" + dt.Rows[i]["GroupName"].ToString() + "' and BodyPart='" + dt.Rows[i]["BodyPart"].ToString() + "' and cmp_id=" + cmpid;
+
+                                var objGroupIsExist = _services.GetAllDiagCodeGroups(cnd);
+
+                                if (objGroupIsExist.Count == 0)
                                 {
-                                    Cmp_id = cmpid,
-                                    GroupName = dt.Rows[i]["GroupName"].ToString(),
-                                    BodyPart = dt.Rows[i]["BodyPart"].ToString()
-                                };
-                                _services.InsertDiagCodeGroup(objGroup);
+                                    tbl_diagcodes_group objGroup = new tbl_diagcodes_group()
+                                    {
+                                        Cmp_id = cmpid,
+                                        GroupName = dt.Rows[i]["GroupName"].ToString(),
+                                        BodyPart = dt.Rows[i]["BodyPart"].ToString()
+                                    };
+                                    _services.InsertDiagCodeGroup(objGroup);
+                                }
                             }
 
                         }
