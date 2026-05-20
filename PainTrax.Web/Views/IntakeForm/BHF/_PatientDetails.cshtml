@@ -1,0 +1,174 @@
+﻿
+<h6>Provider Name:  @ViewBag.ProviderName</h6>
+
+<!-- Patient Info -->
+<p>
+    Patient LName:
+    <input id="LN" name="LN" class="form-control d-inline" style="width:150px;" />
+    FName:
+    <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" />
+    @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
+    Gender
+    <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+        <option value="male">M</option>
+        <option value="female">F</option>
+    </select>
+    &nbsp;&nbsp;
+    handed:
+    <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+        <option value="right-handed">R</option>
+        <option value="left-handed">L</option>
+        <option value="ambidextrous">A</option>
+    </select>
+    &nbsp;&nbsp;
+    DOE
+    <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" />
+    &nbsp;&nbsp;
+    Location: &nbsp;&nbsp;
+    <span id="lblLocation">
+        @ViewBag.LocName
+    </span>
+
+</p>
+
+<p>
+    DOB:
+    <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Age:
+    <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    DOA:
+    <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+</p>
+<div class="select-group">
+    <strong>Case Type:</strong>
+    <label>
+        <input type="radio" name="InjuryType" value="NF">
+        <span class="select-btn">NF</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="WC">
+        <span class="select-btn">WC</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="MM">
+        <span class="select-btn">MM</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="PI">
+        <span class="select-btn">PI</span>
+    </label>
+    <label>
+        <input type="radio" name="InjuryType" value="LIEN">
+        <span class="select-btn">LIEN</span>
+    </label>
+</div>
+<p>
+    <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Height:
+    <input id="Height" name="Height" class="form-control d-inline" onchange="calculateBMI()" style="width:150px" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i>
+    Weight:
+    <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:150px" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i>
+    lbs,
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpO2:
+    <input id="SpO" name="SpO" class="form-control d-inline" style="width:100px" />%,
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HR:
+    <input id="HR" name="HR" class="form-control d-inline" style="width:100px" />,
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
+    <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
+</p>
+
+<!-- Work -->
+<div class="select-group">
+
+    Currently working:
+    <label>
+        <input type="radio" name="IsWorking" value="The patient is currently working." />  <span class="select-btn">Yes</span>
+    </label>
+    <label>
+        <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." />  <span class="select-btn">No</span>
+    </label>
+
+
+    Degree of Disability:
+
+    <input id="DisabilityPercentage"
+           class="form-control d-inline"
+           style="width:100px"
+           type="number"
+           min="0"
+           max="100" />
+
+    % temporarily disabled
+</div>
+
+<div id="divWC1" style="display:none;">
+    <p>
+        Occupation:
+        <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
+        <br />
+        Job Description:
+        <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:95%;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i>
+    </p>
+    <p>
+        Sit <input id="SitHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Drive <input id="DriveHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Stand <input id="StandHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Walk <input id="WalkHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Kneel/Stoop <input id="KneelHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Reach Overhead <input id="ReachOverhead" class="form-control d-inline" style="width:80px" />
+
+        Reach Below Waist <input id="ReachBelowWaist" class="form-control d-inline" style="width:80px" />
+    </p>
+    <p>
+        On your job how many hours a day do you spend:
+
+        Sitting <input id="JobSitting" class="form-control d-inline" style="width:80px" /> hr.
+
+        Standing <input id="JobStanding" class="form-control d-inline" style="width:80px" /> hr.
+
+        Driving <input id="JobDriving" class="form-control d-inline" style="width:80px" /> hr.
+
+        Bending <input id="JobBending" class="form-control d-inline" style="width:80px" /> hr.
+
+        Kneeling <input id="JobKneeling" class="form-control d-inline" style="width:80px" /> hr.
+
+        Crouching <input id="JobCrouching" class="form-control d-inline" style="width:80px" /> hr.
+
+        Lifting <input id="JobLifting" class="form-control d-inline" style="width:80px" /> hr.
+    </p>
+
+    <div class="select-group">
+        If lifting, how many pounds:
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="5">  <span class="select-btn">5</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="10">  <span class="select-btn">10</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="10-20">  <span class="select-btn">10-20</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="greater than 20"> <span class="select-btn">Greater than 20</span></label>
+    </div>
+    @* <p>
+                                                If not working, stopped immediately after accident:
+                                                <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
+                                                <input type="radio" name="StoppedAfterAccident" value="No" /> No
+                                                <br />
+                                                Reason:
+                                                <textarea id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
+                                            </p> *@
+</div>

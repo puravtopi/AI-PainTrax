@@ -154,7 +154,7 @@
                                                 DOE
                                                 <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" />
                                                 &nbsp;&nbsp;
-                                               @*  DOA
+                                                @*  DOA
                                                 <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
                                                 &nbsp;&nbsp; *@
                                                 Location: &nbsp;&nbsp;
@@ -175,6 +175,12 @@
                                                 <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
                                             </p>
                                             <p>
+
+                                                Occupation:
+                                                <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
+                                            </p>
+                                            <p>
                                                 Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Working:
@@ -186,19 +192,14 @@
                                                     <input type="radio" name="YesWork" value="Full time" />  Full-time
                                                 </span>
                                             </p>
-                                            <p>
 
-                                                Occupation:
-                                                <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
-                                                </p>
                                             <p>
                                                 <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Height:
                                                 <input id="Height" name="Height" class="form-control d-inline" onchange="calculateBMI()" style="width:150px" />
-                                               @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i> *@
+                                                @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i> *@
                                                 Weight:
                                                 <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:150px" />
-                                               @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i> *@
+                                                @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i> *@
                                                 lbs,
                                                 @* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpO2:
                                                 <input id="SpO" name="SpO" class="form-control d-inline" style="width:100px" />%,
@@ -244,20 +245,20 @@
                                                 </span>
                                             </p>
 
-                                            
-                                            
+
+
                                             <p>
                                                 Asymptomatic prior to accident:
                                                 <label><input type="radio" name="Asymptomatic" value="Yes"> Y</label>
                                                 <label><input type="radio" name="Asymptomatic" value="No"> N</label>
-                                               
+
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 History of prior trauma:
                                                 <label><input type="radio" name="Priortrauma" value="Yes"> Y</label>
-                                                <label><input type="radio" name="Priortrauma" value="No"> N</label>                                               
-                                               
+                                                <label><input type="radio" name="Priortrauma" value="No"> N</label>
+
                                             </p>
-                                            <p>                                               
+                                            <p>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driver"> Driver</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="FrontPass"> Front Pass</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="RearPass"> Rear Pass</label>
@@ -295,7 +296,7 @@
                                                 <label><input type="radio" name="EMS" value="Yes"> Y</label>
                                                 <label><input type="radio" name="EMS" value="No"> N</label>
                                                 &nbsp;&nbsp;&nbsp;
-                                                 Private car:
+                                                Private car:
                                                 <label><input type="radio" name=" privatecar" value="Yes"> Y</label>
                                                 <label><input type="radio" name=" privatecar" value="No"> N</label>
                                                 &nbsp;&nbsp;&nbsp;
@@ -305,21 +306,21 @@
                                                 <input id="hospitalname" name="hospitalname" class="form-control d-inline w-auto" style="min-width:70%;" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'hospitalname')"></i>
                                             </p>
-                                                 
 
-                                           
+
+
                                             <p>
                                                 Accident Description
                                                 <textarea id="AccidentDescription" name="AccidentDescription" class="form-control d-inline" style="width:95%"></textarea>
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
-                                            </p> 
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingTwo">
                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                           History 
+                                            History
                                         </button>
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
@@ -330,7 +331,7 @@
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> Neck</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="mbSection" data-pe="mbPE" /> Mid back</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> Low back</label>
-                                                
+
                                                 <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
                                             </p>
                                             <p>
@@ -340,19 +341,19 @@
                                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="HBP"> HBP</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="HLD"> HLD</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="Asthma"> Asthma</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Cardiac disease"> Cardiac disease</label>                                                
+                                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Cardiac disease"> Cardiac disease</label>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Other:
                                                 <input id="PMHOther" class="form-control d-inline w-25" style="min-width:37%" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PMHOther')"></i>
                                             </p>
                                             <p>
-                                                PSH:                                                
+                                                PSH:
                                                 <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i>
                                             </p>
                                             <p>
-                                                Meds:                                               
+                                                Meds:
 
                                                 <input id="MedsOther" class="form-control d-inline w-25" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i>
@@ -362,7 +363,7 @@
                                                 Allergies:
                                                 <label><input type="radio" name="Allergy" value="No"> No</label>
                                                 <label><input type="radio" name="Allergy" value="Yes"> Yes</label>
-                                                <span id="divAllergy" style="display:none">                                                    
+                                                <span id="divAllergy" style="display:none">
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     What Allergy:
                                                     <input id="AllergyReaction" class="form-control d-inline w-25" />
@@ -379,7 +380,7 @@
                                                     <input id="PTFreq" class="form-control d-inline" placeholder="x/week" style="width:150px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTFreq')"></i>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    x a week:                                                    
+                                                    x a week:
                                                 </span>
                                             </p>
                                             <p>
@@ -392,7 +393,7 @@
                                                     <input id="ChiroFreq" class="form-control d-inline" style="width:150px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroFreq')"></i>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    x a week.                                                   
+                                                    x a week.
                                                 </span>
                                             </p>
                                             <p>
@@ -400,7 +401,7 @@
                                                 <input id="PProcedures" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PProcedures')"></i>
                                             </p>
-                                           
+
                                         </div>
                                     </div>
                                 </div>
@@ -424,8 +425,8 @@
                                                     <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="rotating head"> rotating head</label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="Diff gripping hand"> Diff gripping hand</label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="sustained improvement with PT"> sustained improvement with PT</label>
-                                                   
-                                                   @*  Diff turning:
+
+                                                    @*  Diff turning:
                                                     <input type="radio" name="NeckDiffturning" value="Yes" /> Yes
                                                     <input type="radio" name="NeckDiffturning" value="No" /> No
                                                     rotating head:
@@ -445,35 +446,35 @@
                                                     <label><input type="radio" name="NeckRadiatesTo" value="Bilateral"> B</label>
 
 
-                                                <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="shoulder"> shoulder</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="elbow"> elbow</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="arm"> arm</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="hand"> hand</label>                                                   
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="shoulder"> shoulder</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="elbow"> elbow</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="arm"> arm</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="hand"> hand</label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="fingers"> fingers. </label>
                                                     Neck pain is associated with
                                                     <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="tingling"> tingling</label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="numbness"> numbness</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="weakness"> weakness</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="burning"> burning</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="spasms"> spasms</label>                                                   
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="weakness"> weakness</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="burning"> burning</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="spasms"> spasms</label>
                                                 </p>
                                                 <p>
                                                     Neck pain worsened with
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="sitting"> sitting</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="standing"> standing</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="lying down"> lying down</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value=" movement activities">  movement activities</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="going from seating to standing up"> going from seating to standing up</label>                                                    
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="sitting"> sitting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="standing"> standing</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="lying down"> lying down</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value=" movement activities">  movement activities</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="going from seating to standing up"> going from seating to standing up</label>
                                                 </p>
                                                 <p>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="walking"> walking</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="climbing stairs">  climbing stairs</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="descending stairs"> descending stairs</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="driving"> driving</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="working"> working</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="bending"> bending</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="lifting"> lifting</label>
-                                                <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="twisting"> twisting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="walking"> walking</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="climbing stairs">  climbing stairs</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="descending stairs"> descending stairs</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="driving"> driving</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="working"> working</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="bending"> bending</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="lifting"> lifting</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="twisting"> twisting</label>
                                                 </p>
                                                 <p>
                                                     Neck pain improved with
@@ -514,8 +515,8 @@
                                                     <label><input type="radio" name="MidbackRadiatesTo" value="Left"> L</label>
                                                     <label><input type="radio" name="MidbackRadiatesTo" value="Right"> R</label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="MidbackRadiates" value="doesn’t radiate"> doesn’t radiate</label>                                                  
-                                                   
+                                                    <label><input type="checkbox" class="chkMulti" name="MidbackRadiates" value="doesn’t radiate"> doesn’t radiate</label>
+
                                                 </p>
                                                 <p>
                                                     Midback pain worsened with
@@ -580,7 +581,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="LowBackRadiates" value="buttock"> buttock</label>
                                                     <label><input type="checkbox" class="chkMulti" name="LowBackRadiates" value="thigh"> thigh</label>
                                                     <label><input type="checkbox" class="chkMulti" name="LowBackRadiates" value="ankle"> ankle</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LowBackRadiates" value="toes"> toes</label>                                                    
+                                                    <label><input type="checkbox" class="chkMulti" name="LowBackRadiates" value="toes"> toes</label>
                                                     LowBack pain is associated with
                                                     <label><input type="checkbox" class="chkMulti" name="LowBackAssociated" value="tingling"> tingling</label>
                                                     <label><input type="checkbox" class="chkMulti" name="LowBackAssociated" value="numbness"> numbness</label>
@@ -611,7 +612,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="LowBackImproves" value="Resting"> Resting</label>
                                                     <label><input type="checkbox" class="chkMulti" name="LowBackImproves" value="Medication"> Medication</label>
                                                     <label><input type="checkbox" class="chkMulti" name="LowBackImproves" value="Therapy"> Therapy</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="LowBackImproves" value="Sleeping"> Sleeping</label>                                                    
+                                                    <label><input type="checkbox" class="chkMulti" name="LowBackImproves" value="Sleeping"> Sleeping</label>
                                                 </p>
 
                                             </div>
@@ -629,7 +630,7 @@
                                         <div class="accordion-body">
                                             <p>
                                                 General:
-                                                <input type="text" id="GeneralROS" name="GeneralROS" class="form-control d-inline w-auto" value="Normal"/>                                                
+                                                <input type="text" id="GeneralROS" name="GeneralROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GeneralROS')"></i>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -640,11 +641,11 @@
                                                     <input id="GeneralROS" class="form-control d-inline w-25" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GeneralROS')"></i>
                                                 </span> *@
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
                                                 Skin:
-                                                <input type="text" id="SkinROS" name="SkinROS" class="form-control d-inline w-auto" value="Normal" />                                               
+                                                <input type="text" id="SkinROS" name="SkinROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SkinROS')"></i>
-                                               @*  <label><input type="radio" name="SkinNormal" value="No"> No</label>
+                                                @*  <label><input type="radio" name="SkinNormal" value="No"> No</label>
                                                 <label><input type="radio" name="SkinNormal" value="Yes"> Yes</label>
                                                 <span id="divSkin" style="display:none">
                                                     &nbsp;&nbsp;
@@ -653,9 +654,9 @@
                                                 </span> *@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 HEENT:
-                                                 <input type="text" id="HEENTROS" name="HEENTROS" class="form-control d-inline w-auto" value="Normal" />                                               
+                                                <input type="text" id="HEENTROS" name="HEENTROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HEENTROS')"></i>
-                                               @*  <label><input type="radio" name="HEENTNormal" value="No"> No</label>
+                                                @*  <label><input type="radio" name="HEENTNormal" value="No"> No</label>
                                                 <label><input type="radio" name="HEENTNormal" value="Yes"> Yes</label>
                                                 <span id="divHEENT" style="display:none">
                                                     &nbsp;&nbsp;
@@ -665,7 +666,7 @@
                                             </p>
                                             <p>
                                                 Neck:
-                                                 <input type="text" id="NeckROS" name="NeckROS" class="form-control d-inline w-auto" value="Normal" />                                                
+                                                <input type="text" id="NeckROS" name="NeckROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckROS')"></i>
                                                 @* <label><input type="radio" name="NeckNormal" value="No"> No</label>
                                                 <label><input type="radio" name="NeckNormal" value="Yes"> Yes</label>
@@ -676,7 +677,7 @@
                                                 </span> *@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 Cardiovascular:
-                                                 <input type="text" id="CardiovascularROS" name="CardiovascularROS" class="form-control d-inline w-auto" value="Normal" />                                                
+                                                <input type="text" id="CardiovascularROS" name="CardiovascularROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'CardiovascularROS')"></i>
                                                 @* <label><input type="radio" name="CardiovascularNormal" value="No"> No</label>
                                                 <label><input type="radio" name="CardiovascularNormal" value="Yes"> Yes</label>
@@ -687,7 +688,7 @@
                                                 </span> *@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 Respiratory:
-                                                 <input type="text" id="RespiratoryROS" name="RespiratoryROS" class="form-control d-inline w-auto" value="Normal" />                                                
+                                                <input type="text" id="RespiratoryROS" name="RespiratoryROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RespiratoryROS')"></i>
                                                 @* <label><input type="radio" name="RespiratoryNormal" value="No"> No</label>
                                                 <label><input type="radio" name="RespiratoryNormal" value="Yes"> Yes</label>
@@ -699,7 +700,7 @@
                                             </p>
                                             <p>
                                                 Gastrointestinal:
-                                                 <input type="text" id="GastrointestinalROS" name="GastrointestinalROS" class="form-control d-inline w-auto" value="Normal" />                                                
+                                                <input type="text" id="GastrointestinalROS" name="GastrointestinalROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GastrointestinalROS')"></i>
                                                 @* <label><input type="radio" name="GastrointestinalNormal" value="No"> No</label>
                                                 <label><input type="radio" name="GastrointestinalNormal" value="Yes"> Yes</label>
@@ -710,7 +711,7 @@
                                                 </span> *@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 Urinary:
-                                                 <input type="text" id="UrinaryROS" name="UrinaryROS" class="form-control d-inline w-auto" value="Normal" />                                                
+                                                <input type="text" id="UrinaryROS" name="UrinaryROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'UrinaryROS')"></i>
                                                 @* <label><input type="radio" name="UrinaryNormal" value="No"> No</label>
                                                 <label><input type="radio" name="UrinaryNormal" value="Yes"> Yes</label>
@@ -720,8 +721,8 @@
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'UrinaryROS')"></i>
                                                 </span> *@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                                 Peripheral vascular:
-                                                  <input type="text" id="PeripheralvascularROS" name="PeripheralvascularROS" class="form-control d-inline w-auto" value="Normal" />                                               
+                                                Peripheral vascular:
+                                                <input type="text" id="PeripheralvascularROS" name="PeripheralvascularROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PeripheralvascularROS')"></i>
                                                 @*<label><input type="radio" name="PeripheralvascularNormal" value="No"> No</label>
                                                 <label><input type="radio" name="PeripheralvascularNormal" value="Yes"> Yes</label>
@@ -733,7 +734,7 @@
                                             </p>
                                             <p>
                                                 Musculoskeletal:
-                                                 <input type="text" id="MusculoskeletalROS" name="MusculoskeletalROS" class="form-control d-inline w-auto" value="Normal" />                                               
+                                                <input type="text" id="MusculoskeletalROS" name="MusculoskeletalROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,MusculoskeletalROS')"></i>
                                                 @* <label><input type="radio" name="MusculoskeletalNormal" value="No"> No</label>
                                                 <label><input type="radio" name="MusculoskeletalNormal" value="Yes"> Yes</label>
@@ -744,9 +745,9 @@
                                                 </span> *@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 Neurological:
-                                                <input type="text" id="NeurologicalROS" name="NeurologicalROS" class="form-control d-inline w-auto" value="Normal" />                                                
+                                                <input type="text" id="NeurologicalROS" name="NeurologicalROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeurologicalROS')"></i>
-                                               @*  <label><input type="radio" name="NeurologicalNormal" value="No"> No</label>
+                                                @*  <label><input type="radio" name="NeurologicalNormal" value="No"> No</label>
                                                 <label><input type="radio" name="NeurologicalNormal" value="Yes"> Yes</label>
                                                 <span id="divNeurological" style="display:none">
                                                     &nbsp;&nbsp;
@@ -755,7 +756,7 @@
                                                 </span> *@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 Endocrine:
-                                                <input type="text" id="EndocrineROS" name="EndocrineROS" class="form-control d-inline w-auto" value="Normal" />                                                
+                                                <input type="text" id="EndocrineROS" name="EndocrineROS" class="form-control d-inline w-auto" value="Normal" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'EndocrineROS')"></i>
                                                 @* <label><input type="radio" name="EndocrineNormal" value="No"> No</label>
                                                 <label><input type="radio" name="EndocrineNormal" value="Yes"> Yes</label>
@@ -765,11 +766,11 @@
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'EndocrineROS')"></i>
                                                 </span> *@
                                             </p>
-                                            
-                                                                                               
 
-                                            
-                                            
+
+
+
+
                                         </div>
                                     </div>
 
@@ -784,13 +785,13 @@
                                         <div class="accordion-body">
                                             <div id="CERVICALSPINEEXAMSection">
                                                 <h6 class="fw-bold">CERVICAL SPINE EXAM</h6>
-                                               
+
                                                 <p>
-                                                    Inspection                                                    
+                                                    Inspection
 
                                                     <label><input type="checkbox" class="chkMulti" name="CervicalPE" value="unremarkable"> unremarkable</label>
                                                     <label><input type="checkbox" class="chkMulti" name="CervicalPE" value="kyphotic"> kyphotic</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="CervicalPE" value="lordotic"> lordotic</label>                                                    
+                                                    <label><input type="checkbox" class="chkMulti" name="CervicalPE" value="lordotic"> lordotic</label>
                                                 </p>
                                                 <p>
                                                     Palpation
@@ -812,7 +813,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="PETriggerCervical" value="splenius capitis"> splenius capitis</label>
                                                     <label><input type="checkbox" class="chkMulti" name="PETriggerCervical" value="sternocleidomastoid"> sternocleidomastoid</label>
                                                     <label><input type="checkbox" class="chkMulti" name="PETriggerCervical" value="upper trapezius"> upper trapezius</label>
-                                                   @*  <label><input type="radio" name="PETriggerCervical" value="para-cervical"> para-cervical </label>
+                                                    @*  <label><input type="radio" name="PETriggerCervical" value="para-cervical"> para-cervical </label>
                                                     <label><input type="radio" name="PETriggerCervical" value="semispinalis capitis/"> semispinalis capitis/ </label>
                                                     <label><input type="radio" name="PETriggerCervical" value="splenius capitis"> splenius capitis </label>
                                                     <label><input type="radio" name="PETriggerCervical" value="sternocleidomastoid"> sternocleidomastoid </label>
@@ -825,19 +826,19 @@
                                                     <label><input type="radio" name="PEMuscleCervical" value="bilaterally"> bilaterally </label>
                                                     <label><input type="radio" name="PEMuscleCervical" value="right"> right </label>
                                                     <label><input type="radio" name="PEMuscleCervical" value="left"> left </label>
-                                                   
+
                                                 </p>
                                                 <table cellspacing="0" cellpadding="5" border="1"
                                                        style="width:100%;">
 
                                                     <thead>
                                                         <tr>
-                                                            
+
                                                             <td>ROM</td>
                                                             <td>Flex</td>
                                                             <td>Ext</td>
                                                             <td>L Rot</td>
-                                                            <td>R Rott</td>
+                                                            <td>R Rot</td>
                                                             <td>L Lat bend</td>
                                                             <td>R Lat bend</td>
 
@@ -851,31 +852,31 @@
                                                                     Actual
                                                                 </label>
                                                             </td>
-                                                            
+
                                                             <td>
-                                                                <input id="CervicalFlexion" class="form-control d-inline " style="width:100px" />
-                                                                
+                                                                <input id="CervicalFlexion" class="form-control d-inline " style="width:50px" maxlength="3" />
+
                                                             </td>
 
                                                             <td>
-                                                                <input id="CervicalExtension" class="form-control d-inline " style="width:100px" />
-                                                                
+                                                                <input id="CervicalExtension" class="form-control d-inline " style="width:50px" maxlength="3" />
+
                                                             </td>
                                                             <td>
-                                                                <input id="CervicalLeftRotation" class="form-control d-inline " style="width:100px" />
-                                                               
+                                                                <input id="CervicalLeftRotation" class="form-control d-inline " style="width:50px" maxlength="3" />
+
                                                             </td>
                                                             <td>
-                                                                <input id="CervicalRightRotation" class="form-control d-inline " style="width:100px" />
-                                                                
+                                                                <input id="CervicalRightRotation" class="form-control d-inline " style="width:50px" maxlength="3" />
+
                                                             </td>
                                                             <td>
-                                                                <input id="CervicalLeftLateralbending" class="form-control d-inline " style="width:100px" />
-                                                                
+                                                                <input id="CervicalLeftLateralbending" class="form-control d-inline " style="width:50px" maxlength="3" />
+
                                                             </td>
                                                             <td>
-                                                                <input id="CervicalrightLateralbending" class="form-control d-inline " style="width:100px" />
-                                                                
+                                                                <input id="CervicalrightLateralbending" class="form-control d-inline " style="width:50px" maxlength="3" />
+
                                                             </td>
 
 
@@ -886,7 +887,7 @@
                                                                     Normal
                                                                 </label>
                                                             </td>
-                                                           
+
                                                             <td>
 
                                                                 <label>
@@ -931,7 +932,7 @@
 
                                                     </tbody>
                                                 </table>
-                                            @*     <table cellspacing="0" cellpadding="5"
+                                                @*     <table cellspacing="0" cellpadding="5"
                                                        style="border-collapse: collapse; width:100%;">
 
                                                     <thead>
@@ -1061,8 +1062,8 @@
 
                                                     <thead>
                                                         <tr>
-                                                             <td></td>
-                                                              <td></td>
+                                                            <td></td>
+                                                            <td></td>
                                                             <td>Deltoid</td>
                                                             <td>Biceps</td>
                                                             <td>Triceps</td>
@@ -1081,47 +1082,46 @@
                                                                 </label>
                                                             </td>
                                                             <td>
+                                                            </td>
+                                                            <td>
+                                                                <input id="CERVICALRightDeltoid" class="form-control d-inline "  style="width:50px" maxlength="1" />
+                                                                <label>
+                                                                    /5
+                                                                </label>
+                                                            </td>
 
-                                                            </td>
                                                             <td>
-                                                                <input id="CERVICALRightDeltoid" class="form-control d-inline " style="width:100px" />
-                                                                <label>
-                                                                    /5
-                                                                </label>
-                                                            </td>
-                                                           
-                                                            <td>
-                                                                <input id="CERVICALRightBiceps" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALRightBiceps" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALRightTriceps" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALRightTriceps" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALRightWristext" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALRightWristext" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALRightWristflex" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALRightWristflex" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALRightIntrinsic" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALRightIntrinsic" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
-                                                           
-                                                            
+
+
                                                         </tr>
                                                         <tr>
                                                             <td>
@@ -1132,38 +1132,38 @@
                                                             <td>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALLEFTDeltoid" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALLEFTDeltoid" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
 
                                                             <td>
-                                                                <input id="CERVICALLEFTBiceps" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALLEFTBiceps" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALLEFTTriceps" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALLEFTTriceps" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALLeftWristext" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALLeftWristext" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALLEFTWristflex" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALLEFTWristflex" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALLEFTIntrinsic" class="form-control d-inline " style="width:100px" />
+                                                                <input id="CERVICALLEFTIntrinsic" class="form-control d-inline " style="width:50px" maxlength="1" />
                                                                 <label>
                                                                     /5
                                                                 </label>
@@ -1186,7 +1186,7 @@
                                                             <td>C6</td>
                                                             <td>C7</td>
                                                             <td>C8</td>
-                                                            <td>T1</td>                                                            
+                                                            <td>T1</td>
 
                                                         </tr>
                                                     </thead>
@@ -1198,27 +1198,27 @@
                                                                     RIGHT
                                                                 </label>
                                                             </td>
-                                                           
+
                                                             <td>
                                                                 <input id="CERVICALRightC5" class="form-control d-inline " style="width:100px" />
-                                                                
+
                                                             </td>
 
                                                             <td>
-                                                                <input id="CERVICALRightC6" class="form-control d-inline " style="width:100px" />                                                               
+                                                                <input id="CERVICALRightC6" class="form-control d-inline " style="width:100px" />
                                                             </td>
                                                             <td>
                                                                 <input id="CERVICALRightC7" class="form-control d-inline " style="width:100px" />
-                                                                
+
                                                             </td>
                                                             <td>
                                                                 <input id="CERVICALRightC8" class="form-control d-inline " style="width:100px" />
-                                                                
+
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALRightT1" class="form-control d-inline " style="width:100px" />                                                                
+                                                                <input id="CERVICALRightT1" class="form-control d-inline " style="width:100px" />
                                                             </td>
-                                                           
+
 
 
                                                         </tr>
@@ -1228,7 +1228,7 @@
                                                                     LEFT
                                                                 </label>
                                                             </td>
-                                                            
+
                                                             <td>
                                                                 <input id="CERVICALLeftC5" class="form-control d-inline " style="width:100px" />
 
@@ -1280,11 +1280,11 @@
 
                                                     <label><input type="radio" name="CevicalCompression" value="positive"> positive</label>
                                                     &nbsp;&nbsp;&nbsp;
-                                                    <label><input type="radio" name="CevicalCompressionRight" value="right"> right </label>                                                   
-                                                   
+                                                    <label><input type="radio" name="CevicalCompressionRight" value="right"> right </label>
+
                                                     <label><input type="radio" name="CevicalCompressionRight" value="left"> left </label>
                                                     <label><input type="radio" name="CevicalCompressionRight" value="bilaterally"> bilaterally </label>
-                                                    
+
 
                                                 </p>
                                                 <p>
@@ -1305,35 +1305,35 @@
 
                                                     <label><input type="radio" name="THORACICBicepstendonleft" value="oneplus"> 1+</label>
 
-                                                    <label><input type="radio"  name="THORACICBicepstendonleft" value="twoplus"> 2+</label>
+                                                    <label><input type="radio" name="THORACICBicepstendonleft" value="twoplus"> 2+</label>
 
-                                                    <label><input type="radio"  name="THORACICBicepstendonleft" value="threeplus"> 3+ </label>
-                                                    <label><input type="radio"  name="THORACICBicepstendonleft" value="fourplus"> 4+ </label>
+                                                    <label><input type="radio" name="THORACICBicepstendonleft" value="threeplus"> 3+ </label>
+                                                    <label><input type="radio" name="THORACICBicepstendonleft" value="fourplus"> 4+ </label>
                                                     <label>on the right and </label>
-                                                    
+
 
                                                 </p>
                                                 <p>
-                                                    
+
                                                     Triceps tendon
 
-                                                    <label><input type="radio"  name="THORACICTricepstendonright" value="zero"> 0</label>
+                                                    <label><input type="radio" name="THORACICTricepstendonright" value="zero"> 0</label>
 
-                                                    <label><input type="radio"  name="THORACICTricepstendonright" value="oneplus"> 1+</label>
+                                                    <label><input type="radio" name="THORACICTricepstendonright" value="oneplus"> 1+</label>
 
-                                                    <label><input type="radio"  name="THORACICTricepstendonright" value="twoplus"> 2+</label>
+                                                    <label><input type="radio" name="THORACICTricepstendonright" value="twoplus"> 2+</label>
 
-                                                    <label><input type="radio"  name="THORACICTricepstendonright" value="threeplus"> 3+ </label>
-                                                    <label><input type="radio"  name="THORACICTricepstendonright" value="fourplus"> 4+ </label>
+                                                    <label><input type="radio" name="THORACICTricepstendonright" value="threeplus"> 3+ </label>
+                                                    <label><input type="radio" name="THORACICTricepstendonright" value="fourplus"> 4+ </label>
                                                     <label>on the right and </label>
-                                                    <label><input type="radio"  name="THORACICTricepstendonleft" value="zero"> 0</label>
+                                                    <label><input type="radio" name="THORACICTricepstendonleft" value="zero"> 0</label>
 
-                                                    <label><input type="radio"  name="THORACICTricepstendonleft" value="oneplus"> 1+</label>
+                                                    <label><input type="radio" name="THORACICTricepstendonleft" value="oneplus"> 1+</label>
 
-                                                    <label><input type="radio"  name="THORACICTricepstendonleft" value="twoplus"> 2+</label>
+                                                    <label><input type="radio" name="THORACICTricepstendonleft" value="twoplus"> 2+</label>
 
-                                                    <label><input type="radio"  name="THORACICTricepstendonleft" value="threeplus"> 3+ </label>
-                                                    <label><input type="radio"  name="THORACICTricepstendonleft" value="fourplus"> 4+ </label>
+                                                    <label><input type="radio" name="THORACICTricepstendonleft" value="threeplus"> 3+ </label>
+                                                    <label><input type="radio" name="THORACICTricepstendonleft" value="fourplus"> 4+ </label>
                                                     <label>on the left </label>
 
 
@@ -1350,29 +1350,29 @@
                                                     <label><input type="checkbox" class="chkMulti" name="THORACICPE" value="kyphotic"> kyphotic</label>
                                                     <label><input type="checkbox" class="chkMulti" name="THORACICPE" value="lordotic"> lordotic</label>
                                                     <label><input type="checkbox" class="chkMulti" name="THORACICPE" value="trunk shift"> trunk shift</label>
-                                                    <label><input type="checkbox" class="chkMulti" name="THORACICPE" value="pelvic obliquity"> pelvic obliquity</label>                                                    
+                                                    <label><input type="checkbox" class="chkMulti" name="THORACICPE" value="pelvic obliquity"> pelvic obliquity</label>
                                                 </p>
                                                 <p>
                                                     Palpation
 
-                                                    <label><input type="radio"  name="THORACICPalpation" value="No"> No</label>
+                                                    <label><input type="radio" name="THORACICPalpation" value="No"> No</label>
 
-                                                    <label><input type="radio"  name="THORACICPalpation" value="mild"> mild</label>
+                                                    <label><input type="radio" name="THORACICPalpation" value="mild"> mild</label>
 
-                                                    <label><input type="radio"  name="THORACICPalpation" value="moderate"> moderate</label>
+                                                    <label><input type="radio" name="THORACICPalpation" value="moderate"> moderate</label>
 
-                                                    <label><input type="radio"  name="THORACICPalpation" value="severe"> severe </label>
+                                                    <label><input type="radio" name="THORACICPalpation" value="severe"> severe </label>
                                                     <label>tenderness to palpation midline and paraspinal muscles</label>
-                                                    <label><input type="radio"  name="THORACICPalpationmidline" value="bilaterally"> bilaterally </label>
-                                                    <label><input type="radio"  name="THORACICPalpationmidline" value="right"> right </label>
-                                                    <label><input type="radio"  name="THORACICPalpationmidline" value="left"> left </label>
+                                                    <label><input type="radio" name="THORACICPalpationmidline" value="bilaterally"> bilaterally </label>
+                                                    <label><input type="radio" name="THORACICPalpationmidline" value="right"> right </label>
+                                                    <label><input type="radio" name="THORACICPalpationmidline" value="left"> left </label>
                                                     <label> Trigger points in</label>
                                                     <label><input type="checkbox" class="chkMulti" name="PETriggerTHORACIC" value="para lumbar"> para-lumbar</label>
                                                     <label><input type="checkbox" class="chkMulti" name="PETriggerTHORACIC" value="latissimus dorsi">  latissimus dorsi</label>
                                                     @* <label><input type="radio"  name="PETriggerTHORACIC" value="para lumbar"> para-lumbar </label>
                                                     <label><input type="radio"  name="PETriggerTHORACIC" value="latissimus dorsi/">  latissimus dorsi/ </label> *@
-                                                   
-                                                    <label> Muscle spasms Present.ROM is</label>                                                   
+
+                                                    <label> Muscle spasms Present.ROM is</label>
                                                     <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="mild"> mild </label>
                                                     <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="moderate"> moderate </label>
                                                     <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="severe"> severe </label>
@@ -1403,7 +1403,7 @@
                                                                     Actual
                                                                 </label>
                                                             </td>
-                                                            
+
                                                             <td>
                                                                 <input id="THORACICFlexion" class="form-control d-inline " style="width:100px" />
 
@@ -1438,7 +1438,7 @@
                                                                     Normal
                                                                 </label>
                                                             </td>
-                                                            
+
                                                             <td>
 
                                                                 <label>
@@ -1483,7 +1483,7 @@
 
                                                     </tbody>
                                                 </table>
-                                                                                              
+
 
                                             </div>
                                             <div id="LUMBARSPINEEXAMSection">
@@ -1524,13 +1524,13 @@
                                                     <label><input type="radio"  name="PETriggerLUMBAR" value="sternocleidomastoid"> sternocleidomastoid </label>
                                                     <label><input type="radio"  name="PETriggerLUMBAR" value="upper trapezius"> upper trapezius </label> *@
                                                     <label> Muscle spasms are</label>
-                                                    <label><input type="radio"  name="PEMuscleLUMBAR" value="none"> none </label>
-                                                    <label><input type="radio"  name="PEMuscleLUMBAR" value="mild"> mild </label>
-                                                    <label><input type="radio"  name="PEMuscleLUMBAR" value="moderate"> moderate </label>
-                                                    <label><input type="radio"  name="PEMuscleLUMBAR" value="severe"> severe </label>
-                                                    <label><input type="radio"  name="PEMuscleLUMBAR" value="bilaterally"> bilaterally </label>
-                                                    <label><input type="radio"  name="PEMuscleLUMBAR" value="right"> right </label>
-                                                    <label><input type="radio"  name="PEMuscleLUMBAR" value="left"> left </label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="none"> none </label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="mild"> mild </label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="moderate"> moderate </label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="severe"> severe </label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="bilaterally"> bilaterally </label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="right"> right </label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="left"> left </label>
 
                                                 </p>
                                                 <table cellspacing="0" cellpadding="5" border="1"
@@ -1557,7 +1557,7 @@
                                                                     Actual
                                                                 </label>
                                                             </td>
-                                                           
+
                                                             <td>
                                                                 <input id="LUMBARFlexion" class="form-control d-inline " style="width:100px" />
 
@@ -1592,7 +1592,7 @@
                                                                     Normal
                                                                 </label>
                                                             </td>
-                                                            
+
                                                             <td>
 
                                                                 <label>
@@ -1642,7 +1642,7 @@
                                                        style="width:100%;">
 
                                                     <thead>
-                                                        <tr>    
+                                                        <tr>
                                                             <td></td>
                                                             <td>Iliopsoas</td>
                                                             <td>Quadriceps</td>
@@ -1661,7 +1661,7 @@
                                                                     RIGHT
                                                                 </label>
                                                             </td>
-                                                           
+
                                                             <td>
                                                                 <input id="LUMBARRightIliopsoas" class="form-control d-inline " style="width:100px" />
                                                                 <label>
@@ -1776,7 +1776,7 @@
                                                                     RIGHT
                                                                 </label>
                                                             </td>
-                                                           
+
                                                             <td>
                                                                 <input id="LUMBARRightL2" class="form-control d-inline " style="width:100px" />
 
@@ -1840,12 +1840,12 @@
                                                     </label>
                                                     <label><input type="radio" name="LumbarStraight" value="negative"> negative</label>
 
-                                                    <label><input type="radio"  name="LumbarStraight" value="positive"> positive</label>
+                                                    <label><input type="radio" name="LumbarStraight" value="positive"> positive</label>
                                                     &nbsp;&nbsp;&nbsp;
-                                                    <label><input type="radio"  name="LumbarStraightRight" value="right"> right </label>
+                                                    <label><input type="radio" name="LumbarStraightRight" value="right"> right </label>
                                                     <input id="LumbarStraightRighttxt" class="form-control d-inline " style="width:100px" />
                                                     <label>degrees</label>
-                                                    <label><input type="radio"  name="LumbarStraightRight" value="left"> left </label>
+                                                    <label><input type="radio" name="LumbarStraightRight" value="left"> left </label>
                                                     <input id="LumbarStraightLefttxt" class="form-control d-inline " style="width:100px" />
                                                     <label>degrees</label>
 
@@ -1853,13 +1853,13 @@
                                                 <p>
                                                     Facet loading test
 
-                                                    <label><input type="radio"  name="LumbarFacetloading" value="negative"> negative</label>
+                                                    <label><input type="radio" name="LumbarFacetloading" value="negative"> negative</label>
 
-                                                    <label><input type="radio"  name="LumbarFacetloading" value="positive"> positive</label>
+                                                    <label><input type="radio" name="LumbarFacetloading" value="positive"> positive</label>
                                                     &nbsp;&nbsp;&nbsp;
-                                                    <label><input type="radio"  name="LumbarFacetloadingRight" value="right"> right </label>
+                                                    <label><input type="radio" name="LumbarFacetloadingRight" value="right"> right </label>
 
-                                                    <label><input type="radio"  name="LumbarFacetloadingRight" value="left"> left </label>
+                                                    <label><input type="radio" name="LumbarFacetloadingRight" value="left"> left </label>
                                                     <label><input type="radio" name="LumbarFacetloadingRight" value="bilaterally"> bilaterally </label>
 
 
@@ -1869,23 +1869,23 @@
                                                     <br />
                                                     Patellar tendon
 
-                                                    <label><input type="radio"  name="LUMBARPatellartendonright" value="zero"> 0</label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonright" value="zero"> 0</label>
 
-                                                    <label><input type="radio"  name="LUMBARPatellartendonright" value="oneplus"> 1+</label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonright" value="oneplus"> 1+</label>
 
-                                                    <label><input type="radio"  name="LUMBARPatellartendonright" value="twoplus"> 2+</label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonright" value="twoplus"> 2+</label>
 
-                                                    <label><input type="radio"  name="LUMBARPatellartendonright" value="threeplus"> 3+ </label>
-                                                    <label><input type="radio"  name="LUMBARPatellartendonright" value="fourplus"> 4+ </label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonright" value="threeplus"> 3+ </label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonright" value="fourplus"> 4+ </label>
                                                     <label>on the right and </label>
-                                                    <label><input type="radio"  name="LUMBARPatellartendonleft" value="zero"> 0</label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonleft" value="zero"> 0</label>
 
-                                                    <label><input type="radio"  name="LUMBARPatellartendonleft" value="oneplus"> 1+</label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonleft" value="oneplus"> 1+</label>
 
-                                                    <label><input type="radio"  name="LUMBARPatellartendonleft" value="twoplus"> 2+</label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonleft" value="twoplus"> 2+</label>
 
-                                                    <label><input type="radio"  name="LUMBARPatellartendonleft" value="threeplus"> 3+ </label>
-                                                    <label><input type="radio"  name="LUMBARPatellartendonleft" value="fourplus"> 4+ </label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonleft" value="threeplus"> 3+ </label>
+                                                    <label><input type="radio" name="LUMBARPatellartendonleft" value="fourplus"> 4+ </label>
                                                     <label>on the left </label>
 
 
@@ -1896,21 +1896,21 @@
 
                                                     <label><input type="radio" name="LUMBARAchillestendonright" value="zero"> 0</label>
 
-                                                    <label><input type="radio"  name="LUMBARAchillestendonright" value="oneplus"> 1+</label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonright" value="oneplus"> 1+</label>
 
-                                                    <label><input type="radio"  name="LUMBARAchillestendonright" value="twoplus"> 2+</label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonright" value="twoplus"> 2+</label>
 
-                                                    <label><input type="radio"  name="LUMBARAchillestendonright" value="threeplus"> 3+ </label>
-                                                    <label><input type="radio"  name="LUMBARAchillestendonright" value="fourplus"> 4+ </label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonright" value="threeplus"> 3+ </label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonright" value="fourplus"> 4+ </label>
                                                     <label>on the right and </label>
-                                                    <label><input type="radio"  name="LUMBARAchillestendonleft" value="zero"> 0</label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonleft" value="zero"> 0</label>
 
-                                                    <label><input type="radio"  name="LUMBARAchillestendonleft" value="oneplus"> 1+</label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonleft" value="oneplus"> 1+</label>
 
-                                                    <label><input type="radio"  name="LUMBARAchillestendonleft" value="twoplus"> 2+</label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonleft" value="twoplus"> 2+</label>
 
-                                                    <label><input type="radio"  name="LUMBARAchillestendonleft" value="threeplus"> 3+ </label>
-                                                    <label><input type="radio"  name="LUMBARAchillestendonleft" value="fourplus"> 4+ </label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonleft" value="threeplus"> 3+ </label>
+                                                    <label><input type="radio" name="LUMBARAchillestendonleft" value="fourplus"> 4+ </label>
                                                     <label>on the left </label>
 
 
@@ -1927,7 +1927,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="GAIT" value="Cane"> Cane</label>
                                                     <label><input type="checkbox" class="chkMulti" name="GAIT" value="Walker"> Walker</label>
 
-                                                    
+
                                                 </p>
 
                                             </div>
@@ -1961,7 +1961,7 @@
                                             <br />
 
                                             <p>
-                                                
+
                                                 @* <label><input type="checkbox" class="chkMulti" name="PlanConservativeTx" value="ConservativeTx"> ConservativeTx:</label> *@
                                                 ConservativeTx:
                                                 <label><input type="radio" name="PlanStart" value="No">Start</label>
@@ -1970,35 +1970,38 @@
                                                 <label><input type="checkbox" class="chkMulti" name="PlanPT" value="Chiro"> Chiro</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanPT" value="Acupuncture"> Acupuncture</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanPT" value="HEP"> HEP</label>
-                                               
+
                                             </p>
                                             <p>
                                                 Medication Rx:
                                                 @* <label><input type="checkbox" class="chkMulti" name="MedicationRx" value="MedicationRx"> Medication Rx:</label> *@                                                
                                                 <label><input type="checkbox" class="chkMulti" name="PlanMedication" value="Ibuprofen"> Ibuprofen 600 mg</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanMedication" value=" lidocainetopical">  lidocaine 5% topical</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PlanMedication" value="cyclobenzaprine"> cyclobenzaprine 10 mg</label>                                             
+                                                <label><input type="checkbox" class="chkMulti" name="PlanMedication" value="cyclobenzaprine"> cyclobenzaprine 10 mg</label>
 
                                             </p>
                                             <p>
                                                 Order
                                                 @* <label><input type="checkbox" class="chkMulti" name="PlanOrderMRI" value="PlanOrderMRI"> Order</label> *@
-                                                <label><input type="checkbox" class="chkMulti" name="PlanMRI" value="MRI"> MRI</label>
+                                                <label>@* <input type="checkbox" class="chkMulti" name="PlanMRI" value="MRI"> *@ MRI</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanMRI" value="Cspine"> C spine</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PlanMRI" value="Lspine"> L spine</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanMRI" value="Tspine"> T spine</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PlanMRI" value="Lspine"> L spine</label>
+                                              
                                                 &nbsp;&nbsp;&nbsp;
-                                               
-                                                <label><input type="checkbox" class="chkMulti" name="PlanCT" value="CT"> CT</label>
+
+                                                <label>@* <input type="checkbox" class="chkMulti" name="PlanCT" value="CT"> *@ CT</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanCT" value="Cspine"> C spine</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PlanCT" value="Lspine"> L spine</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanCT" value="Tspine"> T spine</label>
-                                                &nbsp;&nbsp;&nbsp;
+                                                <label><input type="checkbox" class="chkMulti" name="PlanCT" value="Lspine"> L spine</label>
                                                
-                                                <label><input type="checkbox" class="chkMulti" name="PlanXray" value="Xray"> X-ray</label>
+                                                &nbsp;&nbsp;&nbsp;
+
+                                                <label>@* <input type="checkbox" class="chkMulti" name="PlanXray" value="Xray"> *@ X-ray</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanXray" value="Cspine"> C spine</label>
+                                                 <label><input type="checkbox" class="chkMulti" name="PlanXray" value="Tspine"> T spine</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanXray" value="Lspine"> L spine</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PlanXray" value="Tspine"> T spine</label>
+                                               
                                                 &nbsp;&nbsp;&nbsp;
                                                 <label>Other</label>
                                                 <input type="text" id="PlanOrder" name="PlanOrder" class="form-control d-inline w-auto" />
@@ -2020,19 +2023,20 @@
                                             <p>
 
                                                 <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="CTPI"> CTPI</label>
-                                                <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="LTPI"> LTPI</label>  
                                                 <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="TTPI"> TTPI</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="LTPI"> LTPI</label>
+                                                
 
                                             </p>
                                             <p>
                                                 Recommendation
-                                               @*  <label><input type="checkbox" class="chkMulti" name="PlanRecommendation" value="Recommendation"> Recommendation</label> *@
+                                                @*  <label><input type="checkbox" class="chkMulti" name="PlanRecommendation" value="Recommendation"> Recommendation</label> *@
                                                 <label><input type="checkbox" class="chkMulti" name="Recommendation" value="CESI"> CESI </label>
                                                 <label><input type="checkbox" class="chkMulti" name="Recommendation" value="CFacet"> C.Facet</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Recommendation" value="CTESI"> CTESI</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LTESI"> LTESI</label>
                                                 <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LESI"> LESI</label>
-                                                <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LFacet"> L.Facet</label> 
+                                                <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LFacet"> L.Facet</label>
                                             </p>
                                             <p>
                                                 <strong>FOLLOW UP:</strong>
@@ -2056,19 +2060,22 @@
                                                     PRN
                                                 </label>
 
-                                                
+
                                             </p>
 
                                         </div>
                                     </div>
                                 </div>
-                               
+
                             </div>
 
 
                         </div>
 
-                        <button type="submit" class="btn btn-primary mt-3 w-100">Submit</button>
+                        <p id="btnSection">
+                            <button type="submit" class="btn btn-primary mt-3  d-inline" style="width:45% !important">Submit</button>
+                            <button type="button" class="btn btn-outline-primary mt-3  d-inline" style="width:45% !important" onclick='saveForm(false)'>Save</button>
+                        </p>
 
                     </form>
                 </div>
@@ -2551,7 +2558,7 @@
                     $("#divWorking").show();
                 else
                     $("#divWorking").hide();
-    
+
                     if(data.GeneralNormal==="No")
         $("#divGeneral").show();
     else
@@ -2604,7 +2611,7 @@
                     $("#divAllergy").show();
                 else
                     $("#divAllergy").hide();
-                
+
                 if(data.Smoke==="Yes")
                     $("#divSmoke").show();
                 else
@@ -2699,7 +2706,12 @@
                     }
                 });
             });
-             var selected = [];
+            
+            
+
+
+
+            var selected = [];
             $(document).on('change', 'input[name="Complaints"]', function () {
 
                 var section = $(this).data('section');
@@ -3241,7 +3253,7 @@
     //                 return false;
     //         }
     //     }
-        
+
     //     return true;
     // }
 
