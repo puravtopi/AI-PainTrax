@@ -1,4 +1,4 @@
-﻿async function downloadPDF() {
+﻿async function downloadPDF(fileName) {
 
     $('#pdfLoader').show();
     try {
@@ -49,7 +49,7 @@
         // PDF options
         const opt = {
             margin: 0.3,
-            filename: 'Patient_Injury_Report.pdf',
+            filename: fileName,
             image: {
                 type: 'jpeg',
                 quality: 1

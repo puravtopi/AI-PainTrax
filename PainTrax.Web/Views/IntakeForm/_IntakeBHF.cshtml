@@ -23,7 +23,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 @*   <li><a class="dropdown-item" href="javascript:void(0)" onclick="fnExportDOC()">Export as DOC</a></li> *@
-                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="downloadPDF()">Export as PDF</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="fndownloadPDF()">Export as PDF</a></li>
                             </ul>
                         </div>
                     </div>
@@ -89,6 +89,7 @@
                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                             Patient Details
                                         </button>
+
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
@@ -334,6 +335,15 @@
             var recognition;
             var isRecording = false;
 
+    function fndownloadPDF(){
+        var fileName =
+        $("#FN").val() + ", " +
+        $("#LN").val() + "_" +
+        $("#DOE").val() +
+        "_IE_IntakeForm.pdf";
+        downloadPDF(fileName);
+    }
+
     function calculateBMI()
     {
             let weight = parseFloat($("#weight").val());
@@ -415,7 +425,7 @@
                     input.val((currentText + "" + transcript).trim());
                 }
 
-                updatePreview();
+                //updatePreview();
             };
 
             recognition.onend = function () {
@@ -529,7 +539,7 @@
                         return loadTextTemplate(templateUrl);
                     })
                     .then(function () {
-                        updatePreview();
+                        //updatePreview();
                     });
             }
 
@@ -655,45 +665,18 @@
                     html = html.replace(regex, data[key]);
                 });
 
+                    toggleSection(data.Hospital === "Yes", "#divHospital");
+                    toggleSection(data.Allergy === "Yes", "#divAllergy");
+                    toggleSection(data.Smoke === "Yes", "#divSmoke");
+                    toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
+                    toggleSection(data.PT === "Yes", "#divPT");
+                    toggleSection(data.Chiro === "Yes", "#divChiro");
+
                     if(data.PreInjury==="No")
                         $("#preInjuryDetailsBox").show();
                     else
-                          $("#preInjuryDetailsBox").hide();
+                        $("#preInjuryDetailsBox").hide();
 
-                    if(data.Hospital==="Yes")
-                        $("#divHospital").show();
-                    else
-                        $("#divHospital").hide();
-
-                     if(data.Hospital==="Yes")
-                        $("#divHospital").show();
-                    else
-                        $("#divHospital").hide();
-
-                    if(data.Allergy==="Yes")
-                        $("#divAllergy").show();
-                    else
-                        $("#divAllergy").hide();
-
-                    if(data.Smoke==="Yes")
-                        $("#divSmoke").show();
-                    else
-                        $("#divSmoke").hide();
-
-                    if(data.OtherDrugs==="Yes")
-                        $("#divDrugs").show();
-                    else
-                        $("#divDrugs").hide();
-
-                    if(data.PT==="Yes")
-                        $("#divPT").show();
-                    else
-                        $("#divPT").hide();
-
-                    if(data.Chiro==="Yes")
-                        $("#divChiro").show();
-                    else
-                        $("#divChiro").hide();
 
                    $(".mmClass").show();
                    if (data.InjuryType === "WC") {
@@ -953,7 +936,7 @@
 
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
-                    updatePreview();
+                    //updatePreview();
                 }, 1000);
             }
 
@@ -1409,6 +1392,11 @@
 
         return true;
     }
+
+    function toggleSection(condition, selector) {
+        $(selector).toggle(condition);
+    }
+
 </script>
 
 <!-- html2pdf library -->
