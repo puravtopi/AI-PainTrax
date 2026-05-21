@@ -50,6 +50,8 @@
         public string Airbag { get; set; }
         public string Gender { get; set; }
         public string Height { get; set; }
+        public string Heightft { get; set; }
+        public string Heightinch { get; set; }
         public string PTFreq { get; set; }
         public string Police { get; set; }
         public string SitMin { get; set; }
@@ -192,10 +194,10 @@
 
         public string MidbackSection { get; set; }
         public List<string> mdbackPain { get; set; }
-        public string mdbackDiffsleeping { get; set; }
-        public string mdbackDifflifting { get; set; }
-        public string mdbackDiffbending { get; set; }
-        public string mdbacksustained { get; set; }
+        //public string mdbackDiffsleeping { get; set; }
+        //public string mdbackDifflifting { get; set; }
+        //public string mdbackDiffbending { get; set; }
+        //public string mdbacksustained { get; set; }
         public string MidbackRadiatesTo { get; set; }
         public List<string> MidbackRadiates { get; set; }
         public List<string> MidbackWorsens { get; set; }
@@ -279,7 +281,7 @@
         public string CERVICALLeftT1 { get; set; }
 
         public string CevicalSpurling { get; set; }
-        public string CevicalSpurlingRight { get; set; }
+        public List<string> CevicalSpurlingRight { get; set; }
         public string CERVICALRighttxt { get; set; }
         public string CERVICALLefttxt { get; set; }
 
@@ -345,7 +347,7 @@
         public string LUMBARLeftS1 { get; set; }
 
         public string LumbarStraight { get; set; }
-        public string LumbarStraightRight { get; set; }
+        public List<string> LumbarStraightRight { get; set; }
         public string LumbarStraightRighttxt { get; set; }
         public string LumbarStraightLefttxt { get; set; }
 
@@ -379,6 +381,10 @@
         public List<string> Recommendation { get; set; }
         public string FollowUpOther { get; set; }
         public string FollowUp { get; set; }
+        public string OtherAsymptomatic { get; set; }
+        public string OtherPriortrauma { get; set; }
+        public string OtherLOC { get; set; }
+        public string OtherBruises { get; set; }
     }
 }
 
