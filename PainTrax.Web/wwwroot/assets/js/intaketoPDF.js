@@ -18,6 +18,7 @@
         // Hide microphone buttons
         $('.mic-btn').hide();
         $('#btnSection').hide();
+        $('#btnSaveSection').hide();
 
         // Optional: remove borders/shadows for clean PDF
         $('.accordion-item').css({
@@ -99,6 +100,7 @@
         $('.accordion-button').show();
         $('.mic-btn').show();
         $('#btnSection').show();
+        $('#btnSaveSection').show();
     }
     finally {
 
