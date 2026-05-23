@@ -171,6 +171,7 @@
         public string degree { get; set; }
         public string Asymptomatic { get; set; }
         public string Priortrauma { get; set; }
+        public string PatientAT { get; set; }
         public List<string> PatientAccidentType { get; set; }
         public string SeatBelt { get; set; }
         public string Airbagsdeployed { get; set; }
@@ -245,8 +246,10 @@
 
         public List<string> CervicalPE { get; set; }
         public string Palpation { get; set; }
+        public string Palpationtenderness { get; set; }
         public List<string> PETriggerCervical { get; set; }
         public string PEMuscleCervical { get; set; }
+        public string PEMuscleCervicalSide { get; set; }
 
         public string CervicalFlexion { get; set; }
         public string CervicalExtension { get; set; }
@@ -312,6 +315,7 @@
         public string LUMBARPalpationmidline { get; set; }
         public List<string> PETriggerLUMBAR { get; set; }
         public string PEMuscleLUMBAR { get; set; }
+        public string PEMuscleLUMBARside { get; set; }
 
         public string LUMBARFlexion { get; set; }
         public string LUMBARExtension { get; set; }

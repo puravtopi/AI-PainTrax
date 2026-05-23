@@ -83,59 +83,67 @@
                                                     <option value="left-handed">L</option>
                                                 </select>
                                                 &nbsp;&nbsp;
-                                                DOE
-                                                <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" oninput="validateYear(this)" />
-                                                &nbsp;&nbsp;
+                                               
                                                 @*  DOA
                                                 <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
                                                 &nbsp;&nbsp; *@
-                                                Location: &nbsp;&nbsp;
-                                                <span id="lblLocation">
+                                                Location: 
+                                                @* <span id="lblLocation">
                                                     @ViewBag.LocName
-                                                </span>
+                                                </span> *@
+                                                <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
+                                                   
+                                                </select>
                                             </div>
 
                                             <div class="select-group">
+                                                DOE
+                                                <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
+                                                &nbsp;&nbsp;
                                                 DOB:
-                                                <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" oninput="validateYear(this)" />
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" oninput="formatDOB(this)" onblur="validateDOB(this)" />
+                                                &nbsp;&nbsp;&nbsp;
                                                 Age:
-                                                <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input id="Age" name="Age" class="form-control d-inline" style="width:30px" /> years
+                                                &nbsp;&nbsp;&nbsp;
 
                                                 DOA:
-                                                <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" oninput="validateYear(this)" />
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <strong>Case Type:</strong>
-                                                    <label>
-                                                        <input type="radio" name="InjuryType" value="NF">
-                                                        <span class="select-btn">NF</span>
-                                                    </label>
+                                                <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
+                                                &nbsp;&nbsp;
+                                                <label>Case Type:</label>
+                                                <label>
+                                                    <input type="radio" name="InjuryType" value="NF">
+                                                    <span class="select-btn">NF</span>
+                                                </label>
 
-                                                    <label>
-                                                        <input type="radio" name="InjuryType" value="WC">
-                                                        <span class="select-btn">WC</span>
-                                                    </label>
+                                                <label>
+                                                    <input type="radio" name="InjuryType" value="WC">
+                                                    <span class="select-btn">WC</span>
+                                                </label>
 
-                                                    <label>
-                                                        <input type="radio" name="InjuryType" value="MM">
-                                                        <span class="select-btn">MM</span>
-                                                    </label>
+                                                <label>
+                                                    <input type="radio" name="InjuryType" value="MM">
+                                                    <span class="select-btn">MM</span>
+                                                </label>
 
-                                                    <label>
-                                                        <input type="radio" name="InjuryType" value="PI">
-                                                        <span class="select-btn">PI</span>
-                                                    </label>
-                                                    <label>
-                                                        <input type="radio" name="InjuryType" value="LIEN">
-                                                        <span class="select-btn">LIEN</span>
-                                                    </label>
+                                                <label>
+                                                    <input type="radio" name="InjuryType" value="PI">
+                                                    <span class="select-btn">PI</span>
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="InjuryType" value="LIEN">
+                                                    <span class="select-btn">LIEN</span>
+                                                </label>
+                                                
                                                
                                            </div>
-                                            
                                             <div class="select-group">
-                                                Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                Occupation:
+                                                <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
+                                            </div>
+                                            <div class="select-group">
                                                 Working:
                                                 <label><input type="radio" name="IsWorking" value="The patient is currently working"> <span class="select-btn">Yes</span></label>
                                                 <label><input type="radio" name="IsWorking" value="The patient stopped working immediately after accident."> <span class="select-btn">No</span></label>
@@ -144,27 +152,26 @@
                                                     <input type="radio" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span>
                                                     <input type="radio" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span>
                                                 </span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
+                                                
+                                                
                                             </div>
-                                            <div class="select-group">
-
-                                                Occupation:
-                                                <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
-                                            </div>
+                                            
 
                                                     <div class="select-group">
                                                 <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Height:
-                                                <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:100px" />ft
-                                                <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:100px" />inches
+                                                <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:30px" />ft
+                                                <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" />inches
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Weight:
-                                                <input id="Weight" name="Weight" class="form-control d-inline" style="width:150px" />
+                                                <input id="Weight" name="Weight" class="form-control d-inline" style="width:30px" />
                                                
                                                 lbs,
                                                 
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
-                                                <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
+                                                <input id="BMI" name="BMI" class="form-control d-inline" style="width:30px" />
                                                     </div>
                                            
                                                         <div class="select-group">
@@ -216,11 +223,19 @@
 
                                             </div>
                                             <div class="select-group">
-                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driver"> <span class="select-btn">Driver</span> </label>
+                                                Accident Type
+                                                <label><input type="radio" name="PatientAType" value="Driver"><span class="select-btn"> Driver</span></label>
+                                                <label><input type="radio" name="PatientAType" value="Front Pass"><span class="select-btn"> Front Pass</span></label>
+                                                <label><input type="radio" name="PatientAType" value="Rear Pass"><span class="select-btn"> Rear Pass</span></label>
+                                                      <label><input type="radio" name="PatientAType" value="Pedestrian"><span class="select-btn"> Pedestrian</span></label>
+                                                <label><input type="radio" name="PatientAType" value="Bicyclist"><span class="select-btn"> Bicyclist</span></label>
+                                               @*  <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driver"> <span class="select-btn">Driver</span> </label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="FrontPass"> <span class="select-btn">Front Pass</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="RearPass"> <span class="select-btn">Rear Pass</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Pedestrian"><span class="select-btn">Pedestrian</span> </label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Bicyclist"> <span class="select-btn">Bicyclist</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Bicyclist"> <span class="select-btn">Bicyclist</span></label> *@
+                                                &nbsp;&nbsp;&nbsp;
+                                                Collision Type
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Frontend"><span class="select-btn">Front end</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Rearend"> <span class="select-btn">Rear end</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driverside"> <span class="select-btn">Driver side</span></label>
@@ -268,12 +283,14 @@
                                                 <label><input type="radio" name=" privatecar" value="No"><span class="select-btn"> N</span></label>
                                                 &nbsp;&nbsp;&nbsp;
                                             </div>
-                                                                           <p>
 
+
+                                            <span id="divHospital" style="display:none">
                                                 Hospital name
                                                 <input id="hospitalname" name="hospitalname" class="form-control d-inline w-auto" style="min-width:70%;" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'hospitalname')"></i>
-                                          </p>
+                                                </span>
+                                          
 
 
 
@@ -426,7 +443,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="going from seating to standing up"> <span class="select-btn">going from seating to standing up</span></label>
                                                </div>
                                                <div class="select-group">
-                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="walking"> <span class="select-btn">walking</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="walking"> <span class="select-btn">walking</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="climbing stairs">  <span class="select-btn">climbing stairs</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="descending stairs"> <span class="select-btn">descending stairs</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="driving"> <span class="select-btn">driving</span></label>
@@ -758,9 +775,9 @@
 
                                                     <label><input type="radio" name="Palpation" value="severe"> <span class="select-btn">severe </span></label>
                                                     <label>tenderness to palpation midline and paraspinal muscles</label>
-                                                    <label><input type="radio" name="Palpation" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
-                                                    <label><input type="radio" name="Palpation" value="right"> <span class="select-btn">right </span></label>
-                                                    <label><input type="radio" name="Palpation" value="left"> <span class="select-btn">left </span></label>
+                                                    <label><input type="radio" name="Palpationtenderness" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
+                                                    <label><input type="radio" name="Palpationtenderness" value="right"> <span class="select-btn">right </span></label>
+                                                        <label><input type="radio" name="Palpationtenderness" value="left"> <span class="select-btn">left </span></label>
                                                     </div>
                                                     <div class="select-group">
                                                     <label> Trigger points in</label>
@@ -781,9 +798,10 @@
                                                     <label><input type="radio" name="PEMuscleCervical" value="mild"> <span class="select-btn">mild</span> </label>
                                                     <label><input type="radio" name="PEMuscleCervical" value="moderate"> <span class="select-btn">moderate</span> </label>
                                                     <label><input type="radio" name="PEMuscleCervical" value="severe"> <span class="select-btn">severe</span> </label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="bilaterally"> <span class="select-btn">bilaterally</span> </label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="right"> <span class="select-btn">right </span></label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="left"> <span class="select-btn">left </span></label>
+                                                    <label> side </label>
+                                                    <label><input type="radio" name="PEMuscleCervicalSide" value="bilaterally"> <span class="select-btn">bilaterally</span> </label>
+                                                    <label><input type="radio" name="PEMuscleCervicalSide" value="right"> <span class="select-btn">right </span></label>
+                                                        <label><input type="radio" name="PEMuscleCervicalSide" value="left"> <span class="select-btn">left </span></label>
 
                                                     </div>
                                                 <table cellspacing="0" cellpadding="5" border="1"
@@ -1373,9 +1391,10 @@
                                                     <label><input type="radio" name="PEMuscleLUMBAR" value="mild"> <span class="select-btn">mild </span></label>
                                                     <label><input type="radio" name="PEMuscleLUMBAR" value="moderate"><span class="select-btn"> moderate </span></label>
                                                     <label><input type="radio" name="PEMuscleLUMBAR" value="severe"> <span class="select-btn">severe </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="right"> <span class="select-btn">right </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="left"> <span class="select-btn">left </span></label>
+                                                    <label> side</label>
+                                                    <label><input type="radio" name="PEMuscleLUMBARside" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
+                                                    <label><input type="radio" name="PEMuscleLUMBARside" value="right"> <span class="select-btn">right </span></label>
+                                                        <label><input type="radio" name="PEMuscleLUMBARside" value="left"> <span class="select-btn">left </span></label>
 
                                                  </div>
                                                 <table cellspacing="0" cellpadding="5" border="1"
@@ -1863,7 +1882,7 @@
                                             <div class="select-group">
                                                 Order
                                                 @* <label><input type="checkbox" class="chkMulti" name="PlanOrderEMG" value="PlanOrderEMG"> Order</label> *@
-                                                <label><input type="checkbox" class="chkMulti" name="PlanEMG" value="EMG"><span class="select-btn"> EMG/NCV</span></label>
+                                                    <label>EMG/NCV</label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanEMG" value="UEs"> <span class="select-btn">UEs</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="PlanEMG" value="LEs"> <span class="select-btn">LEs</span></label>
 
@@ -3295,6 +3314,165 @@
             }
         }
     }
+    function validateDOB(input) {
+
+        if (!input.value)
+            return;
+
+        let parts = input.value.split("-");
+        let year = parts[0];
+
+        // Check year length
+        if (year.length !== 4) {
+
+            alert("Year must be 4 digits only");
+            input.value = "";
+            return;
+        }
+
+        let selectedDate = new Date(input.value);
+        let minDate = new Date("1900-01-01");
+        let today = new Date();
+
+        today.setHours(0, 0, 0, 0);
+
+        // Check minimum date
+        if (selectedDate < minDate) {
+
+            alert("DOB should be after 01/01/1900");
+            input.value = "";
+            return;
+        }
+
+        // Check future date
+        if (selectedDate > today) {
+
+            alert("Future date is not allowed");
+            input.value = "";
+            return;
+        }
+    }
+    function formatDOB(input) {
+        var dob = $('#dob').val();
+        // ---------- DOB ----------
+        if (dob) {
+            dobDate = validateDateStrict(dob, "DOB", true);
+            if (!dobDate) return;
+        }
+    }
+    function validateDateStrict(dateStr, fieldLabel, blockFuture) {
+
+        // Accept only YYYY-MM-DD (what <input type="date"> returns)
+        var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+        if (!regex.test(dateStr)) {
+            alert(fieldLabel + " must be after 01/01/1900");
+            return null;
+        }
+
+        var parts = dateStr.split('-');
+        var year  = parseInt(parts[0], 10);
+        var month = parseInt(parts[1], 10);
+        var day   = parseInt(parts[2], 10);
+
+        var date = new Date(year, month - 1, day);
+
+        // Invalid calendar date
+        if (
+            date.getFullYear() !== year ||
+            date.getMonth() !== month - 1 ||
+            date.getDate() !== day
+        ) {
+            alert("Invalid " + fieldLabel);
+            return null;
+        }
+
+        // DOB cannot be future
+        if (blockFuture) {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (date > today) {
+                alert(fieldLabel + " cannot be future date");
+                return null;
+            }
+        }
+
+        return date;
+    }
+    //  function formatDOB(input) {
+
+    //     let value = input.value.replace(/\D/g, '');
+
+    //     if (value.length > 2 && value.length <= 4)
+    //         value = value.substring(0, 2) + '/' + value.substring(2);
+
+    //     else if (value.length > 4)
+    //         value = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4, 8);
+
+    //     input.value = value;
+    // }
+
+    // function validateDOB(input) {
+
+    //     if (!input.value)
+    //         return;
+
+    //     let parts = input.value.split('/');
+
+    //     if (parts.length !== 3) {
+
+    //         alert("Enter date in dd/mm/yyyy format");
+    //         input.value = "";
+    //         return;
+    //     }
+
+    //     let day = parts[0];
+    //     let month = parts[1];
+    //     let year = parts[2];
+
+    //     // Year validation
+    //     if (year.length !== 4) {
+
+    //         alert("Year must be 4 digits");
+    //         input.value = "";
+    //         return;
+    //     }
+
+    //     let selectedDate = new Date(year, month - 1, day);
+    //     let minDate = new Date("1900-01-01");
+    //     let today = new Date();
+
+    //     today.setHours(0, 0, 0, 0);
+
+    //     // Invalid date check
+    //     if (
+    //         selectedDate.getFullYear() != year ||
+    //         selectedDate.getMonth() != month - 1 ||
+    //         selectedDate.getDate() != day
+    //     ) {
+
+    //         alert("Invalid date");
+    //         input.value = "";
+    //         return;
+    //     }
+
+    //     // Minimum date check
+    //     if (selectedDate < minDate) {
+
+    //         alert("DOB should be after 01/01/1900");
+    //         input.value = "";
+    //         return;
+    //     }
+
+    //     // Future date check
+    //     if (selectedDate > today) {
+
+    //         alert("Future date is not allowed");
+    //         input.value = "";
+    //         return;
+    //     }
+    // }
 </script>
 <!-- html2pdf library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
