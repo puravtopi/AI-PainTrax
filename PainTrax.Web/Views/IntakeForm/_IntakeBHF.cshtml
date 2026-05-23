@@ -758,6 +758,15 @@
                         }
                     });
             }
+            $(document).on('input', '.muscle-input', function () {
+
+                    let val = $(this).val();
+
+                    // If starts with D or d
+                    if (val.toLowerCase() === 'd') {
+                        $(this).val('Decreased');
+                    }
+            });
 
             $(document).ready(function () {
                 // Load template and initialize preview
@@ -777,6 +786,7 @@
                     saveForm(true);
 
                 });
+
 
 
 
