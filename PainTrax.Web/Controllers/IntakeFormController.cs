@@ -743,6 +743,25 @@ namespace PainTrax.Web.Controllers
             var loc = _locservices.GetOne(objLoc);
 
             ViewBag.LocName = loc?.location;
+
+            var locdata = _commonservices.GetLocations(Convert.ToInt32(cmpid));
+
+            List<SelectListItem> lst = new List<SelectListItem>();
+
+            int defaultlocation = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId).Value;
+
+            foreach (var item in locdata)
+            {
+                var obj = new SelectListItem()
+                {
+                    Text = item.Text,
+                    Value = item.Value,
+                    Selected = item.Value == locId.ToString() ? true : false
+                };
+                lst.Add(obj);
+
+            }
+            ViewBag.locList = lst;
             ViewBag.ProviderName = providerName == "--Select Provider--" ? "" : providerName;
 
 
