@@ -777,7 +777,7 @@ namespace PainTrax.Web.Controllers
                     data.allergies = defaultPage1.allergies;
                     data.dd = defaultPage1.dd;
                     data.daignosis_desc = defaultPage1.daignosis_desc;
-                    string assessment = defaultPage1.daignosis_desc==null?"":defaultPage1.daignosis_desc; 
+                    string assessment = defaultPage1.daignosis_desc == null ? "" : defaultPage1.daignosis_desc;
                     assessment = assessment.Replace("#sex", gender);
                     data.assessment = assessment;
                     data.cc = defaultPage1.cc;
@@ -2798,6 +2798,24 @@ namespace PainTrax.Web.Controllers
                 int? ieId = HttpContext.Session.GetInt32(SessionKeys.SessionIEId);
 
                 var Data = _pocService.GetExecutedPOCIE(patientIEId);
+
+                return PartialView("_POCSummary", Data);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "SurgeryPOCSummary");
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult ProcReport(int patientIEId = 0, int patientFUId = 0)
+        {
+            try
+            {
+                int? ieId = HttpContext.Session.GetInt32(SessionKeys.SessionIEId);
+
+                var Data = _pocService.GetPropReport(patientIEId,patientFUId);
 
                 return PartialView("_POCSummary", Data);
             }

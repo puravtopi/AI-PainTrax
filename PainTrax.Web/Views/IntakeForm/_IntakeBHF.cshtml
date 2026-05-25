@@ -687,36 +687,31 @@
                         html = html.replace('[WC_START]', '').replace('[WC_END]', '');
                         html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
                     }
-                    else if (data.InjuryType === "NF") {
+                    else if (data.InjuryType === "NF" || data.InjuryType === "PI" || 
+                    data.InjuryType === "LIEN") {
                         // Keep MVA, remove WC
                         html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
                         html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
                         $("#divWC").hide();
                         $("#divWC1").hide();
                         $("#divNF").show();
-                        $("#divPI").hide();
+                      
                     }
                     else if (data.InjuryType === "MM") {
                         // $("#divNF").hide();
                         // $("#divMM").hide();
                         // $("#divWC1").hide();
                         $(".mmClass").hide();
-                         $("#divPI").hide();
+                        
                     }
-                    else if (data.InjuryType === "PI") {
-                        $("#divWC").hide();
-                        $("#divWC1").hide();
-                        $("#divNF").hide();
-                        $("#divPI").show();
-                    }
-                    else {
+                                       else {
                         // Remove both
                         html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
                         html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
                         $("#divNF").hide();
                         $("#divMM").hide();
                         $("#divWC1").hide();
-                         $("#divPI").hide();
+                       
                     }
 
                     $('#previewText').html(html);

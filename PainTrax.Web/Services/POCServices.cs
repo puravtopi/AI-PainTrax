@@ -420,6 +420,26 @@ namespace PainTrax.Web.Services
             }
         }
 
+        public List<POCSumarryVM> GetPropReport(int PatientIEID = 0, int PatientFUID = 0)
+        {
+            try
+            {
+
+                string query = "SELECT *,p.Executed as PDate FROM tbl_procedures_details p WHERE p.Executed IS NOT NULL AND p.PatientIE_ID=" + PatientIEID+ " order by p.Executed desc";
+
+                if (PatientFUID != 0)
+                    query = "SELECT *,p.Executed as PDate FROM tbl_procedures_details p WHERE p.Executed IS NOT NULL AND p.PatientFU_ID=" + PatientFUID + " order by p.Executed desc";
+
+                List<POCSumarryVM> dataList = ConvertDataTable<POCSumarryVM>(GetData(query));
+                return dataList;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public List<POCSumarryVM> GetPOCSummary(int PatientIEID)
         {
             try
@@ -589,12 +609,12 @@ namespace PainTrax.Web.Services
             Execute(cm);
         }
 
-        public bool UpdatePOCSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant, string sSurgeon, int cmpid,DateTime sDate)
+        public bool UpdatePOCSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant, string sSurgeon, int cmpid, DateTime sDate)
         {
             try
             {
                 string query = "call sp_Update_SurgeryCenter(" + sId + ",'" + sSCName + "','" + sAssistant + "', '" + sProcedureDetailIDs.TrimStart(',') + "','" + sSurgeon.TrimStart(',') + "'," + cmpid + "," +
-                    "'"+ sDate.ToString("yyyy-MM-dd") +"')";
+                    "'" + sDate.ToString("yyyy-MM-dd") + "')";
 
                 MySqlCommand cm = new MySqlCommand(query, conn);
 

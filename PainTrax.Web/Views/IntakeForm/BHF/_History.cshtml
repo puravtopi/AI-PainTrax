@@ -11,16 +11,6 @@
     <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
 </div>
 
-<!-- Injury Type -->
-@* <p>
-                                                Type of Injury:
-                                                <label><input type="radio" name="InjuryType" value="motor vehicle" /> MVA</label>
-                                                <label><input type="radio" name="InjuryType" value="work-related" /> Work-related</label>
-                                                <label><input type="radio" name="InjuryType" value="mm" /> MM</label>
-                                                <label><input type="radio" name="InjuryType" value="lien" /> Lien</label>
-                                                <label><input type="radio" name="InjuryType" value="pi" /> PI</label>
-                                            </p> *@
-
 <div id="divNF" style="display:none;">
     <!-- Paragraph Description -->
     <div class="select-group">
@@ -47,22 +37,23 @@
         <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger-side T-boned"> <span class="select-btn">Passenger-side T-boned</span>   </label>
         <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger sideswipe"> <span class="select-btn">Passenger sideswipe</span></label>
     </div>
-    <p>
-        Please describe
-        <textarea id="MMDescription" name="MMDescription" class="form-control d-inline" style="width:95%"></textarea>
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MMDescription')"></i>
-    </p>
+    
 
 
 
 </div>
-<div id="divPI" style="display:none;">
+@* <div id="divPI" style="display:none;">
     <p>
         Please describe
         <textarea id="PIDescription" name="PIDescription" class="form-control d-inline" style="width:95%"></textarea>
         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PIDescription')"></i>
     </p>
-</div>
+</div> *@
+<p>
+    Please describe
+    <textarea id="NFDescription" name="MMDescription" class="form-control d-inline" style="width:95%"></textarea>
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NFDescription')"></i>
+</p>
 <div id="divWC" style="display:none;">
     <!-- Paragraph Description -->
     <div class="select-group">
