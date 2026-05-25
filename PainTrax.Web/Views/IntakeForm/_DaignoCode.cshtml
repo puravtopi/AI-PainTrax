@@ -62,7 +62,24 @@
                 var code = row.cells[1].innerHTML;
                 var desc = row.cells[2].querySelector('input[type="text"]').value;
 
-                groupHtml += "<li>" + code + " " + desc + "</li>";
+                 // Check if code already exists inside divDiagnosis
+    var alreadyExists = false;
+
+        $("#divDiagnosis li").each(function () {
+
+        var existingText = $(this).text().trim();
+
+        // Check starting code
+        if (existingText.startsWith(code + " ")) {
+            alreadyExists = true;
+            return false; // break loop
+        }
+    });
+
+    // Add only if not exists
+    if (!alreadyExists) {
+        groupHtml += "<li>" + code + " " + desc + "</li>";
+    }
             });
 
 
@@ -74,7 +91,7 @@
         });
 
         $("#divDiagnosis").html(finalHtml);
-      
+
 
         $('#daignoCodeModal').modal('hide');
         return false;
