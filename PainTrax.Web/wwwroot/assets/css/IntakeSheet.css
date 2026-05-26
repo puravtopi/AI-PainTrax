@@ -144,3 +144,13 @@ textarea.form-control.d-inline {
         color: #000 !important;
     }
 }
+
+#settingsDropdown {
+    width: 42px;
+    height: 42px;
+}
+
+    #settingsDropdown:hover {
+        transform: rotate(30deg);
+        transition: 0.3s;
+    }

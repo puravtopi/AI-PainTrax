@@ -1,0 +1,33 @@
+﻿@model IEnumerable<PainTrax.Web.Models.InitialIntakeAI>
+<div class="table-responsive">
+    <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+
+                <th scope="col">FName</th>
+                <th scope="col">LName</th>
+                <th scope="col">DOB</th>
+                <th scope="col">DOA</th>
+                <th scope="col">DOS</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.FN</td>
+                    <td>@item.LN</td>
+                    <td>@item.DOB?.ToShortDateString()</td>
+                    <td>@item.DOA?.ToShortDateString()</td>
+                    <td>@item.DOE?.ToShortDateString()</td>
+                    <td>
+                        <a href="@Url.Action("AIInitialIntake", "IntakeForm", new { id = item.Id, locid = item.LocationId })">
+                            View
+                        </a>
+                    </td>
+
+                </tr>
+            }
+    </table>
+</div>

@@ -317,6 +317,16 @@ namespace PainTrax.Web.Services
             var datalist = ConvertDataTable<InitialIntake>(GetData(cm)).FirstOrDefault();
             return datalist;
         }
+
+        public List<InitialIntakeAI>? GetInitialIntakeByLocationId(int locid)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_intake_ai WHERE DATE(SendDate) = CURDATE() and locationid=@locid order by id desc", conn);
+            cm.Parameters.AddWithValue("@locid", locid);
+            var datalist = ConvertDataTable<InitialIntakeAI>(GetData(cm)).ToList();
+            return datalist;
+        }
+
         public string SaveInitialIntakeAI(InitialIntakeAI model)
         {
             List<MySqlParameter> param = new List<MySqlParameter>();

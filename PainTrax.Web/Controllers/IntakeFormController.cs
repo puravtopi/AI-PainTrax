@@ -1298,6 +1298,13 @@ namespace PainTrax.Web.Controllers
             return View();
         }
 
+        public IActionResult TodayVisitList(int locid)
+        {
+            var model = service.GetInitialIntakeByLocationId(locid);
+
+            return PartialView("_TodayVisitList", model);
+        }
+
 
         #region private method
         public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "", string provName = "")

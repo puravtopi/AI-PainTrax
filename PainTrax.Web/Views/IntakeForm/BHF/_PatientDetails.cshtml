@@ -33,7 +33,8 @@
 
 <p>
     DOB:
-    <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" />
+    <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" min="1900-01-01"
+           max="2099-12-31" />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
@@ -70,11 +71,11 @@
 </div>
 <p>
     <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Height:
-    <input id="Height" name="Height" class="form-control d-inline" onchange="calculateBMI()" style="width:150px" />
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i>
+    <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />ft
+    <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />inches
     Weight:
-    <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:150px" />
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i>
+    <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:50px" />
+   
     lbs,
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpO2:
     <input id="SpO" name="SpO" class="form-control d-inline" style="width:100px" />%,
