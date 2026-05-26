@@ -171,7 +171,7 @@
                                                 lbs,
                                                 
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
-                                                <input id="BMI" name="BMI" class="form-control d-inline" style="width:30px" />
+                                                <input id="BMI" name="BMI" class="form-control d-inline" style="width:70px" />
                                                     </div>
                                            
                                                         <div class="select-group">
@@ -187,15 +187,15 @@
                                                 <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."><span class="select-btn"> Y</span></label>
                                                 <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol."><span class="select-btn"> N</span></label>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Cannabis:
+                                                @* Cannabis:
                                                 <label><input type="radio" name="Cannabis" value="The patient smokes cannabis."><span class="select-btn"> Y</span></label>
                                                 <label><input type="radio" name="Cannabis" value="The patient does not smoke cannabis."><span class="select-btn"> N</span></label>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *@
                                                 Drugs:
                                                 <label><input type="radio" name="OtherDrugs" value="Yes"><span class="select-btn"> Y</span></label>
                                                 <label><input type="radio" name="OtherDrugs" value="No"><span class="select-btn"> N</span></label>
-                                                <span id="divDrugs" style="display:none">
-                                                    <input id="OtherDrugsTxt" class="form-control d-inline w-25" placeholder="Other Drugs Name" style="width:60%" />
+                                                <span id="divDrugs" style="display:none">                                                   
+                                                    <input type="text" id="OtherDrugsTxt" name="OtherDrugsTxt"  placeholder="Other Drugs Name" class="form-control d-inline w-auto" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i>
                                                 </span>
                                            </div>
@@ -365,7 +365,7 @@
                                                     <input id="PTFreq" class="form-control d-inline" placeholder="x/week" style="width:150px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTFreq')"></i>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    x a week:
+                                                   @*  x a week: *@
                                                 </span>
                                            </div>
                                             <div class="select-group">
@@ -1053,23 +1053,23 @@
                                                             </td>
 
                                                             <td>
-                                                                <input id="CERVICALRightC5" class="form-control d-inline " value ="Normal" style="width:100px" />
+                                                                <input id="CERVICALRightC5" class="form-control d-inline muscle-input" value ="Normal" style="width:100px" />
 
                                                             </td>
 
                                                             <td>
-                                                                <input id="CERVICALRightC6" class="form-control d-inline " value ="Normal" style="width:100px" />
+                                                                <input id="CERVICALRightC6" class="form-control d-inline muscle-input" value ="Normal" style="width:100px" />
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALRightC7" class="form-control d-inline " value ="Normal" style="width:100px" />
+                                                                <input id="CERVICALRightC7" class="form-control d-inline muscle-input" value ="Normal" style="width:100px" />
 
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALRightC8" class="form-control d-inline " value ="Normal" style="width:100px" />
+                                                                <input id="CERVICALRightC8" class="form-control d-inline muscle-input" value ="Normal" style="width:100px" />
 
                                                             </td>
                                                             <td>
-                                                                    <input id="CERVICALRightT1" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                    <input id="CERVICALRightT1" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
                                                             </td>
 
 
@@ -1083,23 +1083,23 @@
                                                             </td>
 
                                                             <td>
-                                                                <input id="CERVICALLeftC5" class="form-control d-inline " value ="Normal" style="width:100px" />
+                                                                <input id="CERVICALLeftC5" class="form-control d-inline muscle-input" value ="Normal" style="width:100px" />
 
                                                             </td>
 
                                                             <td>
-                                                                <input id="CERVICALLeftC6" class="form-control d-inline " value ="Normal" style="width:100px" />
+                                                                <input id="CERVICALLeftC6" class="form-control d-inline muscle-input" value ="Normal" style="width:100px" />
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALLeftC7" class="form-control d-inline " value ="Normal" style="width:100px" />
+                                                                <input id="CERVICALLeftC7" class="form-control d-inline muscle-input" value ="Normal" style="width:100px" />
 
                                                             </td>
                                                             <td>
-                                                                <input id="CERVICALLeftC8" class="form-control d-inline " value ="Normal" style="width:100px" />
+                                                                <input id="CERVICALLeftC8" class="form-control d-inline muscle-input" value ="Normal" style="width:100px" />
 
                                                             </td>
                                                             <td>
-                                                                    <input id="CERVICALLeftT1" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                    <input id="CERVICALLeftT1" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
                                                             </td>
 
 
@@ -1642,23 +1642,23 @@
                                                             </td>
 
                                                             <td>
-                                                                <input id="LUMBARRightL2" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                <input id="LUMBARRightL2" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
 
                                                             </td>
 
                                                             <td>
-                                                                <input id="LUMBARRightL3" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                <input id="LUMBARRightL3" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
                                                             </td>
                                                             <td>
-                                                                <input id="LUMBARRightL4" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                <input id="LUMBARRightL4" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
 
                                                             </td>
                                                             <td>
-                                                                <input id="LUMBARRightL5" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                <input id="LUMBARRightL5" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
 
                                                             </td>
                                                             <td>
-                                                                    <input id="LUMBARRightS1" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                    <input id="LUMBARRightS1" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
                                                             </td>
 
 
@@ -1671,23 +1671,23 @@
                                                                 </label>
                                                             </td>
                                                             <td>
-                                                                <input id="LUMBARLeftL2" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                <input id="LUMBARLeftL2" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
 
                                                             </td>
 
                                                             <td>
-                                                                <input id="LUMBARLeftL3" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                <input id="LUMBARLeftL3" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
                                                             </td>
                                                             <td>
-                                                                <input id="LUMBARLeftL4" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                <input id="LUMBARLeftL4" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
 
                                                             </td>
                                                             <td>
-                                                                <input id="LUMBARLeftL5" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                <input id="LUMBARLeftL5" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
 
                                                             </td>
                                                             <td>
-                                                                    <input id="LUMBARLeftS1" class="form-control d-inline " value="Normal" style="width:100px" />
+                                                                    <input id="LUMBARLeftS1" class="form-control d-inline muscle-input" value="Normal" style="width:100px" />
                                                             </td>
 
 
@@ -2500,7 +2500,7 @@
                 else
                     $("#divDrugs").hide();
 
-                if(data.Asymptomatic==="Yes")
+                if(data.Asymptomatic==="No")
                     $("#divAsymptomatic").show();
                 else
                     $("#divAsymptomatic").hide();
@@ -2591,6 +2591,15 @@
                         }
                     });
             }
+            $(document).on('input', '.muscle-input', function () {
+
+                    let val = $(this).val();
+
+                    // If starts with D or d
+                    if (val.toLowerCase() === 'd') {
+                        $(this).val('Decreased');
+                    }
+            });
         $(document).ready(function () {
             // Load template and initialize preview
             var today = new Date().toISOString().split('T')[0];
@@ -2836,80 +2845,80 @@
         }
 
         function fnshowTreatment()
-        {
-            $("#treatmentModal").modal('show');
-        }
+            {
+                $("#treatmentModal").modal('show');
+            }
 
-        function fnTreatmentDetails() {
-                    var strContent = '<ol>';
-                    var strIds = '', strDesc = '';
+            function fnTreatmentDetails() {
+                        var strContent = '<ol>';
+                        var strIds = '', strDesc = '';
 
-                    $('input[type=checkbox].treatment').each(function (i, e) {
-                        // Check if the checkbox is selected
-                        if (e.checked) {
-                            var checkboxValue = $("#chk_" + e.id).val();
+                        $('input[type=checkbox].treatment').each(function (i, e) {
+                            // Check if the checkbox is selected
+                            if (e.checked) {
+                                var checkboxValue = $("#chk_" + e.id).val();
 
-                            // Only append to strContent if checkboxValue is not undefined or empty
-                            if (checkboxValue) {
-                                strContent += '<li>' + checkboxValue + '</li>';
-                                strIds += (strIds ? ',' : '') + e.id;  // Ensure no leading comma
-                                strDesc += (strDesc ? '^' : '') + checkboxValue;  // Ensure no leading ^ for first value
+                                // Only append to strContent if checkboxValue is not undefined or empty
+                                if (checkboxValue) {
+                                    strContent += '<li>' + checkboxValue + '</li>';
+                                    strIds += (strIds ? ',' : '') + e.id;  // Ensure no leading comma
+                                    strDesc += (strDesc ? '^' : '') + checkboxValue;  // Ensure no leading ^ for first value
+                                }
                             }
+                        });
+
+                        // Close the ordered list
+                        strContent += '</ol>';
+
+                        // If no valid checkboxes were selected, clear the content (optional)
+                        if (strContent === '<ol></ol>') {
+                            strContent = '';  // Or handle this case as needed
                         }
-                    });
 
-                    // Close the ordered list
-                    strContent += '</ol>';
+                        var cmp_id = '@ViewBag.CmpId';
 
-                    // If no valid checkboxes were selected, clear the content (optional)
-                    if (strContent === '<ol></ol>') {
-                        strContent = '';  // Or handle this case as needed
+                        // if (cmp_id === '18' || cmp_id === '15' || cmp_id === '10' || cmp_id === '2') {
+
+                        //     strContent = strContent.replace(/<ol>/g, '')     // remove opening <ol>
+                        //         .replace(/<\/ol>/g, '')   // remove closing </ol>
+                        //         .replace(/<li>/g, '')     // remove opening <li>
+                        //         .replace(/<\/li>/g, ''); // replace closing </li> with <br/>;
+                        // }
+
+                        $("#divTreatment").html(strContent);
+                        $('#TreatmentIds').val(strIds);
+                        $('#TreatmentDelimitDesc').val(strDesc);
+                        $('#TreatmentDesc').val(strContent);
                     }
 
-                    var cmp_id = '@ViewBag.CmpId';
+                $(document).on('click', '.diagnosis-link', function(e) {
+                    e.stopPropagation(); // 🔥 prevents accordion from opening/closing
 
-                    // if (cmp_id === '18' || cmp_id === '15' || cmp_id === '10' || cmp_id === '2') {
+                    var part = $(this).data('part');
+                    fnShowDiagnosis(part);
+                });
 
-                    //     strContent = strContent.replace(/<ol>/g, '')     // remove opening <ol>
-                    //         .replace(/<\/ol>/g, '')   // remove closing </ol>
-                    //         .replace(/<li>/g, '')     // remove opening <li>
-                    //         .replace(/<\/li>/g, ''); // replace closing </li> with <br/>;
-                    // }
+            function fnShowDiagnosis(bodyParts){
 
-                    $("#divTreatment").html(strContent);
-                    $('#TreatmentIds').val(strIds);
-                    $('#TreatmentDelimitDesc').val(strDesc);
-                    $('#TreatmentDesc').val(strContent);
-                }
+                var url = '@Url.Action("GetDaignoCodeList", "IntakeForm")?bodyparts=' + bodyParts + "&id=" + $("#hdId").val();
+                $("#hdSelectedBody").val(bodyParts);
+                $.ajax({
+                    type: "Post",
+                    url: url,
 
-            $(document).on('click', '.diagnosis-link', function(e) {
-                e.stopPropagation(); // 🔥 prevents accordion from opening/closing
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
+                        debugger
+                        $('#modelDaignoCode').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + error);
+                    },
+                });
 
-                var part = $(this).data('part');
-                fnShowDiagnosis(part);
-            });
-
-        function fnShowDiagnosis(bodyParts){
-
-            var url = '@Url.Action("GetDaignoCodeList", "IntakeForm")?bodyparts=' + bodyParts + "&id=" + $("#hdId").val();
-            $("#hdSelectedBody").val(bodyParts);
-            $.ajax({
-                type: "Post",
-                url: url,
-
-                contentType: "application/x-www-form-urlencoded",
-                success: function (data, status, xhr) {
-                    debugger
-                    $('#modelDaignoCode').html(data);
-                },
-                error: function (xhr, status, error) {
-                    alert("Error!" + error);
-                },
-            });
-
-            $('#daignoCodeModal').modal('show');
-            return false;
-        }
+                $('#daignoCodeModal').modal('show');
+                return false;
+            }
 
        function fnUploadDL() {
 
@@ -3003,31 +3012,31 @@
 <script>
     let filesArr = [];
 
-    const dropArea = document.getElementById("dropArea");
-    const fileInput = document.getElementById("fup");
-    const previewGrid = document.getElementById("previewGrid");
+     const dropArea = document.getElementById("dropArea");
+     const fileInput = document.getElementById("fup");
+     const previewGrid = document.getElementById("previewGrid");
 
-    // Click
-    dropArea.onclick = () => fileInput.click();
+     // Click
+     dropArea.onclick = () => fileInput.click();
 
-    // Select
-    fileInput.onchange = (e) => handleFiles(e.target.files);
+     // Select
+     fileInput.onchange = (e) => handleFiles(e.target.files);
 
-    // Drag
-    dropArea.ondragover = e => e.preventDefault();
-    dropArea.ondrop = e => {
-        e.preventDefault();
-        handleFiles(e.dataTransfer.files);
-    };
+     // Drag
+     dropArea.ondragover = e => e.preventDefault();
+     dropArea.ondrop = e => {
+         e.preventDefault();
+         handleFiles(e.dataTransfer.files);
+     };
 
-    // Handle files
-    function handleFiles(files) {
-        [...files].forEach(file => {
-            file.id = Date.now() + Math.random();
-            filesArr.push(file);
-            renderPreview(file);
-        });
-    }
+     // Handle files
+     function handleFiles(files) {
+         [...files].forEach(file => {
+             file.id = Date.now() + Math.random();
+             filesArr.push(file);
+             renderPreview(file);
+         });
+     }
 
     function fndownloadPDF(){
         var fileName =
@@ -3037,270 +3046,211 @@
         "_IE_InjuryIntake.pdf";
         downloadPDF(fileName);
     }
-    // Preview
-    function renderPreview(file) {
-        const reader = new FileReader();
+     // Preview
+     function renderPreview(file) {
+         const reader = new FileReader();
 
-        reader.onload = e => {
-            const div = document.createElement("div");
-            div.className = "preview-item";
-            div.dataset.id = file.id;
+         reader.onload = e => {
+             const div = document.createElement("div");
+             div.className = "preview-item";
+             div.dataset.id = file.id;
 
-            div.innerHTML = `
-                <button class="remove-btn">×</button>
-                <img src="${e.target.result}" />
-                <div class="progress"><div class="progress-bar"></div></div>
-            `;
+             div.innerHTML = `
+                 <button class="remove-btn">×</button>
+                 <img src="${e.target.result}" />
+                 <div class="progress"><div class="progress-bar"></div></div>
+             `;
 
-            // Remove
-            div.querySelector(".remove-btn").onclick = () => {
-                filesArr = filesArr.filter(f => f.id !== file.id);
-                div.remove();
-            };
+             // Remove
+             div.querySelector(".remove-btn").onclick = () => {
+                 filesArr = filesArr.filter(f => f.id !== file.id);
+                 div.remove();
+             };
 
-            previewGrid.appendChild(div);
-        };
+             previewGrid.appendChild(div);
+         };
 
-        reader.readAsDataURL(file);
-    }
+         reader.readAsDataURL(file);
+     }
 
-    // Reorder
-    new Sortable(previewGrid, {
-        animation: 150,
-        onEnd: () => {
-            let newOrder = [];
-            document.querySelectorAll(".preview-item").forEach(item => {
-                let id = item.dataset.id;
-                let file = filesArr.find(f => f.id == id);
-                if (file) newOrder.push(file);
-            });
-            filesArr = newOrder;
-        }
-    });
+     // Reorder
+     new Sortable(previewGrid, {
+         animation: 150,
+         onEnd: () => {
+             let newOrder = [];
+             document.querySelectorAll(".preview-item").forEach(item => {
+                 let id = item.dataset.id;
+                 let file = filesArr.find(f => f.id == id);
+                 if (file) newOrder.push(file);
+             });
+             filesArr = newOrder;
+         }
+     });
 
-    // Upload
-        document.getElementById("uploadBtn").onclick = function (e) {
+     // Upload
+         document.getElementById("uploadBtn").onclick = function (e) {
 
-        e.preventDefault();
+         e.preventDefault();
 
-        if (!filesArr || filesArr.length === 0) {
-            alert("Please select files first.");
-            return;
-        }
+         if (!filesArr || filesArr.length === 0) {
+             alert("Please select files first.");
+             return;
+         }
 
-        const progressBars = document.querySelectorAll(".progress-bar");
+         const progressBars = document.querySelectorAll(".progress-bar");
 
-        filesArr.forEach((file, index) => {
+         filesArr.forEach((file, index) => {
 
-            let formData = new FormData();
-            formData.append("file", file);
-            formData.append("order", index);
+             let formData = new FormData();
+             formData.append("file", file);
+             formData.append("order", index);
 
-            let xhr = new XMLHttpRequest();
+             let xhr = new XMLHttpRequest();
 
-            xhr.open("POST", "/Media/UploadNew", true);
+             xhr.open("POST", "/Media/UploadNew", true);
 
-            // Upload progress
-            xhr.upload.onprogress = function (e) {
+             // Upload progress
+             xhr.upload.onprogress = function (e) {
 
-                if (e.lengthComputable && progressBars[index]) {
+                 if (e.lengthComputable && progressBars[index]) {
 
-                    let percent = Math.round((e.loaded / e.total) * 100);
+                     let percent = Math.round((e.loaded / e.total) * 100);
 
-                    progressBars[index].style.width = percent + "%";
-                    progressBars[index].innerText = percent + "%";
-                }
-            };
+                     progressBars[index].style.width = percent + "%";
+                     progressBars[index].innerText = percent + "%";
+                 }
+             };
 
-            // Success
-            xhr.onload = function () {
+             // Success
+             xhr.onload = function () {
 
-                if (xhr.status === 200) {
-                    console.log("Uploaded:", file.name);
-                }
-                else {
-                    console.error("Upload failed:", file.name);
-                }
-            };
+                 if (xhr.status === 200) {
+                     console.log("Uploaded:", file.name);
+                 }
+                 else {
+                     console.error("Upload failed:", file.name);
+                 }
+             };
 
-            // Error
-            xhr.onerror = function () {
-                console.error("Network error while uploading:", file.name);
-            };
+             // Error
+             xhr.onerror = function () {
+                 console.error("Network error while uploading:", file.name);
+             };
 
-            xhr.send(formData);
-        });
-    };
+             xhr.send(formData);
+         });
+     };
 
-    // function checkValidation(){
 
-    //     const isNeckSelected = $("input[name='Complaints'][value='Neck']").is(":checked");
+         function hasSectionValue(sectionId) {
 
-    //     if (isNeckSelected) {
+         let hasValue = false;
 
-    //         // Check if any input/checkbox/radio/textarea has value inside neckSection
-    //         let hasNeckSectionValue,hasNeckPE = false;
+         $("#" + sectionId)
+             .find("input, textarea, select")
+             .each(function () {
 
-    //         $("#neckSection")
-    //             .find("input, textarea, select")
-    //             .each(function () {
+                 const type = $(this).attr("type");
 
-    //                 const type = $(this).attr("type");
+                 // checkbox / radio
+                 if ((type === "checkbox" || type === "radio") && $(this).is(":checked")) {
+                     hasValue = true;
+                     return false;
+                 }
 
-    //                 // checkbox / radio
-    //                 if ((type === "checkbox" || type === "radio") && $(this).is(":checked")) {
-    //                     hasNeckSectionValue = true;
-    //                     return false;
-    //                 }
+                 // text / textarea / select
+                 if (type !== "checkbox" && type !== "radio") {
 
-    //                 // text / textarea / select
-    //                 if (type !== "checkbox" && type !== "radio") {
-    //                     if ($(this).val()?.trim() !== "") {
-    //                         hasNeckSectionValue = true;
-    //                         return false;
-    //                     }
-    //                 }
-    //             });
+                     const value = $(this).val();
 
-    //         $("#neckPE")
-    //             .find("input, textarea, select")
-    //             .each(function () {
+                     if (value != null && value.toString().trim() !== "") {
+                         hasValue = true;
+                         return false;
+                     }
+                 }
+             });
 
-    //                 const type = $(this).attr("type");
+         return hasValue;
+     }
 
-    //                 // checkbox / radio
-    //                 if ((type === "checkbox" || type === "radio") && $(this).is(":checked")) {
-    //                     hasNeckPE = true;
-    //                     return false;
-    //                 }
+     function validateBodySection(bodyPart, complaintSectionId, peSectionId) {
 
-    //                 // text / textarea / select
-    //                 if (type !== "checkbox" && type !== "radio") {
-    //                     if ($(this).val()?.trim() !== "") {
-    //                         hasNeckPE = true;
-    //                         return false;
-    //                     }
-    //                 }
-    //             });
+         const isSelected = $(`input[name='Complaints'][value='${bodyPart}']`).is(":checked");
 
-    //         // No data entered
-    //         if (!hasNeckSectionValue) {
-    //             alert("Please enter Neck complaint before submitting.");
-    //             return false;
-    //         } else if (!hasNeckPE) {
-    //               alert("Please enter Neck physical exam details before submitting.");
-    //                 return false;
-    //         }
-    //     }
+         if (!isSelected)
+             return true;
 
-    //     return true;
-    // }
+         if (!hasSectionValue(complaintSectionId)) {
+             alert(`Please enter ${bodyPart} complaint before submitting.`);
+             return false;
+         }
 
-        function hasSectionValue(sectionId) {
+         if (!hasSectionValue(peSectionId)) {
+             alert(`Please enter ${bodyPart} physical exam details before submitting.`);
+             return false;
+         }
 
-        let hasValue = false;
+         return true;
+     }
 
-        $("#" + sectionId)
-            .find("input, textarea, select")
-            .each(function () {
+     function checkValidation() {
 
-                const type = $(this).attr("type");
+         const validations = [
+             {
+                 bodyPart: "Neck",
+                 complaintSectionId: "neckSection",
+                 peSectionId: "neckPE"
+             },
+             {
+                 bodyPart: "Midback",
+                 complaintSectionId: "mbSection",
+                 peSectionId: "mbPE"
+             },
+             {
+                 bodyPart: "Lowback",
+                 complaintSectionId: "lbSection",
+                 peSectionId: "lbPE"
+             },
+             {
+                 bodyPart: "Right Shoulder",
+                 complaintSectionId: "rshSection",
+                 peSectionId: "rshPE"
+             },
+             {
+                 bodyPart: "Left Shoulder",
+                 complaintSectionId: "lshSection",
+                 peSectionId: "lshPE"
+             },
+             {
+                 bodyPart: "Right Knee",
+                 complaintSectionId: "rknSection",
+                 peSectionId: "rknPE"
+             },
+             {
+                 bodyPart: "Left Knee",
+                 complaintSectionId: "lknSection",
+                 peSectionId: "lknPE"
+             }
+         ];
 
-                // checkbox / radio
-                if ((type === "checkbox" || type === "radio") && $(this).is(":checked")) {
-                    hasValue = true;
-                    return false;
-                }
+         for (const item of validations) {
 
-                // text / textarea / select
-                if (type !== "checkbox" && type !== "radio") {
+             const isValid = validateBodySection(
+                 item.bodyPart,
+                 item.complaintSectionId,
+                 item.peSectionId
+             );
 
-                    const value = $(this).val();
+             if (!isValid)
+                 return false;
+         }
 
-                    if (value != null && value.toString().trim() !== "") {
-                        hasValue = true;
-                        return false;
-                    }
-                }
-            });
+         return true;
+     }
 
-        return hasValue;
-    }
-
-    function validateBodySection(bodyPart, complaintSectionId, peSectionId) {
-
-        const isSelected = $(`input[name='Complaints'][value='${bodyPart}']`).is(":checked");
-
-        if (!isSelected)
-            return true;
-
-        if (!hasSectionValue(complaintSectionId)) {
-            alert(`Please enter ${bodyPart} complaint before submitting.`);
-            return false;
-        }
-
-        if (!hasSectionValue(peSectionId)) {
-            alert(`Please enter ${bodyPart} physical exam details before submitting.`);
-            return false;
-        }
-
-        return true;
-    }
-
-    function checkValidation() {
-
-        const validations = [
-            {
-                bodyPart: "Neck",
-                complaintSectionId: "neckSection",
-                peSectionId: "neckPE"
-            },
-            {
-                bodyPart: "Midback",
-                complaintSectionId: "midbackSection",
-                peSectionId: "mbPE"
-            },
-            {
-                bodyPart: "Lowback",
-                complaintSectionId: "lbSection",
-                peSectionId: "lbPE"
-            },
-            {
-                bodyPart: "Right Shoulder",
-                complaintSectionId: "rshSection",
-                peSectionId: "rshPE"
-            },
-            {
-                bodyPart: "Left Shoulder",
-                complaintSectionId: "lshSection",
-                peSectionId: "lshPE"
-            },
-            {
-                bodyPart: "Right Knee",
-                complaintSectionId: "rknSection",
-                peSectionId: "rknPE"
-            },
-            {
-                bodyPart: "Left Knee",
-                complaintSectionId: "lknSection",
-                peSectionId: "lknPE"
-            }
-        ];
-
-        for (const item of validations) {
-
-            const isValid = validateBodySection(
-                item.bodyPart,
-                item.complaintSectionId,
-                item.peSectionId
-            );
-
-            if (!isValid)
-                return false;
-        }
-
-        return true;
-    }
+     function toggleSection(condition, selector) {
+         $(selector).toggle(condition);
+     }
      function validateYear(input) {
 
         if (input.value) {
@@ -3400,79 +3350,7 @@
 
         return date;
     }
-    //  function formatDOB(input) {
-
-    //     let value = input.value.replace(/\D/g, '');
-
-    //     if (value.length > 2 && value.length <= 4)
-    //         value = value.substring(0, 2) + '/' + value.substring(2);
-
-    //     else if (value.length > 4)
-    //         value = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4, 8);
-
-    //     input.value = value;
-    // }
-
-    // function validateDOB(input) {
-
-    //     if (!input.value)
-    //         return;
-
-    //     let parts = input.value.split('/');
-
-    //     if (parts.length !== 3) {
-
-    //         alert("Enter date in dd/mm/yyyy format");
-    //         input.value = "";
-    //         return;
-    //     }
-
-    //     let day = parts[0];
-    //     let month = parts[1];
-    //     let year = parts[2];
-
-    //     // Year validation
-    //     if (year.length !== 4) {
-
-    //         alert("Year must be 4 digits");
-    //         input.value = "";
-    //         return;
-    //     }
-
-    //     let selectedDate = new Date(year, month - 1, day);
-    //     let minDate = new Date("1900-01-01");
-    //     let today = new Date();
-
-    //     today.setHours(0, 0, 0, 0);
-
-    //     // Invalid date check
-    //     if (
-    //         selectedDate.getFullYear() != year ||
-    //         selectedDate.getMonth() != month - 1 ||
-    //         selectedDate.getDate() != day
-    //     ) {
-
-    //         alert("Invalid date");
-    //         input.value = "";
-    //         return;
-    //     }
-
-    //     // Minimum date check
-    //     if (selectedDate < minDate) {
-
-    //         alert("DOB should be after 01/01/1900");
-    //         input.value = "";
-    //         return;
-    //     }
-
-    //     // Future date check
-    //     if (selectedDate > today) {
-
-    //         alert("Future date is not allowed");
-    //         input.value = "";
-    //         return;
-    //     }
-    // }
+    
 </script>
 <!-- html2pdf library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
