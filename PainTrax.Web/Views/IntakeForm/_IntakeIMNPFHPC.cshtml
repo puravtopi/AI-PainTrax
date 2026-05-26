@@ -236,12 +236,12 @@
                                                 <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />inches
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Weight:
-                                                <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:30px" />
+                                                <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:100px" />
                                                
                                                 lbs,
                                                 
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
-                                                <input id="BMI" name="BMI" class="form-control d-inline" style="width:70px" />
+                                                <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
                                                     </div>
                                            
                                                         <div class="select-group">
@@ -432,7 +432,7 @@
                                                 <span id="divPT" style="display:none">
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     If yes, how often:
-                                                    <input id="PTFreq" class="form-control d-inline" placeholder="x/week" style="width:150px" />
+                                                        <input id="PTFreq" class="form-control d-inline w-25" style="min-width:37%"  placeholder="x/week" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTFreq')"></i>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                    @*  x a week: *@
@@ -445,10 +445,10 @@
                                                 <span id="divChiro" style="display:none">
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     If yes, how often?
-                                                    <input id="ChiroFreq" class="form-control d-inline" style="width:150px" />
+                                                        <input id="ChiroFreq" class="form-control d-inline w-25" style="min-width:37%" placeholder="x/week" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroFreq')"></i>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    x a week.
+                                                   @*  x a week. *@
                                                 </span>
                                             </div>
                                                 <p>
@@ -472,7 +472,7 @@
                                                 <h6 class="fw-bold">Neck</h6>
                                                 <div class="select-group">
                                                     Pain:
-                                                    <input id="NeckPain" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <input id="NeckPain" class="form-control d-inline w-auto" style="width:40px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckPain')"></i>/10
 
                                                     <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
@@ -538,11 +538,11 @@
                                                 <h6 class="fw-bold">Midback</h6>
                                                 <div class="select-group">
                                                     Pain:
-                                                    <input id="MidbackSection" class="form-control d-inline w-auto" style="width:80px;" />
+                                                        <input id="MidbackSection" class="form-control d-inline w-auto" style="width:40px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MidbackSection')"></i>/10
 
                                                     <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
-                                                    <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Diff lifting"> <span class="select-btn">Diff lifting</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Diff sleeping"> <span class="select-btn">Diff sleeping</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Diff lifting"> <span class="select-btn">Diff lifting</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Diff bending"> <span class="select-btn">Diff bending</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="sustained improvement with PT"> <span class="select-btn">sustained improvement with PT</span></label>
@@ -599,7 +599,7 @@
                                                 <h6 class="fw-bold">LowBack</h6>
                                                 <div class="select-group">
                                                     Pain:
-                                                    <input id="LowBackPain" class="form-control d-inline w-auto" style="width:80px;" />
+                                                        <input id="LowBackPain" class="form-control d-inline w-auto" style="width:40px;" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LowBackPain')"></i>/10
 
                                                     <label><input type="checkbox" class="chkMulti" name="lbackPain" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
@@ -839,11 +839,11 @@
 
                                                     <label><input type="radio" name="Palpation" value="No"> <span class="select-btn">No</span></label>
 
-                                                    <label><input type="radio" name="Palpation" value="mild"> <span class="select-btn">mild</span></label>
+                                                    <label><input type="radio" name="Palpation" value="mildly"> <span class="select-btn">mildly</span></label>
 
-                                                    <label><input type="radio" name="Palpation" value="moderate"> <span class="select-btn">moderate</span></label>
+                                                    <label><input type="radio" name="Palpation" value="moderatly"> <span class="select-btn">moderatly</span></label>
 
-                                                    <label><input type="radio" name="Palpation" value="severe"> <span class="select-btn">severe </span></label>
+                                                    <label><input type="radio" name="Palpation" value="severely"> <span class="select-btn">severely </span></label>
                                                     <label>tenderness to palpation midline and paraspinal muscles</label>
                                                     <label><input type="radio" name="Palpationtenderness" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                     <label><input type="radio" name="Palpationtenderness" value="right"> <span class="select-btn">right </span></label>
@@ -865,9 +865,9 @@
                                                    <div class="select-group">
                                                     <label> Muscle spasms are</label>
                                                     <label><input type="radio" name="PEMuscleCervical" value="none"> <span class="select-btn">none </span></label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="mild"> <span class="select-btn">mild</span> </label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="moderate"> <span class="select-btn">moderate</span> </label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="severe"> <span class="select-btn">severe</span> </label>
+                                                    <label><input type="radio" name="PEMuscleCervical" value="mildly"> <span class="select-btn">mildly</span> </label>
+                                                    <label><input type="radio" name="PEMuscleCervical" value="moderatly"> <span class="select-btn">moderatly</span> </label>
+                                                    <label><input type="radio" name="PEMuscleCervical" value="severely"> <span class="select-btn">severely</span> </label>
                                                     <label> side </label>
                                                     <label><input type="radio" name="PEMuscleCervicalSide" value="bilaterally"> <span class="select-btn">bilaterally</span> </label>
                                                     <label><input type="radio" name="PEMuscleCervicalSide" value="right"> <span class="select-btn">right </span></label>
@@ -880,13 +880,13 @@
                                                     <thead>
                                                         <tr>
 
-                                                            <td>ROM</td>
-                                                            <td>Flex</td>
-                                                            <td>Ext</td>
-                                                            <td>L Rot</td>
-                                                            <td>R Rot</td>
-                                                            <td>L Lat bend</td>
-                                                            <td>R Lat bend</td>
+                                                            <td style="width:10%;">ROM</td>
+                                                            <td style="width:15%;">Flex</td>
+                                                            <td style="width:15%;">Ext</td>
+                                                            <td style="width:15%;">L Rot</td>
+                                                            <td style="width:15%;">R Rot</td>
+                                                            <td style="width:15%;">L Lat bend</td>
+                                                                <td style="width:15%;">R Lat bend</td>
 
                                                         </tr>
                                                     </thead>
@@ -1193,6 +1193,8 @@
                                                         <input id="CERVICALRighttxt" class="form-control d-inline " style="width:100px" />
                                                         <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingRight" value="left"> <span class="select-btn">Left </span></label>
                                                         <input id="CERVICALLefttxt" class="form-control d-inline " style="width:100px" />
+                                                        <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingRight" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
+                                                        <input id="CERVICALbilateraltxt" class="form-control d-inline " style="width:100px" />
                                                     <label>degrees</label>
 
                                                     @* <label><input type="radio" name="CevicalSpurlingRight" value="right"> <span class="select-btn">right </span></label>
@@ -1240,11 +1242,11 @@
 
                                                     <label><input type="radio" name="THORACICBicepstendonleft" value="threeplus"> <span class="select-btn">3+ </span></label>
                                                     <label><input type="radio" name="THORACICBicepstendonleft" value="fourplus"> <span class="select-btn">4+ </span></label>
-                                                    <label>on the right and </label>
+                                                    <label>on the left </label>
 
 
                                                 </div>
-                                                                        <div class="select-group">
+                                                    <div class="select-group">
 
                                                     Triceps tendon
 
@@ -1268,9 +1270,14 @@
                                                     <label>on the left </label>
 
 
-                                                                        </div>
-
+                                                    </div>
+                                                   <div class="select-group">
+                                                        <input id="CERVICALSPINEEXAMtxt" name="CERVICALSPINEEXAMtxt" class="form-control d-inline w-auto" style="min-width:70%;" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'CERVICALSPINEEXAMtxt')"></i>
+                                                   </div>
                                             </div>
+                                            
+                                            <br />
                                             <div id="THORACICSPINEEXAM Section">
                                                 <h6 class="fw-bold">THORACIC SPINE EXAM </h6>
 
@@ -1288,11 +1295,11 @@
 
                                                     <label><input type="radio" name="THORACICPalpation" value="No"> <span class="select-btn">No </span></label>
 
-                                                    <label><input type="radio" name="THORACICPalpation" value="mild"><span class="select-btn"> mild </span></label>
+                                                        <label><input type="radio" name="THORACICPalpation" value="mildly"><span class="select-btn"> mildly </span></label>
 
-                                                    <label><input type="radio" name="THORACICPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
+                                                    <label><input type="radio" name="THORACICPalpation" value="moderatly"> <span class="select-btn">moderatly </span></label>
 
-                                                    <label><input type="radio" name="THORACICPalpation" value="severe"><span class="select-btn">severe </span> </label>
+                                                    <label><input type="radio" name="THORACICPalpation" value="severely"><span class="select-btn">severely </span> </label>
                                                     <label>tenderness to palpation midline and paraspinal muscles</label>
                                                     <label><input type="radio" name="THORACICPalpationmidline" value="bilaterally"> <span class="select-btn">bilaterally  </span></label>
                                                     <label><input type="radio" name="THORACICPalpationmidline" value="right"> <span class="select-btn">right  </span></label>
@@ -1307,9 +1314,9 @@
                                                     </div>
                                                     <div class="select-group">
                                                     <label> Muscle spasms Present.ROM is</label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="mild"><span class="select-btn"> mild  </span></label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="moderate"><span class="select-btn"> moderate </span> </label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="severe"> <span class="select-btn">severe  </span></label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="mildly"><span class="select-btn"> mildly  </span></label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="moderatly"><span class="select-btn"> moderatly </span> </label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="severely"> <span class="select-btn">severely  </span></label>
                                                     <label>decreased</label>
 
                                                  </div>
@@ -1319,13 +1326,13 @@
                                                     <thead>
                                                         <tr>
 
-                                                            <td>ROM</td>
-                                                            <td>Flex</td>
-                                                            <td>Ext</td>
-                                                            <td>L Rot</td>
-                                                            <td>R Rot</td>
-                                                            <td>L Lat bend</td>
-                                                            <td>R Lat bend</td>
+                                                            <td style="width:10%;">ROM</td>
+                                                            <td style="width:15%;">Flex</td>
+                                                            <td style="width:15%;">Ext</td>
+                                                            <td style="width:15%;">L Rot</td>
+                                                            <td style="width:15%;">R Rot</td>
+                                                            <td style="width:15%;">L Lat bend</td>
+                                                                <td style="width:15%;">R Lat bend</td>
 
                                                         </tr>
                                                     </thead>
@@ -1417,9 +1424,14 @@
 
                                                     </tbody>
                                                 </table>
-
+                                                    <div class="select-group">
+                                                        <input id="THORACICEXAMtxt" name="THORACICEXAMtxt" class="form-control d-inline w-auto" style="min-width:70%;" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'THORACICEXAMtxt')"></i>
+                                                    </div>
 
                                             </div>
+                                                
+                                                <br />
                                             <div id="LUMBARSPINEEXAMSection">
                                                 <h6 class="fw-bold">LUMBAR SPINE EXAM</h6>
 
@@ -1437,11 +1449,11 @@
 
                                                     <label><input type="radio" name="LUMBARPalpation" value="No"><span class="select-btn"> No</span></label>
 
-                                                    <label><input type="radio" name="LUMBARPalpation" value="mild"><span class="select-btn"> mild</span></label>
+                                                    <label><input type="radio" name="LUMBARPalpation" value="mildly"><span class="select-btn"> mildly</span></label>
 
-                                                    <label><input type="radio" name="LUMBARPalpation" value="moderate"><span class="select-btn"> moderate</span></label>
+                                                    <label><input type="radio" name="LUMBARPalpation" value="moderatly"><span class="select-btn"> moderatly</span></label>
 
-                                                    <label><input type="radio" name="LUMBARPalpation" value="severe"> <span class="select-btn">severe</span> </label>
+                                                    <label><input type="radio" name="LUMBARPalpation" value="severely"> <span class="select-btn">severely</span> </label>
                                                     <label>tenderness to palpation midline and paraspinal muscles</label>
                                                     <label><input type="radio" name="LUMBARPalpationmidline" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                     <label><input type="radio" name="LUMBARPalpationmidline" value="right"><span class="select-btn"> right </span></label>
@@ -1458,9 +1470,9 @@
                                                     <div class="select-group">
                                                     <label> Muscle spasms are</label>
                                                     <label><input type="radio" name="PEMuscleLUMBAR" value="none"><span class="select-btn"> none </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="mild"> <span class="select-btn">mild </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="moderate"><span class="select-btn"> moderate </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="severe"> <span class="select-btn">severe </span></label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="mildly"> <span class="select-btn">mildly </span></label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="moderatly"><span class="select-btn"> moderatly </span></label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="severely"> <span class="select-btn">severely </span></label>
                                                     <label> side</label>
                                                     <label><input type="radio" name="PEMuscleLUMBARside" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                     <label><input type="radio" name="PEMuscleLUMBARside" value="right"> <span class="select-btn">right </span></label>
@@ -1473,13 +1485,13 @@
                                                     <thead>
                                                         <tr>
 
-                                                            <td>ROM</td>
-                                                            <td>Flex</td>
-                                                            <td>Ext</td>
-                                                            <td>L Rot</td>
-                                                            <td>R Rot</td>
-                                                            <td>L Lat bend</td>
-                                                            <td>R Lat bend</td>
+                                                            <td style="width:10%;">ROM</td>
+                                                            <td style="width:15%;">Flex</td>
+                                                            <td style="width:15%;">Ext</td>
+                                                            <td style="width:15%;">L Rot</td>
+                                                            <td style="width:15%;">R Rot</td>
+                                                            <td style="width:15%;">L Lat bend</td>
+                                                                <td style="width:15%;">R Lat bend</td>
 
                                                         </tr>
                                                     </thead>
@@ -1782,6 +1794,8 @@
                                                         <input id="LumbarStraightRighttxt" class="form-control d-inline " style="width:100px" />
                                                         <label><input type="checkbox" class="chkMulti" name="LumbarStraightRight" value="left"> <span class="select-btn">Left </span></label>
                                                         <input id="LumbarStraightLefttxt" class="form-control d-inline " style="width:100px" />
+                                                        <label><input type="checkbox" class="chkMulti" name="LumbarStraightRight" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
+                                                        <input id="LumbarStraightbilateraltxt" class="form-control d-inline " style="width:100px" />
                                                         <label>degrees</label>
 
                                                     @* <label><input type="radio" name="LumbarStraightRight" value="right"> <span class="select-btn">right</span> </label>
@@ -1858,6 +1872,10 @@
 
                                                 </div>
                                                     <div class="select-group">
+                                                        <div class="select-group">
+                                                            <input id="LUMBAREXAMtxt" name="LUMBAREXAMtxt" class="form-control d-inline w-auto" style="min-width:70%;" />
+                                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LUMBAREXAMtxt')"></i>
+                                                        </div>
                                                         <strong>GAIT:</strong>
 
                                                     <label><input type="checkbox" class="chkMulti" name="GAIT" value="Normal"> <span class="select-btn">Normal</span></label>
@@ -2459,7 +2477,10 @@
 
             var formattedDate = today.toLocaleDateString('en-US', options);
 
-            values["DOE"] = formattedDate.replace(',', '');
+            // values["DOE"] = formattedDate.replace(',', '');
+
+             if ($("#DOE").val() != '')
+                values["DOE"] = formatDate($("#DOE").val());
 
             if ($("#DOB").val() != '')
                 values["DOB"] = formatDate($("#DOB").val());
@@ -2728,8 +2749,8 @@
                             callback: function (result) {
                                 if (result) {
                                        $('#patientForm')[0].reset();
-                                       var today = new Date().toISOString().split('T')[0];
-                                       $('#DOE').val(today);
+                                       // var today = new Date().toISOString().split('T')[0];
+                                       // $('#DOE').val(today);
                                        $('#bodyPartLinks').html('');
                                        $('#divDiagnosis').html('');
                                        $('#pdfLoader').hide();

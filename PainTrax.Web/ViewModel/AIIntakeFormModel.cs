@@ -287,6 +287,7 @@
         public List<string> CevicalSpurlingRight { get; set; }
         public string CERVICALRighttxt { get; set; }
         public string CERVICALLefttxt { get; set; }
+        public string CERVICALbilateraltxt { get; set; }
 
         public string CevicalCompression { get; set; }
         public string CevicalCompressionRight { get; set; }
@@ -296,7 +297,9 @@
 
         public string THORACICTricepstendonright { get; set; }
         public string THORACICTricepstendonleft { get; set; }
-
+        public string CERVICALSPINEEXAMtxt { get; set; }
+        public string THORACICEXAMtxt { get; set; }
+        public string LUMBAREXAMtxt { get; set; }
         public List<string> THORACICPE { get; set; }
         public string THORACICPalpation { get; set; }
         public string THORACICPalpationmidline { get; set; }
@@ -354,7 +357,8 @@
         public List<string> LumbarStraightRight { get; set; }
         public string LumbarStraightRighttxt { get; set; }
         public string LumbarStraightLefttxt { get; set; }
-
+        public string LumbarStraightbilateraltxt { get; set; }
+        
         public string LumbarFacetloading { get; set; }
         public string LumbarFacetloadingRight { get; set; }
 
