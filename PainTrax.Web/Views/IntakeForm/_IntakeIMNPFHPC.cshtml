@@ -230,10 +230,10 @@
                                             
 
                                                     <div class="select-group">
-                                                <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                VITAL SIGNS: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Height:
-                                                <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />ft
-                                                <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />inches
+                                                <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:40px" onchange="calculateBMI()" />ft
+                                                <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" value="0" onchange="calculateBMI()" />inches
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 Weight:
                                                 <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:100px" />
@@ -286,6 +286,10 @@
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Rearend"> <span class="select-btn">Rear end</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driverside"> <span class="select-btn">Driver side</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Passside"> <span class="select-btn">Pass side</span></label>
+
+                                                <input type="text" id="OtherCollision" name="OtherCollision" class="form-control d-inline w-auto" />
+
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherCollision')"></i>
                                             </div>
                                             <div class="select-group">
                                                 Seat Belt:
@@ -346,7 +350,7 @@
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
                                                 </p>
                                             <div class="select-group">
-                                                <b> Chief complaint:</b>
+                                                 Chief complaint:
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> <span class="select-btn">Neck</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="midbackSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> <span class="select-btn">Low back</span></label>
@@ -409,7 +413,7 @@
                                                 <div class="select-group">
                                                     Smoker:
                                                     <label><input type="radio" name="Smoke" value="Yes"> <span class="select-btn">Y</span></label>
-                                                    <label><input type="radio" name="Smoke" value="No"><span class="select-btn"> N</span></label>
+                                                    <label><input type="radio" name="Smoke" value="No" checked><span class="select-btn"> N</span></label>
                                                     <span id="divSmoke" style="display:none">
                                                         <input id="PPD" class="form-control d-inline" style="width:150px" /> PPD.
                                                         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i>
@@ -417,7 +421,7 @@
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     Alcohol:
                                                     <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."><span class="select-btn"> Y</span></label>
-                                                    <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol."><span class="select-btn"> N</span></label>
+                                                    <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol." checked><span class="select-btn"> N</span></label>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     @* Cannabis:
                                                 <label><input type="radio" name="Cannabis" value="The patient smokes cannabis."><span class="select-btn"> Y</span></label>
@@ -425,7 +429,7 @@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *@
                                                     Drugs:
                                                     <label><input type="radio" name="OtherDrugs" value="Yes"><span class="select-btn"> Y</span></label>
-                                                    <label><input type="radio" name="OtherDrugs" value="No"><span class="select-btn"> N</span></label>
+                                                    <label><input type="radio" name="OtherDrugs" value="No" checked><span class="select-btn"> N</span></label>
                                                     <span id="divDrugs" style="display:none">
                                                         <input type="text" id="OtherDrugsTxt" name="OtherDrugsTxt" placeholder="Other Drugs Name" class="form-control d-inline w-auto" />
                                                         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i>
@@ -497,7 +501,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="arm"> <span class="select-btn">arm</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="hand"> <span class="select-btn">hand</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="NeckRadiates" value="fingers"> <span class="select-btn">fingers. </span></label>
-                                                    </div>
+                                                 </div>
                                                     <div class="select-group">
                                                     Neck pain is associated with
                                                     <label><input type="checkbox" class="chkMulti" name="NeckAssociated" value="tingling"> <span class="select-btn">tingling</span></label>
@@ -1316,9 +1320,9 @@
                                                     </div>
                                                     <div class="select-group">
                                                     <label> Muscle spasms Present.ROM is</label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="mild"><span class="select-btn"> mild  </span></label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="moderate"><span class="select-btn"> moderate </span> </label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="severe"> <span class="select-btn">severe  </span></label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="mildly"><span class="select-btn"> mildly  </span></label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="moderately"><span class="select-btn"> moderately </span> </label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="severely"> <span class="select-btn">severely  </span></label>
                                                     <label>decreased</label>
 
                                                  </div>
@@ -2705,10 +2709,41 @@
         //                 }
         //             });
         //     }
+         // ================================
+    // RESTORE ACCORDION
+    // ================================
+    function restoreAccordion() {
 
+        var openAccordion = sessionStorage.getItem('openAccordion');
+
+        if (openAccordion) {
+
+            var accordionElement = document.getElementById(openAccordion);
+
+            if (accordionElement) {
+
+                var bsCollapse = new bootstrap.Collapse(accordionElement, {
+                    toggle: false
+                });
+
+                bsCollapse.show();
+            }
+
+            // clear storage
+            sessionStorage.removeItem('openAccordion');
+        }
+    }
          function saveForm(isSubmit) {
                     $('#pdfLoader').show();
                     try{
+                        // STORE CURRENT OPEN ACCORDION
+            var openAccordion = $('.accordion-collapse.show').attr('id');
+
+            if (openAccordion) {
+
+                sessionStorage.setItem('openAccordion', openAccordion);
+            }
+
         // Assign form values
         formData["Diagnosis"] = $("#divDiagnosis").html();
         formData["TreatmentIds"] = $("#TreatmentIds").val();
@@ -2915,6 +2950,8 @@
                 var age = calculateAge(dob);
                 $('#Age').val(age);
             });
+            // AFTER ALL DATA LOADS
+        restoreAccordion();
         });
 
         function fnExportDOC() {
