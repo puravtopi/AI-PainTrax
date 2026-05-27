@@ -252,5 +252,13 @@ namespace PainTrax.Web.Controllers
             return Json("");
 
         }
+
+        public JsonResult SearchPatient(string term)
+        {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            string cnd = " and cmp_id = " + cmpid + " and (fname like '%" + term + "%' or lname like '%" + term + "%' or CONCAT(fname, ' ', lname) LIKE CONCAT('%', '" + term + "', '%') or CONCAT(lname, ' ', fname) LIKE CONCAT('%', '" + term + "', '%')) ";
+            var result = _ieService.GetAll(cnd);
+            return Json(result);
+        }
     }
 }

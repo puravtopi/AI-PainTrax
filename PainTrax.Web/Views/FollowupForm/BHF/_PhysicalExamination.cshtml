@@ -1,0 +1,345 @@
+﻿<div id="neckPE" style="display:none">
+    <h6 class="fw-bold">Neck</h6>
+    <div class="select-group">
+        Patient has pain and tenderness over the   <input id="NeckTenderness" class="form-control d-inline " style="width:100px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i> facet joints. Facet loading maneuvers are positive.
+        Spurling’s Test:
+        <label><input type="radio" name="NeckSpurlingTest" value="Positive">  <span class="select-btn">+</span></label>
+        <label><input type="radio" name="NeckSpurlingTest" value="Negative">  <span class="select-btn">-</span></label>
+        <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:100px" placeholder="Other" />
+    </div>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>Left</td>
+                <td>Right</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Forward Flexion</td>
+                <td><input id="NeckFFROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>50</td>
+                <td>Rotation</td>
+                <td><input id="NeckFFLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="NeckFFRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>80</td>
+            </tr>
+            <tr>
+                <td>Extension</td>
+                <td><input id="NeckExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>60</td>
+                <td>Lateral Flexion</td>
+                <td><input id="NeckExtLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="NeckExtRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>45</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="mbPE" style="display:none">
+    <h6 class="fw-bold">Mid back</h6>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>Left</td>
+                <td>Right</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Forward Flexion</td>
+                <td><input id="MbFFROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>45</td>
+                <td>Rotation</td>
+                <td><input id="MbFFLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="MbFFRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>30</td>
+            </tr>
+            <tr>
+                <td>Extension</td>
+                <td><input id="MbExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>0</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="lbPE" style="display:none">
+    <h6 class="fw-bold">Low back</h6>
+    <p>
+        Patient has pain and tenderness over the   <input id="LBTenderness" class="form-control d-inline " style="width:100px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i> facet joints. Facet loading maneuvers are positive.
+    </p>
+    <div class="select-group">
+        On exam, patient has tenderness over the   <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> bilateral SI joints.
+        <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> <span class="select-btn">Faber</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"><span class="select-btn">Gaenslen</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="LBSign" value="Yeoman"> <span class="select-btn">Yeoman</span></label> sign are positive.
+    </div>
+    <div class="select-group">
+        SLR Test:
+        <label><input type="radio" name="LBSlrTest" value="Positive"> <span class="select-btn">+</span></label>
+        <label><input type="radio" name="LBSlrTest" value="Negative"> <span class="select-btn">-</span></label>
+        <input id="LBSlrTestOther" class="form-control d-inline " style="width:100px" placeholder="Other" />
+    </div>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>Left</td>
+                <td>Right</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Forward Flexion</td>
+                <td><input id="LBFFROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>60</td>
+                <td>Lateral Flexion</td>
+                <td><input id="LBFFLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="LBFFRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>25</td>
+            </tr>
+            <tr>
+                <td>Extension</td>
+                <td><input id="LBExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>25</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="rshPE" style="display:none">
+    <h6 class="fw-bold">Right Shoulder (R/Sh)</h6>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Abduction</td>
+                <td><input id="RSHAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>180</td>
+                <td>External rotation</td>
+                <td><input id="RSHERROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>90</td>
+            </tr>
+            <tr>
+                <td>Flexion</td>
+                <td><input id="RSHFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>180</td>
+                <td>Internal rotation</td>
+                <td><input id="RSHIRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>90</td>
+            </tr>
+            <tr>
+                <td>Adduction</td>
+                <td><input id="RSHAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>50</td>
+                <td>Extension</td>
+                <td><input id="RSHExtOM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>50</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="lshPE" style="display:none">
+    <h6 class="fw-bold">Left Shoulder (R/Sh)</h6>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Abduction</td>
+                <td>
+                    <input id="LSHAbductionROM"
+                           class="form-control d-inline"
+                           maxlength="3" style="width:50px" />
+                </td>
+                <td>180</td>
+
+                <td>External rotation</td>
+                <td>
+                    <input id="LSHERROM"
+                           class="form-control d-inline"
+                           maxlength="3" style="width:50px" />
+                </td>
+                <td>90</td>
+            </tr>
+
+            <tr>
+                <td>Flexion</td>
+                <td>
+                    <input id="LSHFlexionROM"
+                           class="form-control d-inline"
+                           maxlength="3" style="width:50px" />
+                </td>
+                <td>180</td>
+
+                <td>Internal rotation</td>
+                <td>
+                    <input id="LSHIRROM"
+                           class="form-control d-inline"
+                           maxlength="3" style="width:50px" />
+                </td>
+                <td>90</td>
+            </tr>
+
+            <tr>
+                <td>Adduction</td>
+                <td>
+                    <input id="LSHAdductionROM"
+                           class="form-control d-inline"
+                           maxlength="3" style="width:50px" />
+                </td>
+                <td>50</td>
+
+                <td>Extension</td>
+                <td>
+                    <input id="LSHExtOM"
+                           class="form-control d-inline"
+                           maxlength="3" style="width:50px" />
+                </td>
+                <td>50</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="rknPE" style="display:none">
+    <h6 class="fw-bold">Right Knee (R/Sh)</h6>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Flexion</td>
+                <td><input id="RKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>150</td>
+                <td>Extension</td>
+                <td><input id="RKNExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>0</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<div id="lknPE" style="display:none">
+    <h6 class="fw-bold">Left Knee (R/Sh)</h6>
+
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Flexion" /></td>
+                <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Extension" /></td>
+                <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h6 class="fw-bold">Other body parts:</h6>
+
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input id="OtherFlexionTitle" class="form-control d-inline " style="width:150px" value="Flexion" /></td>
+                <td><input id="OtherFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="OtherFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="OtherExtTitle" class="form-control d-inline " style="width:150px" value="Extension" /></td>
+                <td><input id="OtherExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="OtherExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+            </tr>
+
+        </tbody>
+    </table>
+    <br>
+
+    <div class="select-group">
+        <strong>GAIT:</strong>
+
+        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Normal"> <span class="select-btn">Normal</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Ambulates with a cane"> <span class="select-btn">Ambulates with a cane</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Other"> <span class="select-btn">Other</span></label>
+
+        <input id="GAITOther" class="form-control d-inline w-25" style="min-width:37%" placeholder="Specify other" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOther')"></i>
+    </div>
+</div>

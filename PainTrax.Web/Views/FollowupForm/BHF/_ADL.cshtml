@@ -1,0 +1,164 @@
+﻿<table cellspacing="0" cellpadding="5"
+       style="border-collapse: collapse; width:100%;">
+
+    <thead>
+        <tr style="font-weight:bold; ">
+            <td style="width:50%;">ADL</td>
+            <td>Perform</td>
+            <td>Not Perform</td>
+            <td>With Difficulty</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>
+                <label>
+                    <input type="checkbox" name="ADLPersonalHygiene" />
+                    Personal hygiene, grooming, dressing, toileting
+                </label>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLPersonalHygienePerform"  value="Yes"/>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLPersonalHygienePerform" value="No" />
+            </td>
+
+            <td>
+                <input type="text"
+                       id="ADLPersonalHygieneDifficulty"
+                       name="ADLPersonalHygieneDifficulty"
+                       class="form-control d-inline w-50" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLPersonalHygieneDifficulty')"></i>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>
+                    <input type="checkbox" name="ADLWalking" />
+                    Walking, transferring, ambulating
+                </label>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLWalkingPerform"  value="Yes"/>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLWalkingPerform" value="No" />
+            </td>
+
+            <td>
+                <input type="text"
+                       id="ADLWalkingDifficulty"
+                       name="ADLWalkingDifficulty"
+                       class="form-control d-inline w-50" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLWalkingDifficulty')"></i>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>
+                    <input type="checkbox" name="ADLEating" />
+                    Eating independently
+                </label>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLEatingPerform"  value="Yes"/>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLEatingPerform" value="No" />
+            </td>
+
+            <td>
+                <input type="text"
+                       id="ADLEatingDifficulty"
+                       name="ADLEatingDifficulty"
+                       class="form-control d-inline w-50" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLEatingDifficulty')"></i>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>
+                    <input type="checkbox" name="ADLHousehold" />
+                    Cook, clean, maintain households
+                </label>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLHouseholdPerform"  value="Yes"/>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLHouseholdPerform" value="No" />
+            </td>
+
+            <td>
+                <input type="text"
+                       name="ADLHouseholdDifficulty"
+                       id="ADLHouseholdDifficulty"
+                       class="form-control d-inline w-50" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLHouseholdDifficulty')"></i>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>
+                    <input type="checkbox" name="ADLShopping" />
+                    Shop for food
+                </label>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLShoppingPerform"  value="Yes"/>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLShoppingPerform" value="No" />
+            </td>
+
+            <td>
+                <input type="text"
+                       name="ADLShoppingDifficulty"
+                       id="ADLShoppingDifficulty"
+                       class="form-control d-inline w-50" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLShoppingDifficulty')"></i>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>
+                    <input type="checkbox" name="ADLSleeping" />
+                    Sleeping
+                </label>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLSleepingPerform"  value="Yes"/>
+            </td>
+
+            <td style="text-align:center;">
+                <input type="radio" name="ADLSleepingPerform" value="No" />
+            </td>
+
+            <td>
+                <input type="text"
+                       name="ADLSleepingDifficulty"
+                       id="ADLSleepingDifficulty"
+                       class="form-control d-inline w-50" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ADLSleepingDifficulty')"></i>
+            </td>
+        </tr>
+    </tbody>
+</table>

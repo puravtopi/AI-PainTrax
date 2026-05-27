@@ -1,0 +1,300 @@
+﻿@*  <a href="javascript:void(0)" onclick="fnshowTreatment()">Add / Edit </a>
+                                            <br />
+                                            <div id="divTreatment">
+                                                @Html.Raw(ViewBag.TreatmentDesc)
+                                            </div> *@
+
+<div>
+    <b>RECOMMENDATIONS</b>
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Recommend" />
+            Recommend
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="PT" />
+            PT
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Chiro" />
+            Chiro
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Acupuncture" />
+            Acupuncture
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="HEP" />
+            HEP
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Recommend to continue" />
+            Recommend to continue
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="PT" />
+            PT
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Chiro" />
+            Chiro
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Acupuncture" />
+            Acupuncture
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="HEP" />
+            HEP
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Continue current medications" />
+            Recommend to continue current medications
+        </label>
+    </p>
+
+    <p>
+        <input type="text"
+               id="PrescribedMedicationText"
+               class="form-control d-inline w-25" />
+
+        prescribed.
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Refer to orthopedist" />
+            Refer to orthopedist.
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Follow-up with orthopedist" />
+            Follow-up with orthopedist.
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule EMG" />
+            Schedule EMG
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="UE" />
+            UE
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LE" />
+            LE
+        </label>
+
+        <input type="text"
+               id="ScheduleEMGOther"
+               class="form-control d-inline w-25" />
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule Cervical Injection" />
+            Schedule
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CESI" />
+            CESI
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CMBB" />
+            CMBB
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CFB" />
+            CFB
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CInjOther" />
+        </label>
+
+        <input type="text"
+               id="CervicalInjectionOther"
+               class="form-control d-inline w-25" />
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule Lumbar Injection" />
+            Schedule
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LESI" />
+            LESI
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LMBB" />
+            LMBB
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LFB" />
+            LFB
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LPDA" />
+            LPDA
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LED" />
+            LED
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="ScheduleOther" />
+        </label>
+
+        <input type="text"
+               id="LumbarInjectionOther"
+               class="form-control d-inline w-25" />
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" id="RequestMRI" name="TreatmentPlan" value="Request MRI" />
+            Request
+        </label>
+
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CMRI" /> CMRI</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TMRI" /> TMRI</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LMRI" /> LMRI</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LSMRI" /> LSMRI</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="RSMRI" /> RSMRI</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LKMRI" /> LKMRI</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="RKMRI" /> RKMRI</label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="MRIOther" />
+        </label>
+
+        <input type="text"
+               id="MRIRequestOther"
+               class="form-control d-inline w-25" />
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Request CT" />
+            Request
+        </label>
+
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CSCT" /> CSCT</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TSCT" /> TSCT</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LSCT" /> LSCT</label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CTOther" />
+        </label>
+
+        <input type="text"
+               id="CTRequestOther"
+               class="form-control d-inline w-25" />
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Request XR" />
+            Request
+        </label>
+
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CSXR" /> CSXR</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TSXR" /> TSXR</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LSXR" /> LSXR</label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="XROther" />
+        </label>
+
+        <input type="text"
+               id="XRRequestOther"
+               class="form-control d-inline w-25" />
+    </p>
+
+    <p>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Executed TPI" />
+            Executed TPI
+        </label>
+
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CS" /> CS</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TS" /> TS</label>
+        <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LS" /> LS</label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="ETOther" />
+        </label>
+
+        <input type="text"
+               id="TPIOther"
+               class="form-control d-inline w-25" />
+    </p>
+    <p>
+        <input type="text"
+               id="RecommandationOther1"
+               class="form-control d-inline" style="width:80%" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RecommandationOther1')"></i>
+
+    </p>
+    <p>
+        <input type="text"
+               id="RecommandationOther2"
+               class="form-control d-inline" style="width:80%" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RecommandationOther2')"></i>
+
+    </p>
+</div>
+
+<p>
+    <strong>FOLLOW UP:</strong>
+
+    <label>
+        <input type="radio" name="FollowUp" value="2-4 weeks" />
+        2-4 weeks
+    </label>
+
+    <label style="margin-left:15px;">
+        <input type="radio" name="FollowUp" value="4-6 weeks" />
+        4-6 weeks
+    </label>
+
+    <label style="margin-left:15px;">
+        <input type="radio" name="FollowUp" value="Other" />
+        Other
+    </label>
+
+    <input type="text"
+           id="FollowUpOther"
+           class="form-control d-inline"
+           style="width:200px;" />
+</p>

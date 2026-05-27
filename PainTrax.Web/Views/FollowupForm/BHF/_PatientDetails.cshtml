@@ -1,0 +1,218 @@
+﻿
+<h6>Provider Name:  @ViewBag.ProviderName</h6>
+
+<!-- Patient Info -->
+<p>
+    Patient Name:
+    <input id="PatientName" name="PatientName" class="form-control d-inline" style="width:250px;" />
+    DOB:
+    <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" min="1900-01-01"
+           max="2099-12-31" />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Age:
+    <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    DOA:
+    <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+    <div id="patientGrid"
+         class="table-responsive border bg-white position-absolute shadow"
+         style="width:500px; z-index:999; display:none; max-height:250px; overflow:auto;">
+
+        <table class="table table-sm table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Patient Name</th>
+                    <th>DOB</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+
+   
+</p>
+<div class="select-group">
+    <strong>Case Type:</strong>
+    <label>
+        <input type="radio" name="InjuryType" value="NF">
+        <span class="select-btn">NF</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="WC">
+        <span class="select-btn">WC</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="MM">
+        <span class="select-btn">MM</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="PI">
+        <span class="select-btn">PI</span>
+    </label>
+    <label>
+        <input type="radio" name="InjuryType" value="LIEN">
+        <span class="select-btn">LIEN</span>
+    </label>
+</div>
+
+
+<!-- Work -->
+<div class="select-group">
+
+    Currently working:
+    <label>
+        <input type="radio" name="IsWorking" value="The patient is currently working." />  <span class="select-btn">Yes</span>
+    </label>
+    <label>
+        <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." />  <span class="select-btn">No</span>
+    </label>
+
+
+    Degree of Disability:
+
+    <input id="DisabilityPercentage"
+           class="form-control d-inline"
+           style="width:100px"
+           type="number"
+           min="0"
+           max="100" />
+
+    % temporarily disabled
+</div>
+
+<div id="divWC1" style="display:none;">
+    <p>
+        Occupation:
+        <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
+        <br />
+        Job Description:
+        <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:95%;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i>
+    </p>
+    <p>
+        Sit <input id="SitHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Drive <input id="DriveHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Stand <input id="StandHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Walk <input id="WalkHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Kneel/Stoop <input id="KneelHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Reach Overhead <input id="ReachOverhead" class="form-control d-inline" style="width:80px" />
+
+        Reach Below Waist <input id="ReachBelowWaist" class="form-control d-inline" style="width:80px" />
+    </p>
+    <p>
+        On your job how many hours a day do you spend:
+
+        Sitting <input id="JobSitting" class="form-control d-inline" style="width:80px" /> hr.
+
+        Standing <input id="JobStanding" class="form-control d-inline" style="width:80px" /> hr.
+
+        Driving <input id="JobDriving" class="form-control d-inline" style="width:80px" /> hr.
+
+        Bending <input id="JobBending" class="form-control d-inline" style="width:80px" /> hr.
+
+        Kneeling <input id="JobKneeling" class="form-control d-inline" style="width:80px" /> hr.
+
+        Crouching <input id="JobCrouching" class="form-control d-inline" style="width:80px" /> hr.
+
+        Lifting <input id="JobLifting" class="form-control d-inline" style="width:80px" /> hr.
+    </p>
+
+    <div class="select-group">
+        If lifting, how many pounds:
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="5">  <span class="select-btn">5</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="10">  <span class="select-btn">10</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="10-20">  <span class="select-btn">10-20</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="greater than 20"> <span class="select-btn">Greater than 20</span></label>
+    </div>
+    @* <p>
+                                                If not working, stopped immediately after accident:
+                                                <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
+                                                <input type="radio" name="StoppedAfterAccident" value="No" /> No
+                                                <br />
+                                                Reason:
+                                                <textarea id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
+                                            </p> *@
+</div>
+<script>
+    $("#PatientName").on("keyup", function () {
+
+        let search = $(this).val();
+         var url = '@Url.Action("SearchPatient", "FollowupForm")';
+
+        if (search.length < 2) {
+            $("#patientGrid").hide();
+            return;
+        }
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { term: search },
+            success: function (data) {
+
+                let rows = "";
+                debugger
+
+                $.each(data, function (i, item) {
+
+                    rows += `
+                        <tr class="patient-row"
+                            data-id="${item.id}"
+                            data-name="${item.lname+' '+item.fname}">
+
+                            <td>${item.lname+' '+item.fname}</td>
+                            <td>${item.dob}</td>
+                        </tr>
+                    `;
+                });
+
+                $("#patientGrid tbody").html(rows);
+
+                if (data.length > 0)
+                    $("#patientGrid").show();
+                else
+                    $("#patientGrid").hide();
+            }
+        });
+
+    });
+
+    // Row Select Event
+    $(document).on("click", ".patient-row", function () {
+
+        let patientName = $(this).data("name");
+        let patientId = $(this).data("id");
+
+        $("#PatientName").val(patientName);
+
+        console.log("Selected Patient ID:", patientId);
+
+        $("#patientGrid").hide();
+
+        // Optional:
+        // $("#PatientId").val(patientId);
+    });
+
+    // Hide grid when click outside
+    $(document).click(function (e) {
+        if (!$(e.target).closest('#PatientName, #patientGrid').length) {
+            $("#patientGrid").hide();
+        }
+    });
+</script>
