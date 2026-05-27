@@ -244,31 +244,7 @@
                                                 <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
                                                     </div>
                                            
-                                                        <div class="select-group">
-                                                Smoker:
-                                                <label><input type="radio" name="Smoke" value="Yes"> <span class="select-btn">Y</span></label>
-                                                <label><input type="radio" name="Smoke" value="No"><span class="select-btn"> N</span></label>
-                                                <span id="divSmoke" style="display:none">
-                                                    <input id="PPD" class="form-control d-inline" style="width:150px" /> PPD.
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i>
-                                                </span>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Alcohol:
-                                                <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."><span class="select-btn"> Y</span></label>
-                                                <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol."><span class="select-btn"> N</span></label>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                @* Cannabis:
-                                                <label><input type="radio" name="Cannabis" value="The patient smokes cannabis."><span class="select-btn"> Y</span></label>
-                                                <label><input type="radio" name="Cannabis" value="The patient does not smoke cannabis."><span class="select-btn"> N</span></label>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *@
-                                                Drugs:
-                                                <label><input type="radio" name="OtherDrugs" value="Yes"><span class="select-btn"> Y</span></label>
-                                                <label><input type="radio" name="OtherDrugs" value="No"><span class="select-btn"> N</span></label>
-                                                <span id="divDrugs" style="display:none">                                                   
-                                                    <input type="text" id="OtherDrugsTxt" name="OtherDrugsTxt"  placeholder="Other Drugs Name" class="form-control d-inline w-auto" />
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i>
-                                                </span>
-                                           </div>
+                                                        
 
 
 
@@ -369,6 +345,14 @@
                                                 <textarea id="AccidentDescription" name="AccidentDescription" class="form-control d-inline" style="width:95%"></textarea>
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
                                                 </p>
+                                            <div class="select-group">
+                                                <b> Chief complaint:</b>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> <span class="select-btn">Neck</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="midbackSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> <span class="select-btn">Low back</span></label>
+
+                                                <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+                                            </div>
                                        
                                     </div>
                                 </div>
@@ -379,16 +363,8 @@
                                         </button>
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <br />
-                                            <div class="select-group">
-                                                <b> Chief complaint:</b>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> <span class="select-btn">Neck</span></label>
-                                                    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="midbackSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> <span class="select-btn">Low back</span></label>
-
-                                                <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
-                                                </div>
+                                        <div class="accordion-body">                                           
+                                           
                                             <div class="select-group">
                                                 PMH:
                                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="None"> <span class="select-btn">None</span></label>
@@ -406,6 +382,11 @@
                                                 PSH:
                                                 <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i>
+                                                </p>
+                                                <p>
+                                                    Previous Procedures:
+                                                    <input id="PProcedures" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PProcedures')"></i>
                                                 </p>
                                            <p>
                                                 Meds:
@@ -425,6 +406,31 @@
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i>
                                                 </span>
                                             </div>
+                                                <div class="select-group">
+                                                    Smoker:
+                                                    <label><input type="radio" name="Smoke" value="Yes"> <span class="select-btn">Y</span></label>
+                                                    <label><input type="radio" name="Smoke" value="No"><span class="select-btn"> N</span></label>
+                                                    <span id="divSmoke" style="display:none">
+                                                        <input id="PPD" class="form-control d-inline" style="width:150px" /> PPD.
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i>
+                                                    </span>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    Alcohol:
+                                                    <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."><span class="select-btn"> Y</span></label>
+                                                    <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol."><span class="select-btn"> N</span></label>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    @* Cannabis:
+                                                <label><input type="radio" name="Cannabis" value="The patient smokes cannabis."><span class="select-btn"> Y</span></label>
+                                                <label><input type="radio" name="Cannabis" value="The patient does not smoke cannabis."><span class="select-btn"> N</span></label>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *@
+                                                    Drugs:
+                                                    <label><input type="radio" name="OtherDrugs" value="Yes"><span class="select-btn"> Y</span></label>
+                                                    <label><input type="radio" name="OtherDrugs" value="No"><span class="select-btn"> N</span></label>
+                                                    <span id="divDrugs" style="display:none">
+                                                        <input type="text" id="OtherDrugsTxt" name="OtherDrugsTxt" placeholder="Other Drugs Name" class="form-control d-inline w-auto" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i>
+                                                    </span>
+                                                </div>
                                             <div class="select-group">
                                                 Physical therapy:
                                                 <label><input type="radio" name="PT" value="Yes"> <span class="select-btn">Y</span></label>
@@ -451,11 +457,7 @@
                                                    @*  x a week. *@
                                                 </span>
                                             </div>
-                                                <p>
-                                                Previous Procedures:
-                                                <input id="PProcedures" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PProcedures')"></i>
-                                                </p>
+                                                
 
                                         </div>
                                     </div>
@@ -472,7 +474,7 @@
                                                 <h6 class="fw-bold">Neck</h6>
                                                 <div class="select-group">
                                                     Pain:
-                                                    <input id="NeckPain" class="form-control d-inline w-auto" style="width:40px;" />
+                                                        <input id="NeckPain" class="form-control d-inline" style="width:30px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckPain')"></i>/10
 
                                                     <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
@@ -538,7 +540,7 @@
                                                 <h6 class="fw-bold">Midback</h6>
                                                 <div class="select-group">
                                                     Pain:
-                                                        <input id="MidbackSection" class="form-control d-inline w-auto" style="width:40px;" />
+                                                        <input id="MidbackSection" class="form-control d-inline" style="width:30px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MidbackSection')"></i>/10
 
                                                     <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
@@ -599,7 +601,7 @@
                                                 <h6 class="fw-bold">LowBack</h6>
                                                 <div class="select-group">
                                                     Pain:
-                                                        <input id="LowBackPain" class="form-control d-inline w-auto" style="width:40px;" />
+                                                        <input id="LowBackPain" class="form-control d-inline" style="width:30px" />
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LowBackPain')"></i>/10
 
                                                     <label><input type="checkbox" class="chkMulti" name="lbackPain" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
@@ -839,11 +841,11 @@
 
                                                     <label><input type="radio" name="Palpation" value="No"> <span class="select-btn">No</span></label>
 
-                                                    <label><input type="radio" name="Palpation" value="mildly"> <span class="select-btn">mildly</span></label>
+                                                    <label><input type="radio" name="Palpation" value="mild"> <span class="select-btn">mild</span></label>
 
-                                                    <label><input type="radio" name="Palpation" value="moderatly"> <span class="select-btn">moderatly</span></label>
+                                                    <label><input type="radio" name="Palpation" value="moderate"> <span class="select-btn">moderate</span></label>
 
-                                                    <label><input type="radio" name="Palpation" value="severely"> <span class="select-btn">severely </span></label>
+                                                    <label><input type="radio" name="Palpation" value="severe"> <span class="select-btn">severe </span></label>
                                                     <label>tenderness to palpation midline and paraspinal muscles</label>
                                                     <label><input type="radio" name="Palpationtenderness" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                     <label><input type="radio" name="Palpationtenderness" value="right"> <span class="select-btn">right </span></label>
@@ -865,9 +867,9 @@
                                                    <div class="select-group">
                                                     <label> Muscle spasms are</label>
                                                     <label><input type="radio" name="PEMuscleCervical" value="none"> <span class="select-btn">none </span></label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="mildly"> <span class="select-btn">mildly</span> </label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="moderatly"> <span class="select-btn">moderatly</span> </label>
-                                                    <label><input type="radio" name="PEMuscleCervical" value="severely"> <span class="select-btn">severely</span> </label>
+                                                    <label><input type="radio" name="PEMuscleCervical" value="mild"> <span class="select-btn">mild</span> </label>
+                                                    <label><input type="radio" name="PEMuscleCervical" value="moderate"> <span class="select-btn">moderate</span> </label>
+                                                    <label><input type="radio" name="PEMuscleCervical" value="severe"> <span class="select-btn">severe</span> </label>
                                                     <label> side </label>
                                                     <label><input type="radio" name="PEMuscleCervicalSide" value="bilaterally"> <span class="select-btn">bilaterally</span> </label>
                                                     <label><input type="radio" name="PEMuscleCervicalSide" value="right"> <span class="select-btn">right </span></label>
@@ -1295,11 +1297,11 @@
 
                                                     <label><input type="radio" name="THORACICPalpation" value="No"> <span class="select-btn">No </span></label>
 
-                                                        <label><input type="radio" name="THORACICPalpation" value="mildly"><span class="select-btn"> mildly </span></label>
+                                                        <label><input type="radio" name="THORACICPalpation" value="mild"><span class="select-btn"> mild </span></label>
 
-                                                    <label><input type="radio" name="THORACICPalpation" value="moderatly"> <span class="select-btn">moderatly </span></label>
+                                                    <label><input type="radio" name="THORACICPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
 
-                                                    <label><input type="radio" name="THORACICPalpation" value="severely"><span class="select-btn">severely </span> </label>
+                                                    <label><input type="radio" name="THORACICPalpation" value="severe"><span class="select-btn">severe </span> </label>
                                                     <label>tenderness to palpation midline and paraspinal muscles</label>
                                                     <label><input type="radio" name="THORACICPalpationmidline" value="bilaterally"> <span class="select-btn">bilaterally  </span></label>
                                                     <label><input type="radio" name="THORACICPalpationmidline" value="right"> <span class="select-btn">right  </span></label>
@@ -1314,9 +1316,9 @@
                                                     </div>
                                                     <div class="select-group">
                                                     <label> Muscle spasms Present.ROM is</label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="mildly"><span class="select-btn"> mildly  </span></label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="moderatly"><span class="select-btn"> moderatly </span> </label>
-                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="severely"> <span class="select-btn">severely  </span></label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="mild"><span class="select-btn"> mild  </span></label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="moderate"><span class="select-btn"> moderate </span> </label>
+                                                    <label><input type="radio" class="chkMulti" name="PEMuscleTHORACIC" value="severe"> <span class="select-btn">severe  </span></label>
                                                     <label>decreased</label>
 
                                                  </div>
@@ -1449,11 +1451,11 @@
 
                                                     <label><input type="radio" name="LUMBARPalpation" value="No"><span class="select-btn"> No</span></label>
 
-                                                    <label><input type="radio" name="LUMBARPalpation" value="mildly"><span class="select-btn"> mildly</span></label>
+                                                    <label><input type="radio" name="LUMBARPalpation" value="mild"><span class="select-btn"> mild</span></label>
 
-                                                    <label><input type="radio" name="LUMBARPalpation" value="moderatly"><span class="select-btn"> moderatly</span></label>
+                                                    <label><input type="radio" name="LUMBARPalpation" value="moderate"><span class="select-btn"> moderate</span></label>
 
-                                                    <label><input type="radio" name="LUMBARPalpation" value="severely"> <span class="select-btn">severely</span> </label>
+                                                    <label><input type="radio" name="LUMBARPalpation" value="severe"> <span class="select-btn">severe</span> </label>
                                                     <label>tenderness to palpation midline and paraspinal muscles</label>
                                                     <label><input type="radio" name="LUMBARPalpationmidline" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                     <label><input type="radio" name="LUMBARPalpationmidline" value="right"><span class="select-btn"> right </span></label>
@@ -1470,9 +1472,9 @@
                                                     <div class="select-group">
                                                     <label> Muscle spasms are</label>
                                                     <label><input type="radio" name="PEMuscleLUMBAR" value="none"><span class="select-btn"> none </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="mildly"> <span class="select-btn">mildly </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="moderatly"><span class="select-btn"> moderatly </span></label>
-                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="severely"> <span class="select-btn">severely </span></label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="mild"> <span class="select-btn">mild </span></label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="moderate"><span class="select-btn"> moderate </span></label>
+                                                    <label><input type="radio" name="PEMuscleLUMBAR" value="severe"> <span class="select-btn">severe </span></label>
                                                     <label> side</label>
                                                     <label><input type="radio" name="PEMuscleLUMBARside" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                     <label><input type="radio" name="PEMuscleLUMBARside" value="right"> <span class="select-btn">right </span></label>
@@ -1871,11 +1873,12 @@
 
 
                                                 </div>
-                                                    <div class="select-group">
+                                                   
                                                         <div class="select-group">
                                                             <input id="LUMBAREXAMtxt" name="LUMBAREXAMtxt" class="form-control d-inline w-auto" style="min-width:70%;" />
                                                             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LUMBAREXAMtxt')"></i>
                                                         </div>
+                                                        <div class="select-group">
                                                         <strong>GAIT:</strong>
 
                                                     <label><input type="checkbox" class="chkMulti" name="GAIT" value="Normal"> <span class="select-btn">Normal</span></label>
@@ -1886,9 +1889,9 @@
 
                                                     <label><input type="checkbox" class="chkMulti" name="GAIT" value="Cane"> <span class="select-btn">Cane</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="GAIT" value="Walker"><span class="select-btn"> Walker</span></label>
+                                                        </div>
 
-
-                                                 </div>
+                                                
 
                                             </div>
                                         </div>
