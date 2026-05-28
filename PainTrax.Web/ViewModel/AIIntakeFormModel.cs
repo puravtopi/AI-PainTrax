@@ -385,6 +385,8 @@
         public List<string> PlanEMG { get; set; }
         public List<string> PlanNCV { get; set; }
         public List<string> PlanUTPI { get; set; }
+        public List<string> PlanImaging { get; set; }
+        public List<string> Plantreatment { get; set; }
         //public List<string> PlanRecommendation { get; set; }
         public List<string> Recommendation { get; set; }
         public string FollowUpOther { get; set; }

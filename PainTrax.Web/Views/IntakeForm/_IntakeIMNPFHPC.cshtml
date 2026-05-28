@@ -1927,9 +1927,16 @@
                                         <div class="accordion-body">
                                             <br />
 
-                                            <div class="select-group">
-
-                                                @* <label><input type="checkbox" class="chkMulti" name="PlanConservativeTx" value="ConservativeTx"> ConservativeTx:</label> *@
+                                            
+                                                    <div class="select-group">
+                                                        <label><input type="checkbox" class="chkMulti" name="PlanImaging" value="Imaging Studies"> <span class="select-btn">Imaging Studies</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="PlanImaging" value="Clinical Examinations" checked> <span class="select-btn">Clinical Examinations</span></label>
+                                                        Reviewed
+                                                    </div>
+                                                    <div class="select-group">
+                                                        <label><input type="checkbox" class="chkMulti" name="Plantreatment" value="All treatment options discussed with the patient" checked> <span class="select-btn">All treatment options discussed with the patient</span></label>                                                       
+                                                    </div>
+                                               <div class="select-group">
                                                 ConservativeTx:
                                                 <label><input type="radio" name="PlanStart" value="No"><span class="select-btn">Start</span></label>
                                                 <label><input type="radio" name="PlanStart" value="Yes"> <span class="select-btn">Continue</span></label>
