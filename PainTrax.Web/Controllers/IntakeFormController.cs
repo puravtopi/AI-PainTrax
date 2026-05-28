@@ -1306,6 +1306,8 @@ namespace PainTrax.Web.Controllers
             return PartialView("_TodayVisitList", model);
         }
 
+      
+
 
         #region private method
         public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "", string provName = "")
@@ -1714,7 +1716,6 @@ namespace PainTrax.Web.Controllers
             };
             new LogService().Insert(logdata);
         }
-
         private string GetCC(AIIntakeFormModel model)
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();

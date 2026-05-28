@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MS.Models;
 using MS.Services;
 using Optivem.Framework.Core.Domain;
 using PainTrax.Web.AzureServices;
@@ -11,8 +12,10 @@ using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
+using PainTrax.Web.ViewModel;
 using System.Data;
 using System.Text.RegularExpressions;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace PainTrax.Web.Controllers
 {
@@ -29,6 +32,7 @@ namespace PainTrax.Web.Controllers
         private readonly DiagcodesService _diagcodesService = new DiagcodesService();
         private readonly TreatmentMasterService _treatmentService = new TreatmentMasterService();
         private readonly PatientIEService _ieService = new PatientIEService();
+        private readonly PatientFUService _fuservices = new PatientFUService();
         #endregion
 
 
@@ -259,6 +263,97 @@ namespace PainTrax.Web.Controllers
             string cnd = " and cmp_id = " + cmpid + " and (fname like '%" + term + "%' or lname like '%" + term + "%' or CONCAT(fname, ' ', lname) LIKE CONCAT('%', '" + term + "', '%') or CONCAT(lname, ' ', fname) LIKE CONCAT('%', '" + term + "', '%')) ";
             var result = _ieService.GetAll(cnd);
             return Json(result);
+        }
+
+        public IActionResult GetIntakeData(int? id)
+        {
+            var data = service.GetInitialIntakeAIById(id.Value);
+            if (data == null || string.IsNullOrEmpty(data.FormData))
+                return Json(new { });
+
+            return Content(data.FormData, "application/json");
+
+        }
+
+        [HttpPost]
+        public IActionResult SaveForm([FromBody] object formData)
+        {
+            var json = System.Text.Json.JsonSerializer.Serialize(formData);
+            var model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+            var result = "0";
+            if (model != null)
+            {
+                InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
+                {
+                    Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
+                    CmpId = cmpid,
+                    Visit_Type = "FU",
+                    DOA = DateTime.TryParse(model.DOA, out var parsedDOA) ? parsedDOA : (DateTime?)null,
+                    DOB = DateTime.TryParse(model.DOB, out var parsedDOB) ? parsedDOB : (DateTime?)null,
+                    //DOE = System.DateTime.Now,
+                    DOE = DateTime.TryParse(model.DOE, out var parsedDOE) ? parsedDOE : (DateTime?)null,
+                    FormData = json,
+                    FN = model.FN,
+                    LN = model.LN,
+                    PatientSubmitDate = DateTime.TryParse(model.PatientSubmitDate, out var PatientSubmitDate) ? parsedDOA : (DateTime?)null,
+                    LocationId = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
+                    DLPath = model.DLPath,
+                    Diagnosis = model.Diagnosis,
+                    Treatment = model.Treatment,
+                    TreatmentIds = model.TreatmentIds,
+                    TreatmentDelimitDesc = model.TreatmentDelimitDesc
+                };
+                result = service.SaveInitialIntakeAI(initialIntakeAI);
+
+                var InjuryType = "MM";
+
+
+                if (model.InjuryType == "work-related")
+                    InjuryType = "WC";
+                else if (model.InjuryType == "lien")
+                    InjuryType = "Lien";
+                else
+                    InjuryType = model.InjuryType;
+
+
+                if (initialIntakeAI.Id == 0)
+                {
+
+                    tbl_patient_fu objFU = new tbl_patient_fu()
+                    {
+
+                        created_by = userid,
+                        doe = string.IsNullOrEmpty(model.DOE) ? null : Convert.ToDateTime(model.DOE),
+                        patientIE_ID = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
+                        cmp_id = cmpid,
+                        created_date = System.DateTime.Now,
+                        is_active = true,
+                        patient_id = string.IsNullOrEmpty(model.PatientId) ? null : Convert.ToInt32(model.PatientId),
+                        type = InjuryType,
+                        intakeid = Convert.ToInt32(result),
+                        location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId)
+                    };
+
+                    var newFU = _fuservices.Insert(objFU);
+                }
+                else
+                {
+                    var objIE = new tbl_patient_ie()
+                    {
+
+                        doa = string.IsNullOrEmpty(model.DOA) ? null : Convert.ToDateTime(model.DOA),
+                        doe = string.IsNullOrEmpty(model.DOE) ? null : Convert.ToDateTime(model.DOE),
+                        compensation = InjuryType,
+                        intakeid = initialIntakeAI.Id
+                    };
+                    _ieService.UpdateFromIntake(objIE);
+                }
+
+                //return RedirectToAction("Index", "Visit");
+            }
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId });
         }
     }
 }

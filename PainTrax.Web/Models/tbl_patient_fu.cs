@@ -17,6 +17,7 @@ public class tbl_patient_fu{
 	public int? updated_by {get;set;}
 	public bool? is_active {get;set;}
 	public int? cmp_id {get;set;}
+	public int? intakeid { get;set;}
 	public string? extra_comments {get;set;}
 	public string? type { get;set;}
 	public string? history { get;set;}

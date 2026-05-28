@@ -357,11 +357,14 @@ namespace PainTrax.Web.Services
         public InitialIntakeAI? GetInitialIntakeAIById(int id)
         {
             DataTable dt = new DataTable();
-            MySqlCommand cm = new MySqlCommand("select * from tbl_intake_ai where Id=@id ", conn);
+            MySqlCommand cm = new MySqlCommand("CALL sp_get_intake_data(@Id) ", conn);
             cm.Parameters.AddWithValue("@Id", id);
             var datalist = ConvertDataTable<InitialIntakeAI>(GetData(cm)).FirstOrDefault();
             return datalist;
         }
+
+     
+
         public List<InitialIntakeAI> GetInitialAllIntakeAI(int cmpid)
         {
             DataTable dt = new DataTable();

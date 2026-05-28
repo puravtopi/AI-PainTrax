@@ -45,8 +45,8 @@ public class PatientFUService : ParentService
     public int Insert(tbl_patient_fu data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient_fu
-		(patient_id,provider_id,patientIE_ID,doe,created_date,created_by,updated_date,updated_by,is_active,cmp_id,extra_comments,type,accident_type,physicianid,location_id,procedure_performed)Values
-				(@patient_id,@provider_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type,@accident_type,@physicianid,@location_id,@procedure_performed);select @@identity;", conn);
+		(patient_id,provider_id,patientIE_ID,doe,created_date,created_by,updated_date,updated_by,is_active,cmp_id,extra_comments,type,accident_type,physicianid,location_id,procedure_performed,intakeid)Values
+				(@patient_id,@provider_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type,@accident_type,@physicianid,@location_id,@procedure_performed,@intakeid);select @@identity;", conn);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@provider_id", data.provider_id);
 
@@ -64,6 +64,7 @@ public class PatientFUService : ParentService
         cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         cm.Parameters.AddWithValue("@location_id", data.location_id);
         cm.Parameters.AddWithValue("@procedure_performed", data.procedure_performed);
+        cm.Parameters.AddWithValue("@intakeid", data.intakeid);
 
         var result = ExecuteScalar(cm);
         return result;

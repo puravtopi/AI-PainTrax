@@ -908,9 +908,6 @@
 
                 });
 
-
-
-
                 var selected = [];
                 $(document).on('change', 'input[name="Complaints"]', function () {
 
@@ -1161,14 +1158,6 @@
 
                         var cmp_id = '@ViewBag.CmpId';
 
-                        // if (cmp_id === '18' || cmp_id === '15' || cmp_id === '10' || cmp_id === '2') {
-
-                        //     strContent = strContent.replace(/<ol>/g, '')     // remove opening <ol>
-                        //         .replace(/<\/ol>/g, '')   // remove closing </ol>
-                        //         .replace(/<li>/g, '')     // remove opening <li>
-                        //         .replace(/<\/li>/g, ''); // replace closing </li> with <br/>;
-                        // }
-
                         $("#divTreatment").html(strContent);
                         $('#TreatmentIds').val(strIds);
                         $('#TreatmentDelimitDesc').val(strDesc);
@@ -1189,17 +1178,14 @@
                 $.ajax({
                     type: "Post",
                     url: url,
-
                     contentType: "application/x-www-form-urlencoded",
                     success: function (data, status, xhr) {
-                        debugger
-                        $('#modelDaignoCode').html(data);
+                         $('#modelDaignoCode').html(data);
                     },
                     error: function (xhr, status, error) {
                         alert("Error!" + error);
                     },
                 });
-
                 $('#daignoCodeModal').modal('show');
                 return false;
             }

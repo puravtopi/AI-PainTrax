@@ -43,10 +43,10 @@
 
 <script>
 
-            $("#btnDaignoCode").click(function () {
+    $("#btnDaignoCode").click(function () {
 
         var finalHtml = "";
-        var bodyPart = $("#hdSelectedBody").val();
+      
         finalHtml = $("#divDiagnosis").html();
         // Loop each group table (or wrapper)
         $(".diag-group").each(function () {
@@ -63,9 +63,9 @@
                 var desc = row.cells[2].querySelector('input[type="text"]').value;
 
                  // Check if code already exists inside divDiagnosis
-    var alreadyExists = false;
+            var alreadyExists = false;
 
-        $("#divDiagnosis li").each(function () {
+            $("#divDiagnosis li").each(function () {
 
         var existingText = $(this).text().trim();
 
@@ -91,7 +91,6 @@
         });
 
         $("#divDiagnosis").html(finalHtml);
-
 
         $('#daignoCodeModal').modal('hide');
         return false;

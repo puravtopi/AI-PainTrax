@@ -393,6 +393,9 @@
         public string OtherPriortrauma { get; set; }
         public string OtherLOC { get; set; }
         public string OtherBruises { get; set; }
+
+        public string PatientIEId { get; set; }
+        public string PatientId { get; set; }
     }
 }
 

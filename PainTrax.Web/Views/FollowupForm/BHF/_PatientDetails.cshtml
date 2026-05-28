@@ -1,6 +1,11 @@
 ﻿
 <h6>Provider Name:  @ViewBag.ProviderName</h6>
 
+<input type="hidden" id="FN" name="FN" />
+<input type="hidden" id="LN" name="LN" />
+<input type="hidden" id="PatientId" name="PatientId" />
+<input type="hidden" id="PatientIEId" name="PatientIEId" />
+
 <!-- Patient Info -->
 <p>
     Patient Name:
@@ -12,7 +17,10 @@
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
+   
+    DOE
+    <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" />
+    &nbsp;&nbsp;
     DOA:
     <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
     <div id="patientGrid"
@@ -24,6 +32,7 @@
                 <tr>
                     <th>Patient Name</th>
                     <th>DOB</th>
+                    <th>DOA</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -31,7 +40,7 @@
     </div>
 
 
-   
+
 </p>
 <div class="select-group">
     <strong>Case Type:</strong>
@@ -171,15 +180,39 @@
 
                 $.each(data, function (i, item) {
 
-                    rows += `
-                        <tr class="patient-row"
-                            data-id="${item.id}"
-                            data-name="${item.lname+' '+item.fname}">
+                        rows += `
+        <tr class="patient-row"
+            data-id="${item.id}"
+            data-intakeid="${item.intakeid}"
+            data-patientid="${item.patient_id}"
+            data-name="${item.lname} ${item.fname}">
 
-                            <td>${item.lname+' '+item.fname}</td>
-                            <td>${item.dob}</td>
-                        </tr>
-                    `;
+            <td>${item.lname} ${item.fname}</td>
+
+            <td>
+                ${
+                    item.dob
+                        ? new Date(item.dob).toLocaleDateString('en-US', {
+                              month: '2-digit',
+                              day: '2-digit',
+                              year: 'numeric'
+                          })
+                        : ''
+                }
+            </td>
+             <td>
+                ${
+                    item.doa
+                        ? new Date(item.doa).toLocaleDateString('en-US', {
+                              month: '2-digit',
+                              day: '2-digit',
+                              year: 'numeric'
+                          })
+                        : ''
+                }
+            </td>
+        </tr>
+    `;
                 });
 
                 $("#patientGrid tbody").html(rows);
@@ -197,16 +230,29 @@
     $(document).on("click", ".patient-row", function () {
 
         let patientName = $(this).data("name");
-        let patientId = $(this).data("id");
+        let patientId = $(this).data("patientid");
+        let patientIEId = $(this).data("id");
+        let patientIntakeId = $(this).data("intakeid");
 
         $("#PatientName").val(patientName);
+        $("#PatientIEId").val(patientIEId);
+        $("#PatientId").val(patientId);
 
-        console.log("Selected Patient ID:", patientId);
+        console.log("Selected Patient Intake ID:", patientIntakeId);
 
         $("#patientGrid").hide();
 
-        // Optional:
-        // $("#PatientId").val(patientId);
+        let url="@Url.Action("GetIntakeData", "FollowupForm")?id="+patientId;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (res) {
+                debugger
+                console.log("Result: "+res);
+                bindForm(res);
+            }
+        });
     });
 
     // Hide grid when click outside
