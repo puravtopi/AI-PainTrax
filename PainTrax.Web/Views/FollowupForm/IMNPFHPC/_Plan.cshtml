@@ -1,0 +1,109 @@
+﻿<br />
+
+<div class="select-group">
+
+    @* <label><input type="checkbox" class="chkMulti" name="PlanConservativeTx" value="ConservativeTx"> ConservativeTx:</label> *@
+    ConservativeTx:
+    <label><input type="radio" name="PlanStart" value="No"><span class="select-btn">Start</span></label>
+    <label><input type="radio" name="PlanStart" value="Yes"> <span class="select-btn">Continue</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanPT" value="PT"> <span class="select-btn">PT</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanPT" value="Chiro"> <span class="select-btn">Chiro</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanPT" value="Acupuncture"> <span class="select-btn">Acupuncture</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanPT" value="HEP"> <span class="select-btn">HEP</span></label>
+
+</div>
+<div class="select-group">
+    Medication Rx:
+    @* <label><input type="checkbox" class="chkMulti" name="MedicationRx" value="MedicationRx"> Medication Rx:</label> *@                                                
+                                                <label><input type="checkbox" class="chkMulti" name="PlanMedication" value="Ibuprofen"><span class="select-btn"> Ibuprofen 600 mg</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanMedication" value=" lidocainetopical"> <span class="select-btn"> lidocaine 5% topical</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanMedication" value="cyclobenzaprine"><span class="select-btn"> cyclobenzaprine 10 mg</span></label>
+
+</div>
+<div class="select-group">
+    Order
+    @* <label><input type="checkbox" class="chkMulti" name="PlanOrderMRI" value="PlanOrderMRI"> Order</label> *@
+    <label>@* <input type="checkbox" class="chkMulti" name="PlanMRI" value="MRI"> *@ MRI</label>
+    <label><input type="checkbox" class="chkMulti" name="PlanMRI" value="Cspine"> <span class="select-btn">C spine</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanMRI" value="Tspine"> <span class="select-btn">T spine</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanMRI" value="Lspine"> <span class="select-btn">L spine</span></label>
+
+    &nbsp;&nbsp;&nbsp;
+
+    <label>@* <input type="checkbox" class="chkMulti" name="PlanCT" value="CT"> *@ CT</label>
+    <label><input type="checkbox" class="chkMulti" name="PlanCT" value="Cspine"> <span class="select-btn">C spine</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanCT" value="Tspine"> <span class="select-btn">T spine</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanCT" value="Lspine"><span class="select-btn"> L spine</span></label>
+
+    &nbsp;&nbsp;&nbsp;
+
+    <label>@* <input type="checkbox" class="chkMulti" name="PlanXray" value="Xray"> *@ X-ray</label>
+    <label><input type="checkbox" class="chkMulti" name="PlanXray" value="Cspine"><span class="select-btn"> C spine</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanXray" value="Tspine"> <span class="select-btn">T spine</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanXray" value="Lspine"> <span class="select-btn">L spine</span></label>
+
+    &nbsp;&nbsp;&nbsp;
+    <label>Other</label>
+    <input type="text" id="PlanOrder" name="PlanOrder" class="form-control d-inline w-auto" />
+
+</div>
+<div class="select-group">
+    Order
+    @* <label><input type="checkbox" class="chkMulti" name="PlanOrderEMG" value="PlanOrderEMG"> Order</label> *@
+    <label>EMG/NCV</label>
+    <label><input type="checkbox" class="chkMulti" name="PlanEMG" value="UEs"> <span class="select-btn">UEs</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanEMG" value="LEs"> <span class="select-btn">LEs</span></label>
+
+
+    @* <label><input type="checkbox" class="chkMulti" name="PlanNCV" value="NCV"> NCV</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PlanNCV" value="UEs"> UEs</label>
+                                                <label><input type="checkbox" class="chkMulti" name="PlanNCV" value="LEs"> LEs</label> *@                                                
+
+                                           </div>
+<div class="select-group">
+
+    <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="CTPI"> <span class="select-btn">CTPI</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="TTPI"> <span class="select-btn">TTPI</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="LTPI"> <span class="select-btn">LTPI</span></label>
+
+
+</div>
+<div class="select-group">
+    Recommendation
+    @*  <label><input type="checkbox" class="chkMulti" name="PlanRecommendation" value="Recommendation"> Recommendation</label> *@
+    <label><input type="checkbox" class="chkMulti" name="Recommendation" value="CESI"> <span class="select-btn">CESI </span></label>
+    <label><input type="checkbox" class="chkMulti" name="Recommendation" value="CFacet"><span class="select-btn"> C.Facet</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Recommendation" value="CTESI"> <span class="select-btn">CTESI</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LESI"> <span class="select-btn">LESI</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LFacet"><span class="select-btn"> L.Facet</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LTESI"> <span class="select-btn">LTESI</span></label>
+
+</div>
+<div class="select-group">
+    <strong>FOLLOW UP:</strong>
+    <input type="text"
+           id="FollowUpOther"
+           class="form-control d-inline"
+           style="width:200px;" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'FollowUpOther')"></i>
+
+    <label><input type="radio" name="FollowUp" value="Weeks"><span class="select-btn">Weeks</span></label>
+    <label><input type="radio" name="FollowUp" value="Months"><span class="select-btn">Months</span></label>
+    <label><input type="radio" name="FollowUp" value="PRN"><span class="select-btn">PRN</span></label>
+    @* <label>
+                                                    <input type="radio" name="FollowUp" value="Weeks" />
+                                                    Weeks
+                                                </label>
+
+                                                <label style="margin-left:15px;">
+                                                    <input type="radio" name="FollowUp" value="Months" />
+                                                    Months
+                                                </label>
+
+                                                <label style="margin-left:15px;">
+                                                    <input type="radio" name="FollowUp" value="PRN" />
+                                                    PRN
+                                                </label> *@
+
+
+</div>

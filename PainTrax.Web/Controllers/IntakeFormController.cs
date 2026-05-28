@@ -795,7 +795,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeBHF");
+            else return PartialView("_IntakeIMNPFHPC");
             //return View();
         }
 
@@ -1305,8 +1305,7 @@ namespace PainTrax.Web.Controllers
 
             return PartialView("_TodayVisitList", model);
         }
-
-      
+         
 
 
         #region private method
@@ -1733,7 +1732,7 @@ namespace PainTrax.Web.Controllers
                 //right soulder
                 if (!string.IsNullOrEmpty(model.RShPain))
                     cc_rsh = "The patient’s right shoulder pain level is " + model.RShPain + "/10. ";
-                if (model.RShSymptoms.Count > 0)
+                if (model.RShSymptoms?.Count > 0)
                     cc_rsh = cc_rsh + "The patient complains of " + string.Join(", ", model.RShSymptoms) + ". ";
 
                 if (model.RShReachOverhead?.ToLower() == "yes")
@@ -1754,7 +1753,7 @@ namespace PainTrax.Web.Controllers
                 //left soulder
                 if (!string.IsNullOrEmpty(model.LShPain))
                     cc_lsh = "The patient’s left shoulder pain level is " + model.LShPain + "/10. ";
-                if (model.LShSymptoms.Count > 0)
+                if (model.LShSymptoms?.Count > 0)
                     cc_lsh = cc_lsh + "The patient complains of " + string.Join(", ", model.LShSymptoms) + ". ";
 
 
@@ -1775,7 +1774,7 @@ namespace PainTrax.Web.Controllers
                 //right knee
                 if (!string.IsNullOrEmpty(model.RKnPain))
                     cc_rkn = "The patient’s right knee pain level is " + model.RKnPain + "/10. ";
-                if (model.RKnSymptoms.Count > 0)
+                if (model.RKnSymptoms?.Count > 0)
                     cc_rkn = cc_rkn + "The patient complains of " + string.Join(", ", model.RKnSymptoms) + ". ";
 
 

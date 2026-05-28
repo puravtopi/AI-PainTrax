@@ -96,10 +96,10 @@ namespace PainTrax.Web.Controllers
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
             else if (client_code.ToLower() == "bhfpc")
-                return PartialView("_IntakeBHF");
+                return PartialView("_IntakeBHFFU");
             else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
-            else return PartialView("_IntakeBHFFU");
+            else return PartialView("_IntakeIMNPFHPCFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -267,7 +267,7 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult GetIntakeData(int? id)
         {
-            var data = service.GetInitialIntakeAIById(id.Value);
+            var data = service.GetInitialIntakeFUById(id.Value);
             if (data == null || string.IsNullOrEmpty(data.FormData))
                 return Json(new { });
 

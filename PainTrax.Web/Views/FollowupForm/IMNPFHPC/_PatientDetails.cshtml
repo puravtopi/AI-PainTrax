@@ -1,0 +1,352 @@
+﻿
+<input type="hidden" id="FN" name="FN" />
+<input type="hidden" id="LN" name="LN" />
+<input type="hidden" id="PatientId" name="PatientId" />
+<input type="hidden" id="PatientIEId" name="PatientIEId" />
+
+<h6>Provider Name:  @ViewBag.ProviderName</h6>
+<!-- Patient Info -->
+<div class="select-group">
+  @*   Patient LName:
+    <input id="LN" name="LN" class="form-control d-inline" style="width:150px;" />
+    FName:
+    <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" /> *@
+
+    @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
+    Patient Name:
+    <input id="PatientName" name="PatientName" class="form-control d-inline" style="width:250px;" />
+    Gender
+    <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+        <option value="male">M</option>
+        <option value="female">F</option>
+    </select>
+    &nbsp;&nbsp;
+    handed:
+    <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+        <option value="right-handed">R</option>
+        <option value="left-handed">L</option>
+    </select>
+    &nbsp;&nbsp;
+
+    @*  DOA
+                                                <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+                                                &nbsp;&nbsp; *@
+    Location:
+    @* <span id="lblLocation">
+                                                    @ViewBag.LocName
+                                                </span> *@
+    <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
+    </select>
+    <div id="patientGrid"
+         class="table-responsive border bg-white position-absolute shadow"
+         style="width:500px; z-index:999; display:none; max-height:250px; overflow:auto;">
+
+        <table class="table table-sm table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Patient Name</th>
+                    <th>DOB</th>
+                    <th>DOA</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="select-group">
+    DOE
+    <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
+    &nbsp;&nbsp;
+    DOB:
+    <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" oninput="formatDOB(this)" onblur="validateDOB(this)" />
+    &nbsp;&nbsp;&nbsp;
+    Age:
+    <input id="Age" name="Age" class="form-control d-inline" style="width:30px" /> years
+    &nbsp;&nbsp;&nbsp;
+
+    DOA:
+    <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
+    &nbsp;&nbsp;
+    <label>Case Type:</label>
+    <label>
+        <input type="radio" name="InjuryType" value="NF">
+        <span class="select-btn">NF</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="WC">
+        <span class="select-btn">WC</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="MM">
+        <span class="select-btn">MM</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="PI">
+        <span class="select-btn">PI</span>
+    </label>
+    <label>
+        <input type="radio" name="InjuryType" value="LIEN">
+        <span class="select-btn">LIEN</span>
+    </label>
+
+
+</div>
+<div class="select-group">
+
+    Occupation:
+    <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
+</div>
+<div class="select-group">
+    Working:
+    <label><input type="radio" name="IsWorking" value="The patient is currently working"> <span class="select-btn">Yes</span></label>
+    <label><input type="radio" name="IsWorking" value="The patient stopped working immediately after accident."> <span class="select-btn">No</span></label>
+    <span id="divWorking" style="display:none">
+        &nbsp;&nbsp;
+        <input type="radio" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span>
+        <input type="radio" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
+
+
+</div>
+
+
+<div class="select-group">
+    VITAL SIGNS: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Height:
+    <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:40px" onchange="calculateBMI()" />ft
+    <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" value="0" onchange="calculateBMI()" />inches
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Weight:
+    <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:100px" />
+
+    lbs,
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
+    <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
+</div>
+
+
+
+
+
+<div class="select-group">
+    Asymptomatic prior to accident:
+    <label><input type="radio" name="Asymptomatic" value="Yes"> <span class="select-btn">Y</span></label>
+    <label><input type="radio" name="Asymptomatic" value="No"> <span class="select-btn">N</span></label>
+    <span id="divAsymptomatic" style="display:none">
+        <input type="text" id="OtherAsymptomatic" name="OtherAsymptomatic" class="form-control d-inline w-auto" />
+
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherAsymptomatic')"></i>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    History of prior trauma:
+    <label><input type="radio" name="Priortrauma" value="Yes"> <span class="select-btn">Y</span></label>
+    <label><input type="radio" name="Priortrauma" value="No"> <span class="select-btn">N</span></label>
+    <span id="divPriortrauma" style="display:none">
+        <input type="text" id="OtherPriortrauma" name="OtherPriortrauma" class="form-control d-inline w-auto" />
+
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherPriortrauma')"></i>
+    </span>
+
+</div>
+<div class="select-group">
+    Accident Type
+    <label><input type="radio" name="PatientAType" value="Driver"><span class="select-btn"> Driver</span></label>
+    <label><input type="radio" name="PatientAType" value="Front Pass"><span class="select-btn"> Front Pass</span></label>
+    <label><input type="radio" name="PatientAType" value="Rear Pass"><span class="select-btn"> Rear Pass</span></label>
+    <label><input type="radio" name="PatientAType" value="Pedestrian"><span class="select-btn"> Pedestrian</span></label>
+    <label><input type="radio" name="PatientAType" value="Bicyclist"><span class="select-btn"> Bicyclist</span></label>
+    @*  <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driver"> <span class="select-btn">Driver</span> </label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="FrontPass"> <span class="select-btn">Front Pass</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="RearPass"> <span class="select-btn">Rear Pass</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Pedestrian"><span class="select-btn">Pedestrian</span> </label>
+                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Bicyclist"> <span class="select-btn">Bicyclist</span></label> *@
+    &nbsp;&nbsp;&nbsp;
+    Collision Type
+    <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Frontend"><span class="select-btn">Front end</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Rearend"> <span class="select-btn">Rear end</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driverside"> <span class="select-btn">Driver side</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Passside"> <span class="select-btn">Pass side</span></label>
+
+    <input type="text" id="OtherCollision" name="OtherCollision" class="form-control d-inline w-auto" />
+
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherCollision')"></i>
+</div>
+<div class="select-group">
+    Seat Belt:
+    <label><input type="radio" name="SeatBelt" value="Yes"><span class="select-btn"> Y</span></label>
+    <label><input type="radio" name="SeatBelt" value="No"> <span class="select-btn">N</span></label>
+    &nbsp;&nbsp;&nbsp;
+    Airbags deployed:
+    <label><input type="radio" name="Airbagsdeployed" value="Yes"> <span class="select-btn">Y</span></label>
+    <label><input type="radio" name="Airbagsdeployed" value="No"><span class="select-btn"> N</span></label>
+    &nbsp;&nbsp;&nbsp;
+    LOC:
+    <label><input type="radio" name="LOC" value="Yes"> <span class="select-btn">Y</span></label>
+    <label><input type="radio" name="LOC" value="No"> <span class="select-btn">N</span></label>
+    <span id="divLOC" style="display:none">
+        <input type="text" id="OtherLOC" name="OtherLOC" class="form-control d-inline w-auto" />
+
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherLOC')"></i>
+    </span>
+    &nbsp;&nbsp;&nbsp;
+    Bruises:
+    <label><input type="radio" name="Bruises" value="Yes"><span class="select-btn"> Y</span></label>
+    <label><input type="radio" name="Bruises" value="No"><span class="select-btn"> N</span></label>
+    <span id="divBruises" style="display:none">
+        <input type="text" id="OtherBruises" name="OtherBruises" class="form-control d-inline w-auto" />
+
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherBruises')"></i>
+    </span>
+
+</div>
+<div class="select-group">
+    Hospital:
+    <label><input type="radio" name="Hospital" value="Yes"> <span class="select-btn">Y</span></label>
+    <label><input type="radio" name="Hospital" value="No"><span class="select-btn"> N</span></label>
+    &nbsp;&nbsp;&nbsp;
+    EMS:
+    <label><input type="radio" name="EMS" value="Yes"> <span class="select-btn">Y</span></label>
+    <label><input type="radio" name="EMS" value="No"> <span class="select-btn">N</span></label>
+    &nbsp;&nbsp;&nbsp;
+    Private car:
+    <label><input type="radio" name=" privatecar" value="Yes"> <span class="select-btn">Y</span></label>
+    <label><input type="radio" name=" privatecar" value="No"><span class="select-btn"> N</span></label>
+    &nbsp;&nbsp;&nbsp;
+</div>
+
+
+<span id="divHospital" style="display:none">
+    Hospital name
+    <input id="hospitalname" name="hospitalname" class="form-control d-inline w-auto" style="min-width:70%;" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'hospitalname')"></i>
+</span>
+
+
+
+
+<p>
+    Accident Description
+    <textarea id="AccidentDescription" name="AccidentDescription" class="form-control d-inline" style="width:95%"></textarea>
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
+</p>
+<div class="select-group">
+    Chief complaint:
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> <span class="select-btn">Neck</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="midbackSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> <span class="select-btn">Low back</span></label>
+
+    <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+</div>
+<script>
+    $("#PatientName").on("keyup", function () {
+
+        let search = $(this).val();
+         var url = '@Url.Action("SearchPatient", "FollowupForm")';
+
+        if (search.length < 2) {
+            $("#patientGrid").hide();
+            return;
+        }
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { term: search },
+            success: function (data) {
+
+                let rows = "";
+                debugger
+
+                $.each(data, function (i, item) {
+
+                        rows += `
+        <tr class="patient-row"
+            data-id="${item.id}"
+            data-intakeid="${item.intakeid}"
+            data-patientid="${item.patient_id}"
+            data-name="${item.lname} ${item.fname}">
+
+            <td>${item.lname} ${item.fname}</td>
+
+            <td>
+                ${
+                    item.dob
+                        ? new Date(item.dob).toLocaleDateString('en-US', {
+                              month: '2-digit',
+                              day: '2-digit',
+                              year: 'numeric'
+                          })
+                        : ''
+                }
+            </td>
+             <td>
+                ${
+                    item.doa
+                        ? new Date(item.doa).toLocaleDateString('en-US', {
+                              month: '2-digit',
+                              day: '2-digit',
+                              year: 'numeric'
+                          })
+                        : ''
+                }
+            </td>
+        </tr>
+    `;
+                });
+
+                $("#patientGrid tbody").html(rows);
+
+                if (data.length > 0)
+                    $("#patientGrid").show();
+                else
+                    $("#patientGrid").hide();
+            }
+        });
+
+    });
+
+    // Row Select Event
+    $(document).on("click", ".patient-row", function () {
+
+        let patientName = $(this).data("name");
+        let patientId = $(this).data("patientid");
+        let patientIEId = $(this).data("id");
+        let patientIntakeId = $(this).data("intakeid");
+
+        $("#PatientName").val(patientName);
+        $("#PatientIEId").val(patientIEId);
+        $("#PatientId").val(patientId);
+
+        console.log("Selected Patient Intake ID:", patientIntakeId);
+
+        $("#patientGrid").hide();
+
+        let url="@Url.Action("GetIntakeData", "FollowupForm")?id="+patientId;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (res) {
+                debugger
+                console.log("Result: "+res);
+                bindForm(res);
+            }
+        });
+    });
+
+    // Hide grid when click outside
+    $(document).click(function (e) {
+        if (!$(e.target).closest('#PatientName, #patientGrid').length) {
+            $("#patientGrid").hide();
+        }
+    });
+</script>

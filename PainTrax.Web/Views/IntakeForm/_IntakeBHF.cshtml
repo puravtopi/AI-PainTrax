@@ -890,10 +890,11 @@
             });
 
             $(document).ready(function () {
+                debugger
                 // Load template and initialize preview
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
-                loadTemplate();
+               // loadTemplate();
                 if ('@ViewBag.FormData' != '') {
                     bindForm('@ViewBag.FormData');
                 }
@@ -1016,6 +1017,7 @@
                 // cleaned=cleaned.replace(/"/g, '\\"');
 
                 //
+                debugger
                 var data = safeParse(val);
 
 
