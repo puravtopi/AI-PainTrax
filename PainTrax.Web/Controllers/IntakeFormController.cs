@@ -1260,7 +1260,7 @@ namespace PainTrax.Web.Controllers
 
                 string result = parts.Length > 1 ? parts[1] : parts[0];
 
-                string cnd = " and d.cmp_id=" + cmpid + " and (d.Description like '%" + _bodyparts + "%' or d.Description like '%" + bodyparts + "%') order by d.display_order ASC";
+                string cnd = " and d.cmp_id=" + cmpid + " and (d.BodyPart like '%" + bodyparts + "%' or d.Description like '%" + _bodyparts + "%') order by d.display_order ASC";
 
                 var data = _diagcodesService.GetAllWithGroups(cnd);
 
