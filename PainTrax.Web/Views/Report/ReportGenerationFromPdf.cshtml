@@ -1,0 +1,593 @@
+@{
+    ViewBag.Title = "Report Generation from PDF";
+}
+
+<main id="main" class="main">
+    <style>
+        /* ── Upload area ── */
+        #uploadSection {
+            margin-bottom: 20px;
+        }
+
+        #previewSection {
+            display: none;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+            .upload-area:hover, .upload-area.drag-over {
+                border-color: #0d6efd;
+                background-color: #f0f4ff;
+            }
+
+            .upload-area i {
+                font-size: 48px;
+                color: #aaa;
+            }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* ── File chips ── */
+        .pdf-file-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e9f5ff;
+            border: 1px solid #b6d4fe;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            margin: 3px;
+        }
+
+            .pdf-file-chip .remove-chip {
+                cursor: pointer;
+                color: #dc3545;
+                font-weight: bold;
+                margin-left: 4px;
+            }
+
+        /* ── PDF parsing progress ── */
+        #pdfParseProgress {
+            display: none;
+        }
+
+        /* ── Preview table ── */
+        #tblReports th, #tblReports td {
+            white-space: nowrap !important;
+            padding: 8px;
+        }
+
+        #tblReports th {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: 600;
+        }
+
+        #tblReports tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .report-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .status-pending  { background-color: #fff3cd; color: #664d03; }
+        .status-processing { background-color: #cfe2ff; color: #084298; }
+        .status-ready    { background-color: #d1e7dd; color: #0f5132; }
+        .status-error    { background-color: #f8d7da; color: #842029; }
+
+        .table-responsive { border-radius: 8px; overflow: hidden; }
+
+        .btn-download { padding: 4px 8px; font-size: 12px; white-space: nowrap; }
+
+        /* ── Summary cards ── */
+        .summary-card {
+            border: none;
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 15px;
+        }
+            .summary-card .card-body  { padding: 15px; }
+            .summary-card .d-flex     { justify-content: space-between; }
+    </style>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE TITLE & BREADCRUMB
+         ═══════════════════════════════════════════ -->
+    <div class="pagetitle">
+        <h1>Report Generation from PDF</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">Report Generation</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- ══════════════════════════════════════════════
+                             STEP 1 — Upload PDF Files
+                             ══════════════════════════════════════════════ -->
+                        <div id="uploadSection">
+                            <h5 class="card-title">Step 1 – Upload Surgical PDF Form(s)</h5>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-info-circle"></i>
+                                Upload one or multiple <strong>RSAS / LSAS / RKAS / LKAS</strong> surgical forms.
+                                Each PDF will generate <strong>one DOCX report</strong>.
+                            </p>
+
+                            <div class="upload-area" id="dropZone">
+                                <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                <p class="mt-2 mb-0"><strong>Click to browse</strong> or drag &amp; drop PDF file(s) here</p>
+                                <p class="text-muted small">Supported format: .pdf — multiple files allowed</p>
+                            </div>
+                            <input type="file" id="pdfFile" accept=".pdf" multiple style="display:none" />
+
+                            <div id="fileChips" class="mt-2"></div>
+                            <div class="file-info mt-1" id="fileInfo"></div>
+
+                            <!-- Parse progress -->
+                            <div id="pdfParseProgress" class="mt-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="spinner-border spinner-border-sm text-primary"></div>
+                                    <span id="parseProgressText">Processing PDFs…</span>
+                                </div>
+                                <div class="progress mt-2" style="height:6px;">
+                                    <div id="parseProgressBar"
+                                         class="progress-bar progress-bar-striped progress-bar-animated"
+                                         style="width:0%"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <button class="btn btn-primary" id="btnPreview" disabled onclick="previewPDFs()">
+                                    <i class="bi bi-eye"></i> Preview &amp; Generate Reports
+                                </button>
+                                <button class="btn btn-secondary ms-2" onclick="resetAll()">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ══════════════════════════════════════════════
+                             STEP 2 — Review & Generate Reports
+                             ══════════════════════════════════════════════ -->
+                        <div id="previewSection">
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                <div>
+                                    <h5 class="card-title mb-0">Step 2 – Review &amp; Generate DOCX Reports</h5>
+                                    <small class="text-muted">
+                                        <i class="bi bi-info-circle"></i>
+                                        Each row represents one PDF — one DOCX will be generated per file.
+                                    </small>
+                                </div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-secondary align-self-center" id="reportCount">0 reports</span>
+                                    <button class="btn btn-warning" onclick="resetAll()">
+                                        <i class="bi bi-upload"></i> Upload Different Files
+                                    </button>
+                                    <button class="btn btn-success" id="btnGenerate" onclick="generateReports()">
+                                        <i class="bi bi-file-word"></i> Generate All Reports
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Summary cards -->
+                            <div class="row mb-3">
+                                <div class="col-6 col-md-3">
+                                    <div class="summary-card bg-primary">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex">
+                                                <span>Total</span>
+                                                <strong id="summTotal">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="summary-card bg-info">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex">
+                                                <span>Pending</span>
+                                                <strong id="summPending">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="summary-card bg-success">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex">
+                                                <span>Ready</span>
+                                                <strong id="summReady">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="summary-card bg-danger">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex">
+                                                <span>Errors</span>
+                                                <strong id="summErrors">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reports Table -->
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" id="tblReports">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:30px;">#</th>
+                                            <th>File Name</th>
+                                            <th>Patient Name</th>
+                                            <th>MRN</th>
+                                            <th>Date of Service</th>
+                                            <th>Report Type</th>
+                                            <th>Status</th>
+                                            <th style="width:120px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblReportsBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Status Messages -->
+                        <div id="statusMessages"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     HIDDEN FORM — provides the CSRF token that JS reads
+     (same pattern as ExcelAI.cshtml)
+     ══════════════════════════════════════════════════════════════════ -->
+<form id="frmCsrf" style="display:none">
+    @Html.AntiForgeryToken()
+</form>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<!-- jQuery (same as ExcelAI — load our own copy after main HTML) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+    // ─────────────────────────────────────────────────────────────────────────
+    // CONFIG
+    // ─────────────────────────────────────────────────────────────────────────
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const EXTRACT_ENDPOINT  = '@Url.Action("ExtractPdfData",    "Report")';
+    const GENERATE_ENDPOINT = '@Url.Action("GenerateReportDocx","Report")';
+
+    let selectedFiles = [];
+    let parsedReports = [];
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // CSRF TOKEN  (reads from the hidden form above — same as ExcelAI)
+    // ─────────────────────────────────────────────────────────────────────────
+    function getAntiForgeryToken() {
+        return document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // DROP-ZONE / FILE INPUT
+    // ─────────────────────────────────────────────────────────────────────────
+    (function initFileHandlers() {
+        const dropZone  = document.getElementById('dropZone');
+        const fileInput = document.getElementById('pdfFile');
+
+        dropZone.addEventListener('click',     () => fileInput.click());
+        dropZone.addEventListener('dragover',  e  => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', e => handleFiles(e.target.files));
+    })();
+
+    function handleFiles(files) {
+        selectedFiles = [];
+
+        for (let i = 0; i < files.length; i++) {
+            const f = files[i];
+            if (f.type !== 'application/pdf') { showError(`"${f.name}" is not a PDF. Skipped.`); continue; }
+            if (f.size > 50 * 1024 * 1024)    { showError(`"${f.name}" exceeds 50 MB. Skipped.`); continue; }
+            selectedFiles.push(f);
+        }
+
+        renderFileChips();
+        document.getElementById('fileInfo').innerHTML =
+            selectedFiles.length ? `<small class="text-muted">${selectedFiles.length} file(s) selected</small>` : '';
+        document.getElementById('btnPreview').disabled = selectedFiles.length === 0;
+    }
+
+    function renderFileChips() {
+        const chips = document.getElementById('fileChips');
+        chips.innerHTML = '';
+        selectedFiles.forEach((f, idx) => {
+            const chip = document.createElement('div');
+            chip.className = 'pdf-file-chip';
+            chip.innerHTML = `<i class="bi bi-file-earmark-pdf"></i><span>${f.name}</span><span class="remove-chip">✕</span>`;
+            chip.querySelector('.remove-chip').addEventListener('click', () => removeFile(idx));
+            chips.appendChild(chip);
+        });
+    }
+
+    function removeFile(idx) {
+        selectedFiles.splice(idx, 1);
+        renderFileChips();
+        document.getElementById('pdfFile').value = '';
+        document.getElementById('btnPreview').disabled = selectedFiles.length === 0;
+        if (!selectedFiles.length) document.getElementById('fileInfo').innerHTML = '';
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // STEP 1 — PREVIEW (render PDFs → send to server → collect rows)
+    // ─────────────────────────────────────────────────────────────────────────
+    async function previewPDFs() {
+        if (!selectedFiles.length) return;
+
+        parsedReports = [];
+        const progress    = document.getElementById('pdfParseProgress');
+        const progressBar = document.getElementById('parseProgressBar');
+        const progressTxt = document.getElementById('parseProgressText');
+        const btnPreview  = document.getElementById('btnPreview');
+
+        progress.style.display = 'block';
+        btnPreview.disabled = true;
+
+        const total = selectedFiles.length;
+
+        for (let fi = 0; fi < total; fi++) {
+            const file = selectedFiles[fi];
+            progressTxt.textContent = `Reading "${file.name}" (${fi + 1} of ${total})…`;
+            progressBar.style.width = Math.round((fi / total) * 100) + '%';
+
+            try {
+                const ab  = await file.arrayBuffer();
+                const doc = await pdfjsLib.getDocument({ data: ab }).promise;
+
+                const pageBase64Array = [];
+                for (let p = 1; p <= doc.numPages; p++) {
+                    progressTxt.textContent = `Rendering "${file.name}" — page ${p} of ${doc.numPages}…`;
+                    pageBase64Array.push(await renderPageToBase64(await doc.getPage(p)));
+                }
+
+                progressTxt.textContent = `extracting data from "${file.name}"…`;
+                const row = await extractPdfWithServer(pageBase64Array, file.name);
+                row._fileName = file.name;
+                row._status   = 'pending';
+                row._docxBytes = null;
+                row._docxFileName = null;
+                parsedReports.push(row);
+
+            } catch (e) {
+                console.error('Error processing', file.name, e);
+                parsedReports.push({
+                    _fileName: file.name, _status: 'error', _error: e.message,
+                    FirstName: '', LastName: '', MRN: '', DOS: '', ReportTemplate: ''
+                });
+            }
+
+            progressBar.style.width = Math.round(((fi + 1) / total) * 100) + '%';
+        }
+
+        progress.style.display = 'none';
+        btnPreview.disabled = false;
+        renderReportsTable();
+        document.getElementById('uploadSection').style.display  = 'none';
+        document.getElementById('previewSection').style.display = 'block';
+    }
+
+    // Render one PDF page → base64 PNG
+    async function renderPageToBase64(page) {
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas   = document.createElement('canvas');
+        canvas.width   = viewport.width;
+        canvas.height  = viewport.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        return canvas.toDataURL('image/png').split(',')[1];
+    }
+
+    // POST page images to server → server calls ai → returns JSON
+    async function extractPdfWithServer(pageBase64Array, fileName) {
+        const token = getAntiForgeryToken();
+
+        const response = await fetch(EXTRACT_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify({ pages: pageBase64Array, fileName: fileName })
+        });
+
+        if (!response.ok) {
+            const errBody = await response.json().catch(() => ({}));
+            throw new Error(errBody?.error || `Server error ${response.status}`);
+        }
+
+        return await response.json();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // RENDER TABLE
+    // ─────────────────────────────────────────────────────────────────────────
+    function renderReportsTable() {
+        const tbody = document.getElementById('tblReportsBody');
+        tbody.innerHTML = '';
+        let pending = 0, ready = 0, errors = 0;
+
+        parsedReports.forEach((report, idx) => {
+            const status = report._status || 'pending';
+            if (status === 'pending')    pending++;
+            if (status === 'ready')      ready++;
+            if (status === 'error')      errors++;
+
+            const typeMap = { RSAS: 'Right Shoulder', LSAS: 'Left Shoulder', RKAS: 'Right Knee', LKAS: 'Left Knee' };
+            const statusMap = {
+                pending:    '<span class="report-status status-pending">Pending</span>',
+                processing: '<span class="report-status status-processing"><span class="spinner-border spinner-border-sm"></span> Processing…</span>',
+                ready:      '<span class="report-status status-ready">Ready</span>',
+                error:      `<span class="report-status status-error" title="${report._error || ''}">Error</span>`
+            };
+            const actionHtml = status === 'ready' && report._docxBytes
+                ? `<button class="btn btn-success btn-download" onclick="downloadReport(${idx})"><i class="bi bi-download"></i> Download</button>`
+                : (status === 'error' ? `<span class="text-danger small">Failed</span>` : `<span class="text-muted small">—</span>`);
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td>${report._fileName || ''}</td>
+                <td>${(report.LastName || '') + (report.LastName && report.FirstName ? ', ' : '') + (report.FirstName || '') || '—'}</td>
+                <td>${report.MRN || '—'}</td>
+                <td>${report.DOS || '—'}</td>
+                <td>${typeMap[report.ReportTemplate] || report.ReportTemplate || '—'}</td>
+                <td>${statusMap[status] || ''}</td>
+                <td>${actionHtml}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('summTotal').textContent   = parsedReports.length;
+        document.getElementById('summPending').textContent = pending;
+        document.getElementById('summReady').textContent   = ready;
+        document.getElementById('summErrors').textContent  = errors;
+        document.getElementById('reportCount').textContent = parsedReports.length + ' report(s)';
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // STEP 2 — GENERATE REPORTS
+    // ─────────────────────────────────────────────────────────────────────────
+    async function generateReports() {
+        if (!confirm(`Generate DOCX reports for ${parsedReports.length} file(s)?\n\nFiles will download automatically.`)) return;
+
+        const btn = document.getElementById('btnGenerate');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generating…';
+
+        for (let i = 0; i < parsedReports.length; i++) {
+            const report = parsedReports[i];
+            if (report._status === 'error') continue;
+
+            try {
+                report._status = 'processing';
+                renderReportsTable();
+
+                const response = await fetch(GENERATE_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': getAntiForgeryToken()
+                    },
+                    body: JSON.stringify(report)
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err?.error || `HTTP ${response.status}`);
+                }
+
+                const contentDisposition = response.headers.get('content-disposition');
+                let fileName = 'Report.docx';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (match) fileName = match[1];
+                }
+
+                const blob = await response.blob();
+                triggerDownload(blob, fileName);
+
+                report._status      = 'ready';
+                report._docxBytes   = blob;
+                report._docxFileName = fileName;
+
+            } catch (e) {
+                console.error('Generate error for', report._fileName, e);
+                report._status = 'error';
+                report._error  = e.message;
+            }
+
+            renderReportsTable();
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-file-word"></i> Generate All Reports';
+    }
+
+    function downloadReport(idx) {
+        const r = parsedReports[idx];
+        if (r?._docxBytes) triggerDownload(r._docxBytes, r._docxFileName || 'Report.docx');
+    }
+
+    function triggerDownload(blob, fileName) {
+        const url = window.URL.createObjectURL(blob);
+        const a   = document.createElement('a');
+        a.href = url; a.download = fileName;
+        document.body.appendChild(a); a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // RESET
+    // ─────────────────────────────────────────────────────────────────────────
+    function resetAll() {
+        selectedFiles = []; parsedReports = [];
+        document.getElementById('pdfFile').value     = '';
+        document.getElementById('fileChips').innerHTML = '';
+        document.getElementById('fileInfo').innerHTML  = '';
+        document.getElementById('btnPreview').disabled = true;
+        document.getElementById('uploadSection').style.display   = 'block';
+        document.getElementById('previewSection').style.display  = 'none';
+        document.getElementById('pdfParseProgress').style.display = 'none';
+        document.getElementById('statusMessages').innerHTML       = '';
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ALERTS
+    // ─────────────────────────────────────────────────────────────────────────
+    function showError(msg) {
+        const div = document.getElementById('statusMessages');
+        div.innerHTML += `<div class="alert alert-danger alert-dismissible fade show mt-3">
+            <i class="bi bi-exclamation-triangle-fill"></i> ${msg}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>`;
+        setTimeout(() => { const a = div.querySelector('.alert'); if (a) a.remove(); }, 5000);
+    }
+</script>

@@ -3088,10 +3088,945 @@ Rules:
 
         #endregion
 
+
+
+        #region File conversion from pdf to report docx in any format.
+
+
+        /// <summary>
+        /// GET: /ReportGeneration/ReportGenerationFromPdf
+        /// Display the main report generation page
+        /// </summary>
+        public IActionResult ReportGenerationFromPdf()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// POST: /ReportGeneration/ExtractPdfData
+        /// Accepts PDF pages (base64 PNG images), calls Claude API for extraction
+        /// Returns extracted form data as JSON
+        /// </summary>
+        [HttpPost("extract")]
+
+        public async Task<IActionResult> ExtractPdfData([FromBody] PdfExtractRequest request)
+        {
+            if (request?.Pages == null || request.Pages.Count == 0)
+                return BadRequest(new { error = "No page images provided." });
+
+            try
+            {
+
+                var config = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+                var apiKey = config["Claude:ApiKey"];
+                //var apiKey = _configuration["Claude:ApiKey"];
+                if (string.IsNullOrWhiteSpace(apiKey))
+                    return StatusCode(500, new { error = "Claude API key is not configured on the server." });
+
+                var extractedData = await CallClaudeApiForExtraction(apiKey, request.Pages);
+                return Ok(extractedData);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = $"PDF extraction failed: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
+        /// POST: /ReportGeneration/GenerateReportDocx
+        /// Takes extracted data and generates professional DOCX report
+        /// </summary>
+        [HttpPost("generate")]
+
+        public IActionResult GenerateReportDocx([FromBody] ExtractedFormDataDto data)
+        {
+            if (data == null)
+                return BadRequest(new { error = "No data provided." });
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(data.LastName))
+                    data.LastName = "Unknown";
+                if (string.IsNullOrWhiteSpace(data.FirstName))
+                    data.FirstName = "Patient";
+
+                byte[] docxBytes = GenerateDocxReport(data);
+                string safeFilename = SanitizeFilename(
+                    $"Report_{data.LastName}_{data.FirstName}_{data.DOS?.Replace("/", "") ?? DateTime.Now.ToString("yyyyMMdd")}.docx");
+                // ── Create Safe Filename ────────────────────────────────────
+
+
+                return File(
+                    docxBytes,
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    safeFilename);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = $"DOCX generation failed: {ex.Message}" });
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════════════════════════
+        // PRIVATE HELPER METHODS
+        // ════════════════════════════════════════════════════════════════════════════════
+
+        private async Task<ExtractedFormDataDto> CallClaudeApiForExtraction(string apiKey, List<string> pageBase64List)
+        {
+            const string model = "claude-opus-4-6";
+
+            const string prompt = @"You are a medical data extraction assistant.
+The document is a surgical intake form (SHOULDER or KNEE — Right or Left side).
+Read the form carefully. Return ONE JSON object only — no array, no markdown, no backticks.
+
+════════════════════════════════════════════════════════
+FIELD-BY-FIELD EXTRACTION RULES
+════════════════════════════════════════════════════════
+
+
+1. PATIENT NAME  (top-right header of the form)
+   The name is printed as:  LastName, FirstName MiddleInitial
+   Example: ""Barzola, Isaiah O"" → LastName=Barzola  FirstName=Isaiah O
+   RULE: Everything BEFORE the comma = LastName.  Everything AFTER the comma = FirstName.
+
+2. DOB / DOS  (top-right header)
+   Format: MM/DD/YYYY. Leave empty if not found.
+
+3. MRN  (top-right header, labelled MRN:)
+
+4. Assistant  (the ""Assistant:"" line on the form)
+   Look for a checkmark, slash, underline next to: IA. / GD.
+   Only one will be marked. Return that value exactly.
+
+5. Anesthesia  (the ""Anesthesia:"" line on the form)
+   Look for a checkmark, slash, underline next to: Sed. / Block / Gen.
+   Only one will be marked. Return that value exactly.
+
+6. LocationLH  (the ""Location:"" field, handwritten or typed)
+   Return the written location text exactly as appears.
+
+7. CaseType  (the ""Case Type:"" field)
+   Return the case type as written.
+
+8. ReportTemplate  (the VERY FIRST line of the form)
+   Combine body part + side: SHOULDER + RIGHT = ""RSAS"", SHOULDER + LEFT = ""LSAS"",
+   KNEE + RIGHT = ""RKAS"", KNEE + LEFT = ""LKAS""
+
+9. CPTRows (CPT Codes section)
+   Same marking rule (checkmark, slash, or underline = MARKED).
+   
+   For lines with MULTIPLE sub-options on the same line (like ""hyperemic / hypertrophic / post-traumatic""):
+   - Only include the sub-options that are individually marked/checked
+   - Do NOT include unmarked sub-options even if they appear on a marked row
+   
+   For rows with nested/indented checked items (like supraspinatus, anterior labrum):
+   - Include the parent CPT code + description (shortened, without bold label words like ""limited""/""extensive"")
+   - Append each checked nested item after the parent description
+   
+   For bold descriptive labels that are NOT options (e.g., ""limited"", ""extensive"", ""complete""):
+   - Exclude these structural/header words unless they are the only description
+   
+   Return as comma-separated values with format:
+   [CPT Code] [Base Description],[checked sub-items joined by space]
+
+10. ICD10Rows  (ICD-10 Codes section)
+    Same marking rule. Return as comma-separated values and Look for a checkmark, slash, underline next to it on same line which is MARKED and the bold one with the text of full line.
+
+11. IntraOpRows  (Pre-op findings)
+    Same marking rule. Return as comma-separated integers.
+
+12. PreOp  (the ""Pre-op:"" line on the form)
+    Look for a checkmark, slash, underline next to: RC tear / Labrum tear / Chondral lesion / Synovitis / Adhesions / Bursitis.
+    Multiple one will be marked. Return that value exactly.
+
+13. PreOpPassiveRoM  (the ""Pre-op Passive ROM:"" line on the form and handwritten or typed)
+    Look for a handwritten or typed next to: FF: / ER: / IRSS. and for Instability:. chekmark, slash on Yes,No.
+    Multiple one will be marked. Return that value exactly.
+
+════════════════════════════════════════════════════════
+RETURN ONLY THIS JSON OBJECT:
+════════════════════════════════════════════════════════
+{
+  ""FirstName"": """",
+  ""LastName"": """",
+  ""DOB"": """",
+  ""DOS"": """",
+  ""MRN"": """",
+  ""Assistant"": """",
+  ""Anesthesia"": """",
+  ""LocationLH"": """",
+  ""CaseType"": """",
+  ""ReportTemplate"": """",
+  ""CPTRows"": """",
+  ""ICD10Rows"": """",
+  ""IntraOpRows"": """",
+  ""PreOp"": """",
+  ""PreOpPassiveRoM"": """"
+
+}";
+
+            var contentBlocks = new List<object>();
+
+            foreach (var pageBase64 in pageBase64List)
+            {
+                contentBlocks.Add(new
+                {
+                    type = "image",
+                    source = new
+                    {
+                        type = "base64",
+                        media_type = "image/png",
+                        data = pageBase64
+                    }
+                });
+            }
+
+            contentBlocks.Add(new
+            {
+                type = "text",
+                text = prompt
+            });
+
+            var claudeRequest = new
+            {
+                model = model,
+                max_tokens = 2000,
+                messages = new[]
+                {
+                    new { role = "user", content = contentBlocks }
+                }
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(claudeRequest);
+
+
+            // ── Call Anthropic API ──────────────────────────────────────────
+            var httpClientFactory = HttpContext.RequestServices.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.Timeout = TimeSpan.FromMinutes(3);
+
+
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, "https://api.anthropic.com/v1/messages");
+            httpRequest.Headers.Add("x-api-key", apiKey);
+            httpRequest.Headers.Add("anthropic-version", "2023-06-01");
+            httpRequest.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage httpResponse;
+            try
+            {
+                httpResponse = await httpClient.SendAsync(httpRequest);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Could not reach Anthropic API: {ex.Message}", ex);
+            }
+
+            var responseBody = await httpResponse.Content.ReadAsStringAsync();
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                string claudeError;
+                try
+                {
+                    using var errDoc = JsonDocument.Parse(responseBody);
+                    claudeError = errDoc.RootElement
+                        .GetProperty("error")
+                        .GetProperty("message")
+                        .GetString() ?? responseBody;
+                }
+                catch
+                {
+                    claudeError = $"HTTP {(int)httpResponse.StatusCode}";
+                }
+
+                throw new InvalidOperationException($"Claude API error: {claudeError}");
+            }
+
+            string extractedText;
+            try
+            {
+                using var doc = JsonDocument.Parse(responseBody);
+                var contentArray = doc.RootElement.GetProperty("content");
+                extractedText = string.Empty;
+
+                foreach (var block in contentArray.EnumerateArray())
+                {
+                    if (block.GetProperty("type").GetString() == "text")
+                    {
+                        extractedText = block.GetProperty("text").GetString() ?? string.Empty;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to parse Claude response: {ex.Message}", ex);
+            }
+
+            var clean = extractedText
+                .Trim()
+                .TrimStart('`')
+                .TrimEnd('`');
+
+            if (clean.StartsWith("json", StringComparison.OrdinalIgnoreCase))
+                clean = clean[4..].Trim();
+
+            try
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = System.Text.Json.JsonSerializer.Deserialize<ExtractedFormDataDto>(clean, options);
+                return result ?? new ExtractedFormDataDto();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to parse extraction result: {ex.Message}", ex);
+            }
+        }
+
+        private byte[] GenerateDocxReport(ExtractedFormDataDto data)
+        {
+            string templateDir = Path.Combine("wwwroot", "templates");
+            string templatePath = Path.Combine(templateDir, $"{data.ReportTemplate}.docx");
+
+            if (!System.IO.File.Exists(templatePath) && System.IO.File.Exists(Path.Combine(templateDir, $"{data.ReportTemplate}.dotx")))
+            {
+                templatePath = Path.Combine(templateDir, $"{data.ReportTemplate}.dotx");
+            }
+
+            if (!System.IO.File.Exists(templatePath))
+            {
+                throw new FileNotFoundException($"Template file not found at {templatePath}");
+            }
+
+            byte[] templateBytes = System.IO.File.ReadAllBytes(templatePath);
+
+            using (var ms = new MemoryStream())
+            {
+                ms.Write(templateBytes, 0, templateBytes.Length);
+                ms.Position = 0;
+
+                using (var wordDoc = WordprocessingDocument.Open(ms, true))
+                {
+                    if (wordDoc.DocumentType == DocumentFormat.OpenXml.WordprocessingDocumentType.Template)
+                    {
+                        wordDoc.ChangeDocumentType(DocumentFormat.OpenXml.WordprocessingDocumentType.Document);
+                    }
+
+                    // 1. Map Simple Text Fields across Body, Headers, AND Footers
+
+                    AppendTextToAllMatches(wordDoc, "DATE:", data.DOS);
+                    AppendTextToAllMatches(wordDoc, "PATIENT:", $"{data.LastName}, {data.FirstName}");
+                    AppendTextToAllMatches(wordDoc, "DATE OF BIRTH:", data.DOB);
+                    AppendTextToAllMatches(wordDoc, "PATIENT MRN:", data.MRN);
+                    string assistant = data.Assistant switch
+                    {
+                        "GD" => "George Davydov, P.A.",
+                        "IA" => "Iraida Alvarez",
+                        _ => data.Assistant
+                    };
+                    AppendTextToAllMatches(wordDoc, "ASSISTANT:", $"{assistant}");
+
+                    string anesthesia = data.Anesthesia switch
+                    {
+                        "Gen." => "General",
+                        "Sed." => "sedation",
+                        "Block" => "Block",
+                        _ => data.Anesthesia
+                    };
+                    AppendTextToAllMatches(wordDoc, "ANESTHESIA:", $"{anesthesia}");
+
+                    OverwriteTextToAllMatches(wordDoc, "Ln, Fn", $"{data.LastName}, {data.FirstName}");
+                    OverwriteTextToAllMatches(wordDoc, "(mmd/dd/yyyy)", $"{data.DOS}");
+
+                    // Fetch all body paragraphs for the structural edits
+                    var bodyParagraphs = wordDoc.MainDocumentPart.Document.Body.Descendants<Paragraph>().ToList();
+
+                    // 2. Map Multi-line Bulleted Fields
+
+                    var preOpHeading = bodyParagraphs.FirstOrDefault(p => p.InnerText.StartsWith("PREOPERATIVE DIAGNOSES:"));
+                    //InsertNumberedList(preOpHeading, data.PreOp, useNumbering: true, startNumber: 1);
+                    InsertNumberedListpre(preOpHeading, data.PreOp);
+
+                    // 2. POSTOPERATIVE DIAGNOSES (Starts at 2, appending AFTER the default item)
+                    var postOpHeading = bodyParagraphs.FirstOrDefault(p => p.InnerText.StartsWith("POSTOPERATIVE DIAGNOSES:"));
+                    Paragraph postOpAnchor = postOpHeading;
+
+
+                    string[] diagnoses = data.ICD10Rows.Split(',');
+                    List<string> cleanDiagnoses = new List<string>();
+
+                    foreach (string item in diagnoses)
+                    {
+                        string trimmedItem = item.Trim();
+                        int firstSpaceIndex = trimmedItem.IndexOf(' ');
+
+                        if (firstSpaceIndex > 0)
+                        {
+                            // Add only the description to the list
+                            cleanDiagnoses.Add(trimmedItem.Substring(firstSpaceIndex + 1));
+                        }
+                        else
+                        {
+                            cleanDiagnoses.Add(trimmedItem);
+                        }
+                    }
+
+                    // Combine the list back into a single comma-separated string
+                    string finalString = string.Join(", ", cleanDiagnoses);
+                    //InsertNumberedList(postOpAnchor, finalString, useNumbering: true, startNumber: 1);
+                    InsertNumberedListpre(postOpAnchor, finalString);
+
+                    // 3. PROCEDURES PERFORMED 
+                    var procHeading = bodyParagraphs.FirstOrDefault(p => p.InnerText.StartsWith("PROCEDURES PERFORMED:"));
+                    Paragraph procAnchor = procHeading;
+
+                    string[] cpt = data.CPTRows.Split(',');
+                    List<string> cleancpts = new List<string>();
+
+                    foreach (string item in cpt)
+                    {
+                        string trimmedItem = item.Trim();
+                        int firstSpaceIndex = trimmedItem.IndexOf(' ');
+
+                        if (firstSpaceIndex > 0)
+                        {
+                            // Add only the description to the list
+                            cleancpts.Add(trimmedItem.Substring(firstSpaceIndex + 1));
+                        }
+                        else
+                        {
+                            cleancpts.Add(trimmedItem);
+                        }
+                    }
+
+                    // Combine the list back into a single comma-separated string
+                    string finalStringcpt = string.Join(", ", cleancpts);
+
+                    if (procHeading != null && procHeading.NextSibling<Paragraph>() != null)
+                    {
+                        procAnchor = procHeading.NextSibling<Paragraph>();
+                    }
+                    InsertNumberedList(procAnchor, finalStringcpt, useNumbering: true, startNumber: 2);
+                    // InsertNumberedList(procAnchor, data.CPTRows, useNumbering: true, startNumber: 1);
+
+
+                    // 3. Map ROM and Instability placeholders
+                    //   ProcessRomAndInstability(bodyParagraphs, data.PreOpPassiveRoM);
+
+                    if (!string.IsNullOrWhiteSpace(data.PreOpPassiveRoM))
+                    {
+                        var romDict = data.PreOpPassiveRoM.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(part => part.Split(new[] { ':' }, 2))
+                            .Where(parts => parts.Length == 2)
+                            .ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim());
+
+                        string ff = romDict.ContainsKey("FF") ? romDict["FF"] : "___";
+                        string er = romDict.ContainsKey("ER") ? romDict["ER"] : "__";
+                        string ir = romDict.ContainsKey("IR") ? romDict["IR"] :
+                                   (romDict.ContainsKey("IRSS") ? romDict["IRSS"] : "__");
+                        string instability = romDict.ContainsKey("Instability") ? romDict["Instability"] : "";
+
+                        OverwriteTextToAllMatches(wordDoc, "#FF", $"{ff}");
+                        OverwriteTextToAllMatches(wordDoc, "#ER ", $"{er}");
+                        OverwriteTextToAllMatches(wordDoc, "#IR ", $"{ir}");
+                        OverwriteTextToAllMatches(wordDoc, "#IN ", $"{instability}");
+
+                    }
+
+
+
+                    string bodypart = data.ReportTemplate switch
+                    {
+                        "RKAS" => "knee",
+                        "RSAS" => "shoulder",
+                        "LKAS" => "knee",
+                        "LSAS" => "shoulder",
+                        _ => data.ReportTemplate
+                    };
+
+
+                    // 4. Loop through them
+                    foreach (var p in bodyParagraphs)
+                    {
+                        // Make sure the paragraph hasn't already been deleted
+                        if (p.Parent == null) continue;
+
+                        // --- HANDLE MVA ---
+                        if (p.InnerText.Contains("[MVA]"))
+                        {
+                            // Grab the hardcoded sentence that sits on the very next line
+                            var nextParagraph = p.NextSibling<DocumentFormat.OpenXml.Wordprocessing.Paragraph>();
+
+                            if (data.CaseType == "MVA")
+                            {
+                                // 1. Inject our newly generated text into the [MVA] tag
+                                string mvaText = $"The patient’s {bodypart} injuries requiring surgery are the result of a motor vehicle accident.";
+                                //p.InnerXml = p.InnerXml.Replace("[MVA]", mvaText);
+
+                                //// 2. Delete the old hardcoded sentence below it so it doesn't duplicate!
+                                //if (nextParagraph != null) nextParagraph.Remove();
+
+                                // 1. Create the formatting: Times New Roman, Size 12 (24 half-points)
+                                var runProperties = new DocumentFormat.OpenXml.Wordprocessing.RunProperties(
+                                    new DocumentFormat.OpenXml.Wordprocessing.RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman", ComplexScript = "Times New Roman" },
+                                    new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "24" }
+                                );
+
+                                // 2. Create the formatted text run
+                                var formattedRun = new DocumentFormat.OpenXml.Wordprocessing.Run(runProperties, new DocumentFormat.OpenXml.Wordprocessing.Text(mvaText));
+
+                                // 3. Clear the old tag and add the new formatted text
+                                p.RemoveAllChildren();
+                                p.AppendChild(formattedRun);
+
+                                // 4. Delete the old hardcoded sentence below it so it doesn't duplicate!
+                                if (nextParagraph != null) nextParagraph.Remove();
+                            }
+                            else
+                            {
+                                // If it is NOT an MVA case, delete the [MVA] tag AND the hardcoded sentence
+                                p.Remove();
+                                if (nextParagraph != null) nextParagraph.Remove();
+                            }
+                        }
+
+                        // --- HANDLE WC ---
+                        else if (p.InnerText.Contains("[WC]"))
+                        {
+                            // Grab the hardcoded sentence that sits on the very next line
+                            var nextParagraph = p.NextSibling<DocumentFormat.OpenXml.Wordprocessing.Paragraph>();
+
+                            if (data.CaseType == "WC")
+                            {
+                                // 1. Inject our newly generated text into the [WC] tag
+                                string wcText = $"The patient’s {bodypart} injuries requiring surgery are the result of an accident/incident that occurred at work.";
+                                //p.InnerXml = p.InnerXml.Replace("[WC]", wcText);
+
+                                //// 2. Delete the old hardcoded sentence below it so it doesn't duplicate!
+                                //if (nextParagraph != null) nextParagraph.Remove();
+
+                                // 1. Create the formatting: Times New Roman, Size 12 (24 half-points)
+                                var runProperties = new DocumentFormat.OpenXml.Wordprocessing.RunProperties(
+                                    new DocumentFormat.OpenXml.Wordprocessing.RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman", ComplexScript = "Times New Roman" },
+                                    new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "24" }
+                                );
+
+                                // 2. Create the formatted text run
+                                var formattedRun = new DocumentFormat.OpenXml.Wordprocessing.Run(runProperties, new DocumentFormat.OpenXml.Wordprocessing.Text(wcText));
+
+                                // 3. Clear the old tag and add the new formatted text
+                                p.RemoveAllChildren();
+                                p.AppendChild(formattedRun);
+
+                                // 4. Delete the old hardcoded sentence below it so it doesn't duplicate!
+                                if (nextParagraph != null) nextParagraph.Remove();
+                            }
+                            else
+                            {
+                                // If it is NOT a WC case, delete the [WC] tag AND the hardcoded sentence
+                                p.Remove();
+                                if (nextParagraph != null) nextParagraph.Remove();
+                            }
+                        }
+                    }
+
+
+                    // modify the template based on the glenohumeral and subacromial. 
+                    string[] GlenohumeralConditions = {
+    "Adhesive capsulitis",
+    "Biceps tendon",
+    "Chondral lesion",
+    "Partial RC tear",
+    //"Partial RC tear",
+    "Labrum tear",
+    "SLAP tear, Type",
+    "Loose bodies",
+    "Synovitis of shoulder"
+};
+
+                    //foreach (var datagle in GlenohumeralConditions)
+                    //{
+                    //    if (data.ICD10Rows.Contains(datagle))
+                    //    {
+                    //        //keep row. 
+                    //    }
+                    //    else
+                    //    {
+                    //        //remove row
+                    //    }
+                    //}
+
+                    string[] subacromialConditions = {
+    "Bursitis",
+    "complete rupture of rc",
+    "Lysis/resection",
+};
+
+                    //foreach (var datagle in subacromialConditions)
+                    //{
+                    //    if (data.ICD10Rows.Contains(datagle) || data.ICD10Rows.Contains(datagle))
+                    //    {
+                    //        //keep row. 
+                    //    }
+                    //    else
+                    //    {
+                    //        //remove row
+                    //    }
+                    //}
+                    //foreach (var p in bodyParagraphs)
+                    //{
+                    //    // Make sure the paragraph hasn't already been deleted
+                    //    if (p.Parent == null) continue;
+
+                    //    // --- HANDLE SYNOVECTOMY ---
+                    //    if (p.InnerText.Contains("[Synovectomy]"))
+                    //    {
+                    //        // Grab the Labral Debridement Statement paragraph (next sibling)
+                    //        var nextParagraph = p.NextSibling<DocumentFormat.OpenXml.Wordprocessing.Paragraph>();
+
+                    //        // If Synovectomy is present, KEEP it and REMOVE Labral Debridement
+                    //        if (p.InnerText.Contains("Synovectomy"))
+                    //        {
+                    //            // Format Synovectomy text
+                    //            string synovectomyText = "Excessive glenohumeral synovitis was cleared with motorized shaver. The hypertrophic, erythematous synovium was resected, hemostasis was maintained with the radiofrequency device.";
+
+                    //            var runProperties = new DocumentFormat.OpenXml.Wordprocessing.RunProperties(
+                    //                new DocumentFormat.OpenXml.Wordprocessing.RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman", ComplexScript = "Times New Roman" },
+                    //                new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "24" }
+                    //            );
+
+                    //            var formattedRun = new DocumentFormat.OpenXml.Wordprocessing.Run(runProperties,
+                    //                new DocumentFormat.OpenXml.Wordprocessing.Text(synovectomyText));
+
+                    //            // Replace the [Synovectomy] tag with formatted text
+                    //            p.RemoveAllChildren();
+                    //            p.AppendChild(formattedRun);
+
+                    //            // Remove Labral Debridement Statement if it exists
+                    //            if (nextParagraph != null && nextParagraph.InnerText.Contains("[Labral Debridement Statement]"))
+                    //                nextParagraph.Remove();
+                    //        }
+                    //        else
+                    //        {
+                    //            // If Synovectomy is NOT present, remove both Synovectomy and Labral Debridement
+                    //            p.Remove();
+                    //            if (nextParagraph != null && nextParagraph.InnerText.Contains("[Labral Debridement Statement]"))
+                    //                nextParagraph.Remove();
+                    //        }
+                    //    }
+                    //}
+
+
+
+
+
+                    // 4. Important: Explicitly save Header and Footer streams
+                    foreach (var headerPart in wordDoc.MainDocumentPart.HeaderParts)
+                    {
+                        headerPart.Header.Save();
+                    }
+                    foreach (var footerPart in wordDoc.MainDocumentPart.FooterParts)
+                    {
+                        footerPart.Footer.Save();
+                    }
+
+                    wordDoc.Save();
+                }
+
+                return ms.ToArray();
+            }
+        }
+        private void OverwriteTextToAllMatches(WordprocessingDocument wordDoc, string searchText, string replaceText)
+        {
+            if (string.IsNullOrEmpty(searchText)) return;
+
+            // Fallback to empty string if the incoming data is null
+            string safeReplaceText = replaceText ?? string.Empty;
+
+            var allParagraphs = new List<Paragraph>();
+
+            // 1. Collect from Body
+            if (wordDoc.MainDocumentPart.Document.Body != null)
+            {
+                allParagraphs.AddRange(wordDoc.MainDocumentPart.Document.Body.Descendants<Paragraph>());
+            }
+
+            // 2. Collect from Headers
+            foreach (var headerPart in wordDoc.MainDocumentPart.HeaderParts)
+            {
+                allParagraphs.AddRange(headerPart.Header.Descendants<Paragraph>());
+            }
+
+            // 3. Collect from Footers
+            foreach (var footerPart in wordDoc.MainDocumentPart.FooterParts)
+            {
+                allParagraphs.AddRange(footerPart.Footer.Descendants<Paragraph>());
+            }
+
+            // 4. Find paragraphs that contain the search text anywhere inside them
+            // This perfectly bypasses the split-text issue because InnerText reads the whole sentence
+            var targetParas = allParagraphs.Where(p => p.InnerText.Contains(searchText)).ToList();
+
+            foreach (var para in targetParas)
+            {
+                // Get the full glued-together text and apply the replacement
+                string fullText = para.InnerText;
+                string updatedText = fullText.Replace(searchText, safeReplaceText);
+
+                // Try to preserve the paragraph's formatting (bold, font size, etc.)
+                // by grabbing the properties of the first run before we delete the fragments
+                var firstRun = para.Elements<DocumentFormat.OpenXml.Wordprocessing.Run>().FirstOrDefault();
+                var runProperties = firstRun?.RunProperties?.CloneNode(true);
+
+                // Clear the old, fragmented text runs out of the paragraph
+                para.RemoveAllChildren<DocumentFormat.OpenXml.Wordprocessing.Run>();
+
+                // Rebuild the paragraph with the clean, updated text wrapped in a single Run
+                var newRun = new DocumentFormat.OpenXml.Wordprocessing.Run();
+                if (runProperties != null)
+                {
+                    newRun.AppendChild(runProperties);
+                }
+
+                var textNode = new DocumentFormat.OpenXml.Wordprocessing.Text(updatedText)
+                {
+                    Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve
+                };
+
+                // 2. Define the formatting: Times New Roman, Size 12 (24 half-points)
+                var runProperties1 = new DocumentFormat.OpenXml.Wordprocessing.RunProperties(
+                    new DocumentFormat.OpenXml.Wordprocessing.RunFonts()
+                    {
+                        Ascii = "Times New Roman",
+                        HighAnsi = "Times New Roman",
+                        ComplexScript = "Times New Roman"
+                    },
+                    new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "24" }
+                );
+
+                // 3. Create the Run, passing in the properties first, then the text
+                var formattedRun = new DocumentFormat.OpenXml.Wordprocessing.Run(runProperties1, textNode);
+
+                // 4. Append the formatted text to the paragraph
+                newRun.AppendChild(formattedRun);
+
+                //newRun.AppendChild(textNode);
+                para.AppendChild(newRun);
+            }
+        }
+        private void AppendTextToAllMatches(WordprocessingDocument wordDoc, string prefix, string appendText)
+        {
+            if (string.IsNullOrWhiteSpace(appendText)) return;
+
+            var allParagraphs = new List<Paragraph>();
+
+            // Collect from Body
+            if (wordDoc.MainDocumentPart.Document.Body != null)
+            {
+                allParagraphs.AddRange(wordDoc.MainDocumentPart.Document.Body.Descendants<Paragraph>());
+            }
+
+            // Collect from Headers
+            foreach (var headerPart in wordDoc.MainDocumentPart.HeaderParts)
+            {
+                allParagraphs.AddRange(headerPart.Header.Descendants<Paragraph>());
+            }
+
+            // Collect from Footers
+            foreach (var footerPart in wordDoc.MainDocumentPart.FooterParts)
+            {
+                allParagraphs.AddRange(footerPart.Footer.Descendants<Paragraph>());
+            }
+
+            // Find ALL matches so if "PATIENT:" is in the body AND header, both get filled out
+            var targetParas = allParagraphs.Where(p => p.InnerText.Trim().StartsWith(prefix)).ToList();
+
+            foreach (var para in targetParas)
+            {
+                // 1. Create the text node
+                var textNode = new DocumentFormat.OpenXml.Wordprocessing.Text($" {appendText}")
+                {
+                    Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve
+                };
+                //para.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Run(textNode));
+
+                // 2. Define the formatting: Times New Roman, Size 12 (24 half-points)
+                var runProperties = new DocumentFormat.OpenXml.Wordprocessing.RunProperties(
+                    new DocumentFormat.OpenXml.Wordprocessing.RunFonts()
+                    {
+                        Ascii = "Times New Roman",
+                        HighAnsi = "Times New Roman",
+                        ComplexScript = "Times New Roman"
+                    },
+                    new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "24" }
+                );
+
+                // 3. Create the Run, passing in the properties first, then the text
+                var formattedRun = new DocumentFormat.OpenXml.Wordprocessing.Run(runProperties, textNode);
+
+                // 4. Append the formatted text to the paragraph
+                para.AppendChild(formattedRun);
+            }
+        }
+
+        private void InsertNumberedList(Paragraph anchorPara, string csvData, bool useNumbering = true, int startNumber = 1)
+        {
+            if (string.IsNullOrWhiteSpace(csvData) || anchorPara == null) return;
+
+            var items = csvData.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                               .Select(i => i.Trim())
+                               .ToList();
+
+            Paragraph currentPara = anchorPara;
+            for (int i = 0; i < items.Count; i++)
+            {
+                var newPara = new Paragraph();
+
+                // Apply numbering only if requested, starting from the designated number
+                string textContent = useNumbering ? $"{startNumber + i}. {items[i]}" : items[i];
+
+                var textNode = new DocumentFormat.OpenXml.Wordprocessing.Text(textContent)
+                {
+                    Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve
+                };
+
+                //newPara.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Run(textNode));
+
+                // 2. Define the formatting: Times New Roman, Size 12 (24 half-points)
+                var runProperties = new DocumentFormat.OpenXml.Wordprocessing.RunProperties(
+                    new DocumentFormat.OpenXml.Wordprocessing.RunFonts()
+                    {
+                        Ascii = "Times New Roman",
+                        HighAnsi = "Times New Roman",
+                        ComplexScript = "Times New Roman"
+                    },
+                    new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "24" }
+                );
+
+                // 3. Create the Run, passing in the properties first, then the text
+                var formattedRun = new DocumentFormat.OpenXml.Wordprocessing.Run(runProperties, textNode);
+
+                // 4. Append the formatted text to the paragraph
+                newPara.AppendChild(formattedRun);
+
+
+                // Insert directly into the parent container to support Lists inside Tables
+                currentPara.Parent.InsertAfter(newPara, currentPara);
+
+                // Move the anchor forward so the next item goes below this one
+                currentPara = newPara;
+            }
+        }
+
+        private void InsertNumberedListpre(Paragraph anchorPara, string csvData)
+        {
+            if (string.IsNullOrWhiteSpace(csvData) || anchorPara == null) return;
+
+            var items = csvData.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                               .Select(i => i.Trim())
+                               .ToList();
+
+            Paragraph currentPara = anchorPara;
+            for (int i = 0; i < items.Count; i++)
+            {
+                var newPara = new Paragraph();
+                var textNode = new DocumentFormat.OpenXml.Wordprocessing.Text($"{i + 1}. {items[i]}")
+                {
+                    Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve
+                };
+
+                // newPara.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Run(textNode));
+
+                // 2. Define the formatting: Times New Roman, Size 12 (24 half-points)
+                var runProperties = new DocumentFormat.OpenXml.Wordprocessing.RunProperties(
+                    new DocumentFormat.OpenXml.Wordprocessing.RunFonts()
+                    {
+                        Ascii = "Times New Roman",
+                        HighAnsi = "Times New Roman",
+                        ComplexScript = "Times New Roman"
+                    },
+                    new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "24" }
+                );
+
+                // 3. Create the Run, passing in the properties first, then the text
+                var formattedRun = new DocumentFormat.OpenXml.Wordprocessing.Run(runProperties, textNode);
+
+                // 4. Append the formatted text to the paragraph
+                newPara.AppendChild(formattedRun);
+
+
+                // Insert directly into the parent container to support Lists inside Tables
+                currentPara.Parent.InsertAfter(newPara, currentPara);
+
+                currentPara = newPara;
+            }
+        }
+
+        private void ProcessRomAndInstability(List<Paragraph> bodyParagraphs, string preOpPassiveRom)
+        {
+            if (string.IsNullOrWhiteSpace(preOpPassiveRom)) return;
+
+            var romDict = preOpPassiveRom.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(part => part.Split(new[] { ':' }, 2))
+                .Where(parts => parts.Length == 2)
+                .ToDictionary(parts => parts[0].Trim(), parts => parts[1].Trim());
+
+            string ff = romDict.ContainsKey("FF") ? romDict["FF"] : "___";
+            string er = romDict.ContainsKey("ER") ? romDict["ER"] : "__";
+            string ir = romDict.ContainsKey("IR") ? romDict["IR"] :
+                       (romDict.ContainsKey("IRSS") ? romDict["IRSS"] : "__");
+            string instability = romDict.ContainsKey("Instability") ? romDict["Instability"] : "";
+
+            var romPara = bodyParagraphs.FirstOrDefault(p => p.InnerText.Contains("passive range of motion"));
+            if (romPara != null)
+            {
+                romPara.RemoveAllChildren<DocumentFormat.OpenXml.Wordprocessing.Run>();
+                string newText = $"A preoperative orthopedic examination revealed a passive range of motion of {ff} degrees of forward elevation, {er} degrees of external rotation, and {ir} degrees of internal rotation.";
+                romPara.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Run(
+                    new DocumentFormat.OpenXml.Wordprocessing.Text(newText) { Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve }));
+            }
+
+            var instPara = bodyParagraphs.FirstOrDefault(p => p.InnerText.Contains("Stability examination revealed:"));
+            if (instPara != null)
+            {
+                instPara.RemoveAllChildren<DocumentFormat.OpenXml.Wordprocessing.Run>();
+                string newText = $"Stability examination revealed: {instability} instability.";
+                instPara.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Run(
+                    new DocumentFormat.OpenXml.Wordprocessing.Text(newText) { Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve }));
+            }
+        }
+
+        private static string SanitizeFilename(string input)
+        {
+            var invalid = Path.GetInvalidFileNameChars();
+            return string.Concat(input.Select(c => invalid.Contains(c) ? '_' : c));
+        }
+
+        #endregion
+
     }
 }
 public class PdfExtractRequest
 {
     public List<string> Pages { get; set; } = new(); // base64 PNG strings, one per page
     public string FileName { get; set; } = string.Empty;
+}
+
+public class ExtractedFormDataDto
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string DOB { get; set; }
+    public string DOS { get; set; }
+    public string MRN { get; set; }
+    public string Assistant { get; set; }
+    public string Anesthesia { get; set; }
+    public string LocationLH { get; set; }
+    public string CaseType { get; set; }
+    public string ReportTemplate { get; set; }
+    public string CPTRows { get; set; }
+    public string ICD10Rows { get; set; }
+    public string IntraOpRows { get; set; }
+    public string PreOp { get; set; }
+    public string PreOpPassiveRoM { get; set; }
 }

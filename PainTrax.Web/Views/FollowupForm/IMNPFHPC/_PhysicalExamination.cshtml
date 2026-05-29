@@ -1059,10 +1059,16 @@
 
         <label><input type="checkbox" class="chkMulti" name="GAIT" value="Slow cadence"><span class="select-btn"> Slow cadence</span></label>
 
-        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Cane"> <span class="select-btn">Cane</span></label>
-        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Walker"><span class="select-btn"> Walker</span></label>
+        <label><input type="checkbox" class="chkMulti" name="GAITOther" value="Cane"> <span class="select-btn">Cane</span></label>
+        <label><input type="checkbox" class="chkMulti" name="GAITOther" value="Walker"><span class="select-btn"> Walker</span></label>
+        <input id="GAITOthertxt" name="GAITOthertxt" class="form-control d-inline w-auto" style="min-width:50%;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOthertxt')"></i>
     </div>
 
-
+    <p>
+        Others
+        <textarea id="PEOthers" name="PEOthers" class="form-control d-inline" style="width:90%"></textarea>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PEOthers')"></i>
+    </p>
 
 </div>

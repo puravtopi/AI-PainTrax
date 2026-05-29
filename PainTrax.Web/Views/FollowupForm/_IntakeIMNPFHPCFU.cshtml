@@ -139,7 +139,7 @@
                                             <partial name="IMNPFHPC/_PatientDetails" />
                                         </div>
                                     </div>
-                                    <div class="accordion-item">
+                                    <div class="accordion-item" style="display:none">
                                         <h2 class="accordion-header" id="headingTwo">
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                                 History
@@ -200,7 +200,11 @@
 
                                                 <ol> <div class="row" id="divDiagnosis"></div></ol>
                                                 @Html.Raw(ViewBag.Diagnosis)
-
+                                                <p>
+                                                    Others
+                                                    <textarea id="DiagnosisOthers" name="DiagnosisOthers" class="form-control d-inline" style="width:90%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOthers')"></i>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -380,7 +384,7 @@
         // (The DOCX is stored alongside this page.)
         var templateUrlDocx = '@ViewBag.TemplateDOCURL';
         var templateUrl = '@ViewBag.TemplateURL';
-
+        var selected = [];
         var recognition;
         var isRecording = false;
     //     function calculateBMI()
@@ -967,6 +971,7 @@
                                        $('#bodyPartLinks').text('');
                                        $('#divDiagnosis').html('');
                                        $('#pdfLoader').hide();
+                                       selected.length = 0;
                                 }
                                 else {
                                      window.location.href = indexurl;
@@ -1028,7 +1033,7 @@
 
 
 
-            var selected = [];
+           
             $(document).on('change', 'input[name="Complaints"]', function () {
 
                 var section = $(this).data('section');
@@ -1036,11 +1041,6 @@
 
                 fnShowPresentComplain(this, section, pe);
 
-
-
-                    // $('input[name="Complaints"]:checked').each(function () {
-                    //     selected.push($(this).val());
-                    // });
                     var value = $(this).val();
 
                     if ($(this).is(':checked')) {

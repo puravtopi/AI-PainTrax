@@ -101,7 +101,7 @@
 
 <div class="select-group">
 
-    Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
+    Degree of Disability <input id="degree" class="form-control d-inline" maxlength="3" style="width:100px" /> %.
     &nbsp;&nbsp;&nbsp;&nbsp;
     Working:
     <label><input type="radio" name="IsWorking" value="The patient is currently working"> <span class="select-btn">Yes</span></label>
@@ -116,49 +116,33 @@
 </div>
 
 <div class="select-group">
-    Chief complaint:
+    Chief complaint: The patient presents today with
+    <label><input type="radio" name="PatientPresent" value="ongoing pain "> <span class="select-btn">ongoing pain </span></label>
+    <label><input type="radio" name="PatientPresent" value="evaluation of neck "> <span class="select-btn">evaluation</span></label>
 
-    <div class="select-group">
 
-        The patient presents today with
-        <label><input type="radio" name="PatientPresent" value="ongoing pain "> <span class="select-btn">ongoing pain </span></label>
-        <label><input type="radio" name="PatientPresent" value="evaluation of neck "> <span class="select-btn">evaluation of neck </span></label>
-        <label><input type="radio" name="PatientPresent" value="midback"> <span class="select-btn">midback </span></label>
-        <label><input type="radio" name="PatientPresent" value="lowback"> <span class="select-btn">lowback </span></label>
-
-        @*   <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+    @*   <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i> *@
-    </div>
-    <p>
-        S/p:  injection
-        <input id="Injection" name="Injection" class="form-control d-inline" style="width:350px;" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Injection')"></i>
-        on
-        <input id="InjectionOn" name="InjectionOn" class="form-control d-inline" style="width:200px" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'InjectionOn')"></i>
-        with
-        <input id="InjectionWith" name="InjectionWith" class="form-control d-inline" style="width:200px" /> % improvement.
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'InjectionWith')"></i>
-    </p>
-    <p>
-        surgery
-        <input id="Surgery" name="Surgery" class="form-control d-inline" style="width:350px" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Surgery')"></i>
-        on
-        <input id="SurgeryOn" name="SurgeryOn" class="form-control d-inline" style="width:200px" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SurgeryOn')"></i>
-        with
-        <input id="SurgeryWith" name="SurgeryWith" class="form-control d-inline" style="width:200px" /> % improvement.
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SurgeryWith')"></i>
-    </p>
-    <p>
-        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> <span class="select-btn">Neck</span></label>
-        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="midbackSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
-        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> <span class="select-btn">Low back</span></label>
-
-        <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
-    </p>
 </div>
+<div class="select-group">
+    S/p:  injection
+    <input type="text" id="Injection" name="Injection" class="form-control d-inline" style="width:95%" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Injection')"></i>
+</div>
+<div class="select-group">
+    Surgery
+    <input type="text" id="Surgery" name="Surgery" class="form-control d-inline" style="width:95%" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Surgery')"></i>
+</div>
+
+<div class="select-group">
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> <span class="select-btn">Neck</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="midbackSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> <span class="select-btn">Low back</span></label>
+
+    <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+</div>
+
 <script>
     $("#PatientName").on("keyup", function () {
 

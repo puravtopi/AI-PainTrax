@@ -2208,6 +2208,7 @@
 <script>
         var docTemplate = null;
         var formData = null;
+        var selected = [];
         // Path to your saved template file (relative to this HTML file).
         // (The DOCX is stored alongside this page.)
         var templateUrlDocx = '@ViewBag.TemplateDOCURL';
@@ -2799,6 +2800,7 @@
                                        $('#bodyPartLinks').html('');
                                        $('#divDiagnosis').html('');
                                        $('#pdfLoader').hide();
+                                       selected.length = 0;
                                 }
                                 else {
                                      window.location.href = indexurl;
@@ -2862,9 +2864,9 @@
 
 
 
-            var selected = [];
+           
             $(document).on('change', 'input[name="Complaints"]', function () {
-
+                debugger
                 var section = $(this).data('section');
                 var pe = $(this).data('pe');
 
@@ -2886,7 +2888,7 @@
                             return item !== value;
                         });
                     }
-
+                    $('#bodyPartLinks').text('');
                     if(selected.length>0){
                         $("#acordPresentComp").show();
                         $("#acordPhyExam").show();
@@ -2926,7 +2928,7 @@
                 $('#Age').val(age);
             });
             // AFTER ALL DATA LOADS
-        restoreAccordion();
+            restoreAccordion();
         });
 
         function fnExportDOC() {
