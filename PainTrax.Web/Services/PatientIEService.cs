@@ -200,6 +200,14 @@ public class PatientIEService : ParentService
       
         Execute(cm);
     }
+    public void UpdateFromIntakeFU(tbl_patient_ie data)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_fu SET
+				doe=@doe where intakeid=@intakeid", conn);
+        cm.Parameters.AddWithValue("@intakeid", data.intakeid);
+        cm.Parameters.AddWithValue("@doe", data.doe);
+        Execute(cm);
+    }
 
     public void UpdateFromFU(tbl_patient_ie data)
     {

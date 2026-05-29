@@ -159,7 +159,7 @@
                                         </h2>
                                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
-                                                 <partial name="IMNPFHPC/_PresentComplain" />
+                                                <partial name="IMNPFHPC/_PresentComplain" />
                                             </div>
                                         </div>
                                     </div>
@@ -946,7 +946,7 @@
                     if (isSubmit) {
 
                         bootbox.confirm({
-                            message: 'Your details have been saved successfully. Click "Yes" to continue creating the next visit.',
+                            message: 'Your details have been saved successfully. Click "Yes" to continue creating the next followup.',
                             swapButtonOrder: true,
 
                             buttons: {
@@ -964,7 +964,7 @@
                                        $('#patientForm')[0].reset();
                                        // var today = new Date().toISOString().split('T')[0];
                                        // $('#DOE').val(today);
-                                       $('#bodyPartLinks').html('');
+                                       $('#bodyPartLinks').text('');
                                        $('#divDiagnosis').html('');
                                        $('#pdfLoader').hide();
                                 }
@@ -1020,16 +1020,10 @@
                 bindForm('@ViewBag.FormData');
             }
 
-            $('#patientForm').on('submit', function (e) {
-
-                // if(!checkValidation())
-                //     return false;
-
-                e.preventDefault(); // Stop page reload
-                saveForm(true);
-                
-            });
-
+                $('#patientForm').on('submit', function (e) {
+                          e.preventDefault();
+                          saveForm(true);
+                });
 
 
 

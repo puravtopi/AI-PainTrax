@@ -4,15 +4,17 @@
 <input type="hidden" id="PatientId" name="PatientId" />
 <input type="hidden" id="PatientIEId" name="PatientIEId" />
 
+<style>
+    .is-invalid {
+        border: 2px solid red !important;
+    }
+</style>
+
+
 <h6>Provider Name:  @ViewBag.ProviderName</h6>
 <!-- Patient Info -->
 <div class="select-group">
-  @*   Patient LName:
-    <input id="LN" name="LN" class="form-control d-inline" style="width:150px;" />
-    FName:
-    <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" /> *@
 
-    @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
     Patient Name:
     <input id="PatientName" name="PatientName" class="form-control d-inline" style="width:250px;" />
     Gender
@@ -60,7 +62,7 @@
     <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
     &nbsp;&nbsp;
     DOB:
-    <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" oninput="formatDOB(this)" onblur="validateDOB(this)" />
+    <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" oninput="formatDOB(this)" onblur="validateDOB(this)" required />
     &nbsp;&nbsp;&nbsp;
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:30px" /> years
@@ -96,155 +98,66 @@
 
 
 </div>
+
 <div class="select-group">
 
-    Occupation:
-    <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i>
-</div>
-<div class="select-group">
+    Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
+    &nbsp;&nbsp;&nbsp;&nbsp;
     Working:
     <label><input type="radio" name="IsWorking" value="The patient is currently working"> <span class="select-btn">Yes</span></label>
     <label><input type="radio" name="IsWorking" value="The patient stopped working immediately after accident."> <span class="select-btn">No</span></label>
     <span id="divWorking" style="display:none">
         &nbsp;&nbsp;
-        <input type="radio" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span>
-        <input type="radio" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span>
-    </span>
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
-
-
-</div>
-
-
-<div class="select-group">
-    VITAL SIGNS: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    Height:
-    <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:40px" onchange="calculateBMI()" />ft
-    <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" value="0" onchange="calculateBMI()" />inches
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    Weight:
-    <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:100px" />
-
-    lbs,
-
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
-    <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
-</div>
-
-
-
-
-
-<div class="select-group">
-    Asymptomatic prior to accident:
-    <label><input type="radio" name="Asymptomatic" value="Yes"> <span class="select-btn">Y</span></label>
-    <label><input type="radio" name="Asymptomatic" value="No"> <span class="select-btn">N</span></label>
-    <span id="divAsymptomatic" style="display:none">
-        <input type="text" id="OtherAsymptomatic" name="OtherAsymptomatic" class="form-control d-inline w-auto" />
-
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherAsymptomatic')"></i>
-    </span>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    History of prior trauma:
-    <label><input type="radio" name="Priortrauma" value="Yes"> <span class="select-btn">Y</span></label>
-    <label><input type="radio" name="Priortrauma" value="No"> <span class="select-btn">N</span></label>
-    <span id="divPriortrauma" style="display:none">
-        <input type="text" id="OtherPriortrauma" name="OtherPriortrauma" class="form-control d-inline w-auto" />
-
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherPriortrauma')"></i>
+        <input type="radio" name="YesWork" id="PartTime" value="Part time"> <span class="select-btn">Part-time</span>
+        <input type="radio" name="YesWork" id="FullTime" value="Full time">  <span class="select-btn">Full-time</span>
     </span>
 
-</div>
-<div class="select-group">
-    Accident Type
-    <label><input type="radio" name="PatientAType" value="Driver"><span class="select-btn"> Driver</span></label>
-    <label><input type="radio" name="PatientAType" value="Front Pass"><span class="select-btn"> Front Pass</span></label>
-    <label><input type="radio" name="PatientAType" value="Rear Pass"><span class="select-btn"> Rear Pass</span></label>
-    <label><input type="radio" name="PatientAType" value="Pedestrian"><span class="select-btn"> Pedestrian</span></label>
-    <label><input type="radio" name="PatientAType" value="Bicyclist"><span class="select-btn"> Bicyclist</span></label>
-    @*  <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driver"> <span class="select-btn">Driver</span> </label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="FrontPass"> <span class="select-btn">Front Pass</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="RearPass"> <span class="select-btn">Rear Pass</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Pedestrian"><span class="select-btn">Pedestrian</span> </label>
-                                                <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Bicyclist"> <span class="select-btn">Bicyclist</span></label> *@
-    &nbsp;&nbsp;&nbsp;
-    Collision Type
-    <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Frontend"><span class="select-btn">Front end</span></label>
-    <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Rearend"> <span class="select-btn">Rear end</span></label>
-    <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driverside"> <span class="select-btn">Driver side</span></label>
-    <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Passside"> <span class="select-btn">Pass side</span></label>
-
-    <input type="text" id="OtherCollision" name="OtherCollision" class="form-control d-inline w-auto" />
-
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherCollision')"></i>
-</div>
-<div class="select-group">
-    Seat Belt:
-    <label><input type="radio" name="SeatBelt" value="Yes"><span class="select-btn"> Y</span></label>
-    <label><input type="radio" name="SeatBelt" value="No"> <span class="select-btn">N</span></label>
-    &nbsp;&nbsp;&nbsp;
-    Airbags deployed:
-    <label><input type="radio" name="Airbagsdeployed" value="Yes"> <span class="select-btn">Y</span></label>
-    <label><input type="radio" name="Airbagsdeployed" value="No"><span class="select-btn"> N</span></label>
-    &nbsp;&nbsp;&nbsp;
-    LOC:
-    <label><input type="radio" name="LOC" value="Yes"> <span class="select-btn">Y</span></label>
-    <label><input type="radio" name="LOC" value="No"> <span class="select-btn">N</span></label>
-    <span id="divLOC" style="display:none">
-        <input type="text" id="OtherLOC" name="OtherLOC" class="form-control d-inline w-auto" />
-
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherLOC')"></i>
-    </span>
-    &nbsp;&nbsp;&nbsp;
-    Bruises:
-    <label><input type="radio" name="Bruises" value="Yes"><span class="select-btn"> Y</span></label>
-    <label><input type="radio" name="Bruises" value="No"><span class="select-btn"> N</span></label>
-    <span id="divBruises" style="display:none">
-        <input type="text" id="OtherBruises" name="OtherBruises" class="form-control d-inline w-auto" />
-
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherBruises')"></i>
-    </span>
 
 </div>
-<div class="select-group">
-    Hospital:
-    <label><input type="radio" name="Hospital" value="Yes"> <span class="select-btn">Y</span></label>
-    <label><input type="radio" name="Hospital" value="No"><span class="select-btn"> N</span></label>
-    &nbsp;&nbsp;&nbsp;
-    EMS:
-    <label><input type="radio" name="EMS" value="Yes"> <span class="select-btn">Y</span></label>
-    <label><input type="radio" name="EMS" value="No"> <span class="select-btn">N</span></label>
-    &nbsp;&nbsp;&nbsp;
-    Private car:
-    <label><input type="radio" name=" privatecar" value="Yes"> <span class="select-btn">Y</span></label>
-    <label><input type="radio" name=" privatecar" value="No"><span class="select-btn"> N</span></label>
-    &nbsp;&nbsp;&nbsp;
-</div>
 
-
-<span id="divHospital" style="display:none">
-    Hospital name
-    <input id="hospitalname" name="hospitalname" class="form-control d-inline w-auto" style="min-width:70%;" />
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'hospitalname')"></i>
-</span>
-
-
-
-
-<p>
-    Accident Description
-    <textarea id="AccidentDescription" name="AccidentDescription" class="form-control d-inline" style="width:95%"></textarea>
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
-</p>
 <div class="select-group">
     Chief complaint:
-    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> <span class="select-btn">Neck</span></label>
-    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="midbackSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
-    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> <span class="select-btn">Low back</span></label>
 
-    <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+    <div class="select-group">
+
+        The patient presents today with
+        <label><input type="radio" name="PatientPresent" value="ongoing pain "> <span class="select-btn">ongoing pain </span></label>
+        <label><input type="radio" name="PatientPresent" value="evaluation of neck "> <span class="select-btn">evaluation of neck </span></label>
+        <label><input type="radio" name="PatientPresent" value="midback"> <span class="select-btn">midback </span></label>
+        <label><input type="radio" name="PatientPresent" value="lowback"> <span class="select-btn">lowback </span></label>
+
+        @*   <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i> *@
+    </div>
+    <p>
+        S/p:  injection
+        <input id="Injection" name="Injection" class="form-control d-inline" style="width:350px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Injection')"></i>
+        on
+        <input id="InjectionOn" name="InjectionOn" class="form-control d-inline" style="width:200px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'InjectionOn')"></i>
+        with
+        <input id="InjectionWith" name="InjectionWith" class="form-control d-inline" style="width:200px" /> % improvement.
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'InjectionWith')"></i>
+    </p>
+    <p>
+        surgery
+        <input id="Surgery" name="Surgery" class="form-control d-inline" style="width:350px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Surgery')"></i>
+        on
+        <input id="SurgeryOn" name="SurgeryOn" class="form-control d-inline" style="width:200px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SurgeryOn')"></i>
+        with
+        <input id="SurgeryWith" name="SurgeryWith" class="form-control d-inline" style="width:200px" /> % improvement.
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SurgeryWith')"></i>
+    </p>
+    <p>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" /> <span class="select-btn">Neck</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="midbackSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" /> <span class="select-btn">Low back</span></label>
+
+        <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+    </p>
 </div>
 <script>
     $("#PatientName").on("keyup", function () {

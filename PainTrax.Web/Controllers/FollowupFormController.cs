@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
 using Optivem.Framework.Core.Domain;
@@ -33,6 +34,7 @@ namespace PainTrax.Web.Controllers
         private readonly TreatmentMasterService _treatmentService = new TreatmentMasterService();
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientFUService _fuservices = new PatientFUService();
+        private readonly Common _commonservices = new Common();
         #endregion
 
 
@@ -70,7 +72,27 @@ namespace PainTrax.Web.Controllers
             };
             var loc = _locservices.GetOne(objLoc);
 
+
             ViewBag.LocName = loc?.location;
+
+            var locdata = _commonservices.GetLocations(Convert.ToInt32(cmpid));
+
+            List<SelectListItem> lst = new List<SelectListItem>();
+
+            int defaultlocation = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId).Value;
+
+            foreach (var item in locdata)
+            {
+                var obj = new SelectListItem()
+                {
+                    Text = item.Text,
+                    Value = item.Value,
+                    Selected = item.Value == locId.ToString() ? true : false
+                };
+                lst.Add(obj);
+
+            }
+            ViewBag.locList = lst;
             ViewBag.CmpId = cmpid.ToString();
 
             var _dataTreatment = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
@@ -99,6 +121,8 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeBHFFU");
             else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
+            else if (client_code.ToLower() == "imnpfhpc")
+                return PartialView("_IntakeIMNPFHPCFU");
             else return PartialView("_IntakeIMNPFHPCFU");
         }
         [HttpPost]
@@ -349,6 +373,7 @@ namespace PainTrax.Web.Controllers
                         intakeid = initialIntakeAI.Id
                     };
                     _ieService.UpdateFromIntake(objIE);
+                    _ieService.UpdateFromIntakeFU(objIE);
                 }
 
                 //return RedirectToAction("Index", "Visit");

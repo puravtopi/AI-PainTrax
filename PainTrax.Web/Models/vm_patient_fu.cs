@@ -57,5 +57,6 @@ public class vm_patient_fu{
     public int? age {get;set;}
 
     public string? procedure_performed { get; set; }
+    public int? intakeid { get; set; }
 
 }

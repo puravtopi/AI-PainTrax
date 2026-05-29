@@ -917,14 +917,12 @@
         }
 
         function fnGetFUList(d) {
-            debugger
-            // `d` is the original data object for the row
-            debugger
+           
             var id = d.id;
             var url = '@Url.Action("FuList", "Visit")?ieId=' + id;
             var editurl = '@Url.Action("Create", "FUVisit")?patientIEId=' + id;
             var printurl = '@Url.Action("IEPrint", "Visit")';
-
+            var intakeurl = '@Url.Action("Create", "FollowupForm")';
 
             let childtab = document.createElement("table");
             childtab.className = "table table-striped table-bordered dt-responsive nowrap dataTable no-footer";
@@ -954,13 +952,14 @@
                             index += ' <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '&patientFUId=' + value.patientFU + '"><i class="ri-edit-line" title="Edit"></i><span>Edit</span></a></li>';
                             // index += ' <li style="@(designation.ToLower() == "superadmin" || designation.ToLower() == "admin" ? "display:list-item" : "display:none")"><a class="dropdown-item d-flex align-items-center" onclick="fnDeleteFU(' + value.patientFU + ', ' + '\'' + `${value.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${value.lname.replace(/'/g, "\\'")}` + '\')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
-                    if (hasDeletePatient) {
-                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnDeleteFU(' + value.patientFU + ', ' + '\'' + `${value.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${value.lname.replace(/'/g, "\\'")}` + '\')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
-                    }
+                            if (hasDeletePatient) {
+                                index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnDeleteFU(' + value.patientFU + ', ' + '\'' + `${value.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${value.lname.replace(/'/g, "\\'")}` + '\')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
+                            }
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowComment(' + value.patientFU + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i><span>Add Comments</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(0,' + value.patientIE_ID + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + value.patientFU + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowProcReport(0,' + value.patientFU + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Prop Report</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + intakeurl + '?id=' + value.intakeid +'&locid='+ value.location_id + '" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Intake Form "></i><span> Intake Form</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="checkAuthorizationForm(' + value.patient_id + ',' + '\'' + `${value.email}` + '\')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Send Authorization" data-bs-original-title="Send Authorization"></i><span>Send Authorization</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + value.patientFU + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li></ul>';
 

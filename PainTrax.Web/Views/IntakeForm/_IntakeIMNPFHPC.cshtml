@@ -2854,43 +2854,11 @@
 
             $('#patientForm').on('submit', function (e) {
 
-                // if(!checkValidation())
-                //     return false;
-
                 e.preventDefault(); // Stop page reload
                 saveForm(true);
-                formData["Diagnosis"]= $("#divDiagnosis").html();
-                formData["TreatmentIds"]= $("#TreatmentIds").val();
-                formData["TreatmentDesc"]= $("#TreatmentDesc").val();
-                formData["TreatmentDelimitDesc"]= $("#TreatmentDelimitDesc").val();
-                // Serialize form data
-                var url = '@Url.Action("SaveForm", "IntakeForm")';
-                var indexurl = '@Url.Action("Index", "Visit")';
-                var data = JSON.stringify(formData);
-
-                $.ajax({
-                    url: url, // Update with your Controller/Action
-                    type: 'POST',
-                    contentType: "application/json",
-                    data: data,
-                    success: function (response) {
-                        if (response.success) {
-                             alert(response.message);
-                            // // Optionally reset form
-                             $('#patientForm')[0].reset();
-                            // updatePreview();
-                            window.location.href=indexurl;
-                        } else {
-                            alert("Error: " + response.message);
-                        }
-                    },
-                    error: function () {
-                        alert("An error occurred while saving data.");
-                    }
-                });
+               
             });
-            
-            
+                  
 
 
 
