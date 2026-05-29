@@ -318,11 +318,11 @@ namespace PainTrax.Web.Services
             return datalist;
         }
 
-        public List<InitialIntakeAI>? GetInitialIntakeByLocationId(int locid)
+        public List<InitialIntakeAI>? GetInitialIntakeByLocationId(int locid,int cmpId)
         {
             DataTable dt = new DataTable();
-            MySqlCommand cm = new MySqlCommand("select * from tbl_intake_ai WHERE DATE(SendDate) = CURDATE() and locationid=@locid order by id desc", conn);
-            cm.Parameters.AddWithValue("@locid", locid);
+            MySqlCommand cm = new MySqlCommand("select * from tbl_intake_ai WHERE DATE(SendDate) = CURDATE() and CmpId=@CmpId  order by id desc", conn);
+            cm.Parameters.AddWithValue("@CmpId", cmpId);
             var datalist = ConvertDataTable<InitialIntakeAI>(GetData(cm)).ToList();
             return datalist;
         }

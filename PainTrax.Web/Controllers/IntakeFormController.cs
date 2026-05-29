@@ -1301,8 +1301,8 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult TodayVisitList(int locid)
         {
-            var model = service.GetInitialIntakeByLocationId(locid);
-
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var model = service.GetInitialIntakeByLocationId(locid, cmpid.Value);
             return PartialView("_TodayVisitList", model);
         }
          

@@ -1,6 +1,15 @@
 ﻿<br />
 
 <div class="select-group">
+    <label><input type="checkbox" class="chkMulti" name="PlanImaging" value="Imaging Studies"> <span class="select-btn">Imaging Studies</span></label>
+    <label><input type="checkbox" class="chkMulti" name="PlanImaging" value="Clinical Examinations" checked> <span class="select-btn">Clinical Examinations</span></label>
+    Reviewed
+</div>
+<div class="select-group">
+    <label><input type="checkbox" class="chkMulti" name="Plantreatment" value="All treatment options discussed with the patient" checked> <span class="select-btn">All treatment options discussed with the patient</span></label>
+</div>
+
+<div class="select-group">
 
     @* <label><input type="checkbox" class="chkMulti" name="PlanConservativeTx" value="ConservativeTx"> ConservativeTx:</label> *@
     ConservativeTx:
@@ -79,6 +88,11 @@
     <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LTESI"> <span class="select-btn">LTESI</span></label>
 
 </div>
+<p>
+    Others
+    <textarea id="PlanOthers" name="PlanOthers" class="form-control d-inline" style="width:90%"></textarea>
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PlanOthers')"></i>
+</p>
 <div class="select-group">
     <strong>FOLLOW UP:</strong>
     <input type="text"
@@ -90,20 +104,7 @@
     <label><input type="radio" name="FollowUp" value="Weeks"><span class="select-btn">Weeks</span></label>
     <label><input type="radio" name="FollowUp" value="Months"><span class="select-btn">Months</span></label>
     <label><input type="radio" name="FollowUp" value="PRN"><span class="select-btn">PRN</span></label>
-    @* <label>
-                                                    <input type="radio" name="FollowUp" value="Weeks" />
-                                                    Weeks
-                                                </label>
-
-                                                <label style="margin-left:15px;">
-                                                    <input type="radio" name="FollowUp" value="Months" />
-                                                    Months
-                                                </label>
-
-                                                <label style="margin-left:15px;">
-                                                    <input type="radio" name="FollowUp" value="PRN" />
-                                                    PRN
-                                                </label> *@
+    
 
 
 </div>

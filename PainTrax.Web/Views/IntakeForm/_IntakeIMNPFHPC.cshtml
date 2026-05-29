@@ -113,6 +113,14 @@
                                             Export as PDF
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="javascript:void(0)"
+                                           onclick="fnAddFU()">
+                                            <i class="bi bi-file-earmark-text me-2"></i>
+                                            Add Followup
+                                        </a>
+                                    </li>
 
                                 </ul>
                             </div>
@@ -663,7 +671,11 @@
                                                </div>
 
                                             </div>
-
+                                                <p>
+                                                    Others
+                                                    <textarea id="CCOthers" name="CCOthers" class="form-control d-inline" style="width:90%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'CCOthers')"></i>
+                                                </p>
                                         </div>
                                     </div>
                                 </div>
@@ -1891,13 +1903,21 @@
 
                                                     <label><input type="checkbox" class="chkMulti" name="GAIT" value="Slow cadence"><span class="select-btn"> Slow cadence</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Cane"> <span class="select-btn">Cane</span></label>
-                                                    <label><input type="checkbox" class="chkMulti" name="GAIT" value="Walker"><span class="select-btn"> Walker</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="GAITOther" value="Cane"> <span class="select-btn">Cane</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="GAITOther" value="Walker"><span class="select-btn"> Walker</span></label>
+                                                        <input id="GAITOthertxt" name="GAITOthertxt" class="form-control d-inline w-auto" style="min-width:50%;" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOthertxt')"></i>
                                                         </div>
-
+                                                   
                                                 
 
                                             </div>
+
+                                                <p>
+                                                    Others
+                                                    <textarea id="PEOthers" name="PEOthers" class="form-control d-inline" style="width:90%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PEOthers')"></i>
+                                                </p>
                                         </div>
                                     </div>
 
@@ -1913,7 +1933,11 @@
 
                                             <ol> <div class="row" id="divDiagnosis"></div></ol>
                                             @Html.Raw(ViewBag.Diagnosis)
-
+                                                <p>
+                                                    Others
+                                                    <textarea id="DiagnosisOthers" name="DiagnosisOthers" class="form-control d-inline" style="width:90%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOthers')"></i>
+                                                </p>
                                         </div>
                                     </div>
                                 </div>
@@ -2013,6 +2037,11 @@
                                                 <label><input type="checkbox" class="chkMulti" name="Recommendation" value="LTESI"> <span class="select-btn">LTESI</span></label>
                                                 
                                              </div>
+                                                <p>
+                                                    Others
+                                                    <textarea id="PlanOthers" name="PlanOthers" class="form-control d-inline" style="width:90%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PlanOthers')"></i>
+                                                </p>
                                                 <div class="select-group">
                                                     <strong>FOLLOW UP:</strong>
                                                 <input type="text"
@@ -3261,6 +3290,13 @@
         "_IE_InjuryIntake.pdf";
         downloadPDF(fileName);
     }
+
+    function fnAddFU()
+    {
+         window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val();
+    }
+
+
     function fnshowPatientList() {
          $.ajax({
             url: '@Url.Action("TodayVisitList", "IntakeForm")?locid=' + $("#LocationId").val(),

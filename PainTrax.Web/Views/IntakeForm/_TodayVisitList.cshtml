@@ -9,6 +9,7 @@
                 <th scope="col">DOB</th>
                 <th scope="col">DOA</th>
                 <th scope="col">DOS</th>
+                <th scope="col">Visit Type</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -21,10 +22,20 @@
                     <td>@item.DOB?.ToShortDateString()</td>
                     <td>@item.DOA?.ToShortDateString()</td>
                     <td>@item.DOE?.ToShortDateString()</td>
+                    <td>@item.Visit_Type</td>
                     <td>
-                        <a href="@Url.Action("AIInitialIntake", "IntakeForm", new { id = item.Id, locid = item.LocationId })">
-                            View
-                        </a>
+                        @if (item.Visit_Type == "IE")
+                        {
+                            <a href="@Url.Action("AIInitialIntake", "IntakeForm", new { id = item.Id, locid = item.LocationId })">
+                                View
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Create", "FollowupForm", new { id = item.Id, locid = item.LocationId })">
+                                View
+                            </a>
+                        }
                     </td>
 
                 </tr>
