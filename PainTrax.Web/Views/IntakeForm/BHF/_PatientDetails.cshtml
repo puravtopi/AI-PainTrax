@@ -69,6 +69,17 @@
         <span class="select-btn">LIEN</span>
     </label>
 </div>
+<div class="select-group">
+    <b> Chief complaint:</b>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" />  <span class="select-btn">Neck</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="mbSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" />  <span class="select-btn">Low back</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" />  <span class="select-btn">R/SH</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" />  <span class="select-btn">L/SH</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> <span class="select-btn">R/KN</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" />  <span class="select-btn">L/KN</span></label>
+    <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+</div>
 <p>
     <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Height:
     <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />ft

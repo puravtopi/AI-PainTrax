@@ -87,14 +87,46 @@
             white-space: nowrap;
         }
 
-        .status-pending  { background-color: #fff3cd; color: #664d03; }
-        .status-processing { background-color: #cfe2ff; color: #084298; }
-        .status-ready    { background-color: #d1e7dd; color: #0f5132; }
-        .status-error    { background-color: #f8d7da; color: #842029; }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
 
-        .table-responsive { border-radius: 8px; overflow: hidden; }
+        .status-processing {
+            background-color: #cfe2ff;
+            color: #084298;
+        }
 
-        .btn-download { padding: 4px 8px; font-size: 12px; white-space: nowrap; }
+        .status-ready {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .btn-download {
+            padding: 4px 8px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* ── Location template dropdown validation ── */
+        #ddlLocationTemplate.is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, .25);
+        }
+
+        #ddlLocationTemplate:focus {
+            border-color: #0d6efd;
+        }
 
         /* ── Summary cards ── */
         .summary-card {
@@ -103,8 +135,14 @@
             color: white;
             margin-bottom: 15px;
         }
-            .summary-card .card-body  { padding: 15px; }
-            .summary-card .d-flex     { justify-content: space-between; }
+
+            .summary-card .card-body {
+                padding: 15px;
+            }
+
+            .summary-card .d-flex {
+                justify-content: space-between;
+            }
     </style>
 
     <!-- ═══════════════════════════════════════════
@@ -183,8 +221,26 @@
                                         Each row represents one PDF — one DOCX will be generated per file.
                                     </small>
                                 </div>
-                                <div class="d-flex gap-2 flex-wrap">
+                                <div class="d-flex gap-2 flex-wrap align-items-center">
                                     <span class="badge bg-secondary align-self-center" id="reportCount">0 reports</span>
+
+                                    <!-- Location Template Dropdown -->
+                                    <div class="d-flex align-items-center gap-1">
+                                        <label for="ddlLocationTemplate" class="form-label mb-0 text-nowrap fw-semibold small">
+                                            <i class="bi bi-geo-alt"></i> Location Template<span class="text-danger">*</span>
+                                        </label>
+                                        <select id="ddlLocationTemplate" class="form-select form-select-sm" style="min-width:180px;">
+                                            <option value="">— Select Location —</option>
+                                            @if (ViewBag.LocationTemplates != null)
+                                            {
+                                                foreach (var item in ViewBag.LocationTemplates)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+
                                     <button class="btn btn-warning" onclick="resetAll()">
                                         <i class="bi bi-upload"></i> Upload Different Files
                                     </button>
@@ -289,8 +345,8 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc =
         'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-    const EXTRACT_ENDPOINT  = '@Url.Action("ExtractPdfData",    "Report")';
-    const GENERATE_ENDPOINT = '@Url.Action("GenerateReportDocx","Report")';
+    const EXTRACT_ENDPOINT = '@Url.Action("ExtractPdfData", "Report")';
+    const GENERATE_ENDPOINT = '@Url.Action("GenerateReportDocx", "Report")';
 
     let selectedFiles = [];
     let parsedReports = [];
@@ -306,18 +362,22 @@
     // DROP-ZONE / FILE INPUT
     // ─────────────────────────────────────────────────────────────────────────
     (function initFileHandlers() {
-        const dropZone  = document.getElementById('dropZone');
+        const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('pdfFile');
 
-        dropZone.addEventListener('click',     () => fileInput.click());
-        dropZone.addEventListener('dragover',  e  => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-        dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
         dropZone.addEventListener('drop', e => {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
             handleFiles(e.dataTransfer.files);
         });
         fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+        // Clear location dropdown validation on change
+        const ddlLoc = document.getElementById('ddlLocationTemplate');
+        if (ddlLoc) ddlLoc.addEventListener('change', () => ddlLoc.classList.remove('is-invalid'));
     })();
 
     function handleFiles(files) {
@@ -326,7 +386,7 @@
         for (let i = 0; i < files.length; i++) {
             const f = files[i];
             if (f.type !== 'application/pdf') { showError(`"${f.name}" is not a PDF. Skipped.`); continue; }
-            if (f.size > 50 * 1024 * 1024)    { showError(`"${f.name}" exceeds 50 MB. Skipped.`); continue; }
+            if (f.size > 50 * 1024 * 1024) { showError(`"${f.name}" exceeds 50 MB. Skipped.`); continue; }
             selectedFiles.push(f);
         }
 
@@ -363,10 +423,10 @@
         if (!selectedFiles.length) return;
 
         parsedReports = [];
-        const progress    = document.getElementById('pdfParseProgress');
+        const progress = document.getElementById('pdfParseProgress');
         const progressBar = document.getElementById('parseProgressBar');
         const progressTxt = document.getElementById('parseProgressText');
-        const btnPreview  = document.getElementById('btnPreview');
+        const btnPreview = document.getElementById('btnPreview');
 
         progress.style.display = 'block';
         btnPreview.disabled = true;
@@ -379,7 +439,7 @@
             progressBar.style.width = Math.round((fi / total) * 100) + '%';
 
             try {
-                const ab  = await file.arrayBuffer();
+                const ab = await file.arrayBuffer();
                 const doc = await pdfjsLib.getDocument({ data: ab }).promise;
 
                 const pageBase64Array = [];
@@ -391,7 +451,7 @@
                 progressTxt.textContent = `extracting data from "${file.name}"…`;
                 const row = await extractPdfWithServer(pageBase64Array, file.name);
                 row._fileName = file.name;
-                row._status   = 'pending';
+                row._status = 'pending';
                 row._docxBytes = null;
                 row._docxFileName = null;
                 parsedReports.push(row);
@@ -410,16 +470,16 @@
         progress.style.display = 'none';
         btnPreview.disabled = false;
         renderReportsTable();
-        document.getElementById('uploadSection').style.display  = 'none';
+        document.getElementById('uploadSection').style.display = 'none';
         document.getElementById('previewSection').style.display = 'block';
     }
 
     // Render one PDF page → base64 PNG
     async function renderPageToBase64(page) {
         const viewport = page.getViewport({ scale: 2.0 });
-        const canvas   = document.createElement('canvas');
-        canvas.width   = viewport.width;
-        canvas.height  = viewport.height;
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
         await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
         return canvas.toDataURL('image/png').split(',')[1];
     }
@@ -455,16 +515,16 @@
 
         parsedReports.forEach((report, idx) => {
             const status = report._status || 'pending';
-            if (status === 'pending')    pending++;
-            if (status === 'ready')      ready++;
-            if (status === 'error')      errors++;
+            if (status === 'pending') pending++;
+            if (status === 'ready') ready++;
+            if (status === 'error') errors++;
 
             const typeMap = { RSAS: 'Right Shoulder', LSAS: 'Left Shoulder', RKAS: 'Right Knee', LKAS: 'Left Knee' };
             const statusMap = {
-                pending:    '<span class="report-status status-pending">Pending</span>',
+                pending: '<span class="report-status status-pending">Pending</span>',
                 processing: '<span class="report-status status-processing"><span class="spinner-border spinner-border-sm"></span> Processing…</span>',
-                ready:      '<span class="report-status status-ready">Ready</span>',
-                error:      `<span class="report-status status-error" title="${report._error || ''}">Error</span>`
+                ready: '<span class="report-status status-ready">Ready</span>',
+                error: `<span class="report-status status-error" title="${report._error || ''}">Error</span>`
             };
             const actionHtml = status === 'ready' && report._docxBytes
                 ? `<button class="btn btn-success btn-download" onclick="downloadReport(${idx})"><i class="bi bi-download"></i> Download</button>`
@@ -472,22 +532,22 @@
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td>${report._fileName || ''}</td>
-                <td>${(report.LastName || '') + (report.LastName && report.FirstName ? ', ' : '') + (report.FirstName || '') || '—'}</td>
-                <td>${report.MRN || '—'}</td>
-                <td>${report.DOS || '—'}</td>
-                <td>${typeMap[report.ReportTemplate] || report.ReportTemplate || '—'}</td>
-                <td>${statusMap[status] || ''}</td>
-                <td>${actionHtml}</td>
-            `;
+                    <td>${idx + 1}</td>
+                    <td>${report._fileName || ''}</td>
+                    <td>${(report.LastName || '') + (report.LastName && report.FirstName ? ', ' : '') + (report.FirstName || '') || '—'}</td>
+                    <td>${report.MRN || '—'}</td>
+                    <td>${report.DOS || '—'}</td>
+                    <td>${typeMap[report.ReportTemplate] || report.ReportTemplate || '—'}</td>
+                    <td>${statusMap[status] || ''}</td>
+                    <td>${actionHtml}</td>
+                `;
             tbody.appendChild(tr);
         });
 
-        document.getElementById('summTotal').textContent   = parsedReports.length;
+        document.getElementById('summTotal').textContent = parsedReports.length;
         document.getElementById('summPending').textContent = pending;
-        document.getElementById('summReady').textContent   = ready;
-        document.getElementById('summErrors').textContent  = errors;
+        document.getElementById('summReady').textContent = ready;
+        document.getElementById('summErrors').textContent = errors;
         document.getElementById('reportCount').textContent = parsedReports.length + ' report(s)';
     }
 
@@ -495,7 +555,19 @@
     // STEP 2 — GENERATE REPORTS
     // ─────────────────────────────────────────────────────────────────────────
     async function generateReports() {
+        // ── Validate location template ──
+        const ddl = document.getElementById('ddlLocationTemplate');
+        if (!ddl.value) {
+            ddl.classList.add('is-invalid');
+            ddl.focus();
+            showError('Please select a <strong>Location Template</strong> before generating reports.');
+            return;
+        }
+        ddl.classList.remove('is-invalid');
+
         if (!confirm(`Generate DOCX reports for ${parsedReports.length} file(s)?\n\nFiles will download automatically.`)) return;
+
+        const selectedLocationTemplate = ddl.value;
 
         const btn = document.getElementById('btnGenerate');
         btn.disabled = true;
@@ -509,13 +581,17 @@
                 report._status = 'processing';
                 renderReportsTable();
 
+                const payload = Object.assign({}, report, {
+                    LocationLH: selectedLocationTemplate
+                });
+
                 const response = await fetch(GENERATE_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'RequestVerificationToken': getAntiForgeryToken()
                     },
-                    body: JSON.stringify(report)
+                    body: JSON.stringify(payload)
                 });
 
                 if (!response.ok) {
@@ -533,14 +609,14 @@
                 const blob = await response.blob();
                 triggerDownload(blob, fileName);
 
-                report._status      = 'ready';
-                report._docxBytes   = blob;
+                report._status = 'ready';
+                report._docxBytes = blob;
                 report._docxFileName = fileName;
 
             } catch (e) {
                 console.error('Generate error for', report._fileName, e);
                 report._status = 'error';
-                report._error  = e.message;
+                report._error = e.message;
             }
 
             renderReportsTable();
@@ -557,7 +633,7 @@
 
     function triggerDownload(blob, fileName) {
         const url = window.URL.createObjectURL(blob);
-        const a   = document.createElement('a');
+        const a = document.createElement('a');
         a.href = url; a.download = fileName;
         document.body.appendChild(a); a.click();
         window.URL.revokeObjectURL(url);
@@ -569,14 +645,16 @@
     // ─────────────────────────────────────────────────────────────────────────
     function resetAll() {
         selectedFiles = []; parsedReports = [];
-        document.getElementById('pdfFile').value     = '';
+        document.getElementById('pdfFile').value = '';
         document.getElementById('fileChips').innerHTML = '';
-        document.getElementById('fileInfo').innerHTML  = '';
+        document.getElementById('fileInfo').innerHTML = '';
         document.getElementById('btnPreview').disabled = true;
-        document.getElementById('uploadSection').style.display   = 'block';
-        document.getElementById('previewSection').style.display  = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+        document.getElementById('previewSection').style.display = 'none';
         document.getElementById('pdfParseProgress').style.display = 'none';
-        document.getElementById('statusMessages').innerHTML       = '';
+        document.getElementById('statusMessages').innerHTML = '';
+        const ddl = document.getElementById('ddlLocationTemplate');
+        if (ddl) { ddl.value = ''; ddl.classList.remove('is-invalid'); }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -585,9 +663,9 @@
     function showError(msg) {
         const div = document.getElementById('statusMessages');
         div.innerHTML += `<div class="alert alert-danger alert-dismissible fade show mt-3">
-            <i class="bi bi-exclamation-triangle-fill"></i> ${msg}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>`;
+                <i class="bi bi-exclamation-triangle-fill"></i> ${msg}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>`;
         setTimeout(() => { const a = div.querySelector('.alert'); if (a) a.remove(); }, 5000);
     }
 </script>

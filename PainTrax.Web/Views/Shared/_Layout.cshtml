@@ -563,6 +563,14 @@
                                     </a>
                                 </li>
                             }
+                            if (CmpName.ToLower().Contains("hposm"))  // HPOSM
+                            {
+                                <li>
+                                    <a class="nav-link collapsed" asp-action="ReportGenerationFromPdf" asp-controller="Report">
+                                        <i class="bi bi-circle"></i><span>Pdf To OP Report</span>
+                                    </a>
+                                </li>
+                            }
                         }
                     }
                     <li>

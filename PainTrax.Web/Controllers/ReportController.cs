@@ -3099,6 +3099,19 @@ Rules:
         /// </summary>
         public IActionResult ReportGenerationFromPdf()
         {
+            // string? cmpid = HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+            ViewBag.LocationTemplates = new List<SelectListItem>
+{
+    new SelectListItem { Value = "Midtown_LH.docx", Text = "Midtown_LH" },
+    new SelectListItem { Value = "RBSC_LH.docx", Text = "RBSC_LH" },
+    new SelectListItem { Value = "RSCR_LH.docx", Text = "RSCR_LH" },
+    new SelectListItem { Value = "SCJC_LH.docx", Text = "SCJC_LH" },
+    new SelectListItem { Value = "Carewll_LH.docx", Text = "Carewll_LH" },
+    new SelectListItem { Value = "FASC_LH.docx", Text = "FASC_LH" },
+    new SelectListItem { Value = "FASCExt_LH.docx", Text = "FASCExt_LH" }
+};
+
+
             return View();
         }
 
