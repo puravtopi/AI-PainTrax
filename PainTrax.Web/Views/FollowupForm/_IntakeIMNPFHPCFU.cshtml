@@ -189,6 +189,7 @@
                                         </div>
 
                                     </div>
+
                                     <div class="accordion-item" id="acordDiagnosis" style="display:none">
                                         <h2 class="accordion-header" id="headingEight">
                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
@@ -491,56 +492,90 @@
                 .replace(/\bnext line\b/gi, "\n");
         }
         let selectedSections = [];
-        let selectedPESections = [];
+    let selectedPESections = [];
 
-        function fnShowPresentComplain(cntrl, divCC, divPE) {
+    function fnShowPresentComplain(cntrl, divCC, divPE) {
 
         if (!divCC) return;
 
         if ($(cntrl).is(":checked")) {
 
-            // Add in order
+            // Add complaint section
             if (!selectedSections.includes(divCC)) {
                 selectedSections.push(divCC);
             }
 
+            // Add PE section
             if (divPE && !selectedPESections.includes(divPE)) {
                 selectedPESections.push(divPE);
             }
 
         } else {
 
-            // Remove when unchecked
+            // Remove complaint section
             selectedSections = selectedSections.filter(x => x !== divCC);
+
+            // Remove PE section
             selectedPESections = selectedPESections.filter(x => x !== divPE);
 
-            // Clear values
-            $("#" + divCC).find("input").prop("checked", false).val("");
-            $("#" + divPE).find("input").prop("checked", false).val("");
+            // Hide sections
+            $("#" + divCC).hide();
+
+            if (divPE) {
+                $("#" + divPE).hide();
+            }
+
+            // Clear Complaint Section values
+            $("#" + divCC)
+                .find("input[type='text'], textarea")
+                .val("");
+
+            $("#" + divCC)
+                .find("input[type='checkbox'], input[type='radio']")
+                .prop("checked", false);
+
+            // Clear PE Section values
+            if (divPE && $("#" + divPE).length > 0) {
+
+                $("#" + divPE)
+                    .find("input[type='text'], textarea")
+                    .val("");
+
+                $("#" + divPE)
+                    .find("input[type='checkbox'], input[type='radio']")
+                    .prop("checked", false);
+            }
         }
 
         renderSectionsInOrder();
     }
 
-        function renderSectionsInOrder() {
+    function renderSectionsInOrder() {
 
-        let ccContainer = $("#presentComplaintContainer");   // create this div
-        let peContainer = $("#physicalExamContainer");       // create this div
+        let ccContainer = $("#presentComplaintContainer");
+        let peContainer = $("#physicalExamContainer");
 
+        // Clear container
         ccContainer.empty();
         peContainer.empty();
 
-        // Render CC sections in order
+        // Render Complaint Sections
         selectedSections.forEach(function (id) {
+
             let el = $("#" + id);
-            el.show();                 // ensure visible
-            ccContainer.append(el);    // append in order
+
+            el.show();
+
+            ccContainer.append(el);
         });
 
-        //Render PE sections in order
+        // Render PE Sections
         selectedPESections.forEach(function (id) {
+
             let el = $("#" + id);
+
             el.show();
+
             peContainer.append(el);
         });
     }
@@ -983,7 +1018,7 @@
                     else {
 
                         window.location.href =
-                            '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                            '@Url.Action("Create", "FollowupForm")' +
                             '?id=' + response.id +
                             '&locid=' + response.locid;
 
