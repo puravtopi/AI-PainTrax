@@ -1,4 +1,4 @@
-﻿<div id="CERVICALSPINEEXAMSection">
+﻿<div id="neckPE" style="display:none">
     <h6 class="fw-bold">CERVICAL SPINE EXAM</h6>
 
     <div class="select-group">
@@ -452,7 +452,7 @@
 </div>
 
 <br />
-<div id="THORACICSPINEEXAM Section">
+<div id="mbPE" style="display:none">
     <h6 class="fw-bold">THORACIC SPINE EXAM </h6>
 
     <div class="select-group">
@@ -606,7 +606,7 @@
 </div>
 
 <br />
-<div id="LUMBARSPINEEXAMSection">
+<div id="lbPE" style="display:none">
     <h6 class="fw-bold">LUMBAR SPINE EXAM</h6>
 
     <div class="select-group">
@@ -1050,25 +1050,28 @@
         <input id="LUMBAREXAMtxt" name="LUMBAREXAMtxt" class="form-control d-inline w-auto" style="min-width:70%;" />
         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LUMBAREXAMtxt')"></i>
     </div>
-    <div class="select-group">
-        <strong>GAIT:</strong>
+    
 
-        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Normal"> <span class="select-btn">Normal</span></label>
+</div>
+<div class="select-group">
+    <strong>GAIT:</strong>
+    <label><input type="radio" name="GAITrdo" value="Normal"> <span class="select-btn">Normal </span></label>
+    <label><input type="radio" name="GAITrdo" value="Antalgic"> <span class="select-btn">Antalgic </span></label>
+    <label><input type="radio" name="GAITrdo" value="Slow cadence"> <span class="select-btn">Slow cadence </span></label>
+    @*  <label><input type="checkbox" class="chkMulti" name="GAIT" value="Normal"> <span class="select-btn">Normal</span></label>
 
         <label><input type="checkbox" class="chkMulti" name="GAIT" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
 
-        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Slow cadence"><span class="select-btn"> Slow cadence</span></label>
-
-        <label><input type="checkbox" class="chkMulti" name="GAITOther" value="Cane"> <span class="select-btn">Cane</span></label>
-        <label><input type="checkbox" class="chkMulti" name="GAITOther" value="Walker"><span class="select-btn"> Walker</span></label>
-        <input id="GAITOthertxt" name="GAITOthertxt" class="form-control d-inline w-auto" style="min-width:50%;" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOthertxt')"></i>
-    </div>
-
-    <p>
-        Others
-        <textarea id="PEOthers" name="PEOthers" class="form-control d-inline" style="width:90%"></textarea>
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PEOthers')"></i>
-    </p>
-
+        <label><input type="checkbox" class="chkMulti" name="GAIT" value="Slow cadence"><span class="select-btn"> Slow cadence</span></label> *@
+    <label>ambulates with </label>
+    <label><input type="radio" name="GAITOther" value="Cane"> <span class="select-btn">Cane</span></label>
+    <label><input type="radio" name="GAITOther" value="Walker"><span class="select-btn"> Walker</span></label>
+    <input id="GAITOthertxt" name="GAITOthertxt" class="form-control d-inline w-auto" style="min-width:40%;" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOthertxt')"></i>
 </div>
+
+<p>
+    Others
+    <textarea id="PEOthers" name="PEOthers" class="form-control d-inline" style="width:90%"></textarea>
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PEOthers')"></i>
+</p>

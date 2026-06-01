@@ -367,8 +367,8 @@
 
         public string LUMBARAchillestendonright { get; set; }
         public string LUMBARAchillestendonleft { get; set; }
-
-        public List<string> GAIT { get; set; }
+        public string GAITrdo { get; set; }
+        public string GAITOther { get; set; }
 
         //public List<string> PlanConservativeTx { get; set; }
         public string PlanStart { get; set; }
