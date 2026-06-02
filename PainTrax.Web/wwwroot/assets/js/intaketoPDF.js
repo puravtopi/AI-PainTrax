@@ -42,7 +42,29 @@
         // });
 
         // Wait for rendering
-        await new Promise(resolve => setTimeout(resolve, 500));
+
+        $('input[type="date"]').each(function () {
+            let val = $(this).val();
+            debugger
+            if (val) {
+                let parts = val.split('-');
+                let formatted = `${parts[1]}-${parts[2]}-${parts[0]}`;
+
+                $(this).data('original-value', val);
+                $(this).attr('type', 'text');
+                $(this).val(formatted);
+            }
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        $('input[type="text"]').each(function () {
+            let original = $(this).data('original-value');
+            if (original) {
+                $(this).attr('type', 'date');
+                $(this).val(original);
+            }
+        });
 
         // Target form/div
         const element = document.getElementById('patientForm');

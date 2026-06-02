@@ -154,3 +154,24 @@ textarea.form-control.d-inline {
         transform: rotate(30deg);
         transition: 0.3s;
     }
+
+.sticky-buttons {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #fff;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#btnSaveSection {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background: #fff;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}

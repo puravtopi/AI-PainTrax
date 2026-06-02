@@ -67,6 +67,14 @@
                             Patient Injury Report
                         </h4>
                         <div class="position-relative">
+                            <p id="btnSaveSection" class="mb-0 sticky-buttons">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button"
+                                        class="btn btn-outline-primary"
+                                        onclick="saveForm(false)">
+                                    Save
+                                </button>
+                            </p>
 
                             <!-- Settings Button -->
                             <div class="position-absolute top-0 end-0 m-2">
@@ -226,10 +234,7 @@
 
 
                         </div>
-                        <p id="btnSection">
-                            <button type="submit" class="btn btn-primary mt-3  d-inline" style="width:45% !important">Submit</button>
-                            <button type="button" class="btn btn-outline-primary mt-3  d-inline" style="width:45% !important" onclick='saveForm(false)'>Save</button>
-                        </p>
+                       
                     </form>
                 </div>
                 <!-- RIGHT: PREVIEW -->
