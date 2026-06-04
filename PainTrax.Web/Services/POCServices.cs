@@ -537,7 +537,7 @@ namespace PainTrax.Web.Services
                 "tp.Requested, p1.allergies, pm.mc_details as note,tp.surgercy_center, tp.surgon_name, tp.assistent_name,sc.Surgerycenter_name, tp.Executed," +
                 "CASE WHEN pm.gender='1' THEN 'Male' WHEN pm.gender='2' THEN 'Female' WHEN pm.gender='3' THEN 'Other' ELSE '' END AS gender," +
                 "tp.Scheduled, tp.sx_center_name,ROW_NUMBER() OVER (PARTITION BY tp.ProcedureDetail_ID ORDER BY pm.id DESC) AS rn FROM tbl_Procedures_Details tp" +
-                " INNER JOIN tbl_patient_ie ie ON tp.PatientIE_ID = ie.id INNER JOIN tbl_Procedures pp ON pp.id = tp.Procedure_Master_ID INNER JOIN tbl_ie_page1 p1" +
+                " INNER JOIN tbl_patient_ie ie ON tp.PatientIE_ID = ie.id INNER JOIN tbl_Procedures pp ON pp.id = tp.Procedure_Master_ID LEFT JOIN tbl_ie_page1 p1" +
                 " ON ie.id = p1.ie_id INNER JOIN tbl_Patient pm ON pm.id = ie.Patient_ID INNER JOIN tbl_locations lc ON ie.Location_ID = lc.id" +
                 " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id LEFT JOIN tbl_surgerycenter sc ON tp.surgercy_center = sc.Id " +
                 " LEFT JOIN tbl_users u ON ie.provider_id = u.id LEFT JOIN tbl_attorneys a ON ie.attorney_id = a.Id ";

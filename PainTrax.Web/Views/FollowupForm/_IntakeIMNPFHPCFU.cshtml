@@ -1067,7 +1067,17 @@
                 });
 
 
+      $('input[name="MidbackRadiatesTo"]').change(function () {
+        $('#chkNoRadiate').prop('checked', false);
+    });
 
+
+
+            $('#chkNoRadiate').change(function () {
+        if ($(this).is(':checked')) {
+            $('input[name="MidbackRadiatesTo"]').prop('checked', false);
+        }
+    });
 
            
             $(document).on('change', 'input[name="Complaints"]', function () {

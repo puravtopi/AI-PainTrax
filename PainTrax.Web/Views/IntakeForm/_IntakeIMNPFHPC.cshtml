@@ -495,7 +495,7 @@
                                                     <h6 class="fw-bold">Neck</h6>
                                                     <div class="select-group">
                                                         Pain:
-                                                        <input id="NeckPain" class="form-control d-inline" style="width:30px" />
+                                                        <input id="NeckPain" class="form-control d-inline" style="width:60px" />
                                                         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckPain')"></i>/10
 
                                                         <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
@@ -560,7 +560,7 @@
                                                     <h6 class="fw-bold">Midback</h6>
                                                     <div class="select-group">
                                                         Pain:
-                                                        <input id="MidbackSection" class="form-control d-inline" style="width:30px" />
+                                                        <input id="MidbackSection" class="form-control d-inline" style="width:60px" />
                                                         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MidbackSection')"></i>/10
 
                                                         <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
@@ -587,7 +587,7 @@
                                                         <label><input type="radio" name="MidbackRadiatesTo" value="Left"> <span class="select-btn">L</span></label>
                                                         <label><input type="radio" name="MidbackRadiatesTo" value="Right"> <span class="select-btn">R</span></label>
 
-                                                        <label><input type="checkbox" class="chkMulti" name="MidbackRadiates" value="doesn’t radiate"><span class="select-btn"> doesn’t radiate</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" id="chkNoRadiate" name="MidbackRadiates" value="doesn’t radiate"><span class="select-btn"> doesn’t radiate</span></label>
 
                                                     </div>
                                                     <div class="select-group">
@@ -621,7 +621,7 @@
                                                     <h6 class="fw-bold">LowBack</h6>
                                                     <div class="select-group">
                                                         Pain:
-                                                        <input id="LowBackPain" class="form-control d-inline" style="width:30px" />
+                                                        <input id="LowBackPain" class="form-control d-inline" style="width:60px" />
                                                         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LowBackPain')"></i>/10
 
                                                         <label><input type="checkbox" class="chkMulti" name="lbackPain" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
@@ -2992,6 +2992,17 @@
 
                     $('#BodyPart').val(result);
             });
+                        $('input[name="MidbackRadiatesTo"]').change(function () {
+        $('#chkNoRadiate').prop('checked', false);
+    });
+
+
+
+            $('#chkNoRadiate').change(function () {
+        if ($(this).is(':checked')) {
+            $('input[name="MidbackRadiatesTo"]').prop('checked', false);
+        }
+    });
 
             $('#DOB').on('change', function () {
                 var dob = $(this).val(); // format: yyyy-mm-dd
