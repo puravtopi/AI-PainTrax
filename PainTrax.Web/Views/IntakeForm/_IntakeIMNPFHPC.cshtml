@@ -77,11 +77,22 @@
                         <div class="d-flex justify-content-end align-items-start gap-2">
 
                             <p id="btnSaveSection" class="mb-0 sticky-buttons">
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        onclick="window.location.href='@Url.Action("GetProvider", "Home")'">
+                                    <i class="bi bi-house-door-fill"></i> Home
+                                </button>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                                 <button type="button"
                                         class="btn btn-outline-primary"
                                         onclick="saveForm(false)">
                                     Save
+                                </button>
+                                <button type="button"
+                                        class="btn btn-outline-primary"
+                                             @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                             onclick="DownloadPdf('@ViewBag.Id')">
+                                    Super Bill
                                 </button>
                             </p>
 
@@ -228,8 +239,9 @@
                                                 <label><input type="radio" name="IsWorking" value="The patient stopped working immediately after accident."> <span class="select-btn">No</span></label>
                                                 <span id="divWorking" style="display:none">
                                                     &nbsp;&nbsp;
-                                                    <input type="radio" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span>
-                                                    <input type="radio" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span>
+                                                     <label><input type="radio" id="PartTime" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span></label>
+                                                     <label><input type="radio" id="FullTime" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span></label>
+
                                                 </span>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
@@ -253,10 +265,6 @@
                                                 <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
                                             </div>
 
-
-
-
-
                                             <div class="select-group">
                                                 Asymptomatic prior to accident:
                                                 <label><input type="radio" name="Asymptomatic" value="Yes"> <span class="select-btn">Y</span></label>
@@ -270,14 +278,14 @@
                                                 History of prior trauma:
                                                 <label><input type="radio" name="Priortrauma" value="Yes"> <span class="select-btn">Y</span></label>
                                                 <label><input type="radio" name="Priortrauma" value="No"> <span class="select-btn">N</span></label>
-                                                <span id="divPriortrauma" style="display:none">
-                                                    <input type="text" id="OtherPriortrauma" name="OtherPriortrauma" class="form-control d-inline w-auto" />
+                                                <span id="divPriortrauma" style="display:none;width:40%">
+                                                    <input type="text" id="OtherPriortrauma" name="OtherPriortrauma" class="form-control d-inline" style="width:95%" />
 
                                                     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherPriortrauma')"></i>
                                                 </span>
 
                                             </div>
-                                            <div class="select-group">
+                                            <div class="select-group" >
                                                 Accident Type
                                                 <label><input type="radio" name="PatientAType" value="Driver"><span class="select-btn"> Driver</span></label>
                                                 <label><input type="radio" name="PatientAType" value="Front Pass"><span class="select-btn"> Front Pass</span></label>
@@ -296,7 +304,7 @@
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Driverside"> <span class="select-btn">Driver side</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="PatientAccidentType" value="Passside"> <span class="select-btn">Pass side</span></label>
 
-                                                <input type="text" id="OtherCollision" name="OtherCollision" class="form-control d-inline w-auto" />
+                                                <input type="text" id="OtherCollision" name="OtherCollision" class="form-control d-inline" style="width:80%" />
 
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherCollision')"></i>
                                             </div>
@@ -412,10 +420,10 @@
                                                     Allergies:
                                                     <label><input type="radio" name="Allergy" value="No"> <span class="select-btn">No</span></label>
                                                     <label><input type="radio" name="Allergy" value="Yes"> <span class="select-btn">Yes</span></label>
-                                                    <span id="divAllergy" style="display:none">
+                                                    <span id="divAllergy" style="display:none;width:40%">
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         What Allergy:
-                                                        <input id="AllergyReaction" class="form-control d-inline w-25" />
+                                                        <input id="AllergyReaction" class="form-control d-inline" style="width:95%" />
                                                         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i>
                                                     </span>
                                                 </div>
@@ -521,21 +529,20 @@
                                                     </div>
                                                     <div class="select-group">
                                                         Neck pain worsened with
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="sitting"> <span class="select-btn">sitting</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="standing"> <span class="select-btn">standing</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="lying down"> <span class="select-btn">lying down</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value=" movement activities">  <span class="select-btn">movement activities</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="going from seating to standing up"> <span class="select-btn">going from seating to standing up</span></label>
-                                                    </div>
-                                                    <div class="select-group">
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="walking"> <span class="select-btn">walking</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="climbing stairs">  <span class="select-btn">climbing stairs</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="descending stairs"> <span class="select-btn">descending stairs</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="cervical flexion"> <span class="select-btn">cervical flexion</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="cervical extension"> <span class="select-btn">cervical extension</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="using right hand"> <span class="select-btn">using right hand</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="using left hand">  <span class="select-btn">using left hand</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="bilateral rotation"> <span class="select-btn">bilateral rotation</span></label>
+
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="left lateral rotation"> <span class="select-btn">left lateral rotation</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="right lateral rotation">  <span class="select-btn">right lateral rotation</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="exercise"> <span class="select-btn">exercise</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="driving"> <span class="select-btn">driving</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="working"> <span class="select-btn">working</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="bending"> <span class="select-btn">bending</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="lifting"> <span class="select-btn">lifting</span></label>
-                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="twisting"> <span class="select-btn">twisting</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="housework"> <span class="select-btn">housework</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="looking up"> <span class="select-btn">looking up</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckWorsens" value="looking down"> <span class="select-btn">looking down</span></label>
+
                                                     </div>
                                                     <div class="select-group">
                                                         Neck pain improved with
@@ -956,20 +963,14 @@
                                                                 <td>
 
                                                                     <label>
-                                                                        90
+                                                                        45
                                                                     </label>
                                                                 </td>
 
                                                                 <td>
 
                                                                     <label>
-                                                                        30
-                                                                    </label>
-                                                                </td>
-                                                                <td>
-
-                                                                    <label>
-                                                                        80
+                                                                        45
                                                                     </label>
                                                                 </td>
                                                                 <td>
@@ -981,13 +982,19 @@
                                                                 <td>
 
                                                                     <label>
-                                                                        25
+                                                                        80
                                                                     </label>
                                                                 </td>
                                                                 <td>
 
                                                                     <label>
-                                                                        25
+                                                                        45
+                                                                    </label>
+                                                                </td>
+                                                                <td>
+
+                                                                    <label>
+                                                                        45
                                                                     </label>
                                                                 </td>
 
@@ -1402,38 +1409,38 @@
                                                                 <td>
 
                                                                     <label>
-                                                                        45
+                                                                        90
                                                                     </label>
                                                                 </td>
 
                                                                 <td>
 
                                                                     <label>
-                                                                        45
+                                                                        30
                                                                     </label>
                                                                 </td>
                                                                 <td>
 
                                                                     <label>
-                                                                        45
+                                                                        80
                                                                     </label>
                                                                 </td>
                                                                 <td>
 
                                                                     <label>
-                                                                        45
+                                                                        80
                                                                     </label>
                                                                 </td>
                                                                 <td>
 
                                                                     <label>
-                                                                        40
+                                                                        25
                                                                     </label>
                                                                 </td>
                                                                 <td>
 
                                                                     <label>
-                                                                        40
+                                                                        25
                                                                     </label>
                                                                 </td>
 
@@ -3676,7 +3683,48 @@
 
         return date;
     }
+    function DownloadPdf(id) {
+       $('#pdfLoader').show();
+         var downloadurl = '@Url.Action("GeneratePdf", "IntakeForm")';
+                 downloadurl = downloadurl + '?pdffile=' + 'superbill.pdf' + '&id=' + id ;
+                 fetch(downloadurl)
+                     .then(response => {
+                         if (!response.ok) {
+                             throw new Error(`HTTP error! Status: ${response.status}`);
+                         }
+                           const disposition = response.headers.get('Content-Disposition');
+                                 let fileName = 'Superbill.pdf';
+                                  console.log(disposition);
+                                  debugger
+                                    if (disposition) {
+                                     const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                                     if (utf8Match) {
+                                             fileName = decodeURIComponent(utf8Match[1]);
+                                         } else {
+                                             const match = disposition.match(/filename="?([^";]+)"?/i);
+                                             if (match) {
+                                                 fileName = match[1];
+                                             }
+                                         }
+                                     }
 
+                                 return response.blob().then(blob => ({
+                                         blob,
+                                         fileName
+                                  }));
+                     })
+                   .then(({ blob, fileName }) => {
+                         var link = document.createElement('a');
+                         link.href = window.URL.createObjectURL(blob);
+                         link.download = fileName ;
+                         link.click();
+                           $('#pdfLoader').hide();
+                     })
+                     .catch(error => {
+                         console.error('Error downloading Pdf file:', error);
+                     });
+
+             }
 </script>
 <!-- html2pdf library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

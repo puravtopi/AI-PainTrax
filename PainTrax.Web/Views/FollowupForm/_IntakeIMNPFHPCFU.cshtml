@@ -78,7 +78,13 @@
                         </h4>
                         <div class="d-flex justify-content-end align-items-start gap-2">
 
-                            <p id="btnSaveSection" class="mb-0">
+                            <p id="btnSaveSection" class="mb-0 sticky-buttons">
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        onclick="window.location.href='@Url.Action("GetProvider", "Home")'">
+                                    <i class="bi bi-house-door-fill"></i> Home
+                                </button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
                                 <button type="button"
                                         class="btn btn-outline-primary"
                                         onclick="saveForm(false)">
@@ -227,11 +233,6 @@
 
                             </div>
                         </div>
-
-                        <p id="btnSection">
-                            <button type="submit" class="btn btn-primary mt-3  d-inline" style="width:45% !important">Submit</button>
-                            @* <button type="button" class="btn btn-outline-primary mt-3  d-inline" style="width:45% !important" onclick='saveForm(false)'>Save</button> *@
-                        </p>
 
                     </form>
                 </div>

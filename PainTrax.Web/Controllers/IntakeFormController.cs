@@ -12,6 +12,7 @@ using MS.Models;
 using MS.Services;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.Sec;
+using PainTrax.Services;
 using PainTrax.Web.AzureServices;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
@@ -1305,7 +1306,7 @@ namespace PainTrax.Web.Controllers
             var model = service.GetInitialIntakeByLocationId(locid, cmpid.Value);
             return PartialView("_TodayVisitList", model);
         }
-         
+
 
 
         #region private method
@@ -1818,6 +1819,63 @@ namespace PainTrax.Web.Controllers
                 return cc_rsh + "<br/>" + cc_lsh + "<br/>" + cc_rkn + "<br/>" + cc_lkn;
             }
         }
+
+        [HttpGet]
+        public IActionResult GeneratePdf(string id, string pdffile = "")
+        {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+            Dictionary<string, string> controls = new Dictionary<string, string>();
+            ParentService _parentService = new ParentService();
+
+            byte[] pdfBytes = null;
+            DataTable dt = _parentService.GetData("select * from vm_patient_ie where intakeid=" + id);
+            if (dt.Rows.Count > 0)
+            {
+                PdfHelper _pdfhelper = new PdfHelper();
+                string outputfilename = "";
+                var uploadsFolder = "";
+                var filePath = "";
+                var signPath = "";
+
+                try
+                {
+                    uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Downloads/" + cmpclientid);
+                    filePath = Path.Combine(uploadsFolder, pdffile);
+
+                    //  signPath = Path.Combine(Directory.GetCurrentDirectory(), "signatures");
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "set Paths");
+                }
+
+
+                try
+                {
+                    pdfBytes = _pdfhelper.Stamping(filePath, "Id", dt.Rows[0]["patient_id"].ToString(), controls, cmpid, signPath);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "Pdf Stamping");
+                }
+                string fileName = $"Superbill.pdf";
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                string destfilePath = Path.Combine(folder, fileName);
+
+                System.IO.File.WriteAllBytes(destfilePath, pdfBytes);
+
+            }
+
+            return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
+        }
+
         #endregion
     }
 }
