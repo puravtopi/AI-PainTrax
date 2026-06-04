@@ -110,14 +110,14 @@
                                             </a>
                                         </li>
 
-                                        @* <li><hr class="dropdown-divider"></li>
-
                                         <li>
-                                            <a class="dropdown-item text-danger" href="/logout">
-                                                <i class="bi bi-box-arrow-right me-2"></i>
-                                                Logout
+                                            <a class="dropdown-item"
+                                               href="javascript:void(0)"
+                                               onclick="fnAddFU()">
+                                                <i class="bi bi-file-earmark-text me-2"></i>
+                                                Add Followup
                                             </a>
-                                        </li> *@
+                                        </li>
 
                                     </ul>
                                 </div>
@@ -191,7 +191,7 @@
                                     <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
 
-                                            <ol> <div class="row" id="divDiagnosis"></div></ol>
+                                            <ol> <div class="row" id="divDiagnosis" name="divDiagnosis"></div></ol>
                                             @Html.Raw(ViewBag.Diagnosis)
                                             <br>
                                             <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
@@ -1525,7 +1525,10 @@
     function toggleSection(condition, selector) {
         $(selector).toggle(condition);
     }
-
+    function fnAddFU()
+    {
+         window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val();
+    }
 </script>
 
 <!-- html2pdf library -->

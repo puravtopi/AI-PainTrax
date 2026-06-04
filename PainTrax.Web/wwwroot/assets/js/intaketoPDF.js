@@ -44,27 +44,22 @@
         // Wait for rendering
 
         $('input[type="date"]').each(function () {
-            let val = $(this).val();
-            debugger
-            if (val) {
-                let parts = val.split('-');
-                let formatted = `${parts[1]}-${parts[2]}-${parts[0]}`;
+            const originalValue = $(this).val();
 
-                $(this).data('original-value', val);
+            if (originalValue) {
+                const parts = originalValue.split('-');
+                const formattedDate = `${parts[1]}-${parts[2]}-${parts[0]}`;
+
+                $(this).data('original-date', originalValue);
+                $(this).data('original-type', 'date');
+
                 $(this).attr('type', 'text');
-                $(this).val(formatted);
+                $(this).val(formattedDate);
             }
         });
 
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        $('input[type="text"]').each(function () {
-            let original = $(this).data('original-value');
-            if (original) {
-                $(this).attr('type', 'date');
-                $(this).val(original);
-            }
-        });
 
         // Target form/div
         const element = document.getElementById('patientForm');
@@ -94,6 +89,16 @@
 
         // Generate PDF
         await html2pdf().set(opt).from(element).save();
+
+        $('input[data-original-date]').each(function () {
+            const originalDate = $(this).data('original-date');
+
+            $(this).attr('type', 'date');
+            $(this).val(originalDate);
+
+            $(this).removeData('original-date');
+            $(this).removeData('original-type');
+        });
 
         // Restore accordion state
         $('.accordion-collapse').each(function (index) {
