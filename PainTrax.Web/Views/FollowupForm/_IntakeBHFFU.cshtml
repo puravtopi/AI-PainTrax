@@ -803,6 +803,19 @@
             }
 
                 function saveForm(isSubmit) {
+
+                     let isValid = true;
+
+                        $(this).find("[required]").each(function () {
+                            if ($.trim($(this).val()) === "") {
+                                isValid = false;
+                            }
+                        });
+
+                        if (!isValid) {
+                           return; // Stop form submission
+                        }
+
                     $('#pdfLoader').show();
                     try{
         // Assign form values

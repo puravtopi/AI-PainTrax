@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
 using Optivem.Framework.Core.Domain;
+using PainTrax.Services;
 using PainTrax.Web.AzureServices;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
@@ -123,7 +124,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeBHFFU");
+            else return PartialView("_IntakeIMNPFHPCFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -379,6 +380,97 @@ namespace PainTrax.Web.Controllers
                 //return RedirectToAction("Index", "Visit");
             }
             return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId });
+        }
+
+        public IActionResult GeneratePdf(string id, string pdffile = "")
+        {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+            Dictionary<string, string> controls = new Dictionary<string, string>();
+
+            ParentService _parentService = new ParentService();
+
+            byte[] pdfBytes = null;
+            DataTable dt = _parentService.GetData("select * from vm_patient_fu where intakeid=" + id);
+            if (dt.Rows.Count > 0)
+            {
+                PdfHelper _pdfhelper = new PdfHelper();
+                string outputfilename = "";
+                var uploadsFolder = "";
+                var filePath = "";
+                var signPath = "";
+                controls.Add("chk_fu", "Yes");
+                try
+                {
+                    DataTable dtdos = _parentService.GetData("select doe from tbl_patient_fu  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
+                    if (dtdos.Rows.Count > 0)
+                    {
+                        controls.Add("txt_dos", DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MM/dd/yyyy"));
+                    }
+                }
+                catch { }
+
+
+                try
+                {
+                    DataTable dtbodypart = _parentService.GetData("select bodypart from tbl_fu_page1  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
+                    if (dtbodypart.Rows.Count > 0)
+                    {
+                        string bodypart = dtbodypart.Rows[0]["bodypart"].ToString().ToLower();
+                        string[] bodyparts = bodypart.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                        .Select(x => x.Trim())
+                                                        .ToArray();
+                        foreach (string data in bodyparts)
+                        {
+                            controls.Add(data, "Yes");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+
+
+                try
+                {
+                    uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Downloads/" + cmpclientid);
+                    filePath = Path.Combine(uploadsFolder, pdffile);
+
+                    //  signPath = Path.Combine(Directory.GetCurrentDirectory(), "signatures");
+                }
+                catch (Exception ex)
+                {
+                    //SaveLog(ex, "set Paths");
+                }
+
+
+                try
+                {
+                    pdfBytes = _pdfhelper.Stamping(filePath, "Id", dt.Rows[0]["patient_id"].ToString(), controls, cmpid, signPath);
+                }
+                catch (Exception ex)
+                {
+                    //SaveLog(ex, "Pdf Stamping");
+                }
+                string fileName = $"Superbill.pdf";
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                string destfilePath = Path.Combine(folder, fileName);
+
+                System.IO.File.WriteAllBytes(destfilePath, pdfBytes);
+
+                //string htmlContent = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "demo.html"));
+                // ViewBag.FileName = dt.Rows[0]["LastName"].ToString() + " " + dt.Rows[0]["FirstName"].ToString();
+
+
+            }
+
+            return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
         }
     }
 }

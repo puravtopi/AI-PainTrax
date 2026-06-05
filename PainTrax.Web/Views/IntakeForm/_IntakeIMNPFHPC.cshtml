@@ -90,8 +90,8 @@
                                 </button>
                                 <button type="button"
                                         class="btn btn-outline-primary"
-                                             @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                             onclick="DownloadPdf('@ViewBag.Id')">
+                                        @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                        onclick="DownloadPdf('@ViewBag.Id')">
                                     Super Bill
                                 </button>
                             </p>
@@ -239,8 +239,8 @@
                                                 <label><input type="radio" name="IsWorking" value="The patient stopped working immediately after accident."> <span class="select-btn">No</span></label>
                                                 <span id="divWorking" style="display:none">
                                                     &nbsp;&nbsp;
-                                                     <label><input type="radio" id="PartTime" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span></label>
-                                                     <label><input type="radio" id="FullTime" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span></label>
+                                                    <label><input type="radio" id="PartTime" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span></label>
+                                                    <label><input type="radio" id="FullTime" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span></label>
 
                                                 </span>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -285,7 +285,7 @@
                                                 </span>
 
                                             </div>
-                                            <div class="select-group" >
+                                            <div class="select-group">
                                                 Accident Type
                                                 <label><input type="radio" name="PatientAType" value="Driver"><span class="select-btn"> Driver</span></label>
                                                 <label><input type="radio" name="PatientAType" value="Front Pass"><span class="select-btn"> Front Pass</span></label>
@@ -1907,22 +1907,21 @@
 
 
                                                 </div>
+
                                                 <div class="select-group">
                                                     <strong>GAIT:</strong>
-                                                    <div class="select-group">
-                                                        <strong>GAIT:</strong>
-                                                        <label><input type="radio" name="GAITrdo" value="Normal"> <span class="select-btn">Normal </span></label>
-                                                        <label><input type="radio" name="GAITrdo" value="Antalgic"> <span class="select-btn">Antalgic </span></label>
-                                                        <label><input type="radio" name="GAITrdo" value="Slow cadence"> <span class="select-btn">Slow cadence </span></label>
+                                                    <label><input type="radio" name="GAITrdo" value="Normal"> <span class="select-btn">Normal </span></label>
+                                                    <label><input type="radio" name="GAITrdo" value="Antalgic"> <span class="select-btn">Antalgic </span></label>
+                                                    <label><input type="radio" name="GAITrdo" value="Slow cadence"> <span class="select-btn">Slow cadence </span></label>
 
-                                                        <label>ambulates with </label>
-                                                        <label><input type="radio" name="GAITOther" value="Cane"> <span class="select-btn">Cane</span></label>
-                                                        <label><input type="radio" name="GAITOther" value="Walker"><span class="select-btn"> Walker</span></label>
-                                                        <input id="GAITOthertxt" name="GAITOthertxt" class="form-control d-inline w-auto" style="min-width:40%;" />
-                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOthertxt')"></i>
-                                                    </div>
-
+                                                    <label>ambulates with </label>
+                                                    <label><input type="radio" name="GAITOther" value="Cane"> <span class="select-btn">Cane</span></label>
+                                                    <label><input type="radio" name="GAITOther" value="Walker"><span class="select-btn"> Walker</span></label>
+                                                    <input id="GAITOthertxt" name="GAITOthertxt" class="form-control d-inline w-auto" style="min-width:40%;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOthertxt')"></i>
                                                 </div>
+
+
 
                                                 <p>
                                                     Others

@@ -9,6 +9,12 @@
     Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
 }
 
+<style>
+    .error {
+        border: 2px solid red !important;
+    }
+</style>
+
 <link href="~/assets/css/intakesheet.css" rel="stylesheet" />
 <main id="main" class="main" style="margin-left:0px!important">
 
@@ -18,13 +24,13 @@
             <div class="row">
                 <!-- LEFT: FORM -->
                 <div class="col-md-12 col-12" id="formSection" name="formSection">
-                   
+
                     <button id="uploadDL"
                             class="btn btn-sm btn-outline-primary mt-3" onclick="fnshowDLPopup()" style="display:none;">
                         Upload Driving License
                     </button>
                     <!-- Loader -->
-              
+
 
                     <div id="pdfLoader" style="
     display:none;
@@ -100,7 +106,7 @@
                                         <li>
                                             <a class="dropdown-item" onclick="fnshowPatientList()" href="javascript:void(0)">
                                                 <i class="bi bi-calendar-check me-2"></i>
-                                                Today's Visit 
+                                                Today's Visit
                                             </a>
                                         </li>
 
@@ -125,7 +131,7 @@
                             </div>
 
                         </div>
-                        <br/>
+                        <br />
                         <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white">
                             <b><i>*Note: Please do not use single quot(') in any fields.</i></b>
 
@@ -239,7 +245,7 @@
 
 
                         </div>
-                       
+
                     </form>
                 </div>
                 <!-- RIGHT: PREVIEW -->
@@ -374,7 +380,6 @@
             </div>
 
             <div class="modal-body" id="patientlistContainer">
-               
             </div>
 
             <div class="modal-footer">
@@ -426,7 +431,7 @@
 
             }
         });
-      
+
     }
 
     function calculateBMI()
@@ -805,8 +810,24 @@
             }
 
                 function saveForm(isSubmit) {
+
+
+                       let isValid = true;
+
+                        $(this).find("[required]").each(function () {
+                            if ($.trim($(this).val()) === "") {
+                                isValid = false;
+                            }
+                        });
+
+                        if (!isValid) {
+                           return; // Stop form submission
+                        }
+
+
+
                     $('#pdfLoader').show();
-                    try{ 
+                    try{
         // Assign form values
         formData["Diagnosis"] = $("#divDiagnosis").html();
         formData["TreatmentIds"] = $("#TreatmentIds").val();
