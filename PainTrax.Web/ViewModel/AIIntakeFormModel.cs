@@ -167,6 +167,7 @@
 
         // Saranya
         public string Occupation { get; set; }
+        public string CCText { get; set; }
         public string YesWork { get; set; }
         public string degree { get; set; }
         public string Asymptomatic { get; set; }
