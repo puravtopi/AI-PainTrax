@@ -137,6 +137,7 @@
         public string SymptomOnset { get; set; }
         public string ChiroDuration { get; set; }
         public string LShSleepIssue { get; set; }
+        public string txtAlcohol { get; set; }
         public string OtherDrugsTxt { get; set; }
         public string SymptomsStart { get; set; }
         public bool TreatmentPlan { get; set; }

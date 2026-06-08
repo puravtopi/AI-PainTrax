@@ -1057,6 +1057,10 @@
                     if (val.toLowerCase() === 'd') {
                         $(this).val('Decreased');
                     }
+                     // If starts with N or n
+                    if (val.toLowerCase() === 'n') {
+                        $(this).val('Normal');
+                    }
             });
         $(document).ready(function () {
             // Load template and initialize preview
