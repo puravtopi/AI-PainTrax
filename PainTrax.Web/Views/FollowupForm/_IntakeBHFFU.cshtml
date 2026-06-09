@@ -240,7 +240,7 @@
 
 
                         </div>
-                        
+
                     </form>
                 </div>
                 <!-- RIGHT: PREVIEW -->
@@ -1088,6 +1088,20 @@
 
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
+                    if($("#hdId").val()=="0"){
+                       
+                            $('#divRecommendation')
+                            .find('input:text, textarea')
+                            .val('');
+
+                            $('#divRecommendation')
+                                .find('input:checkbox, input:radio')
+                                .prop('checked', false);
+
+                            $('#divRecommendation')
+                                .find('select')
+                                .prop('selectedIndex', 0);
+                    }
                     //updatePreview();
                 }, 1000);
             }

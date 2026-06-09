@@ -92,4 +92,14 @@
         public string Vac_Status { get; set; }
         public string Vac_Note { get; set; }
     }
+
+    public class ProcedureDetailsIntakeVM
+    {
+        public int? PatientIEID { get; set; }
+        public int? PatientFuID { get; set; }
+        public int? Cmp_Id { get; set; }
+        public string? MCode { get; set; }
+        public DateTime? Date { get; set; }
+        public bool IsExecuted { get; set; }
+    }
 }

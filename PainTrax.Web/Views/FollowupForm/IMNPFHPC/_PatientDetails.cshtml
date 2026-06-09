@@ -234,8 +234,9 @@
             type: 'GET',
             success: function (res) {
                 debugger
-                console.log("Result: "+res);
-                bindForm(res);
+                $("#divDiagnosis").html(res.diagnosis);
+                console.log("Result: "+res.diagnosis);
+                bindForm(res.formData);
             }
         });
     });

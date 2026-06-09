@@ -1008,8 +1008,8 @@
                             callback: function (result) {
                                 if (result) {
                                        $('#patientForm')[0].reset();
-                                       // var today = new Date().toISOString().split('T')[0];
-                                       // $('#DOE').val(today);
+                                       var today = new Date().toISOString().split('T')[0];
+                                       $('#DOE').val(today);
                                        $('#bodyPartLinks').text('');
                                        $('#divDiagnosis').html('');
                                        $('#pdfLoader').hide();
@@ -1066,7 +1066,7 @@
             // Load template and initialize preview
             var today = new Date().toISOString().split('T')[0];
             $('#DOE').val(today);
-            loadTemplate();
+            //loadTemplate();
             if ('@ViewBag.FormData' != '') {
                 bindForm('@ViewBag.FormData');
             }
@@ -1218,6 +1218,23 @@
 
             setTimeout(function () {
                 $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
+               if($("#hdId").val()=="0"){
+
+                    var today = new Date().toISOString().split('T')[0];
+                                       $('#DOE').val(today);
+
+                            $('#divRecommendation')
+                            .find('input:text, textarea')
+                            .val('');
+
+                            $('#divRecommendation')
+                                .find('input:checkbox, input:radio')
+                                .prop('checked', false);
+
+                            $('#divRecommendation')
+                                .find('select')
+                                .prop('selectedIndex', 0);
+                    }
                 updatePreview();
             }, 1000);
         }

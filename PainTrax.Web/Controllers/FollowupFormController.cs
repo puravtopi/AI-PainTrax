@@ -16,6 +16,7 @@ using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Data;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
@@ -35,6 +36,9 @@ namespace PainTrax.Web.Controllers
         private readonly TreatmentMasterService _treatmentService = new TreatmentMasterService();
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientFUService _fuservices = new PatientFUService();
+        private readonly FUPage1Service _fuPage1services = new FUPage1Service();
+        private readonly FUOtherService _fuOtherService = new FUOtherService();
+        private readonly POCServices _pocservices = new POCServices();
         private readonly Common _commonservices = new Common();
         #endregion
 
@@ -129,10 +133,6 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult Create(FollowupForm model)
         {
-
-
-
-
             return RedirectToAction("Create", "FollowupForm");
         }
 
@@ -296,7 +296,16 @@ namespace PainTrax.Web.Controllers
             if (data == null || string.IsNullOrEmpty(data.FormData))
                 return Json(new { });
 
-            return Content(data.FormData, "application/json");
+            var formData = string.IsNullOrEmpty(data.FormData)
+       ? null
+       : System.Text.Json.JsonSerializer.Deserialize<object>(data.FormData);
+
+            return Json(new
+            {
+                data.Id,
+                data.Diagnosis,
+                FormData = formData
+            });
 
         }
 
@@ -362,6 +371,73 @@ namespace PainTrax.Web.Controllers
                     };
 
                     var newFU = _fuservices.Insert(objFU);
+
+                    if (newFU > 0)
+                    {
+                        var objPage1 = new tbl_fu_page1()
+                        {
+                            pmh = string.Join(", ", model.PMH),
+                            psh = string.Join(", ", model.PSH),
+                            bodypart = string.Join(",", model.Complaints),
+                            allergies = "",
+                            assessment = model.Diagnosis,
+                            fu_id = newFU,
+                            vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.",
+                            cc = this.GetCC(model)
+
+                        };
+
+                        _fuPage1services.Insert(objPage1);
+
+                        var objOther = new tbl_fu_other()
+                        {
+                            fu_id = newFU,
+                            treatment_delimit = model.TreatmentIds,
+                            treatment_delimit_desc = model.TreatmentDelimitDesc,
+                            treatment_details = model.TreatmentDesc
+                        };
+                        _fuOtherService.Insert(objOther);
+
+                        using JsonDocument doc = JsonDocument.Parse(json);
+
+                        string[] planUTPI = doc.RootElement
+                                               .GetProperty("PlanUTPI")
+                                               .EnumerateArray()
+                                               .Select(x => x.GetString())
+                                               .ToArray();
+                        foreach (string data in planUTPI)
+                        {
+                            var _obj = new ProcedureDetailsIntakeVM()
+                            {
+                                PatientIEID = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
+                                MCode = data,
+                                PatientFuID = newFU,
+                                Cmp_Id = cmpid.Value,
+                                Date = DateTime.TryParse(model.DOE, out var pDOE) ? pDOE : (DateTime?)null,
+                                IsExecuted = true
+                            };
+                            _pocservices.SaveProcedureDetailsIntake(_obj);
+                        }
+
+                        string[] recommendation = doc.RootElement
+                                               .GetProperty("Recommendation")
+                                               .EnumerateArray()
+                                               .Select(x => x.GetString())
+                                               .ToArray();
+                        foreach (string data in recommendation)
+                        {
+                            var _obj = new ProcedureDetailsIntakeVM()
+                            {
+                                PatientIEID = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
+                                MCode = data,
+                                PatientFuID = newFU,
+                                Cmp_Id = cmpid.Value,
+                                Date = DateTime.TryParse(model.DOE, out var pDOE) ? pDOE : (DateTime?)null,
+                                IsExecuted = false
+                            };
+                            _pocservices.SaveProcedureDetailsIntake(_obj);
+                        }
+                    }
                 }
                 else
                 {
@@ -382,13 +458,121 @@ namespace PainTrax.Web.Controllers
             return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId });
         }
 
+        private string GetCC(AIIntakeFormModel model)
+        {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            if (cmpid == "21")
+            {
+                return "";
+            }
+            else
+            {
+                string cc_rsh = "", cc_rsh_difficulty = "", cc_rsh_imporve = "",
+                    cc_lsh = "", cc_lsh_difficulty = "", cc_lsh_imporve = "",
+                      cc_lkn = "", cc_lkn_difficulty = "", cc_lkn_imporve = "",
+                       cc_rkn = "", cc_rkn_difficulty = "", cc_rkn_imporve = "";
+
+                //right soulder
+                if (!string.IsNullOrEmpty(model.RShPain))
+                    cc_rsh = "The patient’s right shoulder pain level is " + model.RShPain + "/10. ";
+                if (model.RShSymptoms?.Count > 0)
+                    cc_rsh = cc_rsh + "The patient complains of " + string.Join(", ", model.RShSymptoms) + ". ";
+
+                if (model.RShReachOverhead?.ToLower() == "yes")
+                    cc_rsh_difficulty = "Overhead";
+                if (model.RShReachBack?.ToLower() == "yes")
+                    cc_rsh_difficulty = cc_rsh_difficulty + ", Back";
+                if (model.RShSleepIssue?.ToLower() == "yes")
+                    cc_rsh_difficulty = cc_rsh_difficulty + ", Sleeping";
+
+                if (!string.IsNullOrEmpty(cc_rsh_difficulty))
+                    cc_rsh = cc_rsh + "The patient has difficulty " + cc_rsh_difficulty + " on the right shoulder. ";
+
+                if (model.RShImprove?.Count > 0)
+                    cc_rsh = cc_rsh + "There has been improvement with " + string.Join(", ", model.RShImprove) + ".";
+                else
+                    cc_rsh = cc_rsh + "There has been no improvement with physical therapy.";
+
+                //left soulder
+                if (!string.IsNullOrEmpty(model.LShPain))
+                    cc_lsh = "The patient’s left shoulder pain level is " + model.LShPain + "/10. ";
+                if (model.LShSymptoms?.Count > 0)
+                    cc_lsh = cc_lsh + "The patient complains of " + string.Join(", ", model.LShSymptoms) + ". ";
+
+
+                if (model.LShReachOverhead?.ToLower() == "yes")
+                    cc_lsh_difficulty = "Overhead";
+                if (model.LShReachBack?.ToLower() == "yes")
+                    cc_lsh_difficulty = cc_lsh_difficulty + ", Back";
+                if (model.LShSleepIssue?.ToLower() == "yes")
+                    cc_lsh_difficulty = cc_lsh_difficulty + ", Sleeping";
+                if (!string.IsNullOrEmpty(cc_lsh_difficulty))
+                    cc_lsh = cc_lsh + "The patient has difficulty " + cc_lsh_difficulty + " on the left shoulder. ";
+
+                if (model.LShImprove?.Count > 0)
+                    cc_lsh = cc_lsh + "There has been improvement with " + string.Join(", ", model.LShImprove) + ".";
+                else
+                    cc_lsh = cc_lsh + "There has been no improvement with physical therapy.";
+
+                //right knee
+                if (!string.IsNullOrEmpty(model.RKnPain))
+                    cc_rkn = "The patient’s right knee pain level is " + model.RKnPain + "/10. ";
+                if (model.RKnSymptoms?.Count > 0)
+                    cc_rkn = cc_rkn + "The patient complains of " + string.Join(", ", model.RKnSymptoms) + ". ";
+
+
+                if (model.RKnReachOverhead?.ToLower() == "yes")
+                    cc_rkn_difficulty = "Overhead";
+                if (model.RKnReachBack?.ToLower() == "yes")
+                    cc_rkn_difficulty = cc_rkn_difficulty + ", Back";
+                if (model.RKnSleepIssue?.ToLower() == "yes")
+                    cc_rkn_difficulty = cc_rkn_difficulty + ", Sleeping";
+
+                if (!string.IsNullOrEmpty(cc_rkn_difficulty))
+                    cc_rkn = cc_rkn + "The patient has difficulty " + cc_rkn_difficulty.TrimStart(',') + " on the right knee. ";
+
+                if (model.RKnImprove?.Count > 0)
+                    cc_rkn = cc_rkn + "There has been improvement with " + string.Join(", ", model.RKnImprove) + ".";
+                else
+                    cc_rkn = cc_rkn + "There has been no improvement with physical therapy.";
+
+                //left knee
+                if (!string.IsNullOrEmpty(model.LKnPain))
+                    cc_lkn = "The patient’s left knee pain level is " + model.LKnPain + "/10. ";
+                if (model.LKnSymptoms?.Count > 0)
+                    cc_lkn = cc_lkn + "The patient complains of " + string.Join(", ", model.LKnSymptoms) + ". ";
+
+
+                if (model.LKnReachOverhead?.ToLower() == "yes")
+                    cc_lkn_difficulty = "Overhead";
+                if (model.LKnReachBack?.ToLower() == "yes")
+                    cc_lkn_difficulty = cc_lkn_difficulty + ", Back";
+                if (model.LKnSleepIssue?.ToLower() == "yes")
+                    cc_lkn_difficulty = cc_lkn_difficulty + ", Sleeping";
+
+                if (!string.IsNullOrEmpty(cc_lkn_difficulty))
+                    cc_lkn = cc_lkn + "The patient has difficulty " + cc_lkn_difficulty.TrimStart(',') + " on the left knee. ";
+
+                if (model.LKnImprove?.Count > 0)
+                    cc_lkn = cc_lkn + "There has been improvement with " + string.Join(", ", model.LKnImprove) + ".";
+                else
+                    cc_lkn = cc_lkn + "There has been no improvement with physical therapy.";
+
+                return cc_rsh + "<br/>" + cc_lsh + "<br/>" + cc_rkn + "<br/>" + cc_lkn;
+            }
+        }
+
+        [HttpGet]
         public IActionResult GeneratePdf(string id, string pdffile = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
             Dictionary<string, string> controls = new Dictionary<string, string>();
 
+
+
             ParentService _parentService = new ParentService();
+
 
             byte[] pdfBytes = null;
             DataTable dt = _parentService.GetData("select * from vm_patient_fu where intakeid=" + id);
@@ -396,16 +580,18 @@ namespace PainTrax.Web.Controllers
             {
                 PdfHelper _pdfhelper = new PdfHelper();
                 string outputfilename = "";
+                string fu_id = "";
                 var uploadsFolder = "";
                 var filePath = "";
                 var signPath = "";
                 controls.Add("chk_fu", "Yes");
                 try
                 {
-                    DataTable dtdos = _parentService.GetData("select doe from tbl_patient_fu  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
+                    DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_fu  where intakeid=" + id);
                     if (dtdos.Rows.Count > 0)
                     {
                         controls.Add("txt_dos", DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MM/dd/yyyy"));
+                        fu_id = dtdos.Rows[0]["id"].ToString();
                     }
                 }
                 catch { }
@@ -413,7 +599,7 @@ namespace PainTrax.Web.Controllers
 
                 try
                 {
-                    DataTable dtbodypart = _parentService.GetData("select bodypart from tbl_fu_page1  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
+                    DataTable dtbodypart = _parentService.GetData("select bodypart from tbl_fu_page1  where fu_id=" + fu_id);
                     if (dtbodypart.Rows.Count > 0)
                     {
                         string bodypart = dtbodypart.Rows[0]["bodypart"].ToString().ToLower();
@@ -428,6 +614,34 @@ namespace PainTrax.Web.Controllers
                 }
                 catch (Exception ex)
                 {
+                }
+
+                try
+                {
+                    DataTable dtplan = _parentService.GetData("select FormData from tbl_intake_ai  where id=" + id);
+                    if (dtplan.Rows.Count > 0)
+                    {
+                        string jsonString = dtplan.Rows[0]["FormData"].ToString().ToLower(); ;
+
+                        using JsonDocument doc = JsonDocument.Parse(jsonString);
+
+                        string[] planUTPI = doc.RootElement
+                                               .GetProperty("planutpi")
+                                               .EnumerateArray()
+                                               .Select(x => x.GetString())
+                                               .ToArray();
+                        foreach (string data in planUTPI)
+                        {
+                            if (data.Trim() != "")
+                                if (!controls.ContainsKey("utpi"))
+                                    controls.Add("utpi", "Yes");
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
                 }
 
 

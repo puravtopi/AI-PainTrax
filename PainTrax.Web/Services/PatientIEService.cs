@@ -427,6 +427,22 @@ poc_assesment=@poc_assesment
         return result;
     }
 
+    public int UpdatePage1Intake(tbl_ie_page1 data)
+    {
+        MySqlCommand cm = new MySqlCommand(@"update tbl_ie_page1 set
+		
+        bodypart=@bodypart
+        where ie_id=(SELECT ie.id FROM tbl_patient_ie ie WHERE ie.IntakeId=@id )
+				 ;select 1;", conn);
+        
+        cm.Parameters.AddWithValue("@id", data.id);
+        cm.Parameters.AddWithValue("@bodypart", data.bodypart);
+        
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+
+
     public tbl_ie_page1? GetOnePage1(int id)
     {
         DataTable dt = new DataTable();

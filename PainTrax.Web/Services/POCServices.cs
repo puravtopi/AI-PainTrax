@@ -303,6 +303,24 @@ namespace PainTrax.Web.Services
             return data;
         }
 
+        public string SaveProcedureDetailsIntake(ProcedureDetailsIntakeVM model)
+        {
+            List<MySqlParameter> param = new List<MySqlParameter>();
+
+            param.Add(new MySqlParameter("v_Mcode", model.MCode));
+
+            param.Add(new MySqlParameter("v_PatientFuID", model.PatientFuID));
+            param.Add(new MySqlParameter("v_PatientIEID", model.PatientIEID));
+            param.Add(new MySqlParameter("v_DATE", model.Date));
+            param.Add(new MySqlParameter("v_Is_Executed", model.IsExecuted));
+
+            param.Add(new MySqlParameter("v_CmpId", model.Cmp_Id));
+
+            var data = ExecuteSP(CommonSp.SavePatientProceduresDetailsIntake, param);
+
+            return data;
+        }
+
         public ProcedureDetailsVM? GetProcedureDetails(int ProcedurrDetail_ID)
         {
             try
@@ -425,7 +443,7 @@ namespace PainTrax.Web.Services
             try
             {
 
-                string query = "SELECT *,p.Executed as PDate FROM tbl_procedures_details p WHERE p.Executed IS NOT NULL AND p.PatientIE_ID=" + PatientIEID+ " order by p.Executed desc";
+                string query = "SELECT *,p.Executed as PDate FROM tbl_procedures_details p WHERE p.Executed IS NOT NULL AND p.PatientIE_ID=" + PatientIEID + " order by p.Executed desc";
 
                 if (PatientFUID != 0)
                     query = "SELECT *,p.Executed as PDate FROM tbl_procedures_details p WHERE p.Executed IS NOT NULL AND p.PatientFU_ID=" + PatientFUID + " order by p.Executed desc";

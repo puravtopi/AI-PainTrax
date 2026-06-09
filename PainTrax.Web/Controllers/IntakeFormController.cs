@@ -21,6 +21,7 @@ using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Data;
 using System.Diagnostics.Metrics;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -35,6 +36,7 @@ namespace PainTrax.Web.Controllers
         private readonly IntakeService service = new IntakeService();
         private readonly LocationsService _locservices = new LocationsService();
         private readonly ProviderService _povservices = new ProviderService();
+        private readonly POCServices _pocservices = new POCServices();
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientService _patientservices = new PatientService();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
@@ -912,7 +914,17 @@ namespace PainTrax.Web.Controllers
         public IActionResult SaveForm([FromBody] object formData)
         {
             var json = System.Text.Json.JsonSerializer.Serialize(formData);
-            var model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
+            var model = new AIIntakeFormModel();
+            try
+            {
+                model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Path: {ex.Path}");
+                Console.WriteLine(ex.Message);
+            }
+
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var result = "0";
             if (model != null)
@@ -954,6 +966,9 @@ namespace PainTrax.Web.Controllers
                 {
                     if (result != "0")
                     {
+
+
+
 
                         tbl_patient objPatient = new tbl_patient()
                         {
@@ -1024,6 +1039,46 @@ namespace PainTrax.Web.Controllers
                                 };
 
                                 _ieService.InsertOtherPage(objOther);
+
+                                using JsonDocument doc = JsonDocument.Parse(json);
+
+                                string[] planUTPI = doc.RootElement
+                                                       .GetProperty("PlanUTPI")
+                                                       .EnumerateArray()
+                                                       .Select(x => x.GetString())
+                                                       .ToArray();
+                                foreach (string data in planUTPI)
+                                {
+                                    var _obj = new ProcedureDetailsIntakeVM()
+                                    {
+                                        PatientIEID = ie,
+                                        MCode = data,
+                                        PatientFuID = null,
+                                        Cmp_Id = cmpid.Value,
+                                        Date = DateTime.TryParse(model.DOE, out var pDOE) ? pDOE : (DateTime?)null,
+                                        IsExecuted = true
+                                    };
+                                    _pocservices.SaveProcedureDetailsIntake(_obj);
+                                }
+
+                                string[] recommendation = doc.RootElement
+                                                       .GetProperty("Recommendation")
+                                                       .EnumerateArray()
+                                                       .Select(x => x.GetString())
+                                                       .ToArray();
+                                foreach (string data in recommendation)
+                                {
+                                    var _obj = new ProcedureDetailsIntakeVM()
+                                    {
+                                        PatientIEID = ie,
+                                        MCode = data,
+                                        PatientFuID = null,
+                                        Cmp_Id = cmpid.Value,
+                                        Date = DateTime.TryParse(model.DOE, out var pDOE) ? pDOE : (DateTime?)null,
+                                        IsExecuted = false
+                                    };
+                                    _pocservices.SaveProcedureDetailsIntake(_obj);
+                                }
                             }
                         }
                     }
@@ -1032,13 +1087,22 @@ namespace PainTrax.Web.Controllers
                 {
                     var objIE = new tbl_patient_ie()
                     {
-
                         doa = string.IsNullOrEmpty(model.DOA) ? null : Convert.ToDateTime(model.DOA),
                         doe = string.IsNullOrEmpty(model.DOE) ? null : Convert.ToDateTime(model.DOE),
                         compensation = InjuryType,
                         intakeid = initialIntakeAI.Id
                     };
                     _ieService.UpdateFromIntake(objIE);
+
+                    var objPage1 = new tbl_ie_page1()
+                    {
+
+                        bodypart = string.Join(",", model.Complaints),
+                        id = initialIntakeAI.Id
+
+                    };
+
+                    _ieService.UpdatePage1Intake(objPage1);
                 }
 
                 //return RedirectToAction("Index", "Visit");
@@ -1875,13 +1939,17 @@ namespace PainTrax.Web.Controllers
 
         //    return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
         //}
+        [HttpGet]
         public IActionResult GeneratePdf(string id, string pdffile = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
             Dictionary<string, string> controls = new Dictionary<string, string>();
 
+
+
             ParentService _parentService = new ParentService();
+
 
             byte[] pdfBytes = null;
             DataTable dt = _parentService.GetData("select * from vm_patient_ie where intakeid=" + id);
@@ -1889,16 +1957,18 @@ namespace PainTrax.Web.Controllers
             {
                 PdfHelper _pdfhelper = new PdfHelper();
                 string outputfilename = "";
+                string ie_id = "";
                 var uploadsFolder = "";
                 var filePath = "";
                 var signPath = "";
                 controls.Add("chk_ie", "Yes");
                 try
                 {
-                    DataTable dtdos = _parentService.GetData("select doe from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
+                    DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
                     if (dtdos.Rows.Count > 0)
                     {
                         controls.Add("txt_dos", DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MM/dd/yyyy"));
+                        ie_id = dtdos.Rows[0]["id"].ToString();
                     }
                 }
                 catch { }
@@ -1906,7 +1976,7 @@ namespace PainTrax.Web.Controllers
 
                 try
                 {
-                    DataTable dtbodypart = _parentService.GetData("select bodypart from tbl_ie_page1  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
+                    DataTable dtbodypart = _parentService.GetData("select bodypart from tbl_ie_page1  where ie_id=" + ie_id);
                     if (dtbodypart.Rows.Count > 0)
                     {
                         string bodypart = dtbodypart.Rows[0]["bodypart"].ToString().ToLower();
@@ -1921,6 +1991,34 @@ namespace PainTrax.Web.Controllers
                 }
                 catch (Exception ex)
                 {
+                }
+
+                try
+                {
+                    DataTable dtplan = _parentService.GetData("select FormData from tbl_intake_ai  where id=" + id);
+                    if (dtplan.Rows.Count > 0)
+                    {
+                        string jsonString = dtplan.Rows[0]["FormData"].ToString().ToLower(); ;
+
+                        using JsonDocument doc = JsonDocument.Parse(jsonString);
+
+                        string[] planUTPI = doc.RootElement
+                                               .GetProperty("planutpi")
+                                               .EnumerateArray()
+                                               .Select(x => x.GetString())
+                                               .ToArray();
+                        foreach (string data in planUTPI)
+                        {
+                            if (data.Trim() != "")
+                                if (!controls.ContainsKey("utpi"))
+                                    controls.Add("utpi", "Yes");
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
                 }
 
 

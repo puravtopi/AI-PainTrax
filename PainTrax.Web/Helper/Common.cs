@@ -1027,6 +1027,7 @@ namespace PainTrax.Web.Helper
         public const string GetAllProceduress = "sp_GetAllProceduress";
         public const string SavePatientProceduresDetails = "sp_SavePatientProceduresDetails";
         public const string SavePatientProceduresDetailsBHF = "sp_SavePatientProceduresDetailsBHF";
+        public const string SavePatientProceduresDetailsIntake = "sp_SavePatientProceduredIntake";
         #endregion
     }
 
