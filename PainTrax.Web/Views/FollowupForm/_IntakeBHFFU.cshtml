@@ -192,8 +192,8 @@
                                     <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
 
-                                            <ol> <div class="row" id="divDiagnosis"></div></ol>
-                                            @Html.Raw(ViewBag.Diagnosis)
+                                            <ol> <div class="row" id="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
+                                            
                                             <br>
                                             <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
                                             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>

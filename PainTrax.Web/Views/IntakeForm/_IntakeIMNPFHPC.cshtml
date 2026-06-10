@@ -88,7 +88,7 @@
                                         onclick="saveForm(false)">
                                     Save
                                 </button>
-                                <button type="button"
+                                <button type="button" id="btnSuperBill"
                                         class="btn btn-outline-primary"
                                         @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
                                         onclick="DownloadPdf('@ViewBag.Id')">
@@ -1220,12 +1220,12 @@
                                                         <label><input type="radio" name="CevicalSpurling" value="positive"> <span class="select-btn">positive</span></label>
                                                         &nbsp;&nbsp;&nbsp;
 
-                                                        <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingRight" value="right"> <span class="select-btn">right </span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingTest" value="right"> <span class="select-btn">right </span></label>
                                                         <input id="CERVICALRighttxt" class="form-control d-inline " style="width:100px" />
-                                                        <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingRight" value="left"> <span class="select-btn">Left </span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingTest" value="left"> <span class="select-btn">Left </span></label>
                                                         <input id="CERVICALLefttxt" class="form-control d-inline " style="width:100px" />
                                                         <label>degrees</label>
-                                                        <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingRight" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingTest" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                         @* <input id="CERVICALbilateraltxt" class="form-control d-inline " style="width:100px" /> *@
                                                        
 
@@ -1244,10 +1244,10 @@
 
                                                         <label><input type="radio" name="CevicalCompression" value="positive"> <span class="select-btn">positive</span></label>
                                                         &nbsp;&nbsp;&nbsp;
-                                                        <label><input type="radio" name="CevicalCompressionRight" value="right"> <span class="select-btn">right</span> </label>
+                                                        <label><input type="radio" name="CevicalCompressionTest" value="right"> <span class="select-btn">right</span> </label>
 
-                                                        <label><input type="radio" name="CevicalCompressionRight" value="left"> <span class="select-btn">left </span></label>
-                                                        <label><input type="radio" name="CevicalCompressionRight" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
+                                                        <label><input type="radio" name="CevicalCompressionTest" value="left"> <span class="select-btn">left </span></label>
+                                                        <label><input type="radio" name="CevicalCompressionTest" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
 
 
                                                     </div>
@@ -1822,12 +1822,12 @@
                                                         <label><input type="radio" name="LumbarStraight" value="positive"><span class="select-btn"> positive</span></label>
                                                         &nbsp;&nbsp;&nbsp;
 
-                                                        <label><input type="checkbox" class="chkMulti" name="LumbarStraightRight" value="right"> <span class="select-btn">right </span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="LumbarStraightTest" value="right"> <span class="select-btn">right </span></label>
                                                         <input id="LumbarStraightRighttxt" class="form-control d-inline " style="width:100px" />
-                                                        <label><input type="checkbox" class="chkMulti" name="LumbarStraightRight" value="left"> <span class="select-btn">Left </span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="LumbarStraightTest" value="left"> <span class="select-btn">Left </span></label>
                                                         <input id="LumbarStraightLefttxt" class="form-control d-inline " style="width:100px" />
                                                         <label>degrees</label>
-                                                        <label><input type="checkbox" class="chkMulti" name="LumbarStraightRight" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="LumbarStraightTest" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                        @*  <input id="LumbarStraightbilateraltxt" class="form-control d-inline " style="width:100px" /> *@
                                                         
 
@@ -1846,10 +1846,10 @@
 
                                                         <label><input type="radio" name="LumbarFacetloading" value="positive"> <span class="select-btn">positive</span></label>
                                                         &nbsp;&nbsp;&nbsp;
-                                                        <label><input type="radio" name="LumbarFacetloadingRight" value="right"><span class="select-btn"> right </span></label>
+                                                        <label><input type="radio" name="LumbarFacetloadingTest" value="right"><span class="select-btn"> right </span></label>
 
-                                                        <label><input type="radio" name="LumbarFacetloadingRight" value="left"> <span class="select-btn">left </span></label>
-                                                        <label><input type="radio" name="LumbarFacetloadingRight" value="bilaterally"><span class="select-btn"> bilaterally </span></label>
+                                                        <label><input type="radio" name="LumbarFacetloadingTest" value="left"> <span class="select-btn">left </span></label>
+                                                        <label><input type="radio" name="LumbarFacetloadingTest" value="bilaterally"><span class="select-btn"> bilaterally </span></label>
 
 
                                                     </div>
@@ -1948,8 +1948,8 @@
                                         <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
 
-                                                <ol> <div class="row" id="divDiagnosis"></div></ol>
-                                                @Html.Raw(ViewBag.Diagnosis)
+                                                <ol> <div class="row" id="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
+                                                
                                                 <p>
                                                     Others
                                                     <textarea id="DiagnosisOthers" name="DiagnosisOthers" class="form-control d-inline" style="width:90%"></textarea>
@@ -2477,7 +2477,32 @@
 
             $(this).hide();
         });
+            $('input[name="CevicalCompression"]').on('change', function () {
+                debugger
+                if ($(this).val() === 'negative') {
+                    $('input[name="CevicalCompressionTest"]').prop('checked', false);
+                }
+             });
+             $('input[name="CevicalSpurling"]').on('change', function () {
+                debugger
+                if ($(this).val() === 'negative') {
+                    $('input[name="CevicalSpurlingTest"]').prop('checked', false);
+                }
+             });
+             $('input[name="LumbarStraight"]').on('change', function () {
+                debugger
+                if ($(this).val() === 'negative') {
+                    $('input[name="LumbarStraightTest"]').prop('checked', false);
+                }
+             });
+             $('input[name="LumbarFacetloading"]').on('change', function () {
+                debugger
+                if ($(this).val() === 'negative') {
+                    $('input[name="LumbarFacetloadingTest"]').prop('checked', false);
+                }
+             });
 
+             
 
         function loadTemplate() {
             // Try loading a DOCX template first; fall back to plain text.
@@ -2612,7 +2637,7 @@
         });
 
         function processTemplate(data) {
-            debugger;
+            ;
             let html = $('#previewText').html();
 
             // Replace placeholders
@@ -2882,6 +2907,7 @@
                                        $('#divDiagnosis').html('');
                                        $('#pdfLoader').hide();
                                        selected.length = 0;
+                                        $("#btnSuperBill").prop("disabled", true);
                                 }
                                 else {
                                      window.location.href = indexurl;
@@ -2951,7 +2977,7 @@
 
 
             $(document).on('change', 'input[name="Complaints"]', function () {
-                debugger
+                
                 var section = $(this).data('section');
                 var pe = $(this).data('pe');
 
@@ -3219,7 +3245,7 @@
 
                     contentType: "application/x-www-form-urlencoded",
                     success: function (data, status, xhr) {
-                        debugger
+                        
                         $('#modelDaignoCode').html(data);
                     },
                     error: function (xhr, status, error) {
@@ -3359,7 +3385,7 @@
     }
 
     function fnAddFU()
-    {
+    {   
          window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val();
     }
 
@@ -3720,7 +3746,7 @@
                            const disposition = response.headers.get('Content-Disposition');
                                  let fileName = 'Superbill.pdf';
                                   console.log(disposition);
-                                  debugger
+                                  
                                     if (disposition) {
                                      const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
                                      if (utf8Match) {
@@ -3750,6 +3776,8 @@
                      });
 
              }
+
+            
 </script>
 <!-- html2pdf library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

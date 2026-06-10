@@ -234,6 +234,8 @@
             type: 'GET',
             success: function (res) {
                 debugger
+                selected=[];
+                $('#bodyPartLinks').text('');
                 $("#divDiagnosis").html(res.diagnosis);
                 console.log("Result: "+res.diagnosis);
                 bindForm(res.formData);
