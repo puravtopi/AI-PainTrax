@@ -40,6 +40,7 @@ namespace PainTrax.Web.Controllers
         private readonly FUOtherService _fuOtherService = new FUOtherService();
         private readonly POCServices _pocservices = new POCServices();
         private readonly Common _commonservices = new Common();
+        private readonly UserService _userService = new UserService();
         #endregion
 
 
@@ -60,8 +61,20 @@ namespace PainTrax.Web.Controllers
         {
             return View();
         }
-        public IActionResult Create(int? locId, int? id)
+        public IActionResult Create(int? locId, int? id, int? providerId)
         {
+            if (providerId == null)
+            {
+                if (HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value == null)
+                {
+                    //providerId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
+                    providerId = Convert.ToInt32(HttpContext.Session.GetString("ProviderId") ?? "0");
+                }
+                else
+                {
+                    providerId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
+                }
+            }
             var templatePath = $"{Request.Scheme}://{Request.Host}/v2/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
             //var templatePath = $"{Request.Scheme}://{Request.Host}/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
             ViewBag.TemplateURL = templatePath + "/report-template.txt";
@@ -99,6 +112,21 @@ namespace PainTrax.Web.Controllers
             }
             ViewBag.locList = lst;
             ViewBag.CmpId = cmpid.ToString();
+            var providers = _userService.GetProviders(cmpid.Value);
+            List<SelectListItem> lstp = new List<SelectListItem>();
+            //int providerid = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
+            foreach (var item in providers)
+            {
+                var obj = new SelectListItem()
+                {
+                    Text = item.Text,
+                    Value = item.Value,
+                    Selected = item.Value == providerId.ToString() ? true : false
+                };
+                lstp.Add(obj);
+
+            }
+            ViewBag.providerList = lstp;
 
             var _dataTreatment = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
             ViewBag.Treatment = _dataTreatment;

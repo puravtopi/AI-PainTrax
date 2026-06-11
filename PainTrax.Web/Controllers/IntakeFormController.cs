@@ -45,6 +45,7 @@ namespace PainTrax.Web.Controllers
         private readonly DiagcodesService _diagcodesService = new DiagcodesService();
         private readonly TreatmentMasterService _treatmentService = new TreatmentMasterService();
         private readonly ILogger<IntakeFormController> _logger;
+        private readonly UserService _userService = new UserService();
         #endregion
 
         public IntakeFormController(
@@ -727,9 +728,21 @@ namespace PainTrax.Web.Controllers
 
             return RedirectToAction("Index", "Visit");
         }
-
-        public IActionResult AIInitialIntake(int? locId, int? id, string providerName)
-        {
+        
+        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId)
+        { 
+            if (providerId == null)
+            {
+                if (HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value == null)
+                {
+                    //providerId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
+                    providerId = Convert.ToInt32(HttpContext.Session.GetString("ProviderId") ?? "0");
+                }
+                else
+                {
+                    providerId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
+                }
+            }
             var templatePath = $"{Request.Scheme}://{Request.Host}/v2/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
             //var templatePath = $"{Request.Scheme}://{Request.Host}/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
             ViewBag.TemplateURL = templatePath + "/report-template.txt";
@@ -765,7 +778,25 @@ namespace PainTrax.Web.Controllers
 
             }
             ViewBag.locList = lst;
-            ViewBag.ProviderName = providerName == "--Select Provider--" ? "" : providerName;
+            var providers = _userService.GetProviders(cmpid.Value);
+            List<SelectListItem> lstp = new List<SelectListItem>();
+            //int providerid = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
+            foreach (var item in providers)
+            {
+                var obj = new SelectListItem()
+                {
+                    Text = item.Text,
+                    Value = item.Value,
+                    Selected = item.Value == providerId.ToString() ? true : false
+                };
+                lstp.Add(obj);
+
+            }
+            ViewBag.providerList = lstp;
+
+
+
+            //ViewBag.ProviderName = providerName == "--Select Provider--" ? "" : providerName;
 
 
             ViewBag.CmpId = cmpid.ToString();

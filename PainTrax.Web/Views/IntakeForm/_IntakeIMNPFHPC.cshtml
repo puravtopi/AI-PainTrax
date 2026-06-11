@@ -1,10 +1,13 @@
 ﻿<link href="~/assets/img/favicon.png" rel="icon">
 <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+@using PainTrax.Web.Helper
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 @{
     Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
+    var userDesignation = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation);
 }
 
 
@@ -154,7 +157,11 @@
                                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <br />
-                                            <h6>Provider Name:  @ViewBag.ProviderName</h6>
+                                            <h6>Provider Name:  
+                                                <select id="providerid" name="providerid" asp-items="@ViewBag.providerList" class="form-select d-inline w-auto" style="width:230px !important">
+                                                    
+                                                </select>
+                                            </h6>
                                             <!-- Patient Info -->
                                             <div class="select-group">
                                                 Patient LName:
@@ -187,7 +194,7 @@
                                             </div>
 
                                             <div class="select-group">
-                                                DOE
+                                                DOS
                                                 <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
                                                 &nbsp;&nbsp;
                                                 DOB:
@@ -506,6 +513,7 @@
                                                         <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="Diff turning"> <span class="select-btn">Diff turning</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="rotating head"> <span class="select-btn">rotating head</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="Diff gripping hand"> <span class="select-btn">Diff gripping hand</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="Sustained improvement with PT"> <span class="select-btn">Sustained improvement with PT</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="NeckStiffness" value="No sustained improvement with PT"> <span class="select-btn">No sustained improvement with PT</span></label>
 
 
@@ -571,6 +579,7 @@
                                                         <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Diff sleeping"> <span class="select-btn">Diff sleeping</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Diff lifting"> <span class="select-btn">Diff lifting</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Diff bending"> <span class="select-btn">Diff bending</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Sustained improvement with PT"> <span class="select-btn">Sustained improvement with PT</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="No sustained improvement with PT"> <span class="select-btn">No sustained improvement with PT</span></label>
 
                                                         @*  Diff sleeping:
@@ -633,6 +642,7 @@
                                                         <label><input type="checkbox" class="chkMulti" name="lbackPain" value="Diff sleeping"><span class="select-btn"> Diff sleeping</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="lbackPain" value="Diff lifting"> <span class="select-btn">Diff lifting</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="lbackPain" value="Diff bending"> <span class="select-btn">Diff bending</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="lbackPain" value="Sustained improvement with PT"> <span class="select-btn">Sustained improvement with PT</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="lbackPain" value="No sustained improvement with PT"> <span class="select-btn">No sustained improvement with PT</span></label>
 
 
@@ -2942,20 +2952,43 @@
     }
 
     }
+        // Expand shortcuts
+    $(document).on('input', '.muscle-input', function () {
+        let val = $(this).val().trim().toLowerCase();
 
-            $(document).on('input', '.muscle-input', function () {
+        if (val === 'd') {
+            $(this).val('Decreased');
+        } else if (val === 'n') {
+            $(this).val('Normal');
+        }
+    });
 
-                    let val = $(this).val();
+    // Clear whole word on Backspace/Delete
+    $(document).on('keydown', '.muscle-input', function (e) {
+        if (e.key === 'Backspace' || e.key === 'Delete') {
 
-                    // If starts with D or d
-                    if (val.toLowerCase() === 'd') {
-                        $(this).val('Decreased');
-                    }
-                    // If starts with N or n
-                    if (val.toLowerCase() === 'n') {
-                        $(this).val('Normal');
-                    }
-            });
+            let val = $(this).val();
+
+            if (val === 'Decreased' || val === 'Normal') {
+                e.preventDefault(); // stop normal character deletion
+                $(this).val('');    // clear entire word
+            }
+        }
+    });
+
+            // $(document).on('input', '.muscle-input', function () {
+
+            //         let val = $(this).val();
+
+            //         // If starts with D or d
+            //         if (val.toLowerCase() === 'd') {
+            //             $(this).val('Decreased');
+            //         }
+            //         // If starts with N or n
+            //         if (val.toLowerCase() === 'n') {
+            //             $(this).val('Normal');
+            //         }
+            // });
         $(document).ready(function () {
             // Load template and initialize preview
             var today = new Date().toISOString().split('T')[0];

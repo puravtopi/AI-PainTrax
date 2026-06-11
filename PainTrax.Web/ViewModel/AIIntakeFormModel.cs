@@ -33,6 +33,7 @@
         public string LN { get; set; }
         public string Age { get; set; }
         public string LocationId { get; set; }
+        public string providerid { get; set; }
         public string DOA { get; set; }
         public string DOB { get; set; }
         public string DOE { get; set; }

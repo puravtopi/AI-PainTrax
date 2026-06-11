@@ -11,7 +11,11 @@
 </style>
 
 
-<h6>Provider Name:  @ViewBag.ProviderName</h6>
+<h6>
+    Provider Name:
+    <select id="providerid" name="providerid" asp-items="@ViewBag.providerList" class="form-select d-inline w-auto" style="width:230px !important">
+    </select>
+</h6>
 <!-- Patient Info -->
 <div class="select-group">
 
@@ -58,7 +62,7 @@
 
 
 <div class="select-group">
-    DOE
+    DOS
     <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
     &nbsp;&nbsp;
     DOB:

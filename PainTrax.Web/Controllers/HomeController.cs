@@ -339,7 +339,12 @@ namespace PainTrax.Web.Controllers
             }
             return View(login);
         }
-
+        [HttpPost]
+        public IActionResult SaveProviderSession(int providerId)
+        {
+            HttpContext.Session.SetString("ProviderId", providerId.ToString());
+            return Json(new { success = true });
+        }
         public IActionResult AdminLogin()
         {
             ViewBag.Success = true;

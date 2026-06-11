@@ -128,6 +128,14 @@
                                             Export as PDF
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="javascript:void(0)"
+                                           onclick="fnAddIE()">
+                                            <i class="bi bi-file-earmark-text me-2"></i>
+                                            Add Initial
+                                        </a>
+                                    </li>
 
                                 </ul>
                             </div>
@@ -1074,20 +1082,42 @@
     }
 
     }
+    // Expand shortcuts
+    $(document).on('input', '.muscle-input', function () {
+        let val = $(this).val().trim().toLowerCase();
 
-            $(document).on('input', '.muscle-input', function () {
+        if (val === 'd') {
+            $(this).val('Decreased');
+        } else if (val === 'n') {
+            $(this).val('Normal');
+        }
+    });
 
-                    let val = $(this).val();
+    // Clear whole word on Backspace/Delete
+    $(document).on('keydown', '.muscle-input', function (e) {
+        if (e.key === 'Backspace' || e.key === 'Delete') {
 
-                    // If starts with D or d
-                    if (val.toLowerCase() === 'd') {
-                        $(this).val('Decreased');
-                    }
-                     // If starts with N or n
-                    if (val.toLowerCase() === 'n') {
-                        $(this).val('Normal');
-                    }
-            });
+            let val = $(this).val();
+
+            if (val === 'Decreased' || val === 'Normal') {
+                e.preventDefault(); // stop normal character deletion
+                $(this).val('');    // clear entire word
+            }
+        }
+    });
+            // $(document).on('input', '.muscle-input', function () {
+
+            //         let val = $(this).val();
+
+            //         // If starts with D or d
+            //         if (val.toLowerCase() === 'd') {
+            //             $(this).val('Decreased');
+            //         }
+            //          // If starts with N or n
+            //         if (val.toLowerCase() === 'n') {
+            //             $(this).val('Normal');
+            //         }
+            // });
         $(document).ready(function () {
             // Load template and initialize preview
             var today = new Date().toISOString().split('T')[0];
@@ -1523,6 +1553,11 @@
         $("#DOE").val() +
         "_IE_InjuryIntake.pdf";
         downloadPDF(fileName);
+    }
+    function fnAddIE()
+    {
+    // window.location.href= '@Url.Action("AIInitialIntake", "IntakeForm")?id='+null+'&locid='+$("#LocationId").val();
+         window.location.href= '@Url.Action("AIInitialIntake", "IntakeForm")?locid=' + $("#LocationId").val();
     }
     function fnshowPatientList() {
          $.ajax({

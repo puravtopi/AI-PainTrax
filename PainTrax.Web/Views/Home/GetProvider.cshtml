@@ -98,26 +98,57 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
         $('#intakeforms').on('change', function () {
-            debugger
-        var baseUrl = $(this).val(); // AIInitialIntake URL
-        var locId = $('#locationid').val();
-        var providerName = $("#providerid option:selected").text();
 
-        if(locId==='0')
-        {
+        var baseUrl = $(this).val();
+        var locId = $('#locationid').val();
+        var providerId = $("#providerid").val();
+         var url = '@Url.Action("SaveProviderSession", "Home")';
+        if (locId === '0') {
             alert('Please select location');
             $('#intakeforms').prop('selectedIndex', 0);
-        }
-        else
-        {
-            if (baseUrl) {
-                var finalUrl = baseUrl + '?locid=' + locId+'&providerName='+ encodeURIComponent(providerName);
-                // Redirect
-                window.location.href = finalUrl;
-            }
+            return;
         }
 
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: { providerId: providerId },
+            success: function (response) {
+
+                if (response.success) {
+
+                    var finalUrl = baseUrl +
+                        '?locid=' + locId +
+                        '&providerId=' + providerId;
+
+                    window.location.href = finalUrl;
+                }
+            }
+        });
+
     });
+    //     $('#intakeforms').on('change', function () {
+    //         debugger
+    //     var baseUrl = $(this).val(); // AIInitialIntake URL
+    //     var locId = $('#locationid').val();
+    //     var providerName = $("#providerid option:selected").text();
+    //     var providerId = $("#providerid").val();
+    //     if(locId==='0')
+    //     {
+    //         alert('Please select location');
+    //         $('#intakeforms').prop('selectedIndex', 0);
+    //     }
+    //     else
+    //     {
+    //         if (baseUrl) {
+    //             // var finalUrl = baseUrl + '?locid=' + locId+'&providerName='+ encodeURIComponent(providerName);
+    //             var finalUrl = baseUrl + '?locid=' + locId+'&providerId=' + providerId;
+    //             // Redirect
+    //             window.location.href = finalUrl;
+    //         }
+    //     }
+
+    // });
 </script>
 @* <script>
     $(document).ready(function () {
