@@ -988,6 +988,13 @@
         }
     }
          function saveForm(isSubmit) {
+             var dob = $('#DOB').val();
+
+        if (!dob) {
+            alert('Please enter Date of Birth.');
+            $('#DOB').focus();
+            return false;
+        }
                     $('#pdfLoader').show();
                     try{
                         // STORE CURRENT OPEN ACCORDION
@@ -1103,6 +1110,17 @@
                 e.preventDefault(); // stop normal character deletion
                 $(this).val('');    // clear entire word
             }
+        }
+    });
+        $(document).on('change', 'input[name="GAITrdo"]', function () {
+
+        if ($(this).val() === 'Normal') {
+
+            // Clear Cane/Walker selection
+            $('input[name="GAITOther"]').prop('checked', false);
+
+            // Clear Other text
+            $('#GAITOthertxt').val('');
         }
     });
             // $(document).on('input', '.muscle-input', function () {
