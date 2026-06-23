@@ -1,0 +1,44 @@
+﻿<p>
+    Prior to the patient’s
+    <select class="form-select d-inline" style="width:200px" name="AccidentType" id="AccidentType">
+
+        <option value="work incident">accident</option>
+        <option value="work incident">work incident</option>
+
+    </select>
+    , the patient reports being able to perform normal activities.
+
+    <br />
+
+    <label><input type="radio" name="PreInjury" value="Yes"> Yes</label>
+    <label><input type="radio" name="PreInjury" value="No"> No</label>
+</p>
+<p>
+    <span id="preInjuryDetailsBox" style="display:none;">
+        <textarea id="PreInjuryDetails" class="form-control d-inline" style="width:95%" placeholder="Specify details"></textarea>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PreInjuryDetails')"></i>
+    </span>
+</p>
+
+<!-- Patient Type -->
+<p>
+    Patient reports being:
+    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bicyclist"> Bicyclist</label>
+    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Pedestrian"> Pedestrian</label>
+    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Motorcyclist"> Motorcyclist</label>
+    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Driver"> Driver</label>
+    <label><input type="checkbox" class="chkMulti" name="PatientType" value="Passenger"> Passenger</label>
+</p>
+
+<!-- Vehicle Hit -->
+<p>
+    Vehicle hit:
+    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Rear"> Rear</label>
+    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Front"> Front</label>
+    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side front/rear"> Driver-side front/rear</label>
+    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver sideswipe"> Driver sideswipe</label>
+    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side T-boned"> Driver side T-boned</label>
+    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side front/rear"> Passenger-side front/rear</label>
+    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger-side swiped"> Passenger-side swiped</label>
+    <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned"> T-boned</label>
+</p>

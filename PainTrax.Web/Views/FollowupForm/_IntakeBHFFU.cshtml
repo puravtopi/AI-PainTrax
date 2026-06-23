@@ -164,7 +164,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
+                                        <div class="accordion-body" id="divCC">
                                             <partial name="BHF/_PresentComplain" />
                                         </div>
                                     </div>
@@ -178,7 +178,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
+                                        <div class="accordion-body" id="divPE">
                                             <partial name="BHF/_PhysicalExamination" />
                                         </div>
                                     </div>
@@ -190,10 +190,10 @@
                                         </button>
                                     </h2>
                                     <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
+                                        <div class="accordion-body" id="divDiag">
 
                                             <ol> <div class="row" id="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
-                                            
+
                                             <br>
                                             <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
                                             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
@@ -207,7 +207,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
+                                        <div class="accordion-body" id="divNeuro">
                                             <partial name="BHF/_NeuroExam" />
                                         </div>
                                     </div>
@@ -219,8 +219,24 @@
                                         </button>
                                     </h2>
                                     <div id="collapseADL" class="accordion-collapse collapse" aria-labelledby="headingADL" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
+                                        <div class="accordion-body" id="divADL">
                                             <partial name="BHF/_ADL" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingNote">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNote" aria-expanded="false" aria-controls="collapseNote">
+                                            Dr Ford Notes
+                                        </button>
+                                    </h2>
+                                    <div id="collapseNote" class="accordion-collapse collapse" aria-labelledby="headingNote" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="divNote">
+                                            <p>
+
+                                                <textarea id="DrNote" name="DrNote" rows="4 " class="form-control d-inline" style="width:95%"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DrNote')"></i>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -458,7 +474,7 @@
                     json = json.replace(/^\uFEFF/, '');
                     json = json.replace(/&quot;/g, '"');
                     json = json.replace(/&#x2B;/g, '+');
-                    debugger
+                    
                     return JSON.parse(json);
                 } catch (e) {
                     console.error("Invalid JSON:", json);
@@ -1032,7 +1048,7 @@
                 form.submit();
             }
 
-            function bindForm(val) {
+            function bindForm(val,forwardSetting=null) {
                 // var cleaned = val
                 //     .replace(/&quot;/g, '"')   // decode HTML quotes
                 //     .trim();
@@ -1089,7 +1105,7 @@
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
                     if($("#hdId").val()=="0"){
-                       
+
                             $('#divRecommendation')
                             .find('input:text, textarea')
                             .val('');
@@ -1101,9 +1117,54 @@
                             $('#divRecommendation')
                                 .find('select')
                                 .prop('selectedIndex', 0);
+
+                            if(forwardSetting!=null){
+                                
+                                if(!forwardSetting.cc){
+                                    $('#divCC').find('input:text, textarea').val('');
+                                    $('#divCC').find('input:checkbox, input:radio').prop('checked', false);
+                                    $('#divCC').find('select').prop('selectedIndex', 0);
+                                }
+                                if(!forwardSetting.pe){
+                                    $('#divPE').find('input:text, textarea').val('');
+                                    $('#divPE').find('input:checkbox, input:radio').prop('checked', false);
+                                    $('#divPE').find('select').prop('selectedIndex', 0);
+                                }
+                                if(!forwardSetting.diagnosis){
+                                    $('#divDiag').find('input:text, textarea').val('');
+                                    $('#divDiag').find('input:checkbox, input:radio').prop('checked', false);
+                                    $('#divDiag').find('select').prop('selectedIndex', 0);
+                                    $('#divDiagnosis').html('');
+                                }
+                                if(!forwardSetting.neroexam){
+                                    $('#divNeuro').find('input:text, textarea').val('');
+                                    $('#divNeuro').find('input:checkbox, input:radio').prop('checked', false);
+                                    $('#divNeuro').find('select').prop('selectedIndex', 0);
+
+                                    $('#tblRE input[type="text"]').each(function() {
+                                         $(this).val('2+');
+                                    });
+                                    $('#tblSE input[type="text"]').each(function() {
+                                         $(this).val('Normal');
+                                    });
+                                    $('#tblME input[type="text"]').each(function() {
+                                         $(this).val('5');
+                                    });
+                                }
+                                if(!forwardSetting.adl){
+                                    $('#divADL').find('input:text, textarea').val('');
+                                    $('#divADL').find('input:checkbox, input:radio').prop('checked', false);
+                                    $('#divADL').find('select').prop('selectedIndex', 0);
+                                }
+                                if(forwardSetting.note){
+                                    $('#divNote').find('input:text, textarea').val('');
+                                    $('#divNote').find('input:checkbox, input:radio').prop('checked', false);
+                                    $('#divNote').find('select').prop('selectedIndex', 0);
+                                }
+                            }
                     }
                     //updatePreview();
-                }, 1000);
+                }, 2000);
             }
 
             function formatDate(inputDate) {
@@ -1228,7 +1289,7 @@
 
                     contentType: "application/x-www-form-urlencoded",
                     success: function (data, status, xhr) {
-                        debugger
+                        
                         $('#modelDaignoCode').html(data);
                     },
                     error: function (xhr, status, error) {

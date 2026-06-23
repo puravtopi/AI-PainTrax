@@ -1,0 +1,68 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@{
+    ViewData["Title"] = "Import Document";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+
+}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Import CSV</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item active">Import CSV</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <br />
+                        <h5>Select CSV to import </h5>
+                        <!-- Upload File Form -->
+                        <form asp-action="UploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                            <div class="row">
+                                <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#location">
+                                    Location <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-4">
+                                    <select class="form-select" name="locationid" asp-items="@ViewBag.locList"></select>
+                                    <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
+                                </div>
+                            </div>
+                             <br />
+                            <div class="row">
+
+                                <div class="col-4">
+                                    <input type="file" class="form-control-file" id="files" name="files" accept=".csv" required multiple />
+                                </div>
+                                <div class="col-2">
+                                    <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                </div>
+                                <div>
+                                    @Html.Raw(TempData["Message"]?.ToString())
+                                </div>
+
+                            </div>
+                        </form>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+

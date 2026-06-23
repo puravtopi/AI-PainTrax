@@ -176,7 +176,7 @@
             success: function (data) {
 
                 let rows = "";
-                debugger
+                
 
                 $.each(data, function (i, item) {
 
@@ -248,9 +248,12 @@
             url: url,
             type: 'GET',
             success: function (res) {
-                debugger
-                console.log("Result: "+res);
-                bindForm(res);
+                
+                selected=[];
+                $('#bodyPartLinks').text('');
+                $("#divDiagnosis").html(res.diagnosis);
+                console.log("Result: "+res.diagnosis);
+                bindForm(res.formData,res.forwardSetting);
             }
         });
     });

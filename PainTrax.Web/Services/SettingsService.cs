@@ -148,5 +148,54 @@ other7_comma=@other7_comma
             cm.Parameters.AddWithValue("@Id", data.id);
             Execute(cm);
         }
+
+        public tbl_intake_forward_setting? GetIntakeOne(int id)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_intake_forward_setting where cmp_id=@id ", conn);
+            cm.Parameters.AddWithValue("@id", id);
+            var datalist = ConvertDataTable<tbl_intake_forward_setting>(GetData(cm)).FirstOrDefault();
+            return datalist;
+        }
+        public void InsertIntake(tbl_intake_forward_setting data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_intake_forward_setting
+		(history,cc,pe,cmp_id,diagnosis,neroexam,adl,note)Values
+				(@history,@cc,@pe,@cmp_id,@diagnosis,@neroexam,@adl,@note)", conn);
+            cm.Parameters.AddWithValue("@history", data.History);
+            cm.Parameters.AddWithValue("@cc", data.Cc);
+            cm.Parameters.AddWithValue("@pe", data.Pe);
+            cm.Parameters.AddWithValue("@cmp_id", data.Cmp_id);
+            cm.Parameters.AddWithValue("@diagnosis", data.Diagnosis);
+            cm.Parameters.AddWithValue("@neroexam", data.Neroexam);
+            cm.Parameters.AddWithValue("@adl", data.Adl);
+            cm.Parameters.AddWithValue("@note", data.Note);
+           
+            Execute(cm);
+
+        }
+        public void UpdateIntake(tbl_intake_forward_setting data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_intake_forward_setting SET
+		history=@history,
+        cc=@cc,
+		pe=@pe,
+        diagnosis=@diagnosis,
+        neroexam=@neroexam,
+        adl=@adl,
+        note=@note
+			where cmp_id=@Id", conn);
+            cm.Parameters.AddWithValue("@Id", data.Cmp_id);
+            cm.Parameters.AddWithValue("@history", data.History);
+            cm.Parameters.AddWithValue("@cc", data.Cc);
+            cm.Parameters.AddWithValue("@pe", data.Pe);
+            cm.Parameters.AddWithValue("@cmp_id", data.Cmp_id);
+            cm.Parameters.AddWithValue("@diagnosis", data.Diagnosis);
+            cm.Parameters.AddWithValue("@neroexam", data.Neroexam);
+            cm.Parameters.AddWithValue("@adl", data.Adl);
+            cm.Parameters.AddWithValue("@note", data.Note);
+
+            Execute(cm);
+        }
     }
 }

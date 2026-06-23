@@ -1,0 +1,393 @@
+﻿<div id="rshPE" style="display:none">
+    <h6 class="fw-bold">Right Shoulder (R/Sh)</h6>
+    <p>
+        <b>Inspection:</b><br />
+
+        <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Deformity"> Deformity</label>
+        <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Erythema"> Erythema</label>
+        <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Ecchymosis"> Ecchymosis</label>
+        <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Swelling"> Swelling present</label>
+        <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Atrophy"> Deltoid/supraspinatus atrophy present</label>
+
+    </p>
+    <p>
+        <b>Palpation:</b><br />
+        Tenderness to palpation over:
+
+        <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Supraspinatus"> Supraspinatus</label>
+        <label><input type="checkbox" class="chkMulti" name="RShPalp" value="AC joint"> AC joint</label>
+        <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Proximal biceps"> Proximal biceps</label>
+        <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Deltoid"> Deltoid</label>
+        <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Trapezius"> Trapezius</label>
+        <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Coracoid"> Coracoid</label>
+        <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Scapular region"> Scapular region</label>
+    </p>
+    <p><b>Range of Motion (Active):</b></p>
+
+    <p>
+        Forward Flexion:
+        <input id="RshFlexion" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RshFlexion')"></i> /180° pain
+        <label><input type="radio" name="RShFlexPain" value="Yes">  yes</label>
+        <label><input type="radio" name="RShFlexPain" value="No">  no</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Abduction:
+        <input id="RShAbduction" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShAbduction')"></i> /180° pain
+        <label><input type="radio" name="RShAbdPain" value="Yes"> yes</label>
+        <label><input type="radio" name="RShAbdPain" value="No"> no</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        External Rotation:
+        <input id="RShExternal" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShExternal')"></i> /90° pain
+        <label><input type="radio" name="RShExtPain" value="Yes"> yes</label>
+        <label><input type="radio" name="RShExtPain" value="No"> no</label>
+    </p>
+
+    <p>
+        Internal Rotation:
+        <label><input type="radio" name="RShInternal" value="Sacrum"> Sacrum</label>
+        <label><input type="radio" name="RShInternal" value="L5"> L5</label>
+        <label><input type="radio" name="RShInternal" value="Mid-back"> Mid-back</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        pain
+        <label><input type="radio" name="RShIntPain" value="Yes"> yes</label>
+        <label><input type="radio" name="RShIntPain" value="No">  no</label>
+    </p>
+    <p>
+        <b>Passive ROM (PROM):</b><br />
+
+        <label><input type="radio" name="RShProm" value="Full and painless"> Full and painless</label>
+        <label><input type="radio" name="RShProm" value="Full with pain"> Full with pain</label>
+        <label><input type="radio" name="RShProm" value="Limited"> Limited compared</label>
+        <label><input type="radio" name="RShProm" value="Interpretation"> PROM interpretation</label>
+
+    </p>
+    <p>
+        <b>ROM Limitation:</b>
+        <label><input type="checkbox" class="chkMulti" name="RShRomLimit" value="Pain-limited"> Pain-limited</label>
+        <label><input type="checkbox" class="chkMulti" name="RShRomLimit" value="Mechanical"> Mechanical</label>
+        <label><input type="checkbox" class="chkMulti" name="RShRomLimit" value="Both"> Both</label>
+    </p>
+
+    <p>
+        <b>Strength:</b>
+        <label><input type="checkbox" class="chkMulti" name="RShStrength" value="Decreased"> Decreased</label>
+        <label><input type="checkbox" class="chkMulti" name="RShStrength" value="Pain-limited"> Pain-limited</label>
+    </p>
+
+    <p>
+        <b>Special Tests:</b>
+        <label><input type="checkbox" class="chkMulti" name="RShTests" value="Hawkins"> Hawkins-Kennedy</label>
+        <label><input type="checkbox" class="chkMulti" name="RShTests" value="Empty Can"> Empty Can</label>
+        <label><input type="checkbox" class="chkMulti" name="RShTests" value="Obrien"> O’Brien’s</label>
+        <label><input type="checkbox" class="chkMulti" name="RShTests" value="Cross Body"> Cross-Body</label>
+        <label><input type="checkbox" class="chkMulti" name="RShTests" value="Drop Arm"> Drop Arm</label>
+    </p>
+
+    <p>
+        <b>Neurovascular:</b>
+        <label><input type="checkbox" class="chkMulti" name="RShNeuro" value="Sensation intact"> Sensation intact</label>
+        <label><input type="checkbox" class="chkMulti" name="RShNeuro" value="Motor intact"> Motor intact</label>
+        <label><input type="checkbox" class="chkMulti" name="RShNeuro" value="Pulses intact"> Pulses intact</label>
+    </p>
+</div>
+
+<div id="lshPE" style="display:none">
+    <h6 class="fw-bold">Left Shoulder (R/Sh)</h6>
+    <p>
+        <b>Inspection:</b><br />
+
+        <label><input type="checkbox" class="chkMulti" name="LShInsp" value="Deformity"> Deformity</label>
+        <label><input type="checkbox" class="chkMulti" name="LShInsp" value="Erythema"> Erythema</label>
+        <label><input type="checkbox" class="chkMulti" name="LShInsp" value="Ecchymosis"> Ecchymosis</label>
+        <label><input type="checkbox" class="chkMulti" name="LShInsp" value="Swelling"> Swelling present</label>
+        <label><input type="checkbox" class="chkMulti" name="LShInsp" value="Atrophy"> Deltoid/supraspinatus atrophy present</label>
+
+    </p>
+    <p>
+        <b>Palpation:</b><br />
+        Tenderness to palpation over:
+
+        <label><input type="checkbox" class="chkMulti" name="LShPalp" value="Supraspinatus"> Supraspinatus</label>
+        <label><input type="checkbox" class="chkMulti" name="LShPalp" value="AC joint"> AC joint</label>
+        <label><input type="checkbox" class="chkMulti" name="LShPalp" value="Proximal biceps"> Proximal biceps</label>
+        <label><input type="checkbox" class="chkMulti" name="LShPalp" value="Deltoid"> Deltoid</label>
+        <label><input type="checkbox" class="chkMulti" name="LShPalp" value="Trapezius"> Trapezius</label>
+        <label><input type="checkbox" class="chkMulti" name="LShPalp" value="Coracoid"> Coracoid</label>
+        <label><input type="checkbox" class="chkMulti" name="LShPalp" value="Scapular region"> Scapular region</label>
+    </p>
+    <p><b>Range of Motion (Active):</b></p>
+
+    <p>
+        Forward Flexion:
+        <input id="LshFlexion" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LshFlexion')"></i> /180° pain
+        <label><input type="radio" name="LShFlexPain" value="Yes"> yes</label>
+        <label><input type="radio" name="LShFlexPain" value="No"> no</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Abduction:
+        <input id="LShAbduction" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LShAbduction')"></i> /180° pain
+        <label><input type="radio" name="LShAbdPain" value="Yes"> yes</label>
+        <label><input type="radio" name="LShAbdPain" value="No"> no</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        External Rotation:
+        <input id="LShExternal" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LShExternal')"></i> /90° pain
+        <label><input type="radio" name="LShExtPain" value="Yes"> yes</label>
+        <label><input type="radio" name="LShExtPain" value="No">  no</label>
+    </p>
+
+    <p>
+        Internal Rotation:
+        <label><input type="radio" name="LShInternal" value="Sacrum"> Sacrum</label>
+        <label><input type="radio" name="LShInternal" value="L5"> L5</label>
+        <label><input type="radio" name="LShInternal" value="Mid-back"> Mid-back</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        pain
+        <label><input type="radio" name="LShIntPain" value="Yes"> yes</label>
+        <label><input type="radio" name="LShIntPain" value="No"> no</label>
+    </p>
+    <p>
+        <b>Passive ROM (PROM):</b><br />
+
+        <label><input type="radio" name="LShProm" value="Full and painless"> Full and painless</label>
+        <label><input type="radio" name="LShProm" value="Full with pain"> Full with pain</label>
+        <label><input type="radio" name="LShProm" value="Limited"> Limited compared</label>
+        <label><input type="radio" name="LShProm" value="Interpretation"> PROM interpretation</label>
+
+    </p>
+    <p>
+        <b>ROM Limitation:</b>
+        <label><input type="checkbox" class="chkMulti" name="LShRomLimit" value="Pain-limited"> Pain-limited</label>
+        <label><input type="checkbox" class="chkMulti" name="LShRomLimit" value="Mechanical"> Mechanical</label>
+        <label><input type="checkbox" class="chkMulti" name="LShRomLimit" value="Both"> Both</label>
+    </p>
+
+    <p>
+        <b>Strength:</b>
+        <label><input type="checkbox" class="chkMulti" name="LShStrength" value="Decreased"> Decreased</label>
+        <label><input type="checkbox" class="chkMulti" name="LShStrength" value="Pain-limited"> Pain-limited</label>
+    </p>
+
+    <p>
+        <b>Special Tests:</b>
+        <label><input type="checkbox" class="chkMulti" name="LShTests" value="Hawkins"> Hawkins-Kennedy</label>
+        <label><input type="checkbox" class="chkMulti" name="LShTests" value="Empty Can"> Empty Can</label>
+        <label><input type="checkbox" class="chkMulti" name="LShTests" value="Obrien"> O’Brien’s</label>
+        <label><input type="checkbox" class="chkMulti" name="LShTests" value="Cross Body"> Cross-Body</label>
+        <label><input type="checkbox" class="chkMulti" name="LShTests" value="Drop Arm"> Drop Arm</label>
+    </p>
+
+    <p>
+        <b>Neurovascular:</b>
+        <label><input type="checkbox" class="chkMulti" name="LShNeuro" value="Sensation intact"> Sensation intact</label>
+        <label><input type="checkbox" class="chkMulti" name="LShNeuro" value="Motor intact"> Motor intact</label>
+        <label><input type="checkbox" class="chkMulti" name="LShNeuro" value="Pulses intact"> Pulses intact</label>
+    </p>
+</div>
+
+<div id="rknPE" style="display:none">
+    <h6 class="fw-bold">Right Knee (R/Sh)</h6>
+    <p>
+        <b>Inspection:</b><br />
+
+        <label><input type="checkbox" class="chkMulti" name="RKnInsp" value="No deformity"> No deformity</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnInsp" value="Deformity present"> Deformity present</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnInsp" value="No erythema"> No erythema</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnInsp" value="Erythema present"> Erythema present</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnInsp" value="No ecchymosis"> No ecchymosis</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnInsp" value="Ecchymosis present"> Ecchymosis present</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnInsp" value="Effusion present"> Effusion present</label>
+
+    </p>
+    <p>
+        <b>Palpation:</b><br />
+        Tenderness to palpation over:
+
+        <label><input type="checkbox" class="chkMulti" name="RKnPalp" value="Medial joint line"> Medial joint line</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnPalp" value="Lateral joint line"> Lateral joint line</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnPalp" value="Patella"> Patella</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnPalp" value="Superior patella"> Superior patella</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnPalp" value="Inferior patella"> Inferior patella</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnPalp" value="Patellar tendon"> Patellar tendon</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnPalp" value="Popliteal fossa"> Popliteal fossa</label>
+    </p>
+    <p><b>Range of Motion (Active):</b></p>
+
+    <p>
+        Flexion:
+        <input id="RknFlexion" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RknFlexion')"></i> /135 ° pain
+        <label><input type="radio" name="RShFlexPain" value="Yes">  yes</label>
+        <label><input type="radio" name="RShFlexPain" value="No"> no</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label><input type="checkbox" name="RKnTF" value="Pain with terminal flexion"> Pain with terminal flexion</label>
+
+    </p>
+    <p>
+        Extension:
+        <input id="RknExtension" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RknExtension')"></i> /0 ° pain
+        <label><input type="radio" name="RKnExtensionPain" value="Yes"> yes</label>
+        <label><input type="radio" name="RKnExtensionPain" value="No"> no</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label><input type="checkbox" name="RKnTE" value="Pain with terminal extension"> Pain with terminal extension</label>
+
+    </p>
+
+    <p>
+        Passive ROM (PROM):
+        <label><input type="checkbox" name="RKNPROM" value="Full and painless"> Full and painless</label>
+        <label><input type="checkbox" name="RKNPROM" value="Full with pain"> Full with pain</label>
+        <label><input type="checkbox" name="RKNPROM" value="Limited compared to contralateral side"> Limited compared to contralateral side</label>
+        <label><input type="checkbox" name="RKNPROM" value="PROM findings interpreted in the context of pain inhibition vs structural pathology"> PROM findings interpreted in the context of pain inhibition vs structural pathology</label>
+
+    </p>
+    <p>
+        <b>ROM Limitation Characterization:</b><br />
+
+        <label><input type="radio" name="RKnRLC" value="Pain-limited"> Pain-limited</label>
+        <label><input type="radio" name="RKnRLC" value="Mechanical restriction"> Mechanical restriction</label>
+        <label><input type="radio" name="RKnRLC" value="Both"> Both</label>
+    </p>
+    <p>
+        <b>Stability / Ligamentous Testing:</b>
+        <label><input type="checkbox" class="chkMulti" name="RKnStability" value="Lachman (ACL)"> Lachman (ACL)</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnStability" value="Anterior Drawer (ACL)"> Anterior Drawer (ACL)</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnStability" value="Posterior Drawer (PCL)"> Posterior Drawer (PCL)</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnStability" value="Varus stress (LCL)"> Varus stress (LCL)</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnStability" value="Valgus stress (MCL)"> Valgus stress (MCL)</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnStability" value="Instability compared to contralateral side"> Instability compared to contralateral side</label>
+    </p>
+    <p>
+        <b>Meniscal / Patellofemoral Tests:</b>
+        <label><input type="checkbox" class="chkMulti" name="RKnMeniscal" value="McMurray (meniscal pathology)"> McMurray (meniscal pathology)</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnMeniscal" value="Thessaly (if tolerated)"> Thessaly (if tolerated)</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnMeniscal" value="Patellar grind (patellofemoral joint)"> Patellar grind (patellofemoral joint)</label>
+
+    </p>
+    <p>
+        <b>Strength:</b>
+        <label><input type="checkbox" class="chkMulti" name="RKnStrength" value="Decreased quadriceps strength on manual testing compared to contralateral side"> Decreased quadriceps strength on manual testing compared to contralateral side</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnStrength" value="Pain-limited"> Pain-limited strength testing</label>
+    </p>
+
+    <p>
+        <b>Gait / Function:</b>
+        <label><input type="checkbox" class="chkMulti" name="RKnGait" value="Antalgic gait">Antalgic gait</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnGait" value="Difficulty with squatting">Difficulty with squatting</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnGait" value="Difficulty with stairs">Difficulty with stairs</label>
+
+    </p>
+
+    <p>
+        <b>Neurovascular:</b>
+        <label><input type="checkbox" class="chkMulti" name="RKnNeuro" value="Sensation intact"> Sensation intact</label>
+        <label><input type="checkbox" class="chkMulti" name="RKnNeuro" value="Distal motor function intact">Distal motor function intact</label>
+
+    </p>
+</div>
+
+<div id="lknPE" style="display:none">
+    <h6 class="fw-bold">Left Knee (R/Sh)</h6>
+    <p>
+        <b>Inspection:</b><br />
+
+        <label><input type="checkbox" class="chkMulti" name="LKnInsp" value="No deformity"> No deformity</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnInsp" value="Deformity present"> Deformity present</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnInsp" value="No erythema"> No erythema</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnInsp" value="Erythema present"> Erythema present</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnInsp" value="No ecchymosis"> No ecchymosis</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnInsp" value="Ecchymosis present"> Ecchymosis present</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnInsp" value="Effusion present"> Effusion present</label>
+
+    </p>
+    <p>
+        <b>Palpation:</b><br />
+        Tenderness to palpation over:
+
+        <label><input type="checkbox" class="chkMulti" name="LKnPalp" value="Medial joint line"> Medial joint line</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnPalp" value="Lateral joint line"> Lateral joint line</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnPalp" value="Patella"> Patella</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnPalp" value="Superior patella"> Superior patella</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnPalp" value="Inferior patella"> Inferior patella</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnPalp" value="Patellar tendon"> Patellar tendon</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnPalp" value="Popliteal fossa"> Popliteal fossa</label>
+    </p>
+    <p><b>Range of Motion (Active):</b></p>
+
+    <p>
+        Flexion:
+        <input id="LknFlexion" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LknFlexion')"></i> /135  ° pain
+        <label><input type="radio" name="LShFlexPain" value="Yes">  yes</label>
+        <label><input type="radio" name="LShFlexPain" value="No"> no</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label><input type="checkbox" name="LKnTF" value="Pain with terminal flexion"> Pain with terminal flexion</label>
+
+    </p>
+    <p>
+        Extension:
+        <input id="LknExtension" class="form-control d-inline" style="width:60px;" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LknExtension')"></i> /0  ° pain
+        <label><input type="radio" name="LKnExtensionPain" value="Yes"> yes</label>
+        <label><input type="radio" name="LKnExtensionPain" value="No"> no</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label><input type="checkbox" name="LKnTE" value="Pain with terminal extension"> Pain with terminal extension</label>
+
+    </p>
+
+    <p>
+        Passive ROM (PROM):
+        <label><input type="checkbox" name="LKNPROM" value="Full and painless"> Full and painless</label>
+        <label><input type="checkbox" name="LKNPROM" value="Full with pain"> Full with pain</label>
+        <label><input type="checkbox" name="LKNPROM" value="Limited compared to contralateral side"> Limited compared to contralateral side</label>
+        <label><input type="checkbox" name="LKNPROM" value="PROM findings interpreted in the context of pain inhibition vs structural pathology"> PROM findings interpreted in the context of pain inhibition vs structural pathology</label>
+
+    </p>
+    <p>
+        <b>ROM Limitation Characterization:</b><br />
+
+        <label><input type="radio" name="LKnRLC" value="Pain-limited"> Pain-limited</label>
+        <label><input type="radio" name="LKnRLC" value="Mechanical restriction"> Mechanical restriction</label>
+        <label><input type="radio" name="LKnRLC" value="Both"> Both</label>
+    </p>
+    <p>
+        <b>Stability / Ligamentous Testing:</b>
+        <label><input type="checkbox" class="chkMulti" name="LKnStability" value="Lachman (ACL)"> Lachman (ACL)</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnStability" value="Anterior Drawer (ACL)"> Anterior Drawer (ACL)</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnStability" value="Posterior Drawer (PCL)"> Posterior Drawer (PCL)</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnStability" value="Varus stress (LCL)"> Varus stress (LCL)</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnStability" value="Valgus stress (MCL)"> Valgus stress (MCL)</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnStability" value="Instability compared to contralateral side"> Instability compared to contralateral side</label>
+    </p>
+    <p>
+        <b>Meniscal / Patellofemoral Tests:</b>
+        <label><input type="checkbox" class="chkMulti" name="LKnMeniscal" value="McMurray (meniscal pathology)"> McMurray (meniscal pathology)</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnMeniscal" value="Thessaly (if tolerated)"> Thessaly (if tolerated)</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnMeniscal" value="Patellar grind (patellofemoral joint)"> Patellar grind (patellofemoral joint)</label>
+
+    </p>
+    <p>
+        <b>Strength:</b>
+        <label><input type="checkbox" class="chkMulti" name="LKnStrength" value="Decreased quadriceps strength on manual testing compared to contralateral side"> Decreased quadriceps strength on manual testing compared to contralateral side</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnStrength" value="Pain-limited"> Pain-limited strength testing</label>
+    </p>
+
+    <p>
+        <b>Gait / Function:</b>
+        <label><input type="checkbox" class="chkMulti" name="LKnGait" value="Antalgic gait">Antalgic gait</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnGait" value="Difficulty with squatting">Difficulty with squatting</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnGait" value="Difficulty with stairs">Difficulty with stairs</label>
+
+    </p>
+
+    <p>
+        <b>Neurovascular:</b>
+        <label><input type="checkbox" class="chkMulti" name="LKnNeuro" value="Sensation intact"> Sensation intact</label>
+        <label><input type="checkbox" class="chkMulti" name="LKnNeuro" value="Distal motor function intact">Distal motor function intact</label>
+
+    </p>
+</div>

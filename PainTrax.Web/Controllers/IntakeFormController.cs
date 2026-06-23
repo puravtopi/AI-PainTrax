@@ -733,7 +733,7 @@ namespace PainTrax.Web.Controllers
         { 
             if (providerId == null)
             {
-                if (HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value == null)
+                if (!HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).HasValue)
                 {
                     //providerId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
                     providerId = Convert.ToInt32(HttpContext.Session.GetString("ProviderId") ?? "0");
@@ -829,7 +829,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeIMNPFHPC");
+            else return PartialView("_IntakeBHF");
             //return View();
         }
 
@@ -1073,11 +1073,20 @@ namespace PainTrax.Web.Controllers
 
                                 using JsonDocument doc = JsonDocument.Parse(json);
 
-                                string[] planUTPI = doc.RootElement
-                                                       .GetProperty("PlanUTPI")
-                                                       .EnumerateArray()
-                                                       .Select(x => x.GetString())
-                                                       .ToArray();
+                                string[] planUTPI = Array.Empty<string>();
+
+                                // 1. Check if the property exists
+                                if (doc.RootElement.TryGetProperty("PlanUTPI", out JsonElement planElement))
+                                {
+                                    // 2. Optional: Ensure it is actually an array before enumerating
+                                    if (planElement.ValueKind == JsonValueKind.Array)
+                                    {
+                                        planUTPI = planElement
+                                            .EnumerateArray()
+                                            .Select(x => x.GetString() ?? string.Empty)
+                                            .ToArray();
+                                    }
+                                }
                                 foreach (string data in planUTPI)
                                 {
                                     var _obj = new ProcedureDetailsIntakeVM()
@@ -1092,11 +1101,22 @@ namespace PainTrax.Web.Controllers
                                     _pocservices.SaveProcedureDetailsIntake(_obj);
                                 }
 
-                                string[] recommendation = doc.RootElement
-                                                       .GetProperty("Recommendation")
-                                                       .EnumerateArray()
-                                                       .Select(x => x.GetString())
-                                                       .ToArray();
+                                string[] recommendation = Array.Empty<string>();
+
+                                // 1. Check if the property exists
+                                if (doc.RootElement.TryGetProperty("Recommendation", out JsonElement recommendationElement))
+                                {
+                                    // 2. Optional: Ensure it is actually an array before enumerating
+                                    if (recommendationElement.ValueKind == JsonValueKind.Array)
+                                    {
+                                        recommendation = recommendationElement
+                                            .EnumerateArray()
+                                            .Select(x => x.GetString() ?? string.Empty)
+                                            .ToArray();
+                                    }
+                                }
+
+                               
                                 foreach (string data in recommendation)
                                 {
                                     var _obj = new ProcedureDetailsIntakeVM()

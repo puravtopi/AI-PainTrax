@@ -1,0 +1,198 @@
+﻿ <!-- PMH -->
+<p>
+    PMH:
+    <label><input type="checkbox" class="chkMulti" name="PMH" value="None"> None</label>
+    <label><input type="checkbox" class="chkMulti" name="PMH" value="Diabetes"> Diabetes</label>
+    <label><input type="checkbox" class="chkMulti" name="PMH" value="HTN"> HTN</label>
+    <label><input type="checkbox" class="chkMulti" name="PMH" value="HLD"> HLD</label>
+    <label><input type="checkbox" class="chkMulti" name="PMH" value="Asthma"> Asthma</label>
+    <label><input type="checkbox" class="chkMulti" name="PMH" value="Cardiac"> Cardiac</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Other:
+    <input id="PMHOther" class="form-control d-inline w-25" style="min-width:37%" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PMHOther')"></i>
+</p>
+
+<!-- PSH -->
+<p>
+    PSH:
+    <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i>
+</p>
+
+<!-- Meds -->
+<p>
+    Meds:
+    <label><input type="radio" name="Meds" value="The patient is not taking any medication at this time."> None</label>
+    <label><input type="radio" name="Meds" value="The patient is taking {{MedsOther}} pain medications p.r.n."> Pain meds PRN</label>
+
+    <input id="MedsOther" class="form-control d-inline w-25" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i>
+</p>
+
+<!-- Allergies -->
+<p>
+    Drug Allergies:
+    <label><input type="radio" name="Allergy" value="NO KNOWN DRUG ALLERGIES."> NKDA</label>
+    <label><input type="radio" name="Allergy" value="Yes"> Yes</label>
+    <span id="divAllergy" style="display:none">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Drug:
+        <input id="AllergyDrug" class="form-control d-inline w-25" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyDrug')"></i>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        What Allergy:
+        <input id="AllergyReaction" class="form-control d-inline w-25" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i>
+    </span>
+</p>
+
+<!-- Social History -->
+<p>
+    Smoke:
+    <label><input type="radio" name="Smoke" value="Yes"> Y</label>
+    <label><input type="radio" name="Smoke" value="No"> N</label>
+    <span id="divSmoke" style="display:none">
+        <input id="PPD" class="form-control d-inline" style="width:150px" /> PPD.
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Alcohol:
+    <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."> Y</label>
+    <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol."> N</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Cannabis:
+    <label><input type="radio" name="Cannabis" value="The patient smokes cannabis."> Y</label>
+    <label><input type="radio" name="Cannabis" value="The patient does not smoke cannabis."> N</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Other Drugs:
+    <label><input type="radio" name="OtherDrugs" value="Yes"> Y</label>
+    <label><input type="radio" name="OtherDrugs" value="No"> N</label>
+    <span id="divDrugs" style="display:none">
+        <input id="OtherDrugsTxt" class="form-control d-inline w-25" placeholder="Other Drugs Name" style="width:60%" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i>
+    </span>
+</p>
+
+<!-- Therapy -->
+<p>
+    Physical therapy:
+    <label><input type="radio" name="PT" value="Yes"> Y</label>
+    <label><input type="radio" name="PT" value="The patient has not had physical therapy."> N</label>
+    <span id="divPT" style="display:none">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Frequency:
+        <input id="PTFreq" class="form-control d-inline" placeholder="x/week" style="width:150px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTFreq')"></i>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Duration:
+        <input id="PTDuration" class="form-control d-inline" style="width:150px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTDuration')"></i>
+
+        Relief:
+        <select id="PTRelief" class="form-select d-inline" style="width:150px">
+            <option>None</option>
+            <option>Partial</option>
+            <option>Minimal</option>
+            <option>Good</option>
+        </select>
+        @* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    Compliance:
+                                    <label><input type="radio" name="PTCompliance" value="The patient reports compliance with therapy."> Y</label>
+                                    <label><input type="radio" name="PTCompliance" value="The patient reports noncompliance with therapy."> N</label> *@
+    </span>
+</p>
+
+<!-- Chiropractor -->
+<p>
+    Chiropractor:
+    <label><input type="radio" name="Chiro" value="Yes"> Y</label>
+    <label><input type="radio" name="Chiro" value="No"> N</label>
+    <span id="divChiro" style="display:none">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Frequency:
+        <input id="ChiroFreq" class="form-control d-inline" style="width:150px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroFreq')"></i>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Duration:
+        <input id="ChiroDuration" class="form-control d-inline " style="width:150px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroDuration')"></i>
+
+        Relief:
+        <select id="ChiroRelief" class="form-select d-inline" style="width:150px">
+            <option>None</option>
+            <option>Partial</option>
+            <option>Minimal</option>
+            <option>Good</option>
+        </select>
+    </span>
+</p>
+
+<!-- Compliance -->
+<p>
+    Patient reports compliance with therapy:
+    <label><input type="radio" name="Compliance" value="Yes"> Y</label>
+    <label><input type="radio" name="Compliance" value="No"> N</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    If discontinued (why):
+    <input id="DiscontinueReason" class="form-control d-inline w-50" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiscontinueReason')"></i>
+</p>
+
+<!-- Functional Limitations -->
+<p>
+    <b>Difficulty</b> Walking:
+    <label><input type="radio" name="Walk" value="Yes"> Y</label>
+    <label><input type="radio" name="Walk" value="No"> N</label>
+    <input id="WalkBlocks" class="form-control d-inline" style="width:100px" placeholder="blocks" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'WalkBlocks')"></i>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Standing:
+    <label><input type="radio" name="Stand" value="Yes"> Y</label>
+    <label><input type="radio" name="Stand" value="No"> N</label>
+    <input id="StandMin" class="form-control d-inline" style="width:100px" placeholder="min" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'StandMin')"></i>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Sitting:
+    <label><input type="radio" name="Sit" value="Yes"> Y</label>
+    <label><input type="radio" name="Sit" value="No"> N</label>
+    <input id="SitMin" class="form-control d-inline " style="width:100px" placeholder="min" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SitMin')"></i>
+</p>
+
+<!-- Unable -->
+<p>
+    Unable to:
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Garden"> Garden</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Play sports"> Play sports</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Drive"> Drive</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Lift"> Lift</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Carry"> Carry</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Laundry"> Laundry</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Reach overhead"> Reach overhead</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Shopping"> Shopping</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Errands"> Errands</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Kneel"> Kneel</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Squat">Squat</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Jog">Jog</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Going up / down stairs"> Going up / down stairs</label>
+    <label><input type="checkbox" class="chkMulti" name="Unable" value="Exercise"> Exercise</label>
+
+</p>
+<p>
+    Based on the patient’s history, symptom duration, prior treatment, and reported functional limitations:
+</p>
+<p>
+
+    <input type="checkbox" name="TreatmentPlan" value="Initial" />
+    Initial conservative management is indicated and will be initiated or continued in accordance with Medical Treatment Guidelines (MTG).
+
+</p>
+<p>
+
+    <input type="checkbox" name="TreatmentPlan" value="Completed" />
+    The patient reports completion of an adequate trial of conservative treatment prior to presentation, consisting of physical therapy, chiropractic care, medications, and/or activity modification for a duration of ≥ <input id="PTDuration" class="form-control d-inline w-25" /> weeks, with persistent functional limitation despite treatment.
+</p>
+<p>
+    Accordingly, further diagnostic evaluation and/or discussion of escalation of care, including interventional or surgical options, may be appropriate if supported by physical examination and imaging findings.
+</p>

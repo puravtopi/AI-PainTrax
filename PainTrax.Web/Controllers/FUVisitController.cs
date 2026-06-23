@@ -2723,8 +2723,7 @@ namespace PainTrax.Web.Controllers
                 history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                 //  history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
                 history = history.Replace("#patientname", gender + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
-                history = history.Replace("#accidenttype", patientData.accidentType);
-                history = history.Replace("#accidenttype", patientData.accidentType);
+                history = history.Replace("#accidenttype", fuData.accident_type);
                 body = body.Replace("#history", history);
 
                 body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());

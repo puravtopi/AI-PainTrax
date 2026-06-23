@@ -1,0 +1,78 @@
+﻿
+<p>
+    Patient describes sudden forceful impact involving
+    <select id="MechanismInvolving" class="form-select d-inline" style="width:150px">
+        <option>acceleration</option>
+        <option>deceleration </option>
+
+    </select>
+    <label><input type="radio" name="MechanismChoice" value="Yes"> and</label>
+    <label><input type="radio" name="MechanismChoice" value="No"> or</label>
+    direct trauma, resulting in
+    <select id="MechanismResulting" class="form-select d-inline" style="width:150px">
+        <option>immediate</option>
+        <option>gradual</option>
+
+    </select>
+    onset of pain to the body parts described in chief complaint.
+</p>
+
+<!-- Airbag -->
+<p>
+    Air bags deployed:
+    <label><input type="radio" name="Airbag" value="Yes"> Yes</label>
+    <label><input type="radio" name="Airbag" value="No"> No</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    EMS arrived:
+    <label><input type="radio" name="EMS" value="Yes"> Yes</label>
+    <label><input type="radio" name="EMS" value="No"> No</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Police contacted:
+    <label><input type="radio" name="Police" value="Yes"> Yes</label>
+    <label><input type="radio" name="Police" value="No"> No</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Police report:
+    <label><input type="radio" name="PoliceReport" value="Yes"> Yes</label>
+    <label><input type="radio" name="PoliceReport" value="No"> No</label>
+</p>
+
+<!-- Hospital -->
+<p>
+    Went to hospital:
+    <label><input type="radio" name="Hospital" value="Yes"> Yes</label>
+    <label><input type="radio" name="Hospital" value="No"> No</label>
+    <div id="divHospital" style="display:none">
+
+        Hospital name:
+        <input id="HospitalName" class="form-control d-inline w-25" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Records:
+        <label><input type="radio" name="Records" value="Yes"> Yes</label>
+        <label><input type="radio" name="Records" value="No"> No</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        How did you get to hospital:
+        <label><input type="radio" name="Transport" value="Ambulance"> Ambulance</label>
+        <label><input type="radio" name="Transport" value="Car"> Car</label>
+        <label><input type="radio" name="Transport" value="Uber"> Uber</label>
+        <label><input type="radio" name="Transport" value="Cab"> Cab</label>
+        <label><input type="radio" name="Transport" value="Friend"> Friend</label>
+    </div>
+</p>
+
+<!-- Symptoms -->
+<p>
+    Symptoms began:
+    <label><input type="radio" name="SymptomsStart" value="Immediately"> Immediately</label>
+    <label><input type="radio" name="SymptomsStart" value="Hours"> Within hours</label>
+    <label><input type="radio" name="SymptomsStart" value="Same day"> Same day</label>
+    <label><input type="radio" name="SymptomsStart" value="Next day"> Following day</label>
+</p>
+
+<p>
+    Since onset, symptoms have:
+    <label><input type="radio" name="SymptomsProgress" value="Persisted"> Persisted</label>
+    <label><input type="radio" name="SymptomsProgress" value="Worsened"> Worsened</label>
+    <label><input type="radio" name="SymptomsProgress" value="Improved"> Improved partially</label>
+    <label><input type="radio" name="SymptomsProgress" value="Fluctuated"> Fluctuated</label>
+</p>

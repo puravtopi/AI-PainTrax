@@ -41,6 +41,7 @@ namespace PainTrax.Web.Controllers
         private readonly POCServices _pocservices = new POCServices();
         private readonly Common _commonservices = new Common();
         private readonly UserService _userService = new UserService();
+        private readonly SettingsService _settingServices = new SettingsService();
         #endregion
 
 
@@ -65,7 +66,7 @@ namespace PainTrax.Web.Controllers
         {
             if (providerId == null)
             {
-                if (HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value == null)
+                if (!HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).HasValue)
                 {
                     //providerId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
                     providerId = Convert.ToInt32(HttpContext.Session.GetString("ProviderId") ?? "0");
@@ -156,7 +157,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeIMNPFHPCFU");
+            else return PartialView("_IntakeBHFFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -328,11 +329,30 @@ namespace PainTrax.Web.Controllers
        ? null
        : System.Text.Json.JsonSerializer.Deserialize<object>(data.FormData);
 
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            var forwardSetting = _settingServices.GetIntakeOne(cmpid.Value);
+
+            if (forwardSetting == null)
+            {
+                forwardSetting = new tbl_intake_forward_setting()
+                {
+                    Neroexam = false,
+                    Adl = false,
+                    Cc = false,
+                    Diagnosis = false,
+                    History = false,
+                    Note = false,
+                    Pe = false
+                };
+            }
+
             return Json(new
             {
                 data.Id,
                 data.Diagnosis,
-                FormData = formData
+                FormData = formData,
+                ForwardSetting = forwardSetting
             });
 
         }

@@ -107,6 +107,51 @@ namespace PainTrax.Web.Controllers
             }
             return View();
         }
+
+
+        public IActionResult IntakeSetting()
+        {
+            var data = new tbl_intake_forward_setting();
+            try
+            {
+
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+                data = _services.GetIntakeOne(cmpid.Value);
+
+                data = data == null ? new tbl_intake_forward_setting() : data;
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "IntakeSetting");
+            }
+
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult IntakeSetting(tbl_intake_forward_setting model)
+        {
+            try
+            {
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                model.Cmp_id = cmpid.Value;
+
+                if (model.Id == 0)
+                {
+                    _services.InsertIntake(model);
+                }
+                else
+                {
+                    _services.UpdateIntake(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "IntakeSetting");
+            }
+            return View(model);
+        }
         #region Private Method
         private void SaveLog(Exception ex, string actionname)
         {

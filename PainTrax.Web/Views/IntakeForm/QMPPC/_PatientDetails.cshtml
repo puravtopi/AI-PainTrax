@@ -1,0 +1,68 @@
+﻿<br />
+<!-- Patient Info -->
+<p>
+    Patient LName:
+    <input id="LN" name="LN" class="form-control d-inline" style="width:150px;" />
+    FName:
+    <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" />
+    @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
+    Gender
+    <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+        <option value="male">M</option>
+        <option value="female">F</option>
+    </select>
+    &nbsp;&nbsp;
+    handed:
+    <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+        <option value="right-handed">R</option>
+        <option value="left-handed">L</option>
+    </select>
+    &nbsp;&nbsp;
+    DOE
+    <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" />
+    &nbsp;&nbsp;
+    Location: &nbsp;&nbsp;
+    <span id="lblLocation">
+        @ViewBag.LocName
+    </span>
+</p>
+
+<p>
+    DOB:
+    <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Age:
+    <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Height:
+    <input id="Height" name="Height" class="form-control d-inline" style="width:150px" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i>
+    Weight:
+    <input id="Weight" name="Weight" class="form-control d-inline" style="width:150px" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i>
+    lbs.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    DOA:
+    <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+</p>
+
+<!-- Work -->
+<p>
+    Currently working:
+    <input type="radio" name="IsWorking" value="The patient is currently working." /> Yes
+    <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." /> No
+    <br />
+    Job title:
+    <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:90%;" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i>
+</p>
+
+<p>
+    If not working, stopped immediately after accident:
+    <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
+    <input type="radio" name="StoppedAfterAccident" value="No" /> No
+    <br />
+    Reason:
+    <textarea id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
+</p>

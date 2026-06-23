@@ -509,7 +509,7 @@ namespace PainTrax.Web.Controllers
 
 
 
-                await _emailService.SendEmailAsync("purav.topi@gmail.com", subject, body);
+                await _emailService.SendEmailAsync(model.email, subject, body);
                 ViewBag.Success = true;
                 ViewBag.Error = false;
             }
