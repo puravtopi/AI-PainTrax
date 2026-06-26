@@ -27,7 +27,7 @@
         <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger-side T-boned"> <span class="select-btn">Passenger-side T-boned</span>   </label>
         <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger sideswipe"> <span class="select-btn">Passenger sideswipe</span></label>
     </div>
-    
+
 
 
 
@@ -75,7 +75,7 @@
         </label>
     </div>
 
-    <p>
+    <p id="divBodyImpact" style="display:none">
         <strong>If yes, which body part?</strong>
 
         <textarea id="DirectImpactBodyPart"
@@ -99,12 +99,13 @@
 
 
         &nbsp;&nbsp;&nbsp;
+        <p id="divLoseConsciousness" style="display:none">
+            <strong>If yes, then for how long?</strong>
 
-        <strong>If yes, then for how long?</strong>
-
-        <input id="LOCForHowLong"
-               class="form-control d-inline"
-               style="width:250px" />
+            <input id="LOCForHowLong"
+                   class="form-control d-inline"
+                   style="width:250px" />
+        </p>
     </div>
 
 </div>
@@ -181,9 +182,10 @@
         <input type="radio" class="chkMulti" name="SameDay" value="No">
         <span class="select-btn">No</span>
     </label>
-
-    how many days later?
-    <input id="DaysLater" name="DaysLater" class="form-control d-inline w-25" />
+    <p id="divSameDay" style="display:none">
+        how many days later?
+        <input id="DaysLater" name="DaysLater" class="form-control d-inline w-25" />
+    </p>
 </div>
 <div class="select-group mmClass">
     In the hospital, Did they do any tests?
@@ -196,22 +198,24 @@
         <input type="radio" class="chkMulti" name="IsHospitalTest" value="No">
         <span class="select-btn">No</span>
     </label>
-    If yes, what tests?
-    <label>
-        <input type="checkbox" class="chkMulti" name="HospitalTest" value="X-rays">
-        <span class="select-btn">X-rays</span>
-    </label>
+    <p id="divHospitalTest" style="display:none">
+        If yes, what tests?
+        <label>
+            <input type="checkbox" class="chkMulti" name="HospitalTest" value="X-rays">
+            <span class="select-btn">X-rays</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="HospitalTest" value="CT">
-        <span class="select-btn">CT</span>
-    </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="HospitalTest" value="CT">
+            <span class="select-btn">CT</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="HospitalTest" value="MRI">
-        <span class="select-btn">MRI</span>
-    </label>
-    <input type="text" id="HospitalTestOther" name="HospitalTestOther" class="form-control d-inline w-auto" />
+        <label>
+            <input type="checkbox" class="chkMulti" name="HospitalTest" value="MRI">
+            <span class="select-btn">MRI</span>
+        </label>
+        <input type="text" id="HospitalTestOther" name="HospitalTestOther" class="form-control d-inline w-auto" />
+    </p>
 </div>
 <div class="select-group mmClass">
     Were you prescribed any medication?
@@ -224,8 +228,10 @@
         <input type="radio" class="chkMulti" name="IsHospitalMedication" value="No">
         <span class="select-btn">No</span>
     </label>
-    If yes, what medication?
-    <input type="text" id="HospitalMedication" name="HospitalMedication" class="form-control d-inline w-auto" />
+    <p id="divHospitalMedication" style="display:none">
+        If yes, what medication?
+        <input type="text" id="HospitalMedication" name="HospitalMedication" class="form-control d-inline w-auto" />
+    </p>
 </div>
 <div class="select-group mmClass">
     Have you been involved in an accident in the past?
@@ -238,25 +244,27 @@
         <input type="radio" class="chkMulti" name="IsAccidentPast" value="No">
         <span class="select-btn">No</span>
     </label>
-    If yes, when?
-    <input type="text" id="AccidentPast" name="AccidentPast" class="form-control d-inline w-auto" />
-    Body parts injured in that accident
-    <input type="text" id="AccidentBodyPart" name="AccidentBodyPart" class="form-control d-inline w-auto" />
-    Did you completely recover?
-    <label>
-        <input type="radio" class="chkMulti" name="IsAccidentRecover" value="Yes">
-        <span class="select-btn">Yes</span>
-    </label>
+    <p id="divIsAccidentPast" style="display:none">
+        If yes, when?
+        <input type="text" id="AccidentPast" name="AccidentPast" class="form-control d-inline w-auto" />
+        Body parts injured in that accident
+        <input type="text" id="AccidentBodyPart" name="AccidentBodyPart" class="form-control d-inline w-auto" />
+        Did you completely recover?
+        <label>
+            <input type="radio" class="chkMulti" name="IsAccidentRecover" value="Yes">
+            <span class="select-btn">Yes</span>
+        </label>
 
-    <label>
-        <input type="radio" class="chkMulti" name="IsAccidentRecover" value="No">
-        <span class="select-btn">No</span>
-    </label>
+        <label>
+            <input type="radio" class="chkMulti" name="IsAccidentRecover" value="No">
+            <span class="select-btn">No</span>
+        </label>
+    </p>
 </div>
 
 <!-- PMH -->
 <div class="select-group">
-    Any Medication conditions?:
+    Any Medical conditions?:
     <label>
         <input type="radio" class="chkMulti" name="IsPMH" value="Yes">
         <span class="select-btn">Yes</span>
@@ -266,50 +274,51 @@
         <input type="radio" class="chkMulti" name="IsPMH" value="No">
         <span class="select-btn">No</span>
     </label>
+    <p id="divIsPMH" style="display:none">
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Diabetes">
+            <span class="select-btn">Diabetes</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="PMH" value="Diabetes">
-        <span class="select-btn">Diabetes</span>
-    </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="High BP">
+            <span class="select-btn">High BP</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="PMH" value="High BP">
-        <span class="select-btn">High BP</span>
-    </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Asthma">
+            <span class="select-btn">Asthma</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="PMH" value="Asthma">
-        <span class="select-btn">Asthma</span>
-    </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Heart disease">
+            <span class="select-btn">Heart disease</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="PMH" value="Heart disease">
-        <span class="select-btn">Heart disease</span>
-    </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Pregnant">
+            <span class="select-btn">Pregnant</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="PMH" value="Pregnant">
-        <span class="select-btn">Pregnant</span>
-    </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Seizure History">
+            <span class="select-btn">Seizure History</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="PMH" value="Seizure History">
-        <span class="select-btn">Seizure History</span>
-    </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Bleeding Problems/Bruise easily/Blood clotting Issues">
+            <span class="select-btn">Bleeding Problems/Bruise easily/Blood clotting Issues</span>
+        </label>
 
-    <label>
-        <input type="checkbox" class="chkMulti" name="PMH" value="Bleeding Problems/Bruise easily/Blood clotting Issues">
-        <span class="select-btn">Bleeding Problems/Bruise easily/Blood clotting Issues</span>
-    </label>
-
-    <label>
-        <input type="checkbox" class="chkMulti" name="PMH" value="Immune Deficiency">
-        <span class="select-btn">Immune Deficiency</span>
-    </label>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    Other:
-    <input id="PMHOther" class="form-control d-inline w-25" style="min-width:37%" />
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PMHOther')"></i>
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Immune Deficiency">
+            <span class="select-btn">Immune Deficiency</span>
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Other:
+        <input id="PMHOther" class="form-control d-inline w-25" style="min-width:37%" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PMHOther')"></i>
+    </p>
 </div>
 
 <!-- PSH -->

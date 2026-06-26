@@ -424,9 +424,9 @@ namespace PainTrax.Web.Controllers
                     {
                         var objPage1 = new tbl_fu_page1()
                         {
-                            pmh = string.Join(", ", model.PMH),
-                            psh = string.Join(", ", model.PSH),
-                            bodypart = string.Join(",", model.Complaints),
+                            pmh = model.PMH!=null ? string.Join(", ", model.PMH) : "",
+                            psh = model.PSH!=null ? string.Join(", ", model.PSH) : "",
+                            bodypart = model.Complaints!=null ? string.Join(",", model.Complaints) : "",
                             allergies = "",
                             assessment = model.Diagnosis,
                             fu_id = newFU,
@@ -448,11 +448,18 @@ namespace PainTrax.Web.Controllers
 
                         using JsonDocument doc = JsonDocument.Parse(json);
 
-                        string[] planUTPI = doc.RootElement
-                                               .GetProperty("PlanUTPI")
-                                               .EnumerateArray()
-                                               .Select(x => x.GetString())
-                                               .ToArray();
+                        string[] planUTPI = Array.Empty<string>();
+                        if (doc.RootElement.TryGetProperty("PlanUTPI", out JsonElement planElement))
+                        {
+                            // 2. Optional: Ensure it is actually an array before enumerating
+                            if (planElement.ValueKind == JsonValueKind.Array)
+                            {
+                                planUTPI = planElement
+                                    .EnumerateArray()
+                                    .Select(x => x.GetString() ?? string.Empty)
+                                    .ToArray();
+                            }
+                        }
                         foreach (string data in planUTPI)
                         {
                             var _obj = new ProcedureDetailsIntakeVM()
@@ -466,12 +473,19 @@ namespace PainTrax.Web.Controllers
                             };
                             _pocservices.SaveProcedureDetailsIntake(_obj);
                         }
+                        string[] recommendation = Array.Empty<string>();
+                        if (doc.RootElement.TryGetProperty("Recommendation", out JsonElement recommendationElement))
+                        {
 
-                        string[] recommendation = doc.RootElement
-                                               .GetProperty("Recommendation")
-                                               .EnumerateArray()
-                                               .Select(x => x.GetString())
-                                               .ToArray();
+                            // 2. Optional: Ensure it is actually an array before enumerating
+                            if (recommendationElement.ValueKind == JsonValueKind.Array)
+                            {
+                                recommendation = recommendationElement
+                                    .EnumerateArray()
+                                    .Select(x => x.GetString() ?? string.Empty)
+                                    .ToArray();
+                            }
+                        }
                         foreach (string data in recommendation)
                         {
                             var _obj = new ProcedureDetailsIntakeVM()

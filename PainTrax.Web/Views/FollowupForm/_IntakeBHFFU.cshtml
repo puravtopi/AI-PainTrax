@@ -110,6 +110,14 @@
                                                 <i class="bi bi-file-earmark-text me-2"></i> Export as PDF
                                             </a>
                                         </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                               href="javascript:void(0)"
+                                               onclick="fnAddIE()">
+                                                <i class="bi bi-file-earmark-text me-2"></i>
+                                                Add Initial
+                                            </a>
+                                        </li>
 
                                         @* <li><hr class="dropdown-divider"></li>
 
@@ -421,6 +429,12 @@
         $("#DOE").val() +
         "_IE_IntakeForm.pdf";
         downloadPDF(fileName);
+    }
+
+     function fnAddIE()
+    {
+    // window.location.href= '@Url.Action("AIInitialIntake", "IntakeForm")?id='+null+'&locid='+$("#LocationId").val();
+         window.location.href= '@Url.Action("AIInitialIntake", "IntakeForm")?locid=' + $("#LocationId").val();
     }
 
     function fnshowPatientList() {

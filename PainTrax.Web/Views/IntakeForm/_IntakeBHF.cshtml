@@ -773,6 +773,13 @@
                     html = html.replace(regex, data[key]);
                 });
 
+                    toggleSection(data.IsPMH === "Yes", "#divIsPMH");
+                    toggleSection(data.IsHospitalTest === "Yes", "#divHospitalTest");
+                    toggleSection(data.IsHospitalMedication === "Yes", "#divHospitalMedication");
+                    toggleSection(data.IsAccidentPast === "Yes", "#divIsAccidentPast");
+                    toggleSection(data.SameDay === "No", "#divSameDay");
+                    toggleSection(data.DirectImpact === "Yes", "#divBodyImpact");
+                    toggleSection(data.LoseConsciousness === "Yes", "#divLoseConsciousness");
                     toggleSection(data.Hospital === "Yes", "#divHospital");
                     toggleSection(data.Allergy === "Yes", "#divAllergy");
                     toggleSection(data.Smoke === "Yes", "#divSmoke");
