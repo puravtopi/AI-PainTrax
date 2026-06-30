@@ -193,7 +193,7 @@ namespace PainTrax.Web.Controllers
                     cnd += " city like '%" + searchValue + "%' or state like '%" + searchValue + "%' or zipcode like '%" + searchValue + "%' or emailid like '%" + searchValue + "%' )";
 
                 }
-                var Data = _services.GetAll(cnd);
+                var Data = _services.GetAllGrid(cnd);
                 //Sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
                 {
@@ -400,7 +400,7 @@ namespace PainTrax.Web.Controllers
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string cnd = " and cmp_id=" + cmpid;
 
-                var data = _services.GetAll(cnd); // Retrieve all attorneys from the database
+                var data = _services.GetAllGrid(cnd); // Retrieve all attorneys from the database
 
                 // Create a new DataTable
                 DataTable dt = new DataTable();
