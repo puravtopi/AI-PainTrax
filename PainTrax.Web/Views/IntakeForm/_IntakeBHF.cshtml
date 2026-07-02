@@ -85,6 +85,12 @@
                                         onclick="saveForm(false)">
                                     Save
                                 </button>
+                                <button type="button" id="btnSuperBill"
+                                        class="btn btn-outline-primary"
+                                        @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                        onclick="DownloadPdf('@ViewBag.Id')">
+                                    Super Bill
+                                </button>
                             </p>
 
                             <!-- Settings Button -->
@@ -773,6 +779,8 @@
                     html = html.replace(regex, data[key]);
                 });
 
+                    toggleSection(data.IsSMH === "Yes", "#divIsSMH");
+                    toggleSection(data.Meds === "Yes", "#divMeds");
                     toggleSection(data.IsPMH === "Yes", "#divIsPMH");
                     toggleSection(data.IsHospitalTest === "Yes", "#divHospitalTest");
                     toggleSection(data.IsHospitalMedication === "Yes", "#divHospitalMedication");
@@ -915,11 +923,15 @@
                             '&locid=' + response.locid;
 
                     }
-
+                    
                 }
                 else {
 
-                    alert("Error: " + response.message);
+                    //alert("Error: " + response.message);
+                        bootbox.alert({
+                            message:  response.message
+                        });
+                      $('#pdfLoader').hide();
                 }
             },
             error: function () {
@@ -1573,6 +1585,48 @@
     {
          window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val();
     }
+    function DownloadPdf(id) {
+        $('#pdfLoader').show();
+     var downloadurl = '@Url.Action("GeneratePdfBHF", "IntakeForm")';
+             downloadurl = downloadurl + '?pdffile=' + 'SUPBILL-BF.pdf' + '&id=' + id ;
+             fetch(downloadurl)
+                 .then(response => {
+                     if (!response.ok) {
+                         throw new Error(`HTTP error! Status: ${response.status}`);
+                     }
+                       const disposition = response.headers.get('Content-Disposition');
+                             let fileName = 'Superbill.pdf';
+                              console.log(disposition);
+                              debugger
+                                if (disposition) {
+                                 const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                                 if (utf8Match) {
+                                         fileName = decodeURIComponent(utf8Match[1]);
+                                     } else {
+                                         const match = disposition.match(/filename="?([^";]+)"?/i);
+                                         if (match) {
+                                             fileName = match[1];
+                                         }
+                                     }
+                                 }
+ 
+                             return response.blob().then(blob => ({
+                                     blob,
+                                     fileName
+                              }));
+                 })
+               .then(({ blob, fileName }) => {
+                     var link = document.createElement('a');
+                     link.href = window.URL.createObjectURL(blob);
+                     link.download = fileName ;
+                     link.click();
+                       $('#pdfLoader').hide();
+                 })
+                 .catch(error => {
+                     console.error('Error downloading Pdf file:', error);
+                 });
+ 
+         }
 </script>
 
 <!-- html2pdf library -->

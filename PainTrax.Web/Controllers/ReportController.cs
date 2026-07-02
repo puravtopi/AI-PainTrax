@@ -2959,13 +2959,13 @@ Rules:
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult PatientImportFromPDFAI(
-                                            string parsedJson,
-                                            string locationId,     // ← new
-                                            string locationName,
-                                            string providerId,     // ← new
-                                            string providerName,
-                                            string fdate
-                                        )   // ← new (optional, for logging/display)
+                                     string parsedJson,
+                                     string locationId,
+                                     string locationName,
+                                     string providerId,
+                                     string providerName,
+                                     string fdate
+                                 )
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             int providerIDrec = Convert.ToInt32(providerId);
@@ -2997,7 +2997,10 @@ Rules:
                 }
 
                 // 3. Map the data
-                List<PatientImportReportVM> lstPatientImportReport = rows.Select(row =>
+                List<PatientImportReportVM> lstPatientImportReport = new List<PatientImportReportVM>();
+                List<string> duplicatePatients = new List<string>();  // Track duplicates for reporting
+
+                foreach (var row in rows)
                 {
                     // --- Parse Name ---
                     string lastName = string.Empty;
@@ -3020,16 +3023,22 @@ Rules:
                     DateTime? dob = DateTime.TryParse(row.DOB, out DateTime parsedDob) ? parsedDob : (DateTime?)null;
                     DateTime? doa = DateTime.TryParse(row.DateOfAccident, out DateTime parsedDoa) ? parsedDoa : (DateTime?)null;
                     DateTime? DOE = DateTime.TryParse(row.DOE, out DateTime parsedDoe) ? parsedDoe : (DateTime?)null;
-                    // --- Create and Map Object ---
-                    return new PatientImportReportVM
+
+                    // ── CHECK IF PATIENT ALREADY EXISTS ──
+                    if (PatientExists(firstName, lastName, dob, locId, cmpid.Value))
                     {
-                        // If last_name is entirely empty but required by the DB, provide a fallback to prevent DB validation errors
+                        // Patient exists - add to duplicate list and skip insertion
+                        duplicatePatients.Add($"{firstName} {lastName} (DOB: {(dob.HasValue ? dob.Value.ToString("MM/dd/yyyy") : "N/A")})");
+                        continue;  // Skip to next row
+                    }
+
+                    // --- Create and Map Object (only if patient doesn't exist) ---
+                    var patientRecord = new PatientImportReportVM
+                    {
                         last_name = string.IsNullOrEmpty(lastName) ? "Unknown" : lastName,
                         first_name = firstName,
-
                         dob = dob,
                         doa = doa,
-
                         sex = row.Sex,
                         address = row.Address,
                         phone = row.Phone,
@@ -3038,7 +3047,7 @@ Rules:
                         employer_address = row.EmployerAddress,
                         emergency_contact = row.EmergencyName,
                         work_phone = row.WorkPhone,
-                        condition_related_to = row.CaseType, // Mapped CaseType to condition_related_to based on context
+                        condition_related_to = row.CaseType,
                         insurance_company = row.InsuranceCompany,
                         insurance_address = row.InsAddress,
                         insurance_phone = row.InsPhone,
@@ -3056,27 +3065,50 @@ Rules:
                         attorney_phone = row.AttorneyPhone,
                         attorney_fax = row.AttorneyFax,
                         imported_at = DateTime.Now,
-                        // If maindoe is not null, use it; otherwise fall back to DOE
                         DOE = DOE ?? DOEmain,
-                        // DOE =  DOE,
                         loc_id = Convert.ToInt32(locationId)
                     };
-                }).ToList();
-                PatientImportReportVM model = new PatientImportReportVM
-                {
-                    cmpy_id = cmpid,
-                    loc_id = Convert.ToInt16(locationId),
-                    lstPatientImportReport = lstPatientImportReport
-                };
-                int result = PatientImportDataToDB(model, providerIDrec);
-                //string locationName = "";
-                if (result > 0)
-                {
-                    TempData["ImportSuccess"] = $"Successfully imported {lstPatientImportReport.Count()} patient record(s) to location \"{Convert.ToString(locationName)}\".";
-                }
-                //TempData["ImportSuccess"] = $"Successfully imported {inserted} patient record(s) to location "{ locationName}".";
-                //TempData["ImportSuccess"] = "Success";// $"Successfully imported {inserted} patient record(s) to location "{ locationName}".";
 
+                    lstPatientImportReport.Add(patientRecord);
+                }
+
+                // ── Only proceed with insertion if there are new patients ──
+                if (lstPatientImportReport.Count > 0)
+                {
+                    PatientImportReportVM model = new PatientImportReportVM
+                    {
+                        cmpy_id = cmpid,
+                        loc_id = Convert.ToInt16(locationId),
+                        lstPatientImportReport = lstPatientImportReport
+                    };
+
+                    int result = PatientImportDataToDB(model, providerIDrec);
+
+                    if (result > 0)
+                    {
+                        // Build success message with duplicate info
+                        string message = $"Successfully imported {lstPatientImportReport.Count()} patient record(s) to location \"{Convert.ToString(locationName)}\".";
+
+                        if (duplicatePatients.Count > 0)
+                        {
+                            message += $" {duplicatePatients.Count} patient(s) already exist and were skipped: {string.Join(", ", duplicatePatients)}";
+                        }
+
+                        TempData["ImportSuccess"] = message;
+                    }
+                }
+                else
+                {
+                    // All patients were duplicates
+                    if (duplicatePatients.Count > 0)
+                    {
+                        TempData["ImportError"] = $"No patients were imported. All {duplicatePatients.Count} record(s) already exist in the database: {string.Join(", ", duplicatePatients)}";
+                    }
+                    else
+                    {
+                        TempData["ImportError"] = "No valid patients to import.";
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -3085,6 +3117,51 @@ Rules:
 
             return RedirectToAction("PatientImportFromPDFAI");
         }
+
+        // ── NEW METHOD: Check if patient already exists ──
+        public bool PatientExists(string firstName, string lastName, DateTime? dob, int locationId, int companyId)
+        {
+            try
+            {
+                string normalizedFirstName = string.IsNullOrWhiteSpace(firstName) ? "" : firstName.Trim().ToLower();
+                string normalizedLastName = string.IsNullOrWhiteSpace(lastName) ? "Unknown" : lastName.Trim().ToLower();
+
+                string dobString = dob.HasValue ? dob.Value.ToString("yyyy-MM-dd") : null;
+
+
+                string query = @"
+            SELECT COUNT(*) as patient_count
+            FROM tbl_patient 
+            WHERE 
+              cmp_id = @companyId
+              AND LOWER(fname) = @firstName
+              AND LOWER(lname) = @lastName
+              AND dob = @dob ";
+
+                MySqlCommand cmd = new MySqlCommand(query);
+                // cmd.Parameters.AddWithValue("@locationId", locationId);
+                cmd.Parameters.AddWithValue("@companyId", companyId);
+                cmd.Parameters.AddWithValue("@firstName", normalizedFirstName);
+                cmd.Parameters.AddWithValue("@lastName", normalizedLastName);
+                cmd.Parameters.AddWithValue("@dob", (object)dobString ?? DBNull.Value);
+
+                DataTable dt = _patientservices.GetData(cmd);
+
+                if (dt.Rows.Count > 0)
+                {
+                    int count = Convert.ToInt32(dt.Rows[0]["patient_count"]);
+                    return count > 0;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error checking patient existence: {ex.Message}");
+                return false;
+            }
+        }
+
 
         #endregion
 

@@ -231,30 +231,37 @@ namespace PainTrax.Web.Controllers
 
                                 if (patientData != null)
                                 {
-                                    string PatientID = patientData[0].id.ToString();
-
-                                    var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", obj.DirName, PatientID);
-
-
-                                    bool folderExists = Directory.Exists(FolderPath);
-                                    if (!folderExists)
-                                        Directory.CreateDirectory(FolderPath);
-
-                                    var filePath = Path.Combine(FolderPath, file.FileName);
-
-                                    // Check If file with same name exists and delete it
-                                    if (System.IO.File.Exists(filePath))
+                                    if (patientData.Count > 1)
                                     {
-                                        System.IO.File.Delete(filePath);
+                                        sb.AppendFormat("<li style='color:red'>{0} - Patient with this name have multiples entries </li>", file.FileName);
                                     }
-
-                                    // Create a new local file and copy contents of uploaded file
-                                    using (var localFile = System.IO.File.OpenWrite(filePath))
-                                    using (var uploadedFile = file.OpenReadStream())
+                                    else
                                     {
-                                        uploadedFile.CopyTo(localFile);
+                                        string PatientID = patientData[0].id.ToString();
+
+                                        var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", obj.DirName, PatientID);
+
+
+                                        bool folderExists = Directory.Exists(FolderPath);
+                                        if (!folderExists)
+                                            Directory.CreateDirectory(FolderPath);
+
+                                        var filePath = Path.Combine(FolderPath, file.FileName);
+
+                                        // Check If file with same name exists and delete it
+                                        if (System.IO.File.Exists(filePath))
+                                        {
+                                            System.IO.File.Delete(filePath);
+                                        }
+
+                                        // Create a new local file and copy contents of uploaded file
+                                        using (var localFile = System.IO.File.OpenWrite(filePath))
+                                        using (var uploadedFile = file.OpenReadStream())
+                                        {
+                                            uploadedFile.CopyTo(localFile);
+                                        }
+                                        sb.AppendFormat("<li style='color:green'>{0} - Uploaded Successfully</li>", file.FileName);
                                     }
-                                    sb.AppendFormat("<li style='color:green'>{0} - Uploaded Successfully</li>", file.FileName);
                                 }
                                 else
                                 {

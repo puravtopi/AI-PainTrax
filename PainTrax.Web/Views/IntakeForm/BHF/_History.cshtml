@@ -334,10 +334,11 @@
         <input type="radio" class="chkMulti" name="IsSMH" value="No">
         <span class="select-btn">No</span>
     </label>
+    <p id="divIsSMH" style="display:none">
+        <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
 
-    <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
-
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i>
+    </p>
 </div>
 
 <!-- Meds -->
@@ -353,24 +354,26 @@
         <input type="radio" class="chkMulti" name="Meds" value="No">
         <span class="select-btn">No</span>
     </label>
-
+    <p id="divMeds" style="display:none">
     <input id="MedsOther" class="form-control d-inline w-25" />
 
     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i>
+    </p>
 </div>
 
 <!-- Allergies -->
 <div class="select-group">
     Drug Allergies:
     <label>
+        <input type="radio" class="chkMulti" name="Allergy" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+    <label>
         <input type="radio" class="chkMulti" name="Allergy" value="No">
         <span class="select-btn">No</span>
     </label>
 
-    <label>
-        <input type="radio" class="chkMulti" name="Allergy" value="Yes">
-        <span class="select-btn">Yes</span>
-    </label>
+   
     <span id="divAllergy" style="display:none">
         @*  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         Drug:
