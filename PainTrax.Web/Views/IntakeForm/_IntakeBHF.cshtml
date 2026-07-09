@@ -9,6 +9,7 @@
     Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
 }
 
+
 <style>
     .error {
         border: 2px solid red !important;
@@ -70,7 +71,7 @@
                         <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
                         <h4 class="text-center mb-4 fw-bold">
-                            Patient Injury Report
+                            Initial Intake
                         </h4>
                         <div class="position-relative">
                             <p id="btnSaveSection" class="mb-0 sticky-buttons">
@@ -417,6 +418,10 @@
 
 <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
 <script>
+
+               var UEBodyPart = '@ViewBag.UEBodyPart';
+               var LEBodyPart = '@ViewBag.LEBodyPart';
+
             var docTemplate = null;
             var formData = null;
             // Path to your saved template file (relative to this HTML file).
@@ -1004,7 +1009,11 @@
 
                         if(selected.length>0){
 
-                            if (selected.includes("Neck"))
+                            //if (selected.includes("Neck"))
+
+                            let sBody=value.replace("Left","");
+                            sBody=sBody.replace("Right","");
+                            if(UEBodyPart.toLowerCase().includes(sBody.trim().toLowerCase()))
                             {
                                 $(".upper").show();
                             }
@@ -1013,7 +1022,7 @@
                                  $(".upper").hide();
                             }
 
-                           if (selected.includes("Lowback"))
+                            if(LEBodyPart.toLowerCase().includes(sBody.trim().toLowerCase()))
                             {
                                 $(".lower").show();
                             }
@@ -1047,6 +1056,8 @@
                              $("#acordPresentComp").hide();
                              $("#acordPhyExam").hide();
                              $("#acordDiagnosis").hide();
+                             $(".upper").hide();
+                             $(".lower").hide();
                         }
 
                         var result = selected.join(', ');

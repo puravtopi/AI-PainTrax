@@ -185,7 +185,10 @@
             data-id="${item.id}"
             data-intakeid="${item.intakeid}"
             data-patientid="${item.patient_id}"
-            data-name="${item.lname} ${item.fname}">
+            data-name="${item.lname} ${item.fname}"
+            data-doa="${item.doa}"
+            data-injurytype="${item.compensation}"
+            data-dob="${item.dob}">
 
             <td>${item.lname} ${item.fname}</td>
 
@@ -237,7 +240,14 @@
         $("#PatientName").val(patientName);
         $("#PatientIEId").val(patientIEId);
         $("#PatientId").val(patientId);
-
+        
+        // $("#DOB").val($(this).data("dob").split('T')[0]);
+        // $("#DOA").val($(this).data("doa").split('T')[0]);
+        $("#DOB").val(formatToISODate($(this).data("dob")));
+        $("#DOA").val(formatToISODate($(this).data("doa")));  
+        //$('input[name="InjuryType"]').val($(this).data("injurytype"));
+        console.log("InuryType:", $(this).data("injurytype"));
+        $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
         console.log("Selected Patient Intake ID:", patientIntakeId);
 
         $("#patientGrid").hide();

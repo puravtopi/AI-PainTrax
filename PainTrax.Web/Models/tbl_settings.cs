@@ -38,6 +38,8 @@
         public string? other5_comma { get; set; }
         public string? other6_comma { get; set; }
         public string? other7_comma { get; set; }
+        public string? UEBodypart { get; set; }
+        public string? LEBodypart { get; set; }
        
     }
 }

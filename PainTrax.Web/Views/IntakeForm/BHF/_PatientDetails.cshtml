@@ -4,9 +4,9 @@
 <!-- Patient Info -->
 <p>
     Patient LName:
-    <input id="LN" name="LN" class="form-control d-inline" required style="width:150px;" />
+    <input id="LN" name="LN" class="form-control d-inline" required style="width:150px;" onchange="fnCheckPatientNameOnly()" />
     FName:
-    <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" required />
+    <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" required onchange="fnCheckPatientNameOnly()" />
     @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
     Gender
     <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
@@ -34,7 +34,7 @@
 <p>
     DOB:
     <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" min="1900-01-01"
-           max="2099-12-31" required />
+           max="2099-12-31" required onchange="fnCheckPatientNameOnly()" />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
@@ -94,7 +94,7 @@
     <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />inches
     Weight:
     <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:50px" />
-   
+
     lbs,
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpO2:
     <input id="SpO" name="SpO" class="form-control d-inline" style="width:100px" />%,
@@ -192,3 +192,40 @@
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
                                             </p> *@
 </div>
+
+<script>
+    function fnCheckPatientNameOnly() {
+        var url = '@Url.Action("CheckPatientNameOnly", "IntakeForm")';
+
+        var id=$("#hdId").val();
+
+        if(id!="0");
+        {
+        var model = {
+            "fname": $("#FN").val(),
+            "lname": $("#LN").val(),
+            "dob": $("#DOB").val(),
+            "id": $("#hdId").val(),
+            "account_no": $("#AccountNo").val()
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+             success: function (data, status, xhr) {
+
+                if (data.result === 1) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>The patient already exists in the system. Please verify the patient details before proceeding.</p>');
+                }
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+        }
+    }
+</script>

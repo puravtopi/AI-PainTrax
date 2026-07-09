@@ -333,6 +333,16 @@ namespace PainTrax.Web.Controllers
 
             var forwardSetting = _settingServices.GetIntakeOne(cmpid.Value);
 
+            if (formData is System.Text.Json.JsonElement element)
+            {
+                // Check if property exists and get it
+                if (element.TryGetProperty("FN", out var property))
+                {
+                    string value = property.GetString();
+                    // or property.GetRawText() / property.GetInt32()
+                }
+            }
+
             if (forwardSetting == null)
             {
                 forwardSetting = new tbl_intake_forward_setting()
@@ -647,6 +657,13 @@ namespace PainTrax.Web.Controllers
                 var filePath = "";
                 var signPath = "";
                 controls.Add("chk_fu", "Yes");
+
+                try
+                {
+                    controls.Add("location", dt.Rows[0]["location"].ToString());
+                }
+                catch { }
+
                 try
                 {
                     DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_fu  where intakeid=" + id);

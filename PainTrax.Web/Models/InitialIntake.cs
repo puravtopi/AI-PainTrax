@@ -441,6 +441,7 @@ namespace PainTrax.Web.Models
         public string Email { get; set; }
         public string Mobile { get; set; }
         public string DLPath { get; set; }
+        public string AccountNo { get; set; }
 
         public DateTime? DOB { get; set; }
 

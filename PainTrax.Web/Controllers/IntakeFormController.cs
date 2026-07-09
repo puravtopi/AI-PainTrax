@@ -728,9 +728,9 @@ namespace PainTrax.Web.Controllers
 
             return RedirectToAction("Index", "Visit");
         }
-        
+
         public IActionResult AIInitialIntake(int? locId, int? id, int? providerId)
-        { 
+        {
             if (providerId == null)
             {
                 if (!HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).HasValue)
@@ -820,6 +820,8 @@ namespace PainTrax.Web.Controllers
             }
 
             var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+            ViewBag.UEBodyPart= HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            ViewBag.LEBodyPart= HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
 
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
@@ -959,8 +961,9 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var result = "0";
 
-            DateTime dob = Convert.ToDateTime(model.DOB);
-            if (IsPatientPresent(model.FN, model.LN, dob))
+            DateTime doa = Convert.ToDateTime(model.DOA);
+
+            if (IsPatientPresent(model.FN, model.LN, doa) && model.Id == "0")
             {
                 return Json(new { success = false, message = "The patient already exists in the system. Please verify the patient details before proceeding." });
             }
@@ -1123,7 +1126,7 @@ namespace PainTrax.Web.Controllers
                                     }
                                 }
 
-                               
+
                                 foreach (string data in recommendation)
                                 {
                                     var _obj = new ProcedureDetailsIntakeVM()
@@ -1429,7 +1432,41 @@ namespace PainTrax.Web.Controllers
             return PartialView("_TodayVisitList", model);
         }
 
+        [HttpPost]
+        public IActionResult CheckPatientNameOnly(VisitVM model)
+        {
+            try
+            {
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                string cnd = "";
 
+                if (!string.IsNullOrEmpty(model.mname))
+                    cnd = " and fname='" + model.fname + "' and lname='" + model.lname + "' and mname='" + model.mname + "'  and cmp_id=" + cmpid;
+                else
+                    cnd = " and fname='" + model.fname + "' and lname='" + model.lname + "' and mname is null  and cmp_id=" + cmpid;
+
+                if (model.doa.HasValue == false)
+                    cnd = cnd + " and doa is null";
+                else
+                    cnd = cnd + " and doa='" + model.doa.Value.ToString("yyyy-MM-dd") + "'";
+
+                if (!string.IsNullOrEmpty(model.account_no))
+                    cnd = cnd + " and account_no='" + model.account_no + "'";
+
+
+                var data = _patientservices.GetAll(cnd);
+
+                if (data.Count > 0)
+                    return Json(new { result = 1, data = data });
+                else
+                    return Json(new { result = 0 });
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "CheckPatientNameOnly");
+                return Json(new { result = -1, message = "An error occurred " });
+            }
+        }
 
         #region private method
         public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "", string provName = "")
@@ -1942,10 +1979,10 @@ namespace PainTrax.Web.Controllers
             }
         }
 
-        private bool IsPatientPresent(string fname,string lname,DateTime dob)
+        private bool IsPatientPresent(string fname, string lname, DateTime doa)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-            string cnd = " and fname='" + fname + "' and lname='" + lname + "' and DATE(DOB)='" + dob.ToString("yyyy-MM-dd") + "'  and cmp_id=" + cmpid;
+            string cnd = " and fname='" + fname + "' and lname='" + lname + "' and DATE(DOA)='" + doa.ToString("yyyy-MM-dd") + "'  and cmp_id=" + cmpid;
 
 
             var data = _patientservices.GetAll(cnd);
@@ -1978,6 +2015,11 @@ namespace PainTrax.Web.Controllers
                 var filePath = "";
                 var signPath = "";
                 controls.Add("chk_ie", "Yes");
+                try
+                {
+                    controls.Add("location", dt.Rows[0]["location"].ToString());
+                }
+                catch { }
                 try
                 {
                     DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
@@ -2080,61 +2122,7 @@ namespace PainTrax.Web.Controllers
             return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
         }
 
-        [HttpGet]
-        //public IActionResult GeneratePdf(string id, string pdffile = "")
-        //{
-        //    string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-        //    string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
-        //    Dictionary<string, string> controls = new Dictionary<string, string>();
-        //    ParentService _parentService = new ParentService();
 
-        //    byte[] pdfBytes = null;
-        //    DataTable dt = _parentService.GetData("select * from vm_patient_ie where intakeid=" + id);
-        //    if (dt.Rows.Count > 0)
-        //    {
-        //        PdfHelper _pdfhelper = new PdfHelper();
-        //        string outputfilename = "";
-        //        var uploadsFolder = "";
-        //        var filePath = "";
-        //        var signPath = "";
-
-        //        try
-        //        {
-        //            uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Downloads/" + cmpclientid);
-        //            filePath = Path.Combine(uploadsFolder, pdffile);
-
-        //            //  signPath = Path.Combine(Directory.GetCurrentDirectory(), "signatures");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            SaveLog(ex, "set Paths");
-        //        }
-
-
-        //        try
-        //        {
-        //            pdfBytes = _pdfhelper.Stamping(filePath, "Id", dt.Rows[0]["patient_id"].ToString(), controls, cmpid, signPath);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            SaveLog(ex, "Pdf Stamping");
-        //        }
-        //        string fileName = $"Superbill.pdf";
-        //        string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
-
-        //        if (!Directory.Exists(folder))
-        //        {
-        //            Directory.CreateDirectory(folder);
-        //        }
-
-        //        string destfilePath = Path.Combine(folder, fileName);
-
-        //        System.IO.File.WriteAllBytes(destfilePath, pdfBytes);
-
-        //    }
-
-        //    return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
-        //}
         [HttpGet]
         public IActionResult GeneratePdf(string id, string pdffile = "")
         {
@@ -2158,6 +2146,11 @@ namespace PainTrax.Web.Controllers
                 var filePath = "";
                 var signPath = "";
                 controls.Add("chk_ie", "Yes");
+                try
+                {
+                    controls.Add("location", dt.Rows[0]["location"].ToString());
+                }
+                catch { }
                 try
                 {
                     DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());

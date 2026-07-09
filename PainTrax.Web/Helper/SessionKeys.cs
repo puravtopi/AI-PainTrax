@@ -35,6 +35,8 @@
         public static string SessionFUDate = "FuDate";
         public static string SessionSideCase = "SideCase";
         public static string SessionShowTableBorder = "TableBorder";
+        public static string SessionUEBodyPart = "UEBodyPart";
+        public static string SessionLEBodyPart = "LEBodyPart";
 
         public static string Sessiondldoe = "dldoe";
         public static string Sessiondldlloc = "dlloc";

@@ -64,6 +64,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@other5_comma", data.other5_comma);
             cm.Parameters.AddWithValue("@other6_comma", data.other6_comma);
             cm.Parameters.AddWithValue("@other7_comma", data.other7_comma);
+           
             Execute(cm);
 
         }
@@ -102,7 +103,9 @@ other3_comma=@other3_comma,
 other4_comma=@other4_comma,
 other5_comma=@other5_comma,
 other6_comma=@other6_comma,
-other7_comma=@other7_comma 
+other7_comma=@other7_comma,
+UEBodypart=@UEBodypart,
+LEBodypart=@LEBodypart
 			where cmp_id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.cmp_id);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
@@ -138,6 +141,8 @@ other7_comma=@other7_comma
             cm.Parameters.AddWithValue("@other6_comma", data.other6_comma);
             cm.Parameters.AddWithValue("@other7_comma", data.other7_comma);
             cm.Parameters.AddWithValue("@table_border", data.table_border);
+            cm.Parameters.AddWithValue("@UEBodypart", data.UEBodypart);
+            cm.Parameters.AddWithValue("@LEBodypart", data.LEBodypart);
 
             Execute(cm);
         }

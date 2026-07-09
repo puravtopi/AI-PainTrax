@@ -273,6 +273,8 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionShowTableBorder, setting.table_border.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionFontFamily, setting.font_family == null ? "" : setting.font_family.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionFontSize, setting.font_size == null ? "" : setting.font_size.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionUEBodyPart, setting.UEBodypart == null ? "" : setting.UEBodypart.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionLEBodyPart, setting.LEBodypart == null ? "" : setting.LEBodypart.ToString());
 
                     }
                     else
