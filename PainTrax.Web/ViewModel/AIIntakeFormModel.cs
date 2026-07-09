@@ -129,6 +129,11 @@
         public List<string> RShSymptoms { get; set; }
         public string AccidentType { get; set; }
         public string DominantHand { get; set; }
+        public string txtDominantHand { get; set; }
+        public string txtLOC { get; set; }
+        public string txtPriorSymptoms { get; set; }
+        public string txtPriorTrauma { get; set; }
+        public string OtherComplaints { get; set; }
         public string HospitalName { get; set; }
         public string IncidentType { get; set; }
         public string PatientFName { get; set; }
@@ -401,6 +406,162 @@
 
         public string PatientIEId { get; set; }
         public string PatientId { get; set; }
+        public List<string> Goniometer { get; set; }
+        public List<string> InterpreterUsed { get; set; }
+
+        public string Dictation { get; set; }
+        public List<string> InjuryTypeHPI { get; set; }
+        public string InjuryTypeOther { get; set; }
+        public string PatientTypeYN { get; set; }
+        public string PriorSymptoms { get; set; }
+        public List<string> Transportation { get; set; }
+        public string TransportationOther { get; set; }
+        public string DailyLifeAssistance { get; set; }
+        public string DailyLifeAssistanceOther { get; set; }
+        public List<string> PSHM { get; set; }
+        public string txtPSH { get; set; }
+        public string PTWeek { get; set; }
+        public string PTMonth { get; set; }
+        public string PTYear { get; set; }
+        //public string PTRelief { get; set; }
+        public List<string> RShPainIn { get; set; }
+        public List<string> RShPainWith { get; set; }
+        public string RShImproveOther { get; set; }
+        public List<string> LShPainIn { get; set; }
+        public List<string> LShPainWith { get; set; }
+        public string LShImproveOther { get; set; }
+        public List<string> RKnPainIn { get; set; }
+        public string RKnSwelling { get; set; }
+        public string RKnRisingFromChair { get; set; }
+        public string RKnUpDown { get; set; }
+        public List<string> RKnDiffi { get; set; }
+        //public List<string> RKnImprove { get; set; }
+        public List<string> LKnPainIn { get; set; }
+        public string LKnSwelling { get; set; }
+        public string LKnRisingFromChair { get; set; }
+        public string LKnUpDown { get; set; }
+        public List<string> LKnDiffi { get; set; }
+        public string RHipPain { get; set; }
+        public List<string> RHipSymptoms { get; set; }
+        public List<string> RHipPainIn { get; set; }
+        public string RHipSwelling { get; set; }
+        public List<string> RHipPainWith { get; set; }
+        public List<string> RHipImprove { get; set; }
+        public string LHipPain { get; set; }
+        public List<string> LHipSymptoms { get; set; }
+        public List<string> LHipPainIn { get; set; }
+        public string LHipSwelling { get; set; }
+        public List<string> LHipPainWith { get; set; }
+        public List<string> LHipImprove { get; set; }
+        public string RElbowPain { get; set; }
+        public List<string> RElbowSymptoms { get; set; }
+        public string RElbowSwelling { get; set; }
+        public List<string> RElbowPainWith { get; set; }
+        public List<string> RElbowImprove { get; set; }
+        public string LElbowPain { get; set; }
+        public List<string> LElbowSymptoms { get; set; }
+        public string LElbowSwelling { get; set; }
+        public List<string> LElbowPainWith { get; set; }
+        public List<string> LElbowImprove { get; set; }
+
+        public string RShPESwelling { get; set; }
+        public List<string> RShTenderness { get; set; }
+        public List<string> RShTemplate { get; set; }
+        //public string RShAbduction { get; set; }
+        public string RShAdduction { get; set; }
+        public string RShForwardFlexion { get; set; }
+        public string RShExtension { get; set; }
+        public string RShExternalRotation { get; set; }
+        public string RShInternalRotation { get; set; }
+
+        public string LShSwelling { get; set; }
+        public List<string> LShTenderness { get; set; }
+        public List<string> LShTemplate { get; set; }
+        public string LShAbduction { get; set; }
+        public string LShAdduction { get; set; }
+        public string LShForwardFlexion { get; set; }
+        public string LShExtension { get; set; }
+        public string LShExternalRotation { get; set; }
+        public string LShInternalRotation { get; set; }
+
+        public string LPEKnSwelling { get; set; }
+        public List<string> LKnTenderness { get; set; }
+        public List<string> LKnTemplate { get; set; }
+        public string LKnFlexion { get; set; }
+        public string LKnExtension { get; set; }
+        public string LKnGrindTest { get; set; }
+        public string LKnDeepFlexion { get; set; }
+
+        public string RHipGait { get; set; }
+        public string RHipSLR { get; set; }
+        public List<string> RHipSLRType { get; set; }
+        public List<string> RHipTemplate { get; set; }
+        public List<string> RHipTenderness { get; set; }
+        public string RHipAbduction { get; set; }
+        public string RHipAdduction { get; set; }
+        public string RHipFlexion { get; set; }
+        public string RHipInternalRotation { get; set; }
+        public string RHipExternalRotation { get; set; }
+        public string RHipFADIR { get; set; }
+        public string RHipFABER { get; set; }
+        public string RHipOBER { get; set; }
+
+        public string LHipGait { get; set; }
+        public string LHipSLR { get; set; }
+        public List<string> LHipSLRType { get; set; }
+        public List<string> LHipTemplate { get; set; }
+        public List<string> LHipTenderness { get; set; }
+        public string LHipAbduction { get; set; }
+        public string LHipAdduction { get; set; }
+        public string LHipFlexion { get; set; }
+        public string LHipInternalRotation { get; set; }
+        public string LHipExternalRotation { get; set; }
+        public string LHipFADIR { get; set; }
+        public string LHipFABER { get; set; }
+        public string LHipOBER { get; set; }
+
+        public string RShElbowSwelling { get; set; }
+        public List<string> RShElbowTenderness { get; set; }
+        public string RShElbowVarus { get; set; }
+        public string RShElbowValgus { get; set; }
+        public string RShElbowTinels { get; set; }
+        public string RShElbowFlexion { get; set; }
+        public string RShElbowExtension { get; set; }
+        public string RShElbowSupination { get; set; }
+        public string RShElbowPronation { get; set; }
+
+        public string LShElbowSwelling { get; set; }
+        public List<string> LShElbowTenderness { get; set; }
+        public string LShElbowVarus { get; set; }
+        public string LShElbowValgus { get; set; }
+        public string LShElbowTinels { get; set; }
+        public string LShElbowFlexion { get; set; }
+        public string LShElbowExtension { get; set; }
+        public string LShElbowSupination { get; set; }
+        public string LShElbowPronation { get; set; }
+
+
+        public List<string> XrayOffice { get; set; }
+        public string XrayViews { get; set; }
+        public List<string> ImagingFindings { get; set; }
+        public string ImagingFindingsDetails { get; set; }
+        public string MRICTDetails { get; set; }
+
+        public string DiagnosisOthers { get; set; }
+
+
+        public List<string> TreatmentPlanC { get; set; }
+        public List<string> SurgicalArea { get; set; }
+        public string ContinuePT { get; set; }
+        public List<string> InjectionStatus { get; set; }
+        public List<string> InjectionArea { get; set; }
+        public List<string> GelInjection { get; set; }
+        public string GelInjectionNo { get; set; }
+        public List<string> GelInjectionOffice { get; set; }
+        public List<string> MRIArea { get; set; }
+        public List<string> XrayArea { get; set; }
+        public string FollowUpDuration { get; set; }
+        public List<string> FollowUpType { get; set; }
     }
 }
 
