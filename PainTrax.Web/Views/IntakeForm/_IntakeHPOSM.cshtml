@@ -172,7 +172,8 @@
                                                 <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
                                                 </select>
                                                 &nbsp;&nbsp;
-                                                Interpreter Used:  <label><input type="checkbox" name="InterpreterUsed" value="Yes" /><span class="select-btn">InterpreterUsed</span></label>
+                                                @* Interpreter Used:   *@
+                                                <label><input type="checkbox" class="chkMulti" name="InterpreterUsed" value="Yes"/> <span class="select-btn">Interpreter Used</span></label>
                                                 &nbsp;&nbsp;
                                                 See Dictation: @* <input id="Dictation" name="Dictation" class="form-control d-inline" style="width:150px;" /> *@
                                                 <input id="Dictation" class="form-control d-inline" style="width:20%" value="None" />
@@ -258,12 +259,20 @@
                                              <div class="select-group">
                                                 <b> HPI:</b>
                                                 Type of Injury:
-                                                <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="MVA"> <span class="select-btn">MVA</span></label>
+                                                <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="MVA">  <span class="select-btn">MVA</span></label>
+                                                <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="Work-Related">  <span class="select-btn">Work-Related</span></label>
+                                                <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="Slip and fall">  <span class="select-btn">Slip and fall</span></label>
+                                                <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="Pedestrian-struck">  <span class="select-btn">Pedestrian-struck</span></label>
+                                                <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="Cyclist-struck">  <span class="select-btn">Cyclist-struck</span></label>
+                                                <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="e-bike">  <span class="select-btn">e-bike</span></label>
+
+
+                                                @* <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="MVA"> <span class="select-btn">MVA</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="Work-Related"> <span class="select-btn">Work-Related</span> </label>
                                                 <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="Slip and fall"> <span class="select-btn">Slip and fall</span> </label>
                                                 <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="Pedestrian-struck"> <span class="select-btn">Pedestrian-struck</span> </label>
                                                 <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="Cyclist-struck"> <span class="select-btn">Cyclist-struck</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="e-bike"> <span class="select-btn">e-bike</span> </label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="e-bike"> <span class="select-btn">e-bike</span> </label> *@
                                                 <p>
                                                 accident Others
                                                 <input type="text" class="form-control d-inline w-25" name="InjuryTypeOther" id="InjuryTypeOther" />.
@@ -285,7 +294,7 @@
                                             </div>
                                             <div class="select-group">
                                                 Vehicle hit:
-                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Rear"> <span class="select-btn">Rear</span>Rear</label>
+                                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Rear"> <span class="select-btn">Rear</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Front"><span class="select-btn">Front</span> </label>
                                                 <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side front"> <span class="select-btn">Driver-side front</span></label>
                                                 <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side Rear"> <span class="select-btn">Driver-side rear</span></label>
@@ -327,17 +336,20 @@
                                                 </p>
                                             </div>
                                             <!-- Hospital -->
+                                           
                                             <div class="select-group">
-                                                Went to hospital:
-                                                <label><input type="radio" name="Hospital" value="Yes"> <span class="select-btn">Yes</span></label>
-                                                <label><input type="radio" name="Hospital" value="No"> <span class="select-btn">No</span></label>
-                                                <div id="divHospital" style="display:none">
-
-                                                    Hospital name:
-                                                    <input id="HospitalName" class="form-control d-inline w-25" />
-                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
+                                                <p>
+                                                    
+                                                    Went to hospital:
+                                                    <label><input type="radio" name="Hospital" value="Yes"> <span class="select-btn">Yes</span></label>
+                                                    <label><input type="radio" name="Hospital" value="No"> <span class="select-btn">No</span></label>
+                                                    <span id="divHospitalName" style="display:none">
+                                                        Hospital name:
+                                                        <input id="HospitalName" class="form-control d-inline" style="width:200px" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
+                                                    </span>
+                                                </p>
+                                                <div id="divHospital" style="display:none">                                                   
                                                     <label><input type="radio" name="Records" value="Yes"> <span class="select-btn">Discharged the same day</span></label>
                                                     <label><input type="radio" name="Records" value="No"> <span class="select-btn">Admitted</span></label>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -347,6 +359,7 @@
                                                     <label><input type="radio" name="Transport" value="Uber"> <span class="select-btn">Uber</span></label>
                                                     <label><input type="radio" name="Transport" value="Cab"> <span class="select-btn">Cab</span></label>
                                                     <label><input type="radio" name="Transport" value="Friend"> <span class="select-btn">Friend</span></label>
+                                                   
                                                 </div>
                                               </div>
                                           
@@ -356,11 +369,11 @@
                                                 <div class="select-group">
                                                     <strong>Any symptoms prior to accident:</strong>
 
-                                                    <label>
-                                                        <input type="radio" name="PriorSymptoms" value="Y"> <span class="select-btn">Yes</span>
                                                    
-                                                        <input type="radio" name="PriorSymptoms" value="N"> <span class="select-btn">No</span>
-                                                    </label>
+                                                         <label><input type="radio" name="PriorSymptoms" value="Y"> <span class="select-btn">Yes</span></label>
+
+                                                <label> <input type="radio" name="PriorSymptoms" value="N"> <span class="select-btn">No</span></label>
+                                                    
                                                     <div id="divPriorSymptoms" style="display:none">
 
 
@@ -372,11 +385,11 @@
                                                <div class="select-group">
                                                     <strong>History of Prior Trauma:</strong>
 
-                                                    <label>
-                                                        <input type="radio" name="PriorTrauma" value="Y"> <span class="select-btn">Yes</span>
+                                                   
+                                                         <label><input type="radio" name="PriorTrauma" value="Y"> <span class="select-btn">Yes</span></label>
+
+                                                <label> <input type="radio" name="PriorTrauma" value="N"> <span class="select-btn">No</span></label>
                                                     
-                                                        <input type="radio" name="PriorTrauma" value="N"> <span class="select-btn">No</span>
-                                                    </label>
                                                     <div id="divPriorTrauma" style="display:none">
 
 
@@ -490,7 +503,7 @@
                                                 </p>
                                                  </div>
                                             <div class="select-group">
-                                                <p>
+                                               <p>
                                                 <!-- Social History -->
                                                
                                                     Smoke:
@@ -500,6 +513,7 @@
                                                         <input id="PPD" class="form-control d-inline" style="width:150px" /> PPD.
                                                         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i>
                                                     </span>
+                                              </p>
                                             </div>
                                             <div class="select-group">
                                                 <p>
@@ -1024,11 +1038,14 @@
                                     </h2>
                                     <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                           
-                                            <label><input type="checkbox" class="chkMulti" name="Goniometer" value=" Goniometer was used"> <span class="select-btn"> Goniometer was used</span></label>
+                                            <div class="select-group">
+                                            <label><input type="checkbox" class="chkMulti" name="Goniometerwasused" value="Goniometer was used"> <span class="select-btn">Goniometer was used</span></label>
+                                            </div>
+
+                                            <div class="select-group">
                                             <div id="rshPE" style="display:none">
                                                 <h6 class="fw-bold">Right Shoulder</h6>
-                                                <div class="select-group">
+                                                
 
                                                     Swelling
                                                     <label><input type="radio" name="RShPESwelling" value="Yes"> <span class="select-btn">Y</span></label>
@@ -1571,9 +1588,12 @@
                                             <div class="treatment-plan">
                                                 <div class="select-group">
                                                 <p>
-                                                        <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Plan Non-surgical"><span class="select-btn"> Plan Non-surgical</span></label>
+                                                        <label><input type="radio" name="Plansurgical" value="Plan Non-surgical"> <span class="select-btn">Plan Non-surgical</span></label>
+                                                        <label><input type="radio" name="Plansurgical" value="Plan Surgical"> <span class="select-btn">Plan Surgical</span></label>
+                                                       
+                                                        @* <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Plan Non-surgical"><span class="select-btn"> Plan Non-surgical</span></label>
 
-                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Plan Surgical"> <span class="select-btn">Plan Surgical</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Plan Surgical"> <span class="select-btn">Plan Surgical</span></label> *@
 
                                                     <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="R/SH"><span class="select-btn"> R/SH</span></label>
 
@@ -1698,7 +1718,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/HIP"> <span class="select-btn">R/HIP</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/HIP"> <span class="select-btn">L/HIP</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/ANK"><span class="select-btn"> R/ANK</span></label>
-                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/ANK"> L/ANK</label>
+                                                    <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/ANK"><span class="select-btn"> L/ANK</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/WRI"><span class="select-btn"> R/WRI</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/WRI"><span class="select-btn"> L/WRI</span></label>
                                                 </p>
@@ -2222,23 +2242,25 @@
                         $("#divLOC").show();
                     else
                         $("#divLOC").hide();
-                         if(data.PriorSymptoms==="Yes")
+                         if(data.PriorSymptoms==="Y")
                         $("#divPriorSymptoms").show();
                     else
                         $("#divPriorSymptoms").hide();
-                if(data.PriorTrauma==="Yes")
+                if(data.PriorTrauma==="Y")
                         $("#divPriorTrauma").show();
                     else
                         $("#divPriorTrauma").hide();
                 if(data.Hospital==="Yes")
+                 {
+                    $("#divHospitalName").show();
                     $("#divHospital").show();
+                 }
                 else
+                {
                     $("#divHospital").hide();
+                    $("#divHospitalName").hide();
 
-                 if(data.Hospital==="Yes")
-                    $("#divHospital").show();
-                else
-                    $("#divHospital").hide();
+                }
 
                 if(data.Allergy==="Yes")
                     $("#divAllergy").show();
