@@ -406,11 +406,11 @@
 
         public string PatientIEId { get; set; }
         public string PatientId { get; set; }
-        public List<string> Goniometer { get; set; }
+        public List<string> Goniometerwasused { get; set; }
         public List<string> InterpreterUsed { get; set; }
 
         public string Dictation { get; set; }
-        public List<string> InjuryTypeHPI { get; set; }
+        public string InjuryTypeHPI { get; set; }
         public string InjuryTypeOther { get; set; }
         public string PatientTypeYN { get; set; }
         public string PriorSymptoms { get; set; }
@@ -549,7 +549,7 @@
 
         public string DiagnosisOthers { get; set; }
 
-
+        public string Plansurgical { get; set; }
         public List<string> TreatmentPlanC { get; set; }
         public List<string> SurgicalArea { get; set; }
         public string ContinuePT { get; set; }
