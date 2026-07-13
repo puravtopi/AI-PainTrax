@@ -42,6 +42,7 @@ namespace PainTrax.Web.Controllers
         private readonly Common _commonservices = new Common();
         private readonly UserService _userService = new UserService();
         private readonly SettingsService _settingServices = new SettingsService();
+        private readonly ForwardServices _forwardServices = new ForwardServices();
         #endregion
 
 
@@ -432,7 +433,7 @@ namespace PainTrax.Web.Controllers
 
                     if (newFU > 0)
                     {
-                        var objPage1 = new tbl_fu_page1()
+                        /*var objPage1 = new tbl_fu_page1()
                         {
                             pmh = model.PMH!=null ? string.Join(", ", model.PMH) : "",
                             psh = model.PSH!=null ? string.Join(", ", model.PSH) : "",
@@ -454,7 +455,40 @@ namespace PainTrax.Web.Controllers
                             treatment_delimit_desc = model.TreatmentDelimitDesc,
                             treatment_details = model.TreatmentDesc
                         };
-                        _fuOtherService.Insert(objOther);
+                        _fuOtherService.Insert(objOther);*/
+
+                        try
+                        {
+                            _forwardServices.GetOnePage1(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+
+                        try
+                        {
+                            _forwardServices.GetOnePage2(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+
+                        try
+                        {
+                            _forwardServices.GetOneNE(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+
+                        try
+                        {
+                            _forwardServices.GetOneOther(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+
 
                         using JsonDocument doc = JsonDocument.Parse(json);
 

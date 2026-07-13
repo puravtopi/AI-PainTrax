@@ -12,6 +12,7 @@ using MS.Models;
 using MS.Services;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.Sec;
+using Org.BouncyCastle.Utilities.Collections;
 using PainTrax.Services;
 using PainTrax.Web.AzureServices;
 using PainTrax.Web.Filter;
@@ -24,6 +25,7 @@ using System.Diagnostics.Metrics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using static PainTrax.Web.Helper.EnumHelper;
 
 
 namespace PainTrax.Web.Controllers
@@ -46,6 +48,7 @@ namespace PainTrax.Web.Controllers
         private readonly TreatmentMasterService _treatmentService = new TreatmentMasterService();
         private readonly ILogger<IntakeFormController> _logger;
         private readonly UserService _userService = new UserService();
+        private readonly DefaultValueSettingServices _defaultSettingService = new DefaultValueSettingServices();
         #endregion
 
         public IntakeFormController(
@@ -820,8 +823,8 @@ namespace PainTrax.Web.Controllers
             }
 
             var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
-            ViewBag.UEBodyPart= HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
-            ViewBag.LEBodyPart= HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+            ViewBag.UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            ViewBag.LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
 
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
@@ -1007,10 +1010,6 @@ namespace PainTrax.Web.Controllers
                 {
                     if (result != "0")
                     {
-
-
-
-
                         tbl_patient objPatient = new tbl_patient()
                         {
                             account_no = null,
@@ -1056,20 +1055,88 @@ namespace PainTrax.Web.Controllers
 
                             if (ie > 0)
                             {
+                                var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
+                                string history = "";
+                                if (defaultPage1 != null)
+                                {
+
+                                    history = defaultPage1.history;
+
+                                    history = history.Replace("#fname", model.FN);
+                                    history = history.Replace("#fn", model.FN);
+                                    history = history.Replace("#lname", model.LN);
+                                    history = history.Replace("#ln", model.LN);
+                                    history = history.Replace("#accidenttype", model.AccidentType);
+                                    history = history.Replace("#dos", model.DOA);
+                                    history = history.Replace("#doi", model.DOE);
+                                    history = history.Replace("#handedness", model.DominantHand);
+                                    history = history.Replace("#sex", model.Gender);
+                                    history = history.Replace("#gender", Common.GetMrMrsFromSex(model.Gender == "male" ? "1" : "2"));
+
+                                }
+                                string assessment = defaultPage1.daignosis_desc == null ? "" : defaultPage1.daignosis_desc;
+                                assessment = assessment.Replace("#sex", model.Gender);
+
                                 var objPage1 = new tbl_ie_page1()
                                 {
-                                    pmh = string.Join(", ", model.PMH),
-                                    psh = string.Join(", ", model.PSH),
+                                    pmh = string.IsNullOrEmpty(string.Join(", ", model.PMH)) ? defaultPage1.pmh : string.Join(", ", model.PMH),
+                                    dd = defaultPage1.dd,
+                                    psh = string.IsNullOrEmpty(string.Join(", ", model.PSH)) ? defaultPage1.psh : string.Join(", ", model.PSH),
                                     bodypart = string.Join(",", model.Complaints),
-                                    allergies = "",
-                                    assessment = model.Diagnosis,
+                                    allergies = defaultPage1.allergies,
+                                    assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : model.Diagnosis,
                                     ie_id = ie,
                                     vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.",
-                                    cc = this.GetCC(model)
-
+                                    cc = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model),
+                                    daignosis_desc = assessment,
+                                    pe = defaultPage1.pe,
+                                    family_history = defaultPage1.family_history,
+                                    history = history,
+                                    medication = defaultPage1.medication,
+                                    note = defaultPage1.note,
+                                    occupation = defaultPage1.occupation,
+                                    plan = defaultPage1.plan,
+                                    rom = defaultPage1.rom,
+                                    social_history = defaultPage1.social_history,
+                                    work_status = defaultPage1.work_status
                                 };
 
                                 _ieService.InsertPage1(objPage1);
+
+                                var defaultPage2 = _defaultSettingService.GetOnePage2(cmpid.Value);
+
+                                if (defaultPage2 != null)
+                                {
+                                    var objPage2 = new tbl_ie_page2()
+                                    {
+                                        ie_id = ie,
+                                        ros = defaultPage2?.ros,
+                                        aod = defaultPage2?.aod,
+                                        other = defaultPage2?.other,
+                                        cmp_id = cmpid.Value,
+                                        patient_id = patientId,
+                                    };
+
+                                    _ieService.InsertPage2(objPage2);
+                                }
+
+                                var defaultNE = _defaultSettingService.GetOneNE(cmpid.Value);
+
+                                if (defaultNE != null)
+                                {
+                                    var objNE = new tbl_ie_ne()
+                                    {
+                                        ie_id = ie,
+                                        neurological_exam = defaultNE?.neurological_exam,
+                                        sensory = defaultNE?.sensory,
+                                        manual_muscle_strength_testing = defaultNE?.manual_muscle_strength_testing,
+                                        other_content = defaultNE?.other_content,
+                                        cmp_id = cmpid.Value,
+                                        patient_id = patientId,
+                                    };
+
+                                    _ieService.InsertNE(objNE);
+                                }
 
                                 var objOther = new tbl_ie_other()
                                 {
