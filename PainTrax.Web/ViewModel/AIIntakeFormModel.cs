@@ -466,7 +466,7 @@
 
         public string RShPESwelling { get; set; }
         public List<string> RShTenderness { get; set; }
-        public List<string> RShTemplate { get; set; }
+        public string RShTemplate { get; set; }
         //public string RShAbduction { get; set; }
         public string RShAdduction { get; set; }
         public string RShForwardFlexion { get; set; }
@@ -476,7 +476,7 @@
 
         public string LShSwelling { get; set; }
         public List<string> LShTenderness { get; set; }
-        public List<string> LShTemplate { get; set; }
+        public string LShTemplate { get; set; }
         public string LShAbduction { get; set; }
         public string LShAdduction { get; set; }
         public string LShForwardFlexion { get; set; }
@@ -486,16 +486,24 @@
 
         public string LPEKnSwelling { get; set; }
         public List<string> LKnTenderness { get; set; }
-        public List<string> LKnTemplate { get; set; }
+        public string LKnTemplate { get; set; }
         public string LKnFlexion { get; set; }
         public string LKnExtension { get; set; }
         public string LKnGrindTest { get; set; }
         public string LKnDeepFlexion { get; set; }
 
+        public string RKnPESwelling { get; set; }
+        public List<string> RKnTenderness { get; set; }
+        public string RKnTemplate { get; set; }
+        public string RKnFlexion { get; set; }
+        public string RKnExtension { get; set; }
+        public string RKnGrindTest { get; set; }
+        public string RKnDeepFlexion { get; set; }
+
         public string RHipGait { get; set; }
         public string RHipSLR { get; set; }
         public List<string> RHipSLRType { get; set; }
-        public List<string> RHipTemplate { get; set; }
+        public string RHipTemplate { get; set; }
         public List<string> RHipTenderness { get; set; }
         public string RHipAbduction { get; set; }
         public string RHipAdduction { get; set; }
@@ -545,11 +553,13 @@
         public string XrayViews { get; set; }
         public List<string> ImagingFindings { get; set; }
         public string ImagingFindingsDetails { get; set; }
+        public string XRayDetails { get; set; }
         public string MRICTDetails { get; set; }
 
         public string DiagnosisOthers { get; set; }
 
         public string Plansurgical { get; set; }
+        public string SurgicalOthers { get; set; }
         public List<string> TreatmentPlanC { get; set; }
         public List<string> SurgicalArea { get; set; }
         public string ContinuePT { get; set; }
