@@ -483,7 +483,8 @@ namespace PainTrax.Web.Controllers
 
                         try
                         {
-                            _forwardServices.GetOneOther(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value);
+                            var follwup = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+                            _forwardServices.GetOneOther(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value,0, follwup);
                         }
                         catch (Exception ex)
                         {

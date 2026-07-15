@@ -49,6 +49,8 @@ namespace PainTrax.Web.Controllers
         private readonly ILogger<IntakeFormController> _logger;
         private readonly UserService _userService = new UserService();
         private readonly DefaultValueSettingServices _defaultSettingService = new DefaultValueSettingServices();
+        private readonly SettingsService _settingservices = new SettingsService();
+        private readonly DefaultDataServices _defaultService = new DefaultDataServices();
         #endregion
 
         public IntakeFormController(
@@ -1077,6 +1079,13 @@ namespace PainTrax.Web.Controllers
                                 string assessment = defaultPage1.daignosis_desc == null ? "" : defaultPage1.daignosis_desc;
                                 assessment = assessment.Replace("#sex", model.Gender);
 
+                                var vital = "";
+
+                                if (!string.IsNullOrEmpty(model.Height) && !string.IsNullOrEmpty(model.Weight))
+                                {
+                                    vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.";
+                                }
+
                                 var objPage1 = new tbl_ie_page1()
                                 {
                                     pmh = string.IsNullOrEmpty(string.Join(", ", model.PMH)) ? defaultPage1.pmh : string.Join(", ", model.PMH),
@@ -1086,7 +1095,7 @@ namespace PainTrax.Web.Controllers
                                     allergies = defaultPage1.allergies,
                                     assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : model.Diagnosis,
                                     ie_id = ie,
-                                    vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.",
+                                    vital = string.IsNullOrEmpty(vital) ? defaultPage1.vital : vital,
                                     cc = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model),
                                     daignosis_desc = assessment,
                                     pe = defaultPage1.pe,
@@ -1141,12 +1150,67 @@ namespace PainTrax.Web.Controllers
                                 var objOther = new tbl_ie_other()
                                 {
                                     ie_id = ie,
+                                   
+                                    patient_id = patientId,
                                     treatment_delimit = model.TreatmentIds,
                                     treatment_delimit_desc = model.TreatmentDelimitDesc,
-                                    treatment_details = model.TreatmentDesc
+                                    treatment_details = model.TreatmentDesc,
+                                    followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate)
                                 };
 
                                 _ieService.InsertOtherPage(objOther);
+
+
+                                var _page3Setting = _settingservices.GetOne(cmpid.Value);
+
+                                var dataPage3 = new tbl_ie_page3();
+
+                                dataPage3.diagcervialbulge_study = "1";
+                                dataPage3.diagcervialbulge_comma = _page3Setting.diagcervialbulge_comma;
+                                dataPage3.diagthoracicbulge_study = "1";
+                                dataPage3.diagthoracicbulge_comma = _page3Setting.diagthoracicbulge_comma;
+                                dataPage3.diaglumberbulge_study = "1";
+                                dataPage3.diaglumberbulge_comma = _page3Setting.diaglumberbulge_comma;
+                                dataPage3.diagleftshoulder_study = "1";
+                                dataPage3.diagleftshoulder_comma = _page3Setting.diagleftshoulder_comma;
+                                dataPage3.diagrightshoulder_study = "1";
+                                dataPage3.diagrightshoulder_comma = _page3Setting.diagrightshoulder_comma;
+                                dataPage3.diagleftknee_study = "1";
+                                dataPage3.diagleftknee_comma = _page3Setting.diagleftknee_comma;
+                                dataPage3.diagrightknee_study = "1";
+                                dataPage3.diagrightknee_comma = _page3Setting.diagrightknee_comma;
+                                dataPage3.diaglumberbulge_study = "1";
+                                dataPage3.diaglumberbulge_comma = _page3Setting.diaglumberbulge_comma;
+
+                                dataPage3.other1_study = "0";
+                                dataPage3.other1_comma = _page3Setting.other1_comma;
+                                dataPage3.other2_study = "0";
+                                dataPage3.other2_comma = _page3Setting.other2_comma;
+                                dataPage3.other3_study = "0";
+                                dataPage3.other3_comma = _page3Setting.other3_comma;
+                                dataPage3.other4_study = "0";
+                                dataPage3.other4_comma = _page3Setting.other4_comma;
+                                dataPage3.other5_study = "0";
+                                dataPage3.other5_comma = _page3Setting.other5_comma;
+                                dataPage3.other6_study = "0";
+                                dataPage3.other6_comma = _page3Setting.other6_comma;
+                                dataPage3.other7_study = "0";
+                                dataPage3.other7_comma = _page3Setting.other7_comma;
+
+                                dataPage3.gait = string.IsNullOrEmpty(dataPage3.gait) ? _page3Setting.gait_default : dataPage3.gait;
+
+
+                                var _defaultdata = _defaultService.GetOneByCompany(cmpid.Value);
+
+                                if (_defaultdata != null)
+                                {
+                                    dataPage3.goal = _defaultdata.goal;
+                                    dataPage3.care = _defaultdata.care;
+                                }
+                                dataPage3.ie_id= ie;
+                                dataPage3.cmp_id = cmpid.Value;
+
+                                _ieService.InsertPage3(dataPage3);
 
                                 using JsonDocument doc = JsonDocument.Parse(json);
 
@@ -1192,8 +1256,6 @@ namespace PainTrax.Web.Controllers
                                             .ToArray();
                                     }
                                 }
-
-
                                 foreach (string data in recommendation)
                                 {
                                     var _obj = new ProcedureDetailsIntakeVM()

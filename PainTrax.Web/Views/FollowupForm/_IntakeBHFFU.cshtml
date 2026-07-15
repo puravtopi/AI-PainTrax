@@ -1082,9 +1082,9 @@
                     var value = data[key];
 
                      // 🔹 Fix DATE format
-        if (type === 'date') {
-            value = formatToISODate(value);
-        }
+                    if (type === 'date') {
+                        value = formatToISODate(value);
+                    }
 
                     if (type === 'radio') {
                         if ($(this).val() == value) {
