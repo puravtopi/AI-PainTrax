@@ -112,12 +112,20 @@
         public string AllergyDrug { get; set; }
         public string ChiroRelief { get; set; }
         public List<string> LKnSymptoms { get; set; }
+        public List<string> LKnSymptomsPatient { get; set; }
+        public List<string> RKnSymptomsPatient { get; set; }
         public List<string> LShSymptoms { get; set; }
         public string LKnReachOverhead { get; set; }
         public string LKnReachBack { get; set; }
         public string LKnSleepIssue { get; set; }
         public List<string> PatientType { get; set; }
         public List<string> RKnSymptoms { get; set; }
+        public string RKnImproveOther { get; set; }
+        public string LKnImproveOther { get; set; }
+        public string RHipImproveOther { get; set; }
+        public string LHipImproveOther { get; set; }
+        public string RElbowImproveOther { get; set; }
+        public string LElbowImproveOther { get; set; }
         public string RShExternal { get; set; }
         public string RKnReachOverhead { get; set; }
         public string RKnReachBack { get; set; }
@@ -378,7 +386,13 @@
         public string GAITrdo { get; set; }
         public string GAITOther { get; set; }
 
-        //public List<string> PlanConservativeTx { get; set; }
+       public List<string> ADL { get; set; }
+        public string ADLSit { get; set; }
+        public string ADLSittxt { get; set; }
+        public string ADLStand { get; set; }
+        public string ADLStandtxt { get; set; }
+        public string ADLWalk { get; set; }
+        public string ADLWalktxt { get; set; }
         public string PlanStart { get; set; }
 
         public List<string> PlanPT { get; set; }
@@ -425,9 +439,11 @@
         public string PTYear { get; set; }
         //public string PTRelief { get; set; }
         public List<string> RShPainIn { get; set; }
+        public List<string> RShPatient { get; set; }
         public List<string> RShPainWith { get; set; }
         public string RShImproveOther { get; set; }
         public List<string> LShPainIn { get; set; }
+        public List<string> LShPatient { get; set; }
         public List<string> LShPainWith { get; set; }
         public string LShImproveOther { get; set; }
         public List<string> RKnPainIn { get; set; }
@@ -440,6 +456,8 @@
         public string LKnSwelling { get; set; }
         public string LKnRisingFromChair { get; set; }
         public string LKnUpDown { get; set; }
+        public string LKndiff { get; set; }
+        public string RKndiff { get; set; }
         public List<string> LKnDiffi { get; set; }
         public string RHipPain { get; set; }
         public List<string> RHipSymptoms { get; set; }
@@ -572,6 +590,9 @@
         public List<string> XrayArea { get; set; }
         public string FollowUpDuration { get; set; }
         public List<string> FollowUpType { get; set; }
+        public List<string> TreatmentPlanUltrasound { get; set; }
+        public string TreatmentPlanUltrasoundtxt { get; set; }
+        public List<string> TreatmentPlanRefer { get; set; }
     }
 }
 
