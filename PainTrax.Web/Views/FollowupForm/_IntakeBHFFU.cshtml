@@ -65,6 +65,7 @@
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
                         <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
+                        <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
                         <h4 class="text-center mb-4 fw-bold">
                             Follow up Intake
                         </h4>
@@ -853,6 +854,10 @@
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
+        debugger
+        formData["ProviderId"] = $("#ProviderId").val();
+        formData["PatientIEId"] = $("#PatientIEId").val();
+        formData["PatientId"] = $("#PatientId").val();
 
         // URLs
         var url = '@Url.Action("SaveForm", "FollowupForm")';
@@ -907,7 +912,7 @@
                     else {
 
                         window.location.href =
-                            '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                            '@Url.Action("Create", "FollowupForm")' +
                             '?id=' + response.id +
                             '&locid=' + response.locid;
 

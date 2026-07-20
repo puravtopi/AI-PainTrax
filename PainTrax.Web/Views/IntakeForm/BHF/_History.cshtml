@@ -169,69 +169,70 @@
             <span class="select-btn">Friend</span>
         </label>
         <input id="TransportOther" name="TransportOther" class="form-control d-inline w-50" />
+
+        <div class="select-group mmClass">
+            Did you go on the same day?
+            <label>
+                <input type="radio" class="chkMulti" name="SameDay" value="Yes">
+                <span class="select-btn">Yes</span>
+            </label>
+
+            <label>
+                <input type="radio" class="chkMulti" name="SameDay" value="No">
+                <span class="select-btn">No</span>
+            </label>
+            <p id="divSameDay" style="display:none">
+                how many days later?
+                <input id="DaysLater" name="DaysLater" class="form-control d-inline w-25" />
+            </p>
+        </div>
+        <div class="select-group mmClass">
+            In the hospital, Did they do any tests?
+            <label>
+                <input type="radio" class="chkMulti" name="IsHospitalTest" value="Yes">
+                <span class="select-btn">Yes</span>
+            </label>
+
+            <label>
+                <input type="radio" class="chkMulti" name="IsHospitalTest" value="No">
+                <span class="select-btn">No</span>
+            </label>
+            <p id="divHospitalTest" style="display:none">
+                If yes, what tests?
+                <label>
+                    <input type="checkbox" class="chkMulti" name="HospitalTest" value="X-rays">
+                    <span class="select-btn">X-rays</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" class="chkMulti" name="HospitalTest" value="CT">
+                    <span class="select-btn">CT</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" class="chkMulti" name="HospitalTest" value="MRI">
+                    <span class="select-btn">MRI</span>
+                </label>
+                <input type="text" id="HospitalTestOther" name="HospitalTestOther" class="form-control d-inline w-auto" />
+            </p>
+        </div>
+        <div class="select-group mmClass">
+            Were you prescribed any medication?
+            <label>
+                <input type="radio" class="chkMulti" name="IsHospitalMedication" value="Yes">
+                <span class="select-btn">Yes</span>
+            </label>
+
+            <label>
+                <input type="radio" class="chkMulti" name="IsHospitalMedication" value="No">
+                <span class="select-btn">No</span>
+            </label>
+            <p id="divHospitalMedication" style="display:none">
+                If yes, what medication?
+                <input type="text" id="HospitalMedication" name="HospitalMedication" class="form-control d-inline w-auto" />
+            </p>
+        </div>
     </div>
-</div>
-<div class="select-group mmClass">
-    Did you go on the same day?
-    <label>
-        <input type="radio" class="chkMulti" name="SameDay" value="Yes">
-        <span class="select-btn">Yes</span>
-    </label>
-
-    <label>
-        <input type="radio" class="chkMulti" name="SameDay" value="No">
-        <span class="select-btn">No</span>
-    </label>
-    <p id="divSameDay" style="display:none">
-        how many days later?
-        <input id="DaysLater" name="DaysLater" class="form-control d-inline w-25" />
-    </p>
-</div>
-<div class="select-group mmClass">
-    In the hospital, Did they do any tests?
-    <label>
-        <input type="radio" class="chkMulti" name="IsHospitalTest" value="Yes">
-        <span class="select-btn">Yes</span>
-    </label>
-
-    <label>
-        <input type="radio" class="chkMulti" name="IsHospitalTest" value="No">
-        <span class="select-btn">No</span>
-    </label>
-    <p id="divHospitalTest" style="display:none">
-        If yes, what tests?
-        <label>
-            <input type="checkbox" class="chkMulti" name="HospitalTest" value="X-rays">
-            <span class="select-btn">X-rays</span>
-        </label>
-
-        <label>
-            <input type="checkbox" class="chkMulti" name="HospitalTest" value="CT">
-            <span class="select-btn">CT</span>
-        </label>
-
-        <label>
-            <input type="checkbox" class="chkMulti" name="HospitalTest" value="MRI">
-            <span class="select-btn">MRI</span>
-        </label>
-        <input type="text" id="HospitalTestOther" name="HospitalTestOther" class="form-control d-inline w-auto" />
-    </p>
-</div>
-<div class="select-group mmClass">
-    Were you prescribed any medication?
-    <label>
-        <input type="radio" class="chkMulti" name="IsHospitalMedication" value="Yes">
-        <span class="select-btn">Yes</span>
-    </label>
-
-    <label>
-        <input type="radio" class="chkMulti" name="IsHospitalMedication" value="No">
-        <span class="select-btn">No</span>
-    </label>
-    <p id="divHospitalMedication" style="display:none">
-        If yes, what medication?
-        <input type="text" id="HospitalMedication" name="HospitalMedication" class="form-control d-inline w-auto" />
-    </p>
 </div>
 <div class="select-group mmClass">
     Have you been involved in an accident in the past?
@@ -355,9 +356,9 @@
         <span class="select-btn">No</span>
     </label>
     <p id="divMeds" style="display:none">
-    <input id="MedsOther" class="form-control d-inline w-25" />
+        <input id="MedsOther" class="form-control d-inline w-25" />
 
-    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i>
     </p>
 </div>
 
@@ -373,7 +374,7 @@
         <span class="select-btn">No</span>
     </label>
 
-   
+
     <span id="divAllergy" style="display:none">
         @*  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         Drug:

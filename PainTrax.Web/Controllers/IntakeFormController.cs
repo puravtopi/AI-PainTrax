@@ -764,6 +764,7 @@ namespace PainTrax.Web.Controllers
             var loc = _locservices.GetOne(objLoc);
 
             ViewBag.LocName = loc?.location;
+            ViewBag.ProviderId = providerId;
 
             var locdata = _commonservices.GetLocations(Convert.ToInt32(cmpid));
 
@@ -1032,6 +1033,7 @@ namespace PainTrax.Web.Controllers
                             state = null,
                             age = string.IsNullOrEmpty(model.Age) ? 0 : Convert.ToInt16(model.Age),
                             cmp_id = cmpid,
+                            
                         };
 
                         var patientId = _patientservices.Insert(objPatient);
@@ -1048,7 +1050,8 @@ namespace PainTrax.Web.Controllers
                                 is_active = true,
                                 patient_id = patientId,
                                 compensation = InjuryType,
-
+                                accident_type= model.AccidentType,
+                                provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
                                 intakeid = Convert.ToInt32(result)
 
                             };
@@ -1068,9 +1071,9 @@ namespace PainTrax.Web.Controllers
                                     history = history.Replace("#fn", model.FN);
                                     history = history.Replace("#lname", model.LN);
                                     history = history.Replace("#ln", model.LN);
-                                    history = history.Replace("#accidenttype", model.AccidentType);
-                                    history = history.Replace("#dos", model.DOA);
-                                    history = history.Replace("#doi", model.DOE);
+                                   
+                                    history = history.Replace("#dos", model.DOE);
+                                    //history = history.Replace("#doi", model.DOA);
                                     history = history.Replace("#handedness", model.DominantHand);
                                     history = history.Replace("#sex", model.Gender);
                                     history = history.Replace("#gender", Common.GetMrMrsFromSex(model.Gender == "male" ? "1" : "2"));
@@ -2036,8 +2039,8 @@ namespace PainTrax.Web.Controllers
 
                 if (model.RShImprove?.Count > 0)
                     cc_rsh = cc_rsh + "There has been improvement with " + string.Join(", ", model.RShImprove) + ".";
-                else
-                    cc_rsh = cc_rsh + "There has been no improvement with physical therapy.";
+                //else
+                //    cc_rsh = cc_rsh + "There has been no improvement with physical therapy.";
 
                 //left soulder
                 if (!string.IsNullOrEmpty(model.LShPain))
@@ -2057,8 +2060,8 @@ namespace PainTrax.Web.Controllers
 
                 if (model.LShImprove?.Count > 0)
                     cc_lsh = cc_lsh + "There has been improvement with " + string.Join(", ", model.LShImprove) + ".";
-                else
-                    cc_lsh = cc_lsh + "There has been no improvement with physical therapy.";
+                //else
+                //    cc_lsh = cc_lsh + "There has been no improvement with physical therapy.";
 
                 //right knee
                 if (!string.IsNullOrEmpty(model.RKnPain))
@@ -2079,8 +2082,8 @@ namespace PainTrax.Web.Controllers
 
                 if (model.RKnImprove?.Count > 0)
                     cc_rkn = cc_rkn + "There has been improvement with " + string.Join(", ", model.RKnImprove) + ".";
-                else
-                    cc_rkn = cc_rkn + "There has been no improvement with physical therapy.";
+                //else
+                //    cc_rkn = cc_rkn + "There has been no improvement with physical therapy.";
 
                 //left knee
                 if (!string.IsNullOrEmpty(model.LKnPain))
@@ -2101,8 +2104,8 @@ namespace PainTrax.Web.Controllers
 
                 if (model.LKnImprove?.Count > 0)
                     cc_lkn = cc_lkn + "There has been improvement with " + string.Join(", ", model.LKnImprove) + ".";
-                else
-                    cc_lkn = cc_lkn + "There has been no improvement with physical therapy.";
+                //else
+                //    cc_lkn = cc_lkn + "There has been no improvement with physical therapy.";
 
                 return cc_rsh + "<br/>" + cc_lsh + "<br/>" + cc_rkn + "<br/>" + cc_lkn;
             }

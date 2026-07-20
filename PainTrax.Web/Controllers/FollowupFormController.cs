@@ -43,6 +43,8 @@ namespace PainTrax.Web.Controllers
         private readonly UserService _userService = new UserService();
         private readonly SettingsService _settingServices = new SettingsService();
         private readonly ForwardServices _forwardServices = new ForwardServices();
+        private readonly DefaultDataServices _defaultService = new DefaultDataServices();
+        private readonly FUPage3Service _fuPage3services = new FUPage3Service();
         #endregion
 
 
@@ -84,6 +86,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.FormData = "";
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
+            ViewBag.ProviderId = providerId;
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             tbl_locations objLoc = new tbl_locations()
@@ -426,7 +429,8 @@ namespace PainTrax.Web.Controllers
                         patient_id = string.IsNullOrEmpty(model.PatientId) ? null : Convert.ToInt32(model.PatientId),
                         type = InjuryType,
                         intakeid = Convert.ToInt32(result),
-                        location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId)
+                        location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
+                        provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId)
                     };
 
                     var newFU = _fuservices.Insert(objFU);
@@ -489,6 +493,71 @@ namespace PainTrax.Web.Controllers
                         catch (Exception ex)
                         {
                         }
+                        try
+                        {
+                            _forwardServices.GetPage3(objFU.patientIE_ID.Value,cmpid.Value, newFU, objFU.patient_id.Value);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+
+                        //try
+                        //{
+                        //    var _page3Setting = _settingServices.GetOne(cmpid.Value);
+
+                        //    var dataPage3 = new tbl_fu_page3();
+
+                        //    dataPage3.diagcervialbulge_study = "1";
+                        //    dataPage3.diagcervialbulge_comma = _page3Setting.diagcervialbulge_comma;
+                        //    dataPage3.diagthoracicbulge_study = "1";
+                        //    dataPage3.diagthoracicbulge_comma = _page3Setting.diagthoracicbulge_comma;
+                        //    dataPage3.diaglumberbulge_study = "1";
+                        //    dataPage3.diaglumberbulge_comma = _page3Setting.diaglumberbulge_comma;
+                        //    dataPage3.diagleftshoulder_study = "1";
+                        //    dataPage3.diagleftshoulder_comma = _page3Setting.diagleftshoulder_comma;
+                        //    dataPage3.diagrightshoulder_study = "1";
+                        //    dataPage3.diagrightshoulder_comma = _page3Setting.diagrightshoulder_comma;
+                        //    dataPage3.diagleftknee_study = "1";
+                        //    dataPage3.diagleftknee_comma = _page3Setting.diagleftknee_comma;
+                        //    dataPage3.diagrightknee_study = "1";
+                        //    dataPage3.diagrightknee_comma = _page3Setting.diagrightknee_comma;
+                        //    dataPage3.diaglumberbulge_study = "1";
+                        //    dataPage3.diaglumberbulge_comma = _page3Setting.diaglumberbulge_comma;
+
+                        //    dataPage3.other1_study = "0";
+                        //    dataPage3.other1_comma = _page3Setting.other1_comma;
+                        //    dataPage3.other2_study = "0";
+                        //    dataPage3.other2_comma = _page3Setting.other2_comma;
+                        //    dataPage3.other3_study = "0";
+                        //    dataPage3.other3_comma = _page3Setting.other3_comma;
+                        //    dataPage3.other4_study = "0";
+                        //    dataPage3.other4_comma = _page3Setting.other4_comma;
+                        //    dataPage3.other5_study = "0";
+                        //    dataPage3.other5_comma = _page3Setting.other5_comma;
+                        //    dataPage3.other6_study = "0";
+                        //    dataPage3.other6_comma = _page3Setting.other6_comma;
+                        //    dataPage3.other7_study = "0";
+                        //    dataPage3.other7_comma = _page3Setting.other7_comma;
+
+                        //    dataPage3.gait = string.IsNullOrEmpty(dataPage3.gait) ? _page3Setting.gait_default : dataPage3.gait;
+
+
+                        //    var _defaultdata = _defaultService.GetOneByCompany(cmpid.Value);
+
+                        //    if (_defaultdata != null)
+                        //    {
+                        //        dataPage3.goal = _defaultdata.goal;
+                        //        dataPage3.care = _defaultdata.care;
+                        //    }
+                        //    dataPage3.fu_id = newFU;
+                        //    dataPage3.ie_id = objFU.patientIE_ID;
+                        //    dataPage3.cmp_id = cmpid.Value;
+
+                        //    _fuPage3services.Insert(dataPage3);
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //}
 
 
                         using JsonDocument doc = JsonDocument.Parse(json);

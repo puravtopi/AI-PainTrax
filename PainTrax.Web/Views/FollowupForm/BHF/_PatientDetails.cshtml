@@ -17,7 +17,7 @@
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   
+
     DOE
     <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" required />
     &nbsp;&nbsp;
@@ -94,7 +94,7 @@
     % temporarily disabled
 </div>
 
-<div id="divWC1" style="display:none;">
+<div id="divWC12" style="display:none;">
     <p>
         Occupation:
         <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
@@ -176,7 +176,7 @@
             success: function (data) {
 
                 let rows = "";
-                
+
 
                 $.each(data, function (i, item) {
 
@@ -185,6 +185,7 @@
             data-id="${item.id}"
             data-intakeid="${item.intakeid}"
             data-patientid="${item.patient_id}"
+            data-providerid="${item.provider_id}"
             data-name="${item.lname} ${item.fname}"
             data-doa="${item.doa}"
             data-injurytype="${item.compensation}"
@@ -236,15 +237,19 @@
         let patientId = $(this).data("patientid");
         let patientIEId = $(this).data("id");
         let patientIntakeId = $(this).data("intakeid");
+        let providerId= $(this).data("providerid");
 
         $("#PatientName").val(patientName);
         $("#PatientIEId").val(patientIEId);
         $("#PatientId").val(patientId);
-        
+        debugger
+        if(providerId!='' && providerId!=null)
+            $("#ProviderId").val(providerId);
+
         // $("#DOB").val($(this).data("dob").split('T')[0]);
         // $("#DOA").val($(this).data("doa").split('T')[0]);
         $("#DOB").val(formatToISODate($(this).data("dob")));
-        $("#DOA").val(formatToISODate($(this).data("doa")));  
+        $("#DOA").val(formatToISODate($(this).data("doa")));
         //$('input[name="InjuryType"]').val($(this).data("injurytype"));
         console.log("InuryType:", $(this).data("injurytype"));
         $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
@@ -258,7 +263,7 @@
             url: url,
             type: 'GET',
             success: function (res) {
-                
+
                 selected=[];
                 $('#bodyPartLinks').text('');
                 $("#divDiagnosis").html(res.diagnosis);
