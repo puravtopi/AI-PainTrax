@@ -604,7 +604,7 @@
         public string txtrelbowPE { get; set; }
         public string txtlelbowPE { get; set; }
         public string StartPhysical { get; set; }
-        public string Planexercises { get; set; }
+        public List<string> Planexercises { get; set; }
         public string txtPlanexercises { get; set; }
         public string MRIordered { get; set; }
         public string Xrayordered { get; set; }
