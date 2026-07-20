@@ -226,14 +226,14 @@
                                             <!-- Chief Complaint -->
                                              <div class="select-group">
                                                 <b> Chief complaint:</b>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" /> <span class="select-btn">R/SH</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" /> <span class="select-btn">L/SH</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> <span class="select-btn">R/KN</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" /> <span class="select-btn">L/KN</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Elbow" data-section="relbowSection" data-pe="relbowPE" /> <span class="select-btn">R/Elb</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Elbow" data-section="lelbowSection" data-pe="lelbowPE" /> <span class="select-btn">L/Elb</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Hip" data-section="rhipSection" data-pe="rhipPE" /> <span class="select-btn">R/Hip</span></label>
-                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" /> <span class="select-btn">L/Hip</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" /> <span class="select-btn">Right Shoulder</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" /> <span class="select-btn">Left Shoulder</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> <span class="select-btn">Right Knee</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" /> <span class="select-btn">Left Knee</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Elbow" data-section="relbowSection" data-pe="relbowPE" /> <span class="select-btn">Right Elbow</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Elbow" data-section="lelbowSection" data-pe="lelbowPE" /> <span class="select-btn">Left Elbow</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Hip" data-section="rhipSection" data-pe="rhipPE" /> <span class="select-btn">Right Hip</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" /> <span class="select-btn">Left Hip</span></label>
                                                 <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
                                            </div>
 
@@ -418,7 +418,7 @@
                                                     </label>
 
                                                     <label>
-                                                        <input type="checkbox" class="chkMulti" name="Transportation" value="Self transportation"> <span class="select-btn">Self transportation</span>
+                                                        <input type="checkbox" class="chkMulti" name="Transportation" value="Self transportation"> <span class="select-btn">Self - transportation</span>
                                                     </label>
                                                     <p>
                                                     Others:
@@ -669,7 +669,7 @@
                                                 
                                             </div>
                                           </div>
-                                            <div id="divWC" style="display:none;">
+                                           @*  <div id="divWC" style="display:none;">
                                                 <!-- Paragraph Description -->
                                                 <p>
                                                     The patient reports that on
@@ -755,7 +755,7 @@
                                                         <option value="physical tasks required for employment">physical tasks required for employment</option>
                                                     </select>
                                                 </p>
-                                            </div>
+                                            </div> *@
                                             
                                         </div>
                                     </div>
@@ -999,6 +999,7 @@
                                                     <label><input type="radio" name="RHipSwelling" value="No"> <span class="select-btn">N</span></label>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     Pain with
+                                                    <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Sitting"><span class="select-btn"> Sitting </span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Standing"><span class="select-btn"> Standing </span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Walking"> <span class="select-btn">Walking </span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Climbing"> <span class="select-btn">Climbing</span> </label>
@@ -1037,6 +1038,7 @@
                                                     <label><input type="radio" name="LHipSwelling" value="No"> <span class="select-btn">N</span></label>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     Pain with
+                                                    <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Sitting"> <span class="select-btn">Sitting</span> </label>
                                                     <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Standing"> <span class="select-btn">Standing</span> </label>
                                                     <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Walking"><span class="select-btn"> Walking </span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Climbing"><span class="select-btn"> Climbing </span></label>
@@ -1143,22 +1145,24 @@
                                             <label><input type="checkbox" class="chkMulti" name="Goniometerwasused" value="Goniometer was used"> <span class="select-btn">Goniometer was used</span></label>
                                             </div>
 
-                                            <div class="select-group">
+                                           
                                             <div id="rshPE" style="display:none">
                                                 <h6 class="fw-bold">Right Shoulder</h6>
-                                                
+                                                 <div class="select-group">
 
                                                     Swelling
                                                     <label><input type="radio" name="RShPESwelling" value="Yes"> <span class="select-btn">Y</span></label>
                                                     <label><input type="radio" name="RShPESwelling" value="No"> <span class="select-btn">N</span></label>
+                                                    <input id="PESwelling" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwelling')"></i>
+                                               
                                                 </div>
-
-                                                    <div class="select-group">
+                                                 <div class="select-group">
                                                     Tenderness to palpation:
                                                     <label><input type="checkbox" class="chkMulti" name="RShTenderness" value="Bicipital groove"> <span class="select-btn">Bicipital groove</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="RShTenderness" value="Greater tuberosity"> <span class="select-btn">Greater tuberosity</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="RShTenderness" value="Posterior joint line"><span class="select-btn"> Posterior joint line</span></label>
-                                                 </div>
+                                              </div>
 
                                                     <div class="select-group">
                                                     Template:
@@ -1201,13 +1205,21 @@
                                                     Internal Rotation:
                                                     <input id="RShInternalRotation" class="form-control d-inline" style="width:50px;" /> /90
                                                 </div>
+                                                <p>
+                                                    <textarea id="txtRSh" class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtRSh')"></i>
+                                                </p>
                                             </div>
+                                           
 
                                             <div id="lshPE" style="display:none">
                                                 <h6 class="fw-bold">Left Shoulder</h6>
                                                 <div class="select-group">
                                                     Swelling
                                                     <label><input type="radio" name="LShSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+                                                    <label><input type="radio" name="LShSwelling" value="No"> <span class="select-btn">N</span></label>
+                                                    <input id="PESwellingLS" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellingLS')"></i>
                                                 </div>
 
                                                 <div class="select-group">
@@ -1250,14 +1262,20 @@
                                                     Internal Rotation:
                                                     <input id="LShInternalRotation" class="form-control d-inline" style="width:50px;" /> /90
                                                 </div>
+                                                <p>
+                                                    <textarea id="txtLSh" class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtLSh')"></i>
+                                                </p>
                                             </div>
-
+                                            
                                             <div id="rknPE" style="display:none">
                                                 <h6 class="fw-bold">Right Knee</h6>
                                                 <div class="select-group">
                                                     Swelling
                                                     <label><input type="radio" name="RKnPESwelling" value="Yes"> <span class="select-btn">Y</span></label>
                                                     <label><input type="radio" name="RKnPESwelling" value="No"><span class="select-btn"> N</span></label>
+                                                    <input id="PESwellingRKn" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellingRKn')"></i>
                                                </div>
 
                                                 <div class="select-group">
@@ -1301,7 +1319,12 @@
                                                     <label><input type="radio" name="RKnDeepFlexion" value="Positive"> <span class="select-btn">Positive</span></label>
                                                     <label><input type="radio" name="RKnDeepFlexion" value="Negative"><span class="select-btn"> Negative</span></label>
                                                 </div>
+                                                <p>
+                                                <textarea id="txtrknPE" class="form-control d-inline" style="width:95%"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtrknPE')"></i>
+                                            </p>
                                             </div>
+                                            
                                             <div id="lknPE" style="display:none">
                                                 <h6 class="fw-bold">Left Knee</h6>
 
@@ -1310,6 +1333,8 @@
                                                     Swelling
                                                     <label><input type="radio" name="LPEKnSwelling" value="Yes"><span class="select-btn"> Y</span></label>
                                                     <label><input type="radio" name="LPEKnSwelling" value="No"> <span class="select-btn">N</span></label>
+                                                    <input id="PESwellingLKn" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellingLKn')"></i>
                                                 </div>
 
                                                 <div class="select-group">
@@ -1353,8 +1378,12 @@
                                                     <label><input type="radio" name="LKnDeepFlexion" value="Positive"> <span class="select-btn">Positive</span></label>
                                                     <label><input type="radio" name="LKnDeepFlexion" value="Negative"> <span class="select-btn">Negative</span></label>
                                                 </div>
+                                                <p>
+                                                    <textarea id="txtlknPE"  class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtlknPE')"></i>
+                                                </p>
                                             </div>
-
+                                            
                                             <div id="rhipPE" style="display:none">
                                                 <h6 class="fw-bold">Right Hip</h6>
 
@@ -1424,7 +1453,12 @@
                                                     <label><input type="radio" name="RHipOBER" value="Negative" checked> <span class="select-btn">Negative</span></label>
                                                     (Default is Negative)
                                                 </div>
+                                                <p>
+                                                    <textarea id="txtrhipPE" class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtrhipPE')"></i>
+                                                </p>
                                             </div>
+                                            
 
                                             <div id="lhipPE" style="display:none">
                                                 <h6 class="fw-bold">Left Hip</h6>
@@ -1446,7 +1480,9 @@
 
                                                 <div class="select-group">
                                                     Template:
-                                                    <label><input type="checkbox" class="chkMulti" name="LHipTemplate" value="Traumatic"> <span class="select-btn">Traumatic</span></label>
+                                                    
+                                                    <label><input type="radio" name="LHipTemplate" value="Traumatic"> <span class="select-btn">Traumatic</span></label>
+                                                    <label><input type="radio" name="LHipTemplate" value="Post-op"> <span class="select-btn">Post-op</span></label>
                                                </div>
 
                                                 <div class="select-group">
@@ -1494,14 +1530,20 @@
                                                     <label><input type="radio" name="LHipOBER" value="Negative" checked> <span class="select-btn">Negative</span></label>
                                                     (Default is Negative)
                                                 </div>
+                                                <p>
+                                                    <textarea id="txtlhipPE" class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtlhipPE')"></i>
+                                                </p>
                                             </div>
-
+                                           
                                             <div id="relbowPE" style="display:none">
                                                 <h6 class="fw-bold">Right Elbow</h6>
                                                 <div class="select-group">
                                                     Swelling:
                                                     <label><input type="radio" name="RShElbowSwelling" value="Yes"> <span class="select-btn">Y</span></label>
                                                     <label><input type="radio" name="RShElbowSwelling" value="No"> <span class="select-btn">N</span></label>
+                                                    <input id="PESwellingrelbow" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellingrelbow')"></i>
                                                 </div>
 
                                                 <div class="select-group">
@@ -1543,13 +1585,20 @@
                                                     Pronation:
                                                     <input id="RShElbowPronation" class="form-control d-inline" style="width:50px;" /> /50
                                                 </div>
+                                                <p>
+                                                    <textarea id="txtrelbowPE"  class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtrelbowPE')"></i>
+                                                </p>
                                             </div>
+                                           
                                             <div id="lelbowPE" style="display:none">
                                                 <h6 class="fw-bold">Left Elbow</h6>
                                                 <div class="select-group">
                                                     Swelling:
                                                     <label><input type="radio" name="LShElbowSwelling" value="Yes"> <span class="select-btn">Y</span></label>
                                                     <label><input type="radio" name="LShElbowSwelling" value="No"> <span class="select-btn">N</span></label>
+                                                    <input id="PESwellinglelbow" class="form-control d-inline w-auto" style="width:80px;" />
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellinglelbow')"></i>
                                                 </div>
 
                                                 <div class="select-group">
@@ -1591,7 +1640,12 @@
                                                     Pronation:
                                                     <input id="LShElbowPronation" class="form-control d-inline" style="width:50px;" /> /50
                                                 </div>
+                                                <p>
+                                                    <textarea id="txtlelbowPE"  class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtlelbowPE')"></i>
+                                                </p>
                                             </div>
+
 
                                             <div class="imaging-section">
 
@@ -1742,12 +1796,25 @@
                                                 </div>
                                                 <div class="select-group">
                                                 <p>
-                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Start Physical Therapy"> <span class="select-btn">Start Physical Therapy.</span></label>
+                                                        <label><input type="radio" name="StartPhysical" value="Start Physical Therapy"> <span class="select-btn">Start Physical Therapy</span></label>
+                                                        <label><input type="radio" name="StartPhysical" value="Continue physical therapy"> <span class="select-btn">Continue physical therapy</span></label>
+                                                   
 
-                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Continue physical therapy"> <span class="select-btn">Continue physical therapy</span></label>
-
-                                                    <input id="ContinuePT" class="form-control d-inline w-25" placeholder="Specify" />
+                                                    
+                                                        <input id="ContinuePT" class="form-control d-inline" style="width:30%" placeholder="Specify" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ContinuePT')"></i>
                                                 </p>
+                                                </div>
+                                                <div class="select-group">
+                                                    <p>
+                                                        <label><input type="checkbox" class="chkMulti" name="Planexercises" value="Transition to home exercises"> <span class="select-btn">Transition to home exercises</span></label>
+                                                        <label><input type="checkbox" class="chkMulti" name="Planexercises" value="Perform at home exercises"> <span class="select-btn">Perform at-home exercises</span></label>                                                      
+
+
+
+                                                        <input id="txtPlanexercises" class="form-control d-inline" style="width:30%" placeholder="Specify" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPlanexercises')"></i>
+                                                    </p>
                                                 </div>
                                                 <div class="select-group">
                                                 <p>
@@ -1782,7 +1849,9 @@
                                                 <p>Ultrasound guided cortisone injection
                                                     <label><input type="checkbox" class="chkMulti" name="TreatmentPlanUltrasound" value="R HIP"> <span class="select-btn">R HIP</span></label>
                                                         <label><input type="checkbox" class="chkMulti" name="TreatmentPlanUltrasound" value="L HIP"> <span class="select-btn">L HIP</span></label>
-                                                        <input id="TreatmentPlanUltrasoundtxt" class="form-control d-inline w-25" placeholder="Specify" />
+                                                        
+                                                         <input id="TreatmentPlanUltrasoundtxt" class="form-control d-inline" style="width:30%" placeholder="Specify" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'TreatmentPlanUltrasoundtxt')"></i>
                                                 </p>
                                                 </div>
                                                 <div class="select-group">
@@ -1833,6 +1902,8 @@
                                                     <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/ELB"> <span class="select-btn">L/ELB</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="MRIArea" value="C Spine"><span class="select-btn"> C Spine</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L Spine"><span class="select-btn"> L Spine</span></label>
+                                                        <input id="MRIordered" class="form-control d-inline" style="width:20%" value="None" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MRIordered')"></i>
                                                 </p>
                                                 </div>
                                                <div class="select-group">
@@ -1849,6 +1920,8 @@
                                                     <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/ANK"><span class="select-btn"> L/ANK</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/WRI"><span class="select-btn"> R/WRI</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/WRI"><span class="select-btn"> L/WRI</span></label>
+                                                        <input id="Xrayordered" class="form-control d-inline" style="width:20%" value="None" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Xrayordered')"></i>
                                                 </p>
                                                 </div>
                                                 <div class="select-group">

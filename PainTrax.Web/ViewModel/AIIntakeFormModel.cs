@@ -535,7 +535,7 @@
         public string LHipGait { get; set; }
         public string LHipSLR { get; set; }
         public List<string> LHipSLRType { get; set; }
-        public List<string> LHipTemplate { get; set; }
+        public string LHipTemplate { get; set; }
         public List<string> LHipTenderness { get; set; }
         public string LHipAbduction { get; set; }
         public string LHipAdduction { get; set; }
@@ -593,6 +593,26 @@
         public List<string> TreatmentPlanUltrasound { get; set; }
         public string TreatmentPlanUltrasoundtxt { get; set; }
         public List<string> TreatmentPlanRefer { get; set; }
+        public string PESwelling { get; set; }
+        public string PESwellingLS { get; set; }
+        public string txtRSh { get; set; }
+        public string txtLSh { get; set; }
+        public string txtrknPE { get; set; }
+        public string txtlknPE { get; set; }
+        public string txtrhipPE { get; set; }
+        public string txtlhipPE { get; set; }
+        public string txtrelbowPE { get; set; }
+        public string txtlelbowPE { get; set; }
+        public string StartPhysical { get; set; }
+        public string Planexercises { get; set; }
+        public string txtPlanexercises { get; set; }
+        public string MRIordered { get; set; }
+        public string Xrayordered { get; set; }
+        public string PESwellingRKn { get; set; }
+        public string PESwellingLKn { get; set; }
+        public string PESwellingrelbow { get; set; }
+        public string PESwellinglelbow { get; set; }
+
     }
 }
 
