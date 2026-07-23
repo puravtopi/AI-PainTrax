@@ -612,6 +612,10 @@
         public string PESwellingLKn { get; set; }
         public string PESwellingrelbow { get; set; }
         public string PESwellinglelbow { get; set; }
+       
+        public string txtGait { get; set; }
+        public string txtPAStatementOther { get; set; }
+        public string txtPAStatement { get; set; }
 
     }
 }

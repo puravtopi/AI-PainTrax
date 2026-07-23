@@ -602,9 +602,13 @@
                                                 </label>
                                                 <label>
                                                     <input type="radio" name="ADLSit" value="N"> <span class="select-btn">No</span>
-                                                </label>                                                
+                                                </label>    
+                                                <span id="divADLSitting" style="display:none">
+                                                       
+                                                    <input id="ADLSittxt" class="form-control d-inline" style="width:150px" />
+                                                    </span>
                                                     
-                                                        <input id="ADLSittxt" class="form-control d-inline" style="width:150px" />
+                                                        
                                                        
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <b>Stand:</b>
@@ -613,9 +617,12 @@
                                                 </label>
                                                 <label>
                                                     <input type="radio" name="ADLStand" value="N"> <span class="select-btn">No</span>
-                                                </label>                                                
-                                                    
-                                                        <input id="ADLStandtxt" class="form-control d-inline" style="width:100px" />mins.
+                                                </label>
+                                                <span id="divADLStand" style="display:none">
+
+                                                    <input id="ADLStandtxt" class="form-control d-inline" style="width:100px" />mins.
+                                                </span>
+                                                        
                                               
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <b>Walk:</b>
@@ -625,9 +632,13 @@
                                                 <label>
                                                     <input type="radio" name="ADLWalk" value="N"> <span class="select-btn">No</span>
                                                 </label>
+                                                <span id="divADLWalk" style="display:none">
 
-                                                <input id="ADLWalktxt" class="form-control d-inline" style="width:100px" />
-                                                blocks.
+                                                    <input id="ADLWalktxt" class="form-control d-inline" style="width:100px" />
+                                                    blocks.
+                                                    </span>
+
+                                                
                                             </div>
                                             <div class="select-group">
                                                
@@ -666,8 +677,14 @@
                                                     <label><input type="radio" name="GAITrdo" value="No assisted device"> <span class="select-btn">No assisted device</span></label>
                                                     
                                                 </p>
+                                                 
                                                 
                                             </div>
+                                            <p>
+                                                <textarea id="txtGait" name="txtGait" class="form-control d-inline" style="width:95%"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtGait')"></i>
+                                                
+                                            </p>
                                           </div>
                                            @*  <div id="divWC" style="display:none;">
                                                 <!-- Paragraph Description -->
@@ -1514,7 +1531,7 @@
 
                                                 <div class="select-group">
                                                     FADIR TEST:
-                                                    <label><input type="radio" name="LHipFADIR" value="Positive"> Positive</label>
+                                                    <label><input type="radio" name="LHipFADIR" value="Positive"> <span class="select-btn">Positive</span></label>
                                                     <label><input type="radio" name="LHipFADIR" value="Negative"> <span class="select-btn">Negative</span></label>
 
                                                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1970,7 +1987,20 @@
                                                     <input id="PainManagementReason" class="form-control d-inline w-25" placeholder="Specify" />
                                                 </p>
                                                 </div>
+                                                <p>
+                                               
+                                                <textarea id="txtPAStatement" name="txtPAStatement" class="form-control d-inline" style="width:95%"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPAStatement')"></i>
+                                            </p>
+                                            <p>
+
+                                                    <textarea id="txtPAStatementOther" name="txtPAStatementOther" class="form-control d-inline" style="width:95%"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPAStatementOther')"></i>
+                                            </p>
+                                               
+                                                
                                               <div class="select-group">
+                                                 
                                                 <p>
                                                         <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="PA statement"> <span class="select-btn">PA statement</span></label>
                                                 </p>
@@ -2461,6 +2491,18 @@
                         $("#divPriorTrauma").show();
                     else
                         $("#divPriorTrauma").hide();
+                 if(data.ADLSit==="Y")
+                           $("#divADLSitting").show();
+                       else
+                           $("#divADLSitting").hide();
+                            if(data.ADLStand==="Y")
+                           $("#divADLStand").show();
+                       else
+                           $("#divADLStand").hide();
+                            if(data.ADLWalk==="Y")
+                           $("#divADLWalk").show();
+                       else
+                           $("#divADLWalk").hide();
                 if(data.Hospital==="Yes")
                  {
                     $("#divHospitalName").show();
