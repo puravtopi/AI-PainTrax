@@ -348,6 +348,7 @@ namespace PainTrax.Web.Services
             param.Add(new MySqlParameter("p_DLPath", model.DLPath));
             param.Add(new MySqlParameter("p_Diagnosis", model.Diagnosis));
             param.Add(new MySqlParameter("p_Treatment", model.Treatment));
+            param.Add(new MySqlParameter("p_AccidentType", model.AccidentType));
            
             var data = ExecuteSP("sp_InsertInitialIntake_ai", param);
 

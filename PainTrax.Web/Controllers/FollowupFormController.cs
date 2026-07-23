@@ -150,7 +150,7 @@ namespace PainTrax.Web.Controllers
 
                 }
             }
-
+            ViewBag.ATList = _commonservices.GetAccidenttype(cmpid.Value);
             var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
 
             if (client_code.ToLower() == "qmppc")
@@ -161,7 +161,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeBHFFU");
+            else return PartialView("_IntakeIMNPFHPCFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -416,6 +416,7 @@ namespace PainTrax.Web.Controllers
 
                 if (initialIntakeAI.Id == 0)
                 {
+                   
 
                     tbl_patient_fu objFU = new tbl_patient_fu()
                     {
@@ -427,11 +428,15 @@ namespace PainTrax.Web.Controllers
                         created_date = System.DateTime.Now,
                         is_active = true,
                         patient_id = string.IsNullOrEmpty(model.PatientId) ? null : Convert.ToInt32(model.PatientId),
-                        type = InjuryType,
+                        type = "FU",
                         intakeid = Convert.ToInt32(result),
                         location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
-                        provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId)
+                        provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
+                        accident_type = model.AccidentType,
                     };
+
+                    var fuData = _ieService.GetLastFU(objFU.patientIE_ID.Value, "FU");
+                    int lFUId = 0;
 
                     var newFU = _fuservices.Insert(objFU);
 
@@ -460,10 +465,15 @@ namespace PainTrax.Web.Controllers
                             treatment_details = model.TreatmentDesc
                         };
                         _fuOtherService.Insert(objOther);*/
+                                               
+
+                        if (fuData != null)
+                            lFUId = fuData.id.Value;
+
 
                         try
                         {
-                            _forwardServices.GetOnePage1(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value);
+                            _forwardServices.GetOnePage1(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value, lFUId);
                         }
                         catch (Exception ex)
                         {
@@ -471,7 +481,7 @@ namespace PainTrax.Web.Controllers
 
                         try
                         {
-                            _forwardServices.GetOnePage2(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value);
+                            _forwardServices.GetOnePage2(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value,lFUId);
                         }
                         catch (Exception ex)
                         {
@@ -479,7 +489,7 @@ namespace PainTrax.Web.Controllers
 
                         try
                         {
-                            _forwardServices.GetOneNE(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value);
+                            _forwardServices.GetOneNE(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value,lFUId);
                         }
                         catch (Exception ex)
                         {
@@ -488,14 +498,14 @@ namespace PainTrax.Web.Controllers
                         try
                         {
                             var follwup = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
-                            _forwardServices.GetOneOther(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value,0, follwup);
+                            _forwardServices.GetOneOther(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value, lFUId, follwup);
                         }
                         catch (Exception ex)
                         {
                         }
                         try
                         {
-                            _forwardServices.GetPage3(objFU.patientIE_ID.Value,cmpid.Value, newFU, objFU.patient_id.Value);
+                            _forwardServices.GetPage3(objFU.patientIE_ID.Value, cmpid.Value, newFU, objFU.patient_id.Value,lFUId);
                         }
                         catch (Exception ex)
                         {

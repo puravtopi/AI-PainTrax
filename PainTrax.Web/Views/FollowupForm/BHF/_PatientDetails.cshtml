@@ -67,6 +67,9 @@
         <input type="radio" name="InjuryType" value="LIEN">
         <span class="select-btn">LIEN</span>
     </label>
+    <p>
+        <select id="AccidentType" class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
+    </p>
 </div>
 
 
@@ -189,6 +192,7 @@
             data-name="${item.lname} ${item.fname}"
             data-doa="${item.doa}"
             data-injurytype="${item.compensation}"
+            data-accidenttype="${item.accidentType}"
             data-dob="${item.dob}">
 
             <td>${item.lname} ${item.fname}</td>
@@ -238,13 +242,17 @@
         let patientIEId = $(this).data("id");
         let patientIntakeId = $(this).data("intakeid");
         let providerId= $(this).data("providerid");
+        let accidentType= $(this).data("accidenttype");
 
         $("#PatientName").val(patientName);
         $("#PatientIEId").val(patientIEId);
         $("#PatientId").val(patientId);
-        debugger
+        
         if(providerId!='' && providerId!=null)
             $("#ProviderId").val(providerId);
+
+        if(accidentType!='' && accidentType!=null)
+            $("#AccidentType").val(accidentType);
 
         // $("#DOB").val($(this).data("dob").split('T')[0]);
         // $("#DOA").val($(this).data("doa").split('T')[0]);

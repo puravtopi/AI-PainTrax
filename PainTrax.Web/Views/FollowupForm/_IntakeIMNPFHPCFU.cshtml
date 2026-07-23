@@ -1010,7 +1010,10 @@
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
-
+        debugger
+        formData["ProviderId"] = $("#providerid").val();
+        formData["PatientIEId"] = $("#PatientIEId").val();
+        formData["PatientId"] = $("#PatientId").val();
         // URLs
         var url = '@Url.Action("SaveForm", "FollowupForm")';
         var indexurl = '@Url.Action("Index", "Visit")';

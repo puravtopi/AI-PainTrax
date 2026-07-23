@@ -4,6 +4,9 @@
     var hasDeletePatient = HttpContextAccessor.HttpContext.Session
         .GetString(SessionKeys.SessionRoleAccess)?
         .Contains("Delete Patient") ?? false;
+
+    var providerId = HttpContextAccessor.HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+    var locationId = HttpContextAccessor.HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
 }
 @{
     var locationOptions = "";
@@ -52,6 +55,7 @@
                     <div class="card-body">
                         <div class="row mb-3">
                             @{
+
                                 if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
                                 {
                                     <div class="col-md-12 col-lg-12">
@@ -355,7 +359,14 @@
                                                 <button id="btnApplyDate" class="btn btn-sm btn-primary">
                                                     Apply
                                                 </button>
-
+                                                <!-- IE In  take -->
+                                                <button id="btnIEIntake" class="btn btn-sm btn-info" onclick="fnshowIntake('IE')">
+                                                    Add IE Intake
+                                                </button>
+                                                 <!-- FU Intake -->
+                                                <button id="btnFUIntake" class="btn btn-sm btn-warning" onclick="fnshowIntake('FU')">
+                                                    Add FU Intake
+                                                </button>
                                             </div>
 
                                         </div>
@@ -604,7 +615,7 @@
         function fnShowSign(pId) {
 
 
-            
+
 
             var url = '@Url.Action("GetSign", "Visit")?pId=' + pId
 
@@ -750,7 +761,7 @@
         }
 
         function fnShowSignatureContent() {
-          
+
             var url = '';
 
             url = '@Url.Action("GetSignContent", "Visit")';
@@ -760,7 +771,7 @@
                 url: url,
                 contentType: "application/x-www-form-urlencoded",
                 success: function (data, status, xhr) {
-                  
+
                     $("#signCon").html(data.sign_content);
                     console.log(data);
                 }
@@ -914,7 +925,7 @@
         }
 
         function fnGetFUList(d) {
-           
+
             var id = d.id;
             var url = '@Url.Action("FuList", "Visit")?ieId=' + id;
             var editurl = '@Url.Action("Create", "FUVisit")?patientIEId=' + id;
@@ -1049,6 +1060,14 @@
               window.location.href = '@Url.Action("Index", "ExportExcel")?id=' + id;
         }
 
+         function fnshowIntake(type)
+         {
+           if(type=='IE')
+                window.location.href = '@Url.Action("AIInitialIntake", "IntakeForm", new { locid = locationId, providerId = providerId })';
+           else
+                window.location.href = '@Url.Action("Create", "FollowupForm", new { locid = locationId, providerId = providerId })';
+         }
+
         function fnPrint() {
             debugger
             const divContents = document.getElementById("signCon").innerHTML;
@@ -1094,6 +1113,7 @@
             };
 
         }
+
 
 
     </script>

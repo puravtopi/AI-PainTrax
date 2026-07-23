@@ -828,6 +828,7 @@ namespace PainTrax.Web.Controllers
             var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
             ViewBag.UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
             ViewBag.LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+            ViewBag.ATList = _commonservices.GetAccidenttype(cmpid.Value);
 
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
@@ -837,7 +838,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeBHF");
+            else return PartialView("_IntakeIMNPFHPC");
             //return View();
         }
 
@@ -994,7 +995,8 @@ namespace PainTrax.Web.Controllers
                     Diagnosis = model.Diagnosis,
                     Treatment = model.Treatment,
                     TreatmentIds = model.TreatmentIds,
-                    TreatmentDelimitDesc = model.TreatmentDelimitDesc
+                    TreatmentDelimitDesc = model.TreatmentDelimitDesc,
+                    AccidentType= model.AccidentType
                 };
                 result = service.SaveInitialIntakeAI(initialIntakeAI);
 
@@ -1052,7 +1054,8 @@ namespace PainTrax.Web.Controllers
                                 compensation = InjuryType,
                                 accident_type= model.AccidentType,
                                 provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
-                                intakeid = Convert.ToInt32(result)
+                                intakeid = Convert.ToInt32(result),
+                                
 
                             };
 
@@ -1110,7 +1113,8 @@ namespace PainTrax.Web.Controllers
                                     plan = defaultPage1.plan,
                                     rom = defaultPage1.rom,
                                     social_history = defaultPage1.social_history,
-                                    work_status = defaultPage1.work_status
+                                    work_status = defaultPage1.work_status,
+                                   
                                 };
 
                                 _ieService.InsertPage1(objPage1);
@@ -2253,7 +2257,6 @@ namespace PainTrax.Web.Controllers
 
             return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
         }
-
 
         [HttpGet]
         public IActionResult GeneratePdf(string id, string pdffile = "")

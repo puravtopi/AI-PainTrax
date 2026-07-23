@@ -165,7 +165,7 @@
             success: function (data) {
 
                 let rows = "";
-                debugger
+
 
                 $.each(data, function (i, item) {
 
@@ -174,7 +174,12 @@
             data-id="${item.id}"
             data-intakeid="${item.intakeid}"
             data-patientid="${item.patient_id}"
-            data-name="${item.lname} ${item.fname}">
+            data-providerid="${item.provider_id}"
+            data-name="${item.lname} ${item.fname}"
+            data-doa="${item.doa}"
+            data-injurytype="${item.compensation}"
+            data-accidenttype="${item.accidentType}"
+            data-dob="${item.dob}">
 
             <td>${item.lname} ${item.fname}</td>
 
@@ -222,11 +227,26 @@
         let patientId = $(this).data("patientid");
         let patientIEId = $(this).data("id");
         let patientIntakeId = $(this).data("intakeid");
+        let providerId= $(this).data("providerid");
+        let accidentType= $(this).data("accidenttype");
 
         $("#PatientName").val(patientName);
         $("#PatientIEId").val(patientIEId);
         $("#PatientId").val(patientId);
 
+        if(providerId!='' && providerId!=null)
+            $("#ProviderId").val(providerId);
+
+        if(accidentType!='' && accidentType!=null)
+            $("#AccidentType").val(accidentType);
+
+        // $("#DOB").val($(this).data("dob").split('T')[0]);
+        // $("#DOA").val($(this).data("doa").split('T')[0]);
+        $("#DOB").val(formatToISODate($(this).data("dob")));
+        $("#DOA").val(formatToISODate($(this).data("doa")));
+        //$('input[name="InjuryType"]').val($(this).data("injurytype"));
+        console.log("InuryType:", $(this).data("injurytype"));
+        $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
         console.log("Selected Patient Intake ID:", patientIntakeId);
 
         $("#patientGrid").hide();
@@ -237,12 +257,12 @@
             url: url,
             type: 'GET',
             success: function (res) {
-                debugger
+
                 selected=[];
                 $('#bodyPartLinks').text('');
                 $("#divDiagnosis").html(res.diagnosis);
                 console.log("Result: "+res.diagnosis);
-                bindForm(res.formData);
+                bindForm(res.formData,res.forwardSetting);
             }
         });
     });
