@@ -19,7 +19,7 @@
     </select>
     &nbsp;&nbsp;
     DOE
-    <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" />
+    <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" class="form-control d-inline w-auto" />
     &nbsp;&nbsp;
     Location: &nbsp;&nbsp;
     <span id="lblLocation">
@@ -29,7 +29,7 @@
 
 <p>
     DOB:
-    <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" />
+    <input id="DOB" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOB" type="date" class="form-control d-inline w-auto" />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
@@ -43,7 +43,7 @@
     lbs.
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     DOA:
-    <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" class="form-control d-inline w-auto" />
 </p>
 
 <!-- Work -->

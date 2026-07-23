@@ -63,17 +63,17 @@
 
 <div class="select-group">
     DOS
-    <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
+    <input id="DOE" name="DOE" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
     &nbsp;&nbsp;
     DOB:
-    <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" oninput="formatDOB(this)" onblur="validateDOB(this)" required />
+    <input id="DOB" name="DOB" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control d-inline" style="width:125px" oninput="formatDOB(this)" onblur="validateDOB(this)" required />
     &nbsp;&nbsp;&nbsp;
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:30px" /> years
     &nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
+    <input id="DOA" name="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
     &nbsp;&nbsp;
     <label>Case Type:</label>
     <label>

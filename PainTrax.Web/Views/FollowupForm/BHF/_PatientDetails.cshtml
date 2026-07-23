@@ -11,7 +11,7 @@
     Patient Name:
     <input id="PatientName" name="PatientName" class="form-control d-inline" style="width:250px;" />
     DOB:
-    <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" min="1900-01-01"
+    <input id="DOB" name="DOB" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control d-inline w-auto" min="1900-01-01"
            max="2099-12-31" required />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Age:
@@ -19,10 +19,10 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     DOE
-    <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" required />
+    <input id="DOE" name="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" required />
     &nbsp;&nbsp;
     DOA:
-    <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+    <input id="DOA" name="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" />
     <div id="patientGrid"
          class="table-responsive border bg-white position-absolute shadow"
          style="width:500px; z-index:999; display:none; max-height:250px; overflow:auto;">
