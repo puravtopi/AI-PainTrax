@@ -593,10 +593,10 @@
                 $("#" + divCC).find("input").prop("checked", false).val("");
                 $("#" + divPE).find("input").prop("checked", false).val("");
             }
-
+           
             renderSectionsInOrder();
         }
-
+           
             function renderSectionsInOrder() {
 
             let ccContainer = $("#presentComplaintContainer");   // create this div
@@ -955,6 +955,7 @@
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
                 loadTemplate();
+                
                 if ('@ViewBag.FormData' != '') {
                     bindForm('@ViewBag.FormData');
                 }
@@ -968,10 +969,6 @@
                     saveForm(true);
 
                 });
-
-
-
-
                 var selected = [];
                 $(document).on('change', 'input[name="Complaints"]', function () {
 
@@ -1058,8 +1055,33 @@
                     var age = calculateAge(dob);
                     $('#Age').val(age);
                 });
-            });
 
+    $('input[name="FUType"]').on('change', function() {
+            if ($(this).val() === 'Post injection FU') {
+                $('#divInjectionFU').show();
+                $('#divNormalFU').hide();
+            } else {
+                $('#divNormalFU').show();
+                $('#divInjectionFU').hide();
+            }
+        });
+     $(document).on('change', 'input[name="RadicularPecentage"]', function () {
+        if ($(this).is(':checked')) {
+            $('#divRadicularPecentage').show();
+        } else {
+            $('#divRadicularPecentage').hide();
+        }
+    });
+
+    $(document).on('change', 'input[name="VASPecentage"]', function () {
+        if ($(this).is(':checked')) {
+            $('#divVASPecentage').show();
+        } else {
+            $('#divVASPecentage').hide();
+        }
+    });
+            });
+                    
             function fnExportDOC() {
                 var htmlContent = $('#previewText').html();
                 var url = '@Url.Action("ExportWord", "IntakeForm")';
@@ -1128,6 +1150,10 @@
 
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
+                    // ADD THESE LINES
+    $('input[name="FUType"]:checked').trigger('change');
+    $('input[name="RadicularPecentage"]:checked').trigger('change');
+    $('input[name="VASPecentage"]:checked').trigger('change');
                     if($("#hdId").val()=="0"){
 
                             $('#divRecommendation')
@@ -1648,6 +1674,7 @@
     function toggleSection(condition, selector) {
         $(selector).toggle(condition);
     }
+        
 
 </script>
 

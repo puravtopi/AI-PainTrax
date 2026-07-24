@@ -21,8 +21,8 @@
         <option value="ambidextrous">A</option>
     </select>
     &nbsp;&nbsp;
-    DOE
-    <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" required class="form-control d-inline w-auto" />
+    DOS
+    <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" required class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     Location: &nbsp;&nbsp;
     <span id="lblLocation">
@@ -33,7 +33,7 @@
 
 <p>
     DOB:
-    <input id="DOB" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOB" type="date" class="form-control d-inline w-auto" min="1900-01-01"
+    <input id="DOB" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOB" type="date" class="form-control d-inline w-auto" min="1900-01-01" onblur="fnvalidateDatefields()"
             required onchange="fnCheckPatientNameOnly()" />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Age:
@@ -41,7 +41,7 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" class="form-control d-inline w-auto" />
+    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
 </p>
 <div class="select-group">
     <strong>Case Type:</strong>
@@ -231,4 +231,150 @@
         });
         }
     }
+    function validateDateStrict(dateStr, fieldLabel, blockFuture, fieldId) {
+
+            var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+            if (!regex.test(dateStr)) {
+                alert(fieldLabel + " must be after 01/01/1900");
+
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
+
+                return null;
+            }
+
+            var parts = dateStr.split('-');
+            var year = parseInt(parts[0], 10);
+            var month = parseInt(parts[1], 10);
+            var day = parseInt(parts[2], 10);
+
+            var date = new Date(year, month - 1, day);
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                alert("Invalid " + fieldLabel);
+
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
+
+                return null;
+            }
+
+            if (blockFuture) {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (date > today) {
+                    alert(fieldLabel + " cannot be future date");
+
+                    if (fieldId === "#DOB")
+                        clearDOBFields();
+                    else
+                        $(fieldId).val('').focus();
+
+                    return null;
+                }
+            }
+
+            return date;
+        }
+            function clearDOBFields() {
+            $('#DOB').val('');
+            $('#Age').val('');
+            $('#pdDOB').text('');
+            $('#pdAge').text('');
+            $('#DOB').focus();
+        }
+           function fnvalidateDatefields() {
+
+            var dob = $('#DOB').val();
+            var dos = $('#DOE').val();
+            var doa = $('#DOA').val();
+
+            var dobDate = null;
+            var dosDate = null;
+            var doaDate = null;
+
+               // DOB
+        if (dob) {
+            dobDate = validateDateStrict(dob, "DOB", true, "#DOB");
+            if (!dobDate) return;
+        }
+
+        // DOS
+        if (dos) {
+            dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
+            if (!dosDate) return;
+        }
+
+        // DOA
+        if (doa) {
+            doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+            if (!doaDate) return;
+        }
+
+            // ---------- DOA vs DOS ----------
+                if (dosDate && doaDate && doaDate > dosDate) {
+            alert("DOA cannot be greater than DOS");
+
+            $('#DOA').val('').focus();
+            $('#pdDOA').text('');
+
+            return;
+        }
+
+            // // ---------- Side panel ----------
+            // var fullname = $("#lname").val() + ' ' + $("#fname").val();
+            // $('#pdName').text(fullname);
+
+            // if (dos) $('#pdDOS').text(fngetAGE(dos));
+            // if (doa) $('#pdDOA').text(fngetAGE(doa));
+
+            // ---------- Age ----------
+            if (dobDate && dosDate) {
+
+                var age = dosDate.getFullYear() - dobDate.getFullYear();
+                var m = dosDate.getMonth() - dobDate.getMonth();
+
+                if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
+                    age--;
+                }
+
+                   if (age > 90) {
+        alert("Age should not be greater than 90 years");
+
+        clearDOBFields();
+
+        return;
+    }
+            }
+
+              // $('#pdCT').text($("#compensation option:selected").text());
+              // $('#pdLoc').text($("#locationid option:selected").text());
+              // $('#pdGender').text($("#gender option:selected").text());
+        }
+        function fngetAGE(inputDate) {
+            if (inputDate) {
+                var date = new Date(inputDate);
+
+                // Extract month, date, and year
+                var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+                var day = date.getDate().toString().padStart(2, '0');
+                var year = date.getFullYear();
+
+                // Format date as MM/dd/yyyy
+                var formattedDate = month + '/' + day + '/' + year;
+
+                return formattedDate;
+            }
+            return '';
+        }
 </script>

@@ -164,7 +164,7 @@
                                             <div class="select-group">
 
                                                 DOS
-                                                <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
+                                                <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
                                                 @* <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" /> *@
                                                 &nbsp;&nbsp;
                                                 Location: &nbsp;&nbsp;
@@ -203,12 +203,12 @@
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtDominantHand')"></i>
                                                 <p>
                                                 DOB:
-                                                <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" oninput="formatDOB(this)" onblur="validateDOB(this)" />
+                                                <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
                                                 &nbsp;&nbsp; Age:
                                                 <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
                                                
-                                                &nbsp;&nbsp;DOA:                                                
-                                                <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" oninput="validateYear(this)" />
+                                                &nbsp;&nbsp;DOA:
+                                                    <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
                                                 </p>
                                             </div>
 
@@ -3228,104 +3228,250 @@
                 // Set Age
                 $('#Age').val(calculateAge(formattedDate));
             }
-             function validateYear(input) {
+            function validateDateStrict(dateStr, fieldLabel, blockFuture, fieldId) {
 
-        if (input.value) {
+            var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-            let year = input.value.split("-")[0];
+            if (!regex.test(dateStr)) {
+                alert(fieldLabel + " must be after 01/01/1900");
 
-            if (year.length > 4) {
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
 
-                alert("Year must be 4 digits only.");
-                input.value = "";
-            }
-        }
-    }
-    function validateDOB(input) {
-
-        if (!input.value)
-            return;
-
-        let year = input.value.split("-")[0];
-
-        // Check year length
-        if (year.length > 4){
-
-            alert("Year must be 4 digits only");
-            input.value = "";
-            return;
-        }
-
-        let selectedDate = new Date(input.value);
-        let minDate = new Date("1900-01-01");
-        let today = new Date();
-
-        today.setHours(0, 0, 0, 0);
-
-        // Check minimum date
-        if (selectedDate < minDate) {
-
-            alert("DOB should be after 01/01/1900");
-            input.value = "";
-            return;
-        }
-
-        // Check future date
-        if (selectedDate > today) {
-
-            alert("Future date is not allowed");
-            input.value = "";
-            return;
-        }
-    }
-    function formatDOB(input) {
-        var dob = $('#dob').val();
-        // ---------- DOB ----------
-        if (dob) {
-            dobDate = validateDateStrict(dob, "DOB", true);
-            if (!dobDate) return;
-        }
-    }
-    function validateDateStrict(dateStr, fieldLabel, blockFuture) {
-
-        // Accept only YYYY-MM-DD (what <input type="date"> returns)
-        var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
-
-        if (!regex.test(dateStr)) {
-            alert(fieldLabel + " must be after 01/01/1900");
-            return null;
-        }
-
-        var parts = dateStr.split('-');
-        var year  = parseInt(parts[0], 10);
-        var month = parseInt(parts[1], 10);
-        var day   = parseInt(parts[2], 10);
-
-        var date = new Date(year, month - 1, day);
-
-        // Invalid calendar date
-        if (
-            date.getFullYear() !== year ||
-            date.getMonth() !== month - 1 ||
-            date.getDate() !== day
-        ) {
-            alert("Invalid " + fieldLabel);
-            return null;
-        }
-
-        // DOB cannot be future
-        if (blockFuture) {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            if (date > today) {
-                alert(fieldLabel + " cannot be future date");
                 return null;
             }
+
+            var parts = dateStr.split('-');
+            var year = parseInt(parts[0], 10);
+            var month = parseInt(parts[1], 10);
+            var day = parseInt(parts[2], 10);
+
+            var date = new Date(year, month - 1, day);
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                alert("Invalid " + fieldLabel);
+
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
+
+                return null;
+            }
+
+            if (blockFuture) {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (date > today) {
+                    alert(fieldLabel + " cannot be future date");
+
+                    if (fieldId === "#DOB")
+                        clearDOBFields();
+                    else
+                        $(fieldId).val('').focus();
+
+                    return null;
+                }
+            }
+
+            return date;
+        }
+            function clearDOBFields() {
+            $('#DOB').val('');
+            $('#Age').val('');
+            $('#pdDOB').text('');
+            $('#pdAge').text('');
+            $('#DOB').focus();
+        }
+           function fnvalidateDatefields() {
+
+            var dob = $('#DOB').val();
+            var dos = $('#DOE').val();
+            var doa = $('#DOA').val();
+
+            var dobDate = null;
+            var dosDate = null;
+            var doaDate = null;
+
+               // DOB
+        if (dob) {
+            dobDate = validateDateStrict(dob, "DOB", true, "#DOB");
+            if (!dobDate) return;
         }
 
-        return date;
+        // DOS
+        if (dos) {
+            dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
+            if (!dosDate) return;
+        }
+
+        // DOA
+        if (doa) {
+            doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+            if (!doaDate) return;
+        }
+
+            // ---------- DOA vs DOS ----------
+                if (dosDate && doaDate && doaDate > dosDate) {
+            alert("DOA cannot be greater than DOS");
+
+            $('#DOA').val('').focus();
+            $('#pdDOA').text('');
+
+            return;
+        }
+
+            // // ---------- Side panel ----------
+            // var fullname = $("#lname").val() + ' ' + $("#fname").val();
+            // $('#pdName').text(fullname);
+
+            // if (dos) $('#pdDOS').text(fngetAGE(dos));
+            // if (doa) $('#pdDOA').text(fngetAGE(doa));
+
+            // ---------- Age ----------
+            if (dobDate && dosDate) {
+
+                var age = dosDate.getFullYear() - dobDate.getFullYear();
+                var m = dosDate.getMonth() - dobDate.getMonth();
+
+                if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
+                    age--;
+                }
+
+                   if (age > 90) {
+        alert("Age should not be greater than 90 years");
+
+        clearDOBFields();
+
+        return;
     }
+            }
+
+              // $('#pdCT').text($("#compensation option:selected").text());
+              // $('#pdLoc').text($("#locationid option:selected").text());
+              // $('#pdGender').text($("#gender option:selected").text());
+        }
+        function fngetAGE(inputDate) {
+            if (inputDate) {
+                var date = new Date(inputDate);
+
+                // Extract month, date, and year
+                var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+                var day = date.getDate().toString().padStart(2, '0');
+                var year = date.getFullYear();
+
+                // Format date as MM/dd/yyyy
+                var formattedDate = month + '/' + day + '/' + year;
+
+                return formattedDate;
+            }
+            return '';
+        }
+    //          function validateYear(input) {
+
+    //     if (input.value) {
+
+    //         let year = input.value.split("-")[0];
+
+    //         if (year.length > 4) {
+
+    //             alert("Year must be 4 digits only.");
+    //             input.value = "";
+    //         }
+    //     }
+    // }
+    // function validateDOB(input) {
+
+    //     if (!input.value)
+    //         return;
+
+    //     let year = input.value.split("-")[0];
+
+    //     // Check year length
+    //     if (year.length > 4){
+
+    //         alert("Year must be 4 digits only");
+    //         input.value = "";
+    //         return;
+    //     }
+
+    //     let selectedDate = new Date(input.value);
+    //     let minDate = new Date("1900-01-01");
+    //     let today = new Date();
+
+    //     today.setHours(0, 0, 0, 0);
+
+    //     // Check minimum date
+    //     if (selectedDate < minDate) {
+
+    //         alert("DOB should be after 01/01/1900");
+    //         input.value = "";
+    //         return;
+    //     }
+
+    //     // Check future date
+    //     if (selectedDate > today) {
+
+    //         alert("Future date is not allowed");
+    //         input.value = "";
+    //         return;
+    //     }
+    // }
+    // function formatDOB(input) {
+    //     var dob = $('#dob').val();
+    //     // ---------- DOB ----------
+    //     if (dob) {
+    //         dobDate = validateDateStrict(dob, "DOB", true);
+    //         if (!dobDate) return;
+    //     }
+    // }
+    // function validateDateStrict(dateStr, fieldLabel, blockFuture) {
+
+    //     // Accept only YYYY-MM-DD (what <input type="date"> returns)
+    //     var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+    //     if (!regex.test(dateStr)) {
+    //         alert(fieldLabel + " must be after 01/01/1900");
+    //         return null;
+    //     }
+
+    //     var parts = dateStr.split('-');
+    //     var year  = parseInt(parts[0], 10);
+    //     var month = parseInt(parts[1], 10);
+    //     var day   = parseInt(parts[2], 10);
+
+    //     var date = new Date(year, month - 1, day);
+
+    //     // Invalid calendar date
+    //     if (
+    //         date.getFullYear() !== year ||
+    //         date.getMonth() !== month - 1 ||
+    //         date.getDate() !== day
+    //     ) {
+    //         alert("Invalid " + fieldLabel);
+    //         return null;
+    //     }
+
+    //     // DOB cannot be future
+    //     if (blockFuture) {
+    //         var today = new Date();
+    //         today.setHours(0, 0, 0, 0);
+
+    //         if (date > today) {
+    //             alert(fieldLabel + " cannot be future date");
+    //             return null;
+    //         }
+    //     }
+
+    //     return date;
+    // }
 </script>
 
 @* for file upload *@
