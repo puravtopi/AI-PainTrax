@@ -838,7 +838,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeIMNPFHPC");
+            else return PartialView("_IntakeBHF");
             //return View();
         }
 
@@ -1304,7 +1304,7 @@ namespace PainTrax.Web.Controllers
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId,provid= model.ProviderId });
         }
 
         [HttpPost]

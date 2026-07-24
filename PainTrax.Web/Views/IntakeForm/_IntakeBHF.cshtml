@@ -206,7 +206,7 @@
                                         <div class="accordion-body">
 
                                             <ol> <div class="row" id="divDiagnosis" name="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
-                                            
+
                                             <br>
                                             <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
                                             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
@@ -246,7 +246,7 @@
                                     <div id="collapseNote" class="accordion-collapse collapse" aria-labelledby="headingNote" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <p>
-                                                
+
                                                 <textarea id="DrNote" name="DrNote" rows="4 " class="form-control d-inline" style="width:95%"></textarea>
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DrNote')"></i>
                                             </p>
@@ -907,12 +907,16 @@
                             },
                             callback: function (result) {
                                 if (result) {
-                                       $('#patientForm')[0].reset();
-                                       var today = new Date().toISOString().split('T')[0];
-                                       $('#DOE').val(today);
-                                       $('#bodyPartLinks').html('');
-                                       $('#divDiagnosis').html('');
+                                    let locId= $("#LocationId").val() || 0;
+                                    let provId=$("#ProviderId").val() || 0;
+                                       
+                                        window.location.href =
+                                        '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                                        '?providerId=' + provId +
+                                        '&id=0' + 
+                                        '&locid=' + locId;
                                        $('#pdfLoader').hide();
+
                                 }
                                 else {
                                      window.location.href = indexurl;
@@ -926,10 +930,11 @@
                         window.location.href =
                             '@Url.Action("AIInitialIntake", "IntakeForm")' +
                             '?id=' + response.id +
+                            '&providerId=' + response.provid+
                             '&locid=' + response.locid;
 
                     }
-                    
+
                 }
                 else {
 
@@ -1018,7 +1023,7 @@
                                  return UEBodyPart.toLowerCase().includes(sBody.toLowerCase().trim());
                             });
 
-                           
+
                             if(isUEPresent)
                             {
                                 $(".upper").show();
@@ -1630,7 +1635,7 @@
                                          }
                                      }
                                  }
- 
+
                              return response.blob().then(blob => ({
                                      blob,
                                      fileName
@@ -1646,7 +1651,7 @@
                  .catch(error => {
                      console.error('Error downloading Pdf file:', error);
                  });
- 
+
          }
 </script>
 

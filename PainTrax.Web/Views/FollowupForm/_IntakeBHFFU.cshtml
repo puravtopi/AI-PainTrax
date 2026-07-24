@@ -854,7 +854,7 @@
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
-        debugger
+        
         formData["ProviderId"] = $("#ProviderId").val();
         formData["PatientIEId"] = $("#PatientIEId").val();
         formData["PatientId"] = $("#PatientId").val();
@@ -895,12 +895,16 @@
                             },
                             callback: function (result) {
                                 if (result) {
-                                       $('#patientForm')[0].reset();
-                                       var today = new Date().toISOString().split('T')[0];
-                                       $('#DOE').val(today);
-                                       $('#bodyPartLinks').text('');
-                                       $('#divDiagnosis').html('');
+                                    let locId= $("#LocationId").val() || 0;
+                                    let provId=$("#ProviderId").val() || 0;
+                                      
+                                        window.location.href =
+                                        '@Url.Action("Create", "FollowupForm")' +
+                                        '?providerId=' + provId +
+                                        '&id=0' +
+                                        '&locid=' + locId;
                                        $('#pdfLoader').hide();
+                                      
                                 }
                                 else {
                                      window.location.href = indexurl;
@@ -914,6 +918,7 @@
                         window.location.href =
                             '@Url.Action("Create", "FollowupForm")' +
                             '?id=' + response.id +
+                            '&providerId=' + response.provid+
                             '&locid=' + response.locid;
 
                     }
