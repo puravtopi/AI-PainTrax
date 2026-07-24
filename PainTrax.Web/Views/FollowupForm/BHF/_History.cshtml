@@ -41,12 +41,21 @@
         <p>
             During that
             <input type="text" id="During" name="During" class="form-control d-inline" style="width:150px" />
-            period patient reported: Radicular symptoms had improved by greater than
-            <input type="text" id="RadicularSys" name="RadicularSys" class="form-control d-inline" style="width:70px" />%
+            period patient reported: Radicular symptoms had improved 
+            <label><input type="checkbox" class="chkMulti" name="RadicularPecentage" value="by greater than" />  <span class="select-btn">by greater than</span></label>
+            <span id="divRadicularPecentage" style="display:none">
+                <input type="text" id="RadicularSys" name="RadicularSys" class="form-control d-inline" style="width:70px" />%
+            </span>
+            
         </p>
     </div>
     <div class="select-group">
-        <label><input type="checkbox" class="chkMulti" name="PostInjection" value="VAS pain scores had improved by greater than 50%." />  <span class="select-btn"> VAS pain scores had improved by greater than 50%.</span></label>
+        VAS pain scores had improved
+        <label><input type="checkbox" class="chkMulti" name="VASPecentage" value="by greater than" />  <span class="select-btn">by greater than</span></label>
+        <span id="divVASPecentage" style="display:none">
+            <input type="text" id="txtVASPecentage" name="txtVASPecentage" class="form-control d-inline" style="width:70px" />%
+        </span>
+       @*  <label><input type="checkbox" class="chkMulti" name="PostInjection" value="VAS pain scores had improved by greater than 50%." />  <span class="select-btn"> VAS pain scores had improved by greater than 50%.</span></label> *@
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="There was functional improvement in ROM." />  <span class="select-btn">  There was functional improvement in ROM.</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Patient required less use of assistive devices." />  <span class="select-btn">  Patient required less use of assistive devices.</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Patient reported better sleep pattern." />  <span class="select-btn">  Patient reported better sleep pattern.</span></label>
@@ -141,6 +150,7 @@
 </div>
 
 <script>
+        
         $('input[name="FUType"]').on('change', function() {
         if ($(this).val() === 'Post injection FU') {
             $('#divInjectionFU').show();
@@ -150,4 +160,22 @@
             $('#divInjectionFU').hide();
         }
     });
+               $(document).on('change', 'input[name="RadicularPecentage"]', function () {
+        if ($(this).is(':checked')) {
+            $('#divRadicularPecentage').show();
+        } else {
+            $('#divRadicularPecentage').hide();
+        }
+    });
+
+    $(document).on('change', 'input[name="VASPecentage"]', function () {
+        if ($(this).is(':checked')) {
+            $('#divVASPecentage').show();
+        } else {
+            $('#divVASPecentage').hide();
+        }
+    });
+        
+
+    
 </script>
