@@ -456,7 +456,7 @@
         public string LKnSwelling { get; set; }
         public string LKnRisingFromChair { get; set; }
         public string LKnUpDown { get; set; }
-        public string LKndiff { get; set; }
+        public List<string> LKndiff { get; set; }
         public string RKndiff { get; set; }
         public List<string> LKnDiffi { get; set; }
         public string RHipPain { get; set; }
