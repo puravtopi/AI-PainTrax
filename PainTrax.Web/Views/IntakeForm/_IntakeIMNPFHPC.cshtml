@@ -67,6 +67,8 @@
                         <input type="hidden" id="hdId" name="hdId" value="@ViewBag.Id" />
                         <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
                         <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
+                        <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
+                        <input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
                         <input type="hidden" id="hdIEId" name="hdIEId" />
                         <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
@@ -85,10 +87,10 @@
                                         onclick="window.location.href='@Url.Action("GetProvider", "Home")'">
                                     <i class="bi bi-house-door-fill"></i> Home
                                 </button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                              @*   <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
                                         class="btn btn-outline-primary"
-                                        onclick="saveForm(false)">
+                                        onclick="saveForm(true)">
                                     Save
                                 </button>
                                 <button type="button" id="btnSuperBill"
@@ -218,12 +220,9 @@
                                                     <span class="select-btn">WC</span>
                                                 </label>
 
-                                               @*  <label>
-                                                    <input type="radio" name="InjuryType" value="MM">
-                                                    <span class="select-btn">MM</span>
-                                                </label>
+                                             
 
-                                                <label>
+                                                @*  <label>
                                                     <input type="radio" name="InjuryType" value="PI">
                                                     <span class="select-btn">PI</span>
                                                 </label> *@
@@ -231,7 +230,10 @@
                                                     <input type="radio" name="InjuryType" value="LIEN">
                                                     <span class="select-btn">LIEN</span>
                                                 </label>
-
+                                                <label>
+                                                    <input type="radio" name="InjuryType" value="MM">
+                                                    <span class="select-btn">MM</span>
+                                                </label>
 
                                             </div>
                                             <div class="select-group">
@@ -2050,7 +2052,7 @@
                                                     <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="CTPI"> <span class="select-btn">CTPI</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="TTPI"> <span class="select-btn">TTPI</span></label>
                                                     <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="LTPI"> <span class="select-btn">LTPI</span></label>
-
+                                                    <label><input type="checkbox" class="chkMulti" name="PlanUTPI" value="PT"> <span class="select-btn">PT</span></label>
 
                                                 </div>
                                                 <div class="select-group">
@@ -2883,6 +2885,8 @@
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
+        formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
+        formData["ProviderId"] = $("#ProviderId").val();
 
         // URLs
         var url = '@Url.Action("SaveForm", "IntakeForm")';
@@ -2901,11 +2905,12 @@
 
                 if (response.success) {
 
+                    $("#PatientId").val(response.patientid);
                     // If final submit
                     if (isSubmit) {
 
                         bootbox.confirm({
-                            message: 'Your details have been saved successfully. Click "Yes" to continue creating the next visit.',
+                            message: 'Click "Yes" to continue creating the next visit.',
                             swapButtonOrder: true,
 
                             buttons: {
@@ -2919,19 +2924,28 @@
                                 }
                             },
                             callback: function (result) {
+
+                                 let locId= $("#LocationId").val() || 0;
+                                    let provId=$("#ProviderId").val() || 0;
                                 if (result) {
-                                       $('#patientForm')[0].reset();
-                                       // var today = new Date().toISOString().split('T')[0];
-                                       // $('#DOE').val(today);
-                                       $('#bodyPartLinks').html('');
-                                       $('#divDiagnosis').html('');
+                                        window.location.href =
+                                        '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                                        '?providerId=' + provId +
+                                        '&id=0' + 
+                                        '&locid=' + locId;
                                        $('#pdfLoader').hide();
-                                       selected.length = 0;
-                                        $("#btnSuperBill").prop("disabled", true);
+                                }else{
+                                    debugger
+                                  window.location.href =
+                            '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                            '?id=' + response.id +
+                            '&locid=' + locId+
+                            '&providerId=' + provId +
+                            '&patientId=' + response.patientid;
                                 }
-                                else {
-                                     window.location.href = indexurl;
-                                }
+                                // else {
+                                //      window.location.href = indexurl;
+                                // }
                             }
                         });
                     }
@@ -3439,7 +3453,7 @@
 
     function fnAddFU()
     {   
-         window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val();
+         window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val()+"&providerId=" + $("#ProviderId").val();
     }
 
 

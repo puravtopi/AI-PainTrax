@@ -161,7 +161,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeBHFFU");
+            else return PartialView("_IntakeIMNPFHPCFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -416,11 +416,8 @@ namespace PainTrax.Web.Controllers
 
                 if (initialIntakeAI.Id == 0)
                 {
-                   
-
                     tbl_patient_fu objFU = new tbl_patient_fu()
                     {
-
                         created_by = userid,
                         doe = string.IsNullOrEmpty(model.DOE) ? null : Convert.ToDateTime(model.DOE),
                         patientIE_ID = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
@@ -442,11 +439,11 @@ namespace PainTrax.Web.Controllers
 
                     if (newFU > 0)
                     {
-                        /*var objPage1 = new tbl_fu_page1()
+                        var objPage1 = new tbl_fu_page1()
                         {
-                            pmh = model.PMH!=null ? string.Join(", ", model.PMH) : "",
-                            psh = model.PSH!=null ? string.Join(", ", model.PSH) : "",
-                            bodypart = model.Complaints!=null ? string.Join(",", model.Complaints) : "",
+                            pmh = model.PMH != null ? string.Join(", ", model.PMH) : "",
+                            psh = model.PSH != null ? string.Join(", ", model.PSH) : "",
+                            bodypart = model.Complaints != null ? string.Join(",", model.Complaints) : "",
                             allergies = "",
                             assessment = model.Diagnosis,
                             fu_id = newFU,
@@ -457,15 +454,15 @@ namespace PainTrax.Web.Controllers
 
                         _fuPage1services.Insert(objPage1);
 
-                        var objOther = new tbl_fu_other()
-                        {
-                            fu_id = newFU,
-                            treatment_delimit = model.TreatmentIds,
-                            treatment_delimit_desc = model.TreatmentDelimitDesc,
-                            treatment_details = model.TreatmentDesc
-                        };
-                        _fuOtherService.Insert(objOther);*/
-                                               
+                       //var objOther = new tbl_fu_other()
+                       //{
+                       //    fu_id = newFU,
+                       //    treatment_delimit = model.TreatmentIds,
+                       //    treatment_delimit_desc = model.TreatmentDelimitDesc,
+                       //    treatment_details = model.TreatmentDesc
+                       //};
+                       //_fuOtherService.Insert(objOther);
+
 
                         if (fuData != null)
                             lFUId = fuData.id.Value;
@@ -479,9 +476,11 @@ namespace PainTrax.Web.Controllers
                         {
                         }
 
+                        _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), objFU.intakeid.Value);
+
                         try
                         {
-                            _forwardServices.GetOnePage2(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value,lFUId);
+                            _forwardServices.GetOnePage2(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value, lFUId);
                         }
                         catch (Exception ex)
                         {
@@ -489,7 +488,7 @@ namespace PainTrax.Web.Controllers
 
                         try
                         {
-                            _forwardServices.GetOneNE(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value,lFUId);
+                            _forwardServices.GetOneNE(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value, lFUId);
                         }
                         catch (Exception ex)
                         {
@@ -505,69 +504,11 @@ namespace PainTrax.Web.Controllers
                         }
                         try
                         {
-                            _forwardServices.GetPage3(objFU.patientIE_ID.Value, cmpid.Value, newFU, objFU.patient_id.Value,lFUId);
+                            _forwardServices.GetPage3(objFU.patientIE_ID.Value, cmpid.Value, newFU, objFU.patient_id.Value, lFUId);
                         }
                         catch (Exception ex)
                         {
                         }
-
-                        //try
-                        //{
-                        //    var _page3Setting = _settingServices.GetOne(cmpid.Value);
-
-                        //    var dataPage3 = new tbl_fu_page3();
-
-                        //    dataPage3.diagcervialbulge_study = "1";
-                        //    dataPage3.diagcervialbulge_comma = _page3Setting.diagcervialbulge_comma;
-                        //    dataPage3.diagthoracicbulge_study = "1";
-                        //    dataPage3.diagthoracicbulge_comma = _page3Setting.diagthoracicbulge_comma;
-                        //    dataPage3.diaglumberbulge_study = "1";
-                        //    dataPage3.diaglumberbulge_comma = _page3Setting.diaglumberbulge_comma;
-                        //    dataPage3.diagleftshoulder_study = "1";
-                        //    dataPage3.diagleftshoulder_comma = _page3Setting.diagleftshoulder_comma;
-                        //    dataPage3.diagrightshoulder_study = "1";
-                        //    dataPage3.diagrightshoulder_comma = _page3Setting.diagrightshoulder_comma;
-                        //    dataPage3.diagleftknee_study = "1";
-                        //    dataPage3.diagleftknee_comma = _page3Setting.diagleftknee_comma;
-                        //    dataPage3.diagrightknee_study = "1";
-                        //    dataPage3.diagrightknee_comma = _page3Setting.diagrightknee_comma;
-                        //    dataPage3.diaglumberbulge_study = "1";
-                        //    dataPage3.diaglumberbulge_comma = _page3Setting.diaglumberbulge_comma;
-
-                        //    dataPage3.other1_study = "0";
-                        //    dataPage3.other1_comma = _page3Setting.other1_comma;
-                        //    dataPage3.other2_study = "0";
-                        //    dataPage3.other2_comma = _page3Setting.other2_comma;
-                        //    dataPage3.other3_study = "0";
-                        //    dataPage3.other3_comma = _page3Setting.other3_comma;
-                        //    dataPage3.other4_study = "0";
-                        //    dataPage3.other4_comma = _page3Setting.other4_comma;
-                        //    dataPage3.other5_study = "0";
-                        //    dataPage3.other5_comma = _page3Setting.other5_comma;
-                        //    dataPage3.other6_study = "0";
-                        //    dataPage3.other6_comma = _page3Setting.other6_comma;
-                        //    dataPage3.other7_study = "0";
-                        //    dataPage3.other7_comma = _page3Setting.other7_comma;
-
-                        //    dataPage3.gait = string.IsNullOrEmpty(dataPage3.gait) ? _page3Setting.gait_default : dataPage3.gait;
-
-
-                        //    var _defaultdata = _defaultService.GetOneByCompany(cmpid.Value);
-
-                        //    if (_defaultdata != null)
-                        //    {
-                        //        dataPage3.goal = _defaultdata.goal;
-                        //        dataPage3.care = _defaultdata.care;
-                        //    }
-                        //    dataPage3.fu_id = newFU;
-                        //    dataPage3.ie_id = objFU.patientIE_ID;
-                        //    dataPage3.cmp_id = cmpid.Value;
-
-                        //    _fuPage3services.Insert(dataPage3);
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //}
 
 
                         using JsonDocument doc = JsonDocument.Parse(json);
@@ -635,13 +576,14 @@ namespace PainTrax.Web.Controllers
                         compensation = InjuryType,
                         intakeid = initialIntakeAI.Id
                     };
-                    _ieService.UpdateFromIntake(objIE);
+                   // _ieService.UpdateFromIntake(objIE);
                     _ieService.UpdateFromIntakeFU(objIE);
+                    _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), initialIntakeAI.Id);
                 }
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid=model.ProviderId });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId });
         }
 
         private string GetCC(AIIntakeFormModel model)

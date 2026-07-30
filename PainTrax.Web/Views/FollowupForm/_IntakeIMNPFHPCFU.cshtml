@@ -73,6 +73,7 @@
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
                         <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
+                        <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
                         <h4 class="text-center mb-4 fw-bold">
                             Patient Injury Report
                         </h4>
@@ -84,10 +85,10 @@
                                         onclick="window.location.href='@Url.Action("GetProvider", "Home")'">
                                     <i class="bi bi-house-door-fill"></i> Home
                                 </button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                @*  <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
                                         class="btn btn-outline-primary"
-                                        onclick="saveForm(false)">
+                                        onclick="saveForm(true)">
                                     Save
                                 </button>
                                 <button type="button" id="btnSuperBill"
@@ -220,7 +221,7 @@
                                             <div class="accordion-body">
 
                                                 <ol> <div class="row" id="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
-                                                
+
                                                 <p>
                                                     Others
                                                     <textarea id="DiagnosisOthers" name="DiagnosisOthers" class="form-control d-inline" style="width:90%"></textarea>
@@ -927,45 +928,7 @@
 
                 $('#previewText').html(html);
         }
-        // function saveForm(isSubmit)
-        //     {
-        //             formData["Diagnosis"]= $("#divDiagnosis").html();
-        //             formData["TreatmentIds"]= $("#TreatmentIds").val();
-        //             formData["TreatmentDesc"]= $("#TreatmentDesc").val();
-        //             formData["TreatmentDelimitDesc"]= $("#TreatmentDelimitDesc").val();
-        //             // Serialize form data
-        //             var url = '@Url.Action("SaveForm", "IntakeForm")';
-        //             var indexurl = '@Url.Action("Index", "Visit")';
-        //             var data = JSON.stringify(formData);
 
-        //             $.ajax({
-        //                 url: url, // Update with your Controller/Action
-        //                 type: 'POST',
-        //                 contentType: "application/json",
-        //                 data: data,
-        //                 success: function (response) {
-        //                     if (response.success) {
-        //                          alert(response.message);
-        //                         // // Optionally reset form
-        //                          $('#patientForm')[0].reset();
-        //                         // updatePreview();
-        //                         if(isSubmit)
-        //                             window.location.href=indexurl;
-        //                         else
-        //                             window.location.href='@Url.Action("AIInitialIntake", "IntakeForm")?id='+response.id+'&locid='+response.locid;
-        //                     } else {
-        //                         alert("Error: " + response.message);
-        //                     }
-        //                 },
-
-        //                 error: function () {
-        //                     alert("An error occurred while saving data.");
-        //                 }
-        //             });
-        //     }
-         // ================================
-    // RESTORE ACCORDION
-    // ================================
     function restoreAccordion() {
 
         var openAccordion = sessionStorage.getItem('openAccordion');
@@ -990,11 +953,11 @@
          function saveForm(isSubmit) {
              var dob = $('#DOB').val();
 
-        if (!dob) {
-            alert('Please enter Date of Birth.');
-            $('#DOB').focus();
-            return false;
-        }
+                if (!dob) {
+                    alert('Please enter Date of Birth.');
+                    $('#DOB').focus();
+                    return false;
+                }
                     $('#pdfLoader').show();
                     try{
                         // STORE CURRENT OPEN ACCORDION
@@ -1035,7 +998,7 @@
                     if (isSubmit) {
 
                         bootbox.confirm({
-                            message: 'Your details have been saved successfully. Click "Yes" to continue creating the next followup.',
+                            message: 'Click "Yes" to continue creating the next visit.',
                             swapButtonOrder: true,
 
                             buttons: {
@@ -1049,18 +1012,24 @@
                                 }
                             },
                             callback: function (result) {
+                                 let locId= $("#LocationId").val() || 0;
+                                 let provId=$("#ProviderId").val() || 0;
+
                                 if (result) {
-                                       $('#patientForm')[0].reset();
-                                       var today = new Date().toISOString().split('T')[0];
-                                       $('#DOE').val(today);
-                                       $('#bodyPartLinks').text('');
-                                       $('#divDiagnosis').html('');
+                                      
+                                        window.location.href =
+                                        '@Url.Action("Create", "FollowupForm")' +
+                                        '?providerId=' + provId +
+                                        '&id=0' +
+                                        '&locid=' + locId;
                                        $('#pdfLoader').hide();
-                                       selected.length = 0;
-                                       $("#btnSuperBill").prop("disabled", true);
                                 }
                                 else {
-                                     window.location.href = indexurl;
+                                     window.location.href =
+                            '@Url.Action("Create", "FollowupForm")' +
+                            '?id=' + response.id +
+                            '&locid=' + locId+
+                            '&providerId=' + provId ;
                                 }
                             }
                         });
@@ -1086,10 +1055,9 @@
             }
         });
         }finally {
-
-        // HIDE LOADER
-        $('#pdfLoader').hide();
-    }
+            // HIDE LOADER
+            $('#pdfLoader').hide();
+        }
 
     }
     // Expand shortcuts
@@ -1166,7 +1134,7 @@
         }
     });
 
-           
+
             $(document).on('change', 'input[name="Complaints"]', function () {
 
                 var section = $(this).data('section');

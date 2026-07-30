@@ -209,6 +209,15 @@ public class PatientIEService : ParentService
         Execute(cm);
     }
 
+    public void UpdateBodyPartFromIntakeFU(string bodypart, int id)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_fu_page1 SET
+				bodypart=@bodypart where fu_id=(select id from tbl_patient_fu where intakeid=@id)", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@bodypart", bodypart);
+        Execute(cm);
+    }
+
     public void UpdateFromFU(tbl_patient_ie data)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET

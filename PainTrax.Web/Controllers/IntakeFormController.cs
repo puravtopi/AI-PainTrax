@@ -734,7 +734,7 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index", "Visit");
         }
 
-        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId)
+        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId, int patientId = 0)
         {
             if (providerId == null)
             {
@@ -747,6 +747,10 @@ namespace PainTrax.Web.Controllers
                 {
                     providerId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId).Value;
                 }
+            }
+            if (HttpContext.Session.GetString(SessionKeys.SessionDesignation) != "Provider")
+            {
+                HttpContext.Session.SetInt32(SessionKeys.SessionSelectedProviderId, providerId == null ? 0 : providerId.Value);
             }
             var templatePath = $"{Request.Scheme}://{Request.Host}/v2/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
             //var templatePath = $"{Request.Scheme}://{Request.Host}/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
@@ -817,6 +821,7 @@ namespace PainTrax.Web.Controllers
                 if (data != null)
                 {
                     ViewBag.FormData = data.FormData;
+                    ViewBag.PatientId = patientId;
                     ViewBag.Id = id;
                     ViewBag.SubmitDate = data.PatientSubmitDate;
                     ViewBag.Diagnosis = data.Diagnosis;
@@ -838,7 +843,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeBHF");
+            else return PartialView("_IntakeIMNPFHPC");
             //return View();
         }
 
@@ -996,7 +1001,7 @@ namespace PainTrax.Web.Controllers
                     Treatment = model.Treatment,
                     TreatmentIds = model.TreatmentIds,
                     TreatmentDelimitDesc = model.TreatmentDelimitDesc,
-                    AccidentType= model.AccidentType
+                    AccidentType = model.AccidentType
                 };
                 result = service.SaveInitialIntakeAI(initialIntakeAI);
 
@@ -1035,13 +1040,14 @@ namespace PainTrax.Web.Controllers
                             state = null,
                             age = string.IsNullOrEmpty(model.Age) ? 0 : Convert.ToInt16(model.Age),
                             cmp_id = cmpid,
-                            
+
                         };
 
                         var patientId = _patientservices.Insert(objPatient);
 
                         if (patientId > 0)
                         {
+                            model.PatientId = patientId.ToString();
 
                             var objIE = new tbl_patient_ie()
                             {
@@ -1052,10 +1058,10 @@ namespace PainTrax.Web.Controllers
                                 is_active = true,
                                 patient_id = patientId,
                                 compensation = InjuryType,
-                                accident_type= model.AccidentType,
+                                accident_type = model.AccidentType,
                                 provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
                                 intakeid = Convert.ToInt32(result),
-                                
+
 
                             };
 
@@ -1074,7 +1080,7 @@ namespace PainTrax.Web.Controllers
                                     history = history.Replace("#fn", model.FN);
                                     history = history.Replace("#lname", model.LN);
                                     history = history.Replace("#ln", model.LN);
-                                   
+
                                     history = history.Replace("#dos", model.DOE);
                                     //history = history.Replace("#doi", model.DOA);
                                     history = history.Replace("#handedness", model.DominantHand);
@@ -1114,7 +1120,7 @@ namespace PainTrax.Web.Controllers
                                     rom = defaultPage1.rom,
                                     social_history = defaultPage1.social_history,
                                     work_status = defaultPage1.work_status,
-                                   
+
                                 };
 
                                 _ieService.InsertPage1(objPage1);
@@ -1157,7 +1163,7 @@ namespace PainTrax.Web.Controllers
                                 var objOther = new tbl_ie_other()
                                 {
                                     ie_id = ie,
-                                   
+
                                     patient_id = patientId,
                                     treatment_delimit = model.TreatmentIds,
                                     treatment_delimit_desc = model.TreatmentDelimitDesc,
@@ -1214,7 +1220,7 @@ namespace PainTrax.Web.Controllers
                                     dataPage3.goal = _defaultdata.goal;
                                     dataPage3.care = _defaultdata.care;
                                 }
-                                dataPage3.ie_id= ie;
+                                dataPage3.ie_id = ie;
                                 dataPage3.cmp_id = cmpid.Value;
 
                                 _ieService.InsertPage3(dataPage3);
@@ -1304,7 +1310,7 @@ namespace PainTrax.Web.Controllers
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId,provid= model.ProviderId });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, patientid = model.PatientId, locid = model.LocationId, provid = model.ProviderId });
         }
 
         [HttpPost]
