@@ -434,7 +434,10 @@ namespace PainTrax.Web.Controllers
 
                     var fuData = _ieService.GetLastFU(objFU.patientIE_ID.Value, "FU");
                     int lFUId = 0;
-
+                    if(fuData.procedure_performed != null)
+                    {
+                        objFU.procedure_performed = fuData.procedure_performed;
+                    }
                     var newFU = _fuservices.Insert(objFU);
 
                     if (newFU > 0)
