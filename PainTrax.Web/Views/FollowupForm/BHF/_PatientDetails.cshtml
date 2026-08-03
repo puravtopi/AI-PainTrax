@@ -9,7 +9,7 @@
 <!-- Patient Info -->
 <p>
     Patient Name:
-    <input id="PatientName" name="PatientName" class="form-control d-inline" style="width:250px;" />
+    <input id="PatientName" name="PatientName" required class="form-control d-inline" style="width:250px;" />
     DOB:
     <input id="DOB" name="DOB" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control d-inline w-auto" min="1900-01-01" onblur="fnvalidateDatefields()"
            max="2099-12-31" required />
@@ -22,7 +22,7 @@
     <input id="DOE" name="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" required onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     DOA:
-    <input id="DOA" name="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
+    <input id="DOA" name="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" required onblur="fnvalidateDatefields()" />
     <div id="patientGrid"
          class="table-responsive border bg-white position-absolute shadow"
          style="width:500px; z-index:999; display:none; max-height:250px; overflow:auto;">
@@ -171,7 +171,7 @@
             $("#patientGrid").hide();
             return;
         }
-
+      
         $.ajax({
             url: url,
             type: 'GET',
@@ -236,7 +236,7 @@
 
     // Row Select Event
     $(document).on("click", ".patient-row", function () {
-
+        $('#pdfLoader').show();
         let patientName = $(this).data("name");
         let patientId = $(this).data("patientid");
         let patientIEId = $(this).data("id");
@@ -254,18 +254,16 @@
         if(accidentType!='' && accidentType!=null)
             $("#AccidentType").val(accidentType);
 
-        // $("#DOB").val($(this).data("dob").split('T')[0]);
-        // $("#DOA").val($(this).data("doa").split('T')[0]);
         $("#DOB").val(formatToISODate($(this).data("dob")));
         $("#DOA").val(formatToISODate($(this).data("doa")));
-        //$('input[name="InjuryType"]').val($(this).data("injurytype"));
+   
         console.log("InuryType:", $(this).data("injurytype"));
         $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
         console.log("Selected Patient Intake ID:", patientIntakeId);
 
         $("#patientGrid").hide();
         $('input[name="RadicularPecentage"]').trigger('change');
-         $('input[name="VASPecentage"]').trigger('change');
+        $('input[name="VASPecentage"]').trigger('change');
 
         let url="@Url.Action("GetIntakeData", "FollowupForm")?id="+patientId;
 
@@ -279,6 +277,11 @@
                 $("#divDiagnosis").html(res.diagnosis);
                 console.log("Result: "+res.diagnosis);
                 bindForm(res.formData,res.forwardSetting);
+                var today = new Date().toISOString().split('T')[0];
+                $('#DOE').val(today);
+            },
+            error: function (xhr, status, error) {
+               $('#pdfLoader').hide();
             }
         });
     });

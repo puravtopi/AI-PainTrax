@@ -84,10 +84,10 @@
                             <p id="btnSaveSection" class="mb-0 sticky-buttons">
                                 <button type="button"
                                         class="btn btn-secondary"
-                                        onclick="window.location.href='@Url.Action("GetProvider", "Home")'">
+                                        onclick="window.location.href='@Url.Action("Index", "Visit")'">
                                     <i class="bi bi-house-door-fill"></i> Home
                                 </button>
-                              @*   <button type="submit" class="btn btn-primary">Submit</button> *@
+                                @*   <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
                                         class="btn btn-outline-primary"
                                         onclick="saveForm(true)">
@@ -98,6 +98,12 @@
                                         @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
                                         onclick="DownloadPdf('@ViewBag.Id')">
                                     Super Bill
+                                </button>
+                                <button type="button" id="btnCF"
+                                        class="btn btn-outline-primary"
+                                        @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                        onclick="DownloadCF('@ViewBag.Id')">
+                                    Consent Form
                                 </button>
                             </p>
 
@@ -159,17 +165,17 @@
                                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <br />
-                                            <h6>Provider Name:  
+                                            <h6>
+                                                Provider Name:
                                                 <select id="providerid" name="providerid" asp-items="@ViewBag.providerList" class="form-select d-inline w-auto" style="width:230px !important">
-                                                    
                                                 </select>
                                             </h6>
                                             <!-- Patient Info -->
                                             <div class="select-group">
                                                 Patient LName:
-                                                <input id="LN" name="LN" class="form-control d-inline" style="width:150px;" />
+                                                <input id="LN" name="LN" required class="form-control d-inline" style="width:150px;" />
                                                 FName:
-                                                <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" />
+                                                <input id="FN" name="FN" required class="form-control d-inline" style="width:150px;" />
                                                 @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
                                                 Gender
                                                 <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
@@ -191,23 +197,23 @@
                                                 @* <span id="lblLocation">
                                                     @ViewBag.LocName
                                                 </span> *@
-                                                <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
+                                                <select id="LocationId" required name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
                                                 </select>
                                             </div>
 
                                             <div class="select-group">
                                                 DOS
-                                                <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+                                                <input id="DOE" required max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
                                                 &nbsp;&nbsp;
                                                 DOB:
-                                                <input id="DOB" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOB" type="date" class="form-control d-inline" style="width:125px"  onblur="fnvalidateDatefields()" />
+                                                <input id="DOB" required max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOB" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
                                                 &nbsp;&nbsp;&nbsp;
                                                 Age:
                                                 <input id="Age" name="Age" class="form-control d-inline" style="width:30px" /> years
                                                 &nbsp;&nbsp;&nbsp;
 
                                                 DOA:
-                                                <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+                                                <input id="DOA" required max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
                                                 &nbsp;&nbsp;
                                                 <label>Case Type:</label>
                                                 <label>
@@ -220,7 +226,7 @@
                                                     <span class="select-btn">WC</span>
                                                 </label>
 
-                                             
+
 
                                                 @*  <label>
                                                     <input type="radio" name="InjuryType" value="PI">
@@ -449,7 +455,7 @@
                                                     <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."><span class="select-btn"> Y</span></label>
                                                     <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol." checked><span class="select-btn"> N</span></label>
                                                     <span id="divAlcohol" style="display:none">
-                                                        <input id="txtAlcohol" class="form-control d-inline" style="width:150px" /> 
+                                                        <input id="txtAlcohol" class="form-control d-inline" style="width:150px" />
                                                         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtAlcohol')"></i>
                                                     </span>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1239,7 +1245,7 @@
                                                         <label>degrees</label>
                                                         <label><input type="checkbox" class="chkMulti" name="CevicalSpurlingTest" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
                                                         @* <input id="CERVICALbilateraltxt" class="form-control d-inline " style="width:100px" /> *@
-                                                       
+
 
                                                         @* <label><input type="radio" name="CevicalSpurlingRight" value="right"> <span class="select-btn">right </span></label>
                                                     <input id="CERVICALRighttxt" class="form-control d-inline " style="width:100px" />
@@ -1840,8 +1846,8 @@
                                                         <input id="LumbarStraightLefttxt" class="form-control d-inline " style="width:100px" />
                                                         <label>degrees</label>
                                                         <label><input type="checkbox" class="chkMulti" name="LumbarStraightTest" value="bilaterally"> <span class="select-btn">bilaterally </span></label>
-                                                       @*  <input id="LumbarStraightbilateraltxt" class="form-control d-inline " style="width:100px" /> *@
-                                                        
+                                                        @*  <input id="LumbarStraightbilateraltxt" class="form-control d-inline " style="width:100px" /> *@
+
 
                                                         @* <label><input type="radio" name="LumbarStraightRight" value="right"> <span class="select-btn">right</span> </label>
                                                     <input id="LumbarStraightRighttxt" class="form-control d-inline " style="width:100px" />
@@ -1961,7 +1967,7 @@
                                             <div class="accordion-body">
 
                                                 <ol> <div class="row" id="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
-                                                
+
                                                 <p>
                                                     Others
                                                     <textarea id="DiagnosisOthers" name="DiagnosisOthers" class="form-control d-inline" style="width:90%"></textarea>
@@ -2514,7 +2520,7 @@
                 }
              });
 
-             
+
 
         function loadTemplate() {
             // Try loading a DOCX template first; fall back to plain text.
@@ -2799,45 +2805,7 @@
 
                 $('#previewText').html(html);
         }
-        // function saveForm(isSubmit)
-        //     {
-        //             formData["Diagnosis"]= $("#divDiagnosis").html();
-        //             formData["TreatmentIds"]= $("#TreatmentIds").val();
-        //             formData["TreatmentDesc"]= $("#TreatmentDesc").val();
-        //             formData["TreatmentDelimitDesc"]= $("#TreatmentDelimitDesc").val();
-        //             // Serialize form data
-        //             var url = '@Url.Action("SaveForm", "IntakeForm")';
-        //             var indexurl = '@Url.Action("Index", "Visit")';
-        //             var data = JSON.stringify(formData);
-
-        //             $.ajax({
-        //                 url: url, // Update with your Controller/Action
-        //                 type: 'POST',
-        //                 contentType: "application/json",
-        //                 data: data,
-        //                 success: function (response) {
-        //                     if (response.success) {
-        //                          alert(response.message);
-        //                         // // Optionally reset form
-        //                          $('#patientForm')[0].reset();
-        //                         // updatePreview();
-        //                         if(isSubmit)
-        //                             window.location.href=indexurl;
-        //                         else
-        //                             window.location.href='@Url.Action("AIInitialIntake", "IntakeForm")?id='+response.id+'&locid='+response.locid;
-        //                     } else {
-        //                         alert("Error: " + response.message);
-        //                     }
-        //                 },
-
-        //                 error: function () {
-        //                     alert("An error occurred while saving data.");
-        //                 }
-        //             });
-        //     }
-         // ================================
-    // RESTORE ACCORDION
-    // ================================
+        
     function restoreAccordion() {
 
         var openAccordion = sessionStorage.getItem('openAccordion');
@@ -2861,7 +2829,12 @@
     }
          function saveForm(isSubmit) {
              // Validate DOB only when submitting
-    
+
+             var valid=formValidation();
+
+             if(!valid)
+                 return false;
+
         var dob = $('#DOB').val();
 
         if (!dob) {
@@ -2869,7 +2842,7 @@
             $('#DOB').focus();
             return false;
         }
-    
+
                     $('#pdfLoader').show();
                     try{
                         // STORE CURRENT OPEN ACCORDION
@@ -2902,7 +2875,7 @@
             data: data,
 
             success: function (response) {
-
+                 $('#pdfLoader').hide();
                 if (response.success) {
 
                     $("#PatientId").val(response.patientid);
@@ -2931,7 +2904,7 @@
                                         window.location.href =
                                         '@Url.Action("AIInitialIntake", "IntakeForm")' +
                                         '?providerId=' + provId +
-                                        '&id=0' + 
+                                        '&id=0' +
                                         '&locid=' + locId;
                                        $('#pdfLoader').hide();
                                 }else{
@@ -2963,17 +2936,22 @@
                 else {
 
                     alert("Error: " + response.message);
+                     $('#pdfLoader').hide();
                 }
             },
             error: function () {
                 alert("An error occurred while saving data.");
+                 $('#pdfLoader').hide();
             }
         });
-        }finally {
+        }catch (error) {
 
-        // HIDE LOADER
+        // Hide loader if JavaScript exception occurs
         $('#pdfLoader').hide();
+
+        console.error(error);
     }
+
 
     }
         // Expand shortcuts
@@ -3044,7 +3022,7 @@
 
 
             $(document).on('change', 'input[name="Complaints"]', function () {
-                
+
                 var section = $(this).data('section');
                 var pe = $(this).data('pe');
 
@@ -3253,7 +3231,7 @@
                 $("#treatmentModal").modal('show');
             }
 
-            function fnTreatmentDetails() {
+        function fnTreatmentDetails() {
                         var strContent = '<ol>';
                         var strIds = '', strDesc = '';
 
@@ -3302,7 +3280,7 @@
                     fnShowDiagnosis(part);
                 });
 
-            function fnShowDiagnosis(bodyParts){
+       function fnShowDiagnosis(bodyParts){
 
                 var url = '@Url.Action("GetDaignoCodeList", "IntakeForm")?bodyparts=' + bodyParts + "&id=" + $("#hdId").val();
                 $("#hdSelectedBody").val(bodyParts);
@@ -3312,7 +3290,7 @@
 
                     contentType: "application/x-www-form-urlencoded",
                     success: function (data, status, xhr) {
-                        
+
                         $('#modelDaignoCode').html(data);
                     },
                     error: function (xhr, status, error) {
@@ -3376,7 +3354,7 @@
         });
     }
 
-        function setDateToInput(dateStr,inputId) {
+       function setDateToInput(dateStr,inputId) {
 
                             if (!dateStr) return;
 
@@ -3407,6 +3385,34 @@
                 // Set Age
                 $('#Age').val(calculateAge(formattedDate));
             }
+
+       function formValidation()
+       {
+            let isValid = true;
+
+            // Validate required fields
+            $("#LN, #FN, #DOE, #DOB, #DOA").each(function () {
+                if ($.trim($(this).val()) === "") {
+                    isValid = false;
+                    $(this).addClass("is-invalid");
+                } else {
+                    $(this).removeClass("is-invalid");
+                }
+            });
+
+            // Stop if validation fails
+            if (!isValid) {
+                return false;
+            }
+            else
+                 return true;
+       }
+
+       $(document).on("input change", "[required]", function () {
+            if ($.trim($(this).val()) !== "") {
+                $(this).removeClass("is-invalid");
+            }
+       });
 </script>
 
 @* for file upload *@
@@ -3414,378 +3420,399 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
 <script>
-    let filesArr = [];
+        let filesArr = [];
 
-     const dropArea = document.getElementById("dropArea");
-     const fileInput = document.getElementById("fup");
-     const previewGrid = document.getElementById("previewGrid");
+         const dropArea = document.getElementById("dropArea");
+         const fileInput = document.getElementById("fup");
+         const previewGrid = document.getElementById("previewGrid");
 
-     // Click
-     dropArea.onclick = () => fileInput.click();
+         // Click
+         dropArea.onclick = () => fileInput.click();
 
-     // Select
-     fileInput.onchange = (e) => handleFiles(e.target.files);
+         // Select
+         fileInput.onchange = (e) => handleFiles(e.target.files);
 
-     // Drag
-     dropArea.ondragover = e => e.preventDefault();
-     dropArea.ondrop = e => {
-         e.preventDefault();
-         handleFiles(e.dataTransfer.files);
-     };
-
-     // Handle files
-     function handleFiles(files) {
-         [...files].forEach(file => {
-             file.id = Date.now() + Math.random();
-             filesArr.push(file);
-             renderPreview(file);
-         });
-     }
-
-    function fndownloadPDF(){
-        var fileName =
-        $("#LN").val() + ", " +
-        $("#FN").val() + "_" +
-        $("#DOE").val() +
-        "_IE_InjuryIntake.pdf";
-        downloadPDF(fileName);
-    }
-
-    function fnAddFU()
-    {   
-         window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val()+"&providerId=" + $("#ProviderId").val();
-    }
-
-
-    function fnshowPatientList() {
-         $.ajax({
-            url: '@Url.Action("TodayVisitList", "IntakeForm")?locid=' + $("#LocationId").val(),
-            type: 'GET',
-
-            success: function (response) {
-
-                $('#patientlistContainer').html(response);
-                $("#PatientVisitModel").modal('show');
-            },
-
-            error: function () {
-
-                alert('Error loading patient list.');
-
-            }
-        });
-
-    }
-    function calculateBMI()
-    {
-
-            let weight = parseFloat($("#Weight").val());      // Weight in lbs
-            let heightFt = parseFloat($("#Heightft").val()); // Feet
-            let heightInc = parseFloat($("#Heightinch").val()); // Inches
-
-            if (isNaN(weight) || isNaN(heightFt) || isNaN(heightInc)) {
-
-                return;
-            }
-
-            // Convert height to total inches
-            let totalHeightInches = (heightFt * 12) + heightInc;
-
-            // BMI Formula
-            let bmi = (703 * weight) / (totalHeightInches * totalHeightInches);
-
-            bmi = bmi.toFixed(2);
-
-            $("#BMI").val(bmi);
-    }
-     // Preview
-     function renderPreview(file) {
-         const reader = new FileReader();
-
-         reader.onload = e => {
-             const div = document.createElement("div");
-             div.className = "preview-item";
-             div.dataset.id = file.id;
-
-             div.innerHTML = `
-                 <button class="remove-btn">×</button>
-                 <img src="${e.target.result}" />
-                 <div class="progress"><div class="progress-bar"></div></div>
-             `;
-
-             // Remove
-             div.querySelector(".remove-btn").onclick = () => {
-                 filesArr = filesArr.filter(f => f.id !== file.id);
-                 div.remove();
-             };
-
-             previewGrid.appendChild(div);
+         // Drag
+         dropArea.ondragover = e => e.preventDefault();
+         dropArea.ondrop = e => {
+             e.preventDefault();
+             handleFiles(e.dataTransfer.files);
          };
 
-         reader.readAsDataURL(file);
-     }
-
-     // Reorder
-     new Sortable(previewGrid, {
-         animation: 150,
-         onEnd: () => {
-             let newOrder = [];
-             document.querySelectorAll(".preview-item").forEach(item => {
-                 let id = item.dataset.id;
-                 let file = filesArr.find(f => f.id == id);
-                 if (file) newOrder.push(file);
+         // Handle files
+         function handleFiles(files) {
+             [...files].forEach(file => {
+                 file.id = Date.now() + Math.random();
+                 filesArr.push(file);
+                 renderPreview(file);
              });
-             filesArr = newOrder;
-         }
-     });
-
-     // Upload
-         document.getElementById("uploadBtn").onclick = function (e) {
-
-         e.preventDefault();
-
-         if (!filesArr || filesArr.length === 0) {
-             alert("Please select files first.");
-             return;
          }
 
-         const progressBars = document.querySelectorAll(".progress-bar");
+        function fndownloadPDF(){
+            var fileName =
+            $("#LN").val() + ", " +
+            $("#FN").val() + "_" +
+            $("#DOE").val() +
+            "_IE_InjuryIntake.pdf";
+            downloadPDF(fileName);
+        }
 
-         filesArr.forEach((file, index) => {
+            function DownloadCF(id) {
 
-             let formData = new FormData();
-             formData.append("file", file);
-             formData.append("order", index);
+                  $.get('@Url.Action("CheckSign", "IntakeForm")', { id: id }, function (res) {
 
-             let xhr = new XMLHttpRequest();
+                      if (res.id == 0) {
+                          alert("Signature not found.");
+                          return;
+                      }
 
-             xhr.open("POST", "/Media/UploadNew", true);
+                      // Signature exists, download PDF
+                      $('#pdfLoader').show();
 
-             // Upload progress
-             xhr.upload.onprogress = function (e) {
+                      var downloadurl = '@Url.Action("GenerateCF", "IntakeForm")';
+                      downloadurl = downloadurl + '?pdffile=' + encodeURIComponent('Consent Form.pdf') + '&id=' + id;
 
-                 if (e.lengthComputable && progressBars[index]) {
+                      fetch(downloadurl)
+                          .then(response => {
+                              if (!response.ok) {
+                                  throw new Error(`HTTP error! Status: ${response.status}`);
+                              }
 
-                     let percent = Math.round((e.loaded / e.total) * 100);
+                              const disposition = response.headers.get('Content-Disposition');
+                              let fileName = 'Consent Form.pdf';
 
-                     progressBars[index].style.width = percent + "%";
-                     progressBars[index].innerText = percent + "%";
-                 }
+                              if (disposition) {
+                                  const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                                  if (utf8Match) {
+                                      fileName = decodeURIComponent(utf8Match[1]);
+                                  } else {
+                                      const match = disposition.match(/filename="?([^";]+)"?/i);
+                                      if (match) {
+                                          fileName = match[1];
+                                      }
+                                  }
+                              }
+
+                              return response.blob().then(blob => ({
+                                  blob,
+                                  fileName
+                              }));
+                          })
+                          .then(({ blob, fileName }) => {
+                              var link = document.createElement('a');
+                              link.href = window.URL.createObjectURL(blob);
+                              link.download = fileName;
+                              link.click();
+                              $('#pdfLoader').hide();
+                          })
+                          .catch(error => {
+                              $('#pdfLoader').hide();
+                              console.error('Error downloading Pdf file:', error);
+                          });
+
+                  }).fail(function () {
+                      alert("Unable to verify signature.");
+                  });
+          }
+
+        function fnAddFU()
+        {
+             window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val()+"&providerId=" + $("#ProviderId").val();
+        }
+
+
+        function fnshowPatientList() {
+             $.ajax({
+                url: '@Url.Action("TodayVisitList", "IntakeForm")?locid=' + $("#LocationId").val(),
+                type: 'GET',
+
+                success: function (response) {
+
+                    $('#patientlistContainer').html(response);
+                    $("#PatientVisitModel").modal('show');
+                },
+
+                error: function () {
+
+                    alert('Error loading patient list.');
+
+                }
+            });
+
+        }
+        function calculateBMI()
+        {
+
+                let weight = parseFloat($("#Weight").val());      // Weight in lbs
+                let heightFt = parseFloat($("#Heightft").val()); // Feet
+                let heightInc = parseFloat($("#Heightinch").val()); // Inches
+
+                if (isNaN(weight) || isNaN(heightFt) || isNaN(heightInc)) {
+
+                    return;
+                }
+
+                // Convert height to total inches
+                let totalHeightInches = (heightFt * 12) + heightInc;
+
+                // BMI Formula
+                let bmi = (703 * weight) / (totalHeightInches * totalHeightInches);
+
+                bmi = bmi.toFixed(2);
+
+                $("#BMI").val(bmi);
+        }
+         // Preview
+         function renderPreview(file) {
+             const reader = new FileReader();
+
+             reader.onload = e => {
+                 const div = document.createElement("div");
+                 div.className = "preview-item";
+                 div.dataset.id = file.id;
+
+                 div.innerHTML = `
+                     <button class="remove-btn">×</button>
+                     <img src="${e.target.result}" />
+                     <div class="progress"><div class="progress-bar"></div></div>
+                 `;
+
+                 // Remove
+                 div.querySelector(".remove-btn").onclick = () => {
+                     filesArr = filesArr.filter(f => f.id !== file.id);
+                     div.remove();
+                 };
+
+                 previewGrid.appendChild(div);
              };
 
-             // Success
-             xhr.onload = function () {
+             reader.readAsDataURL(file);
+         }
 
-                 if (xhr.status === 200) {
-                     console.log("Uploaded:", file.name);
-                 }
-                 else {
-                     console.error("Upload failed:", file.name);
-                 }
-             };
-
-             // Error
-             xhr.onerror = function () {
-                 console.error("Network error while uploading:", file.name);
-             };
-
-             xhr.send(formData);
+         // Reorder
+         new Sortable(previewGrid, {
+             animation: 150,
+             onEnd: () => {
+                 let newOrder = [];
+                 document.querySelectorAll(".preview-item").forEach(item => {
+                     let id = item.dataset.id;
+                     let file = filesArr.find(f => f.id == id);
+                     if (file) newOrder.push(file);
+                 });
+                 filesArr = newOrder;
+             }
          });
-     };
+
+         // Upload
+             document.getElementById("uploadBtn").onclick = function (e) {
+
+             e.preventDefault();
+
+             if (!filesArr || filesArr.length === 0) {
+                 alert("Please select files first.");
+                 return;
+             }
+
+             const progressBars = document.querySelectorAll(".progress-bar");
+
+             filesArr.forEach((file, index) => {
+
+                 let formData = new FormData();
+                 formData.append("file", file);
+                 formData.append("order", index);
+
+                 let xhr = new XMLHttpRequest();
+
+                 xhr.open("POST", "/Media/UploadNew", true);
+
+                 // Upload progress
+                 xhr.upload.onprogress = function (e) {
+
+                     if (e.lengthComputable && progressBars[index]) {
+
+                         let percent = Math.round((e.loaded / e.total) * 100);
+
+                         progressBars[index].style.width = percent + "%";
+                         progressBars[index].innerText = percent + "%";
+                     }
+                 };
+
+                 // Success
+                 xhr.onload = function () {
+
+                     if (xhr.status === 200) {
+                         console.log("Uploaded:", file.name);
+                     }
+                     else {
+                         console.error("Upload failed:", file.name);
+                     }
+                 };
+
+                 // Error
+                 xhr.onerror = function () {
+                     console.error("Network error while uploading:", file.name);
+                 };
+
+                 xhr.send(formData);
+             });
+         };
 
 
-         function hasSectionValue(sectionId) {
+             function hasSectionValue(sectionId) {
 
-         let hasValue = false;
+             let hasValue = false;
 
-         $("#" + sectionId)
-             .find("input, textarea, select")
-             .each(function () {
+             $("#" + sectionId)
+                 .find("input, textarea, select")
+                 .each(function () {
 
-                 const type = $(this).attr("type");
+                     const type = $(this).attr("type");
 
-                 // checkbox / radio
-                 if ((type === "checkbox" || type === "radio") && $(this).is(":checked")) {
-                     hasValue = true;
-                     return false;
-                 }
-
-                 // text / textarea / select
-                 if (type !== "checkbox" && type !== "radio") {
-
-                     const value = $(this).val();
-
-                     if (value != null && value.toString().trim() !== "") {
+                     // checkbox / radio
+                     if ((type === "checkbox" || type === "radio") && $(this).is(":checked")) {
                          hasValue = true;
                          return false;
                      }
-                 }
-             });
 
-         return hasValue;
-     }
+                     // text / textarea / select
+                     if (type !== "checkbox" && type !== "radio") {
 
-     function validateBodySection(bodyPart, complaintSectionId, peSectionId) {
+                         const value = $(this).val();
 
-         const isSelected = $(`input[name='Complaints'][value='${bodyPart}']`).is(":checked");
+                         if (value != null && value.toString().trim() !== "") {
+                             hasValue = true;
+                             return false;
+                         }
+                     }
+                 });
 
-         if (!isSelected)
-             return true;
-
-         if (!hasSectionValue(complaintSectionId)) {
-             alert(`Please enter ${bodyPart} complaint before submitting.`);
-             return false;
+             return hasValue;
          }
 
-         if (!hasSectionValue(peSectionId)) {
-             alert(`Please enter ${bodyPart} physical exam details before submitting.`);
-             return false;
-         }
+         function validateBodySection(bodyPart, complaintSectionId, peSectionId) {
 
-         return true;
-     }
+             const isSelected = $(`input[name='Complaints'][value='${bodyPart}']`).is(":checked");
 
-     function checkValidation() {
+             if (!isSelected)
+                 return true;
 
-         const validations = [
-             {
-                 bodyPart: "Neck",
-                 complaintSectionId: "neckSection",
-                 peSectionId: "neckPE"
-             },
-             {
-                 bodyPart: "Midback",
-                 complaintSectionId: "mbSection",
-                 peSectionId: "mbPE"
-             },
-             {
-                 bodyPart: "Lowback",
-                 complaintSectionId: "lbSection",
-                 peSectionId: "lbPE"
-             },
-             {
-                 bodyPart: "Right Shoulder",
-                 complaintSectionId: "rshSection",
-                 peSectionId: "rshPE"
-             },
-             {
-                 bodyPart: "Left Shoulder",
-                 complaintSectionId: "lshSection",
-                 peSectionId: "lshPE"
-             },
-             {
-                 bodyPart: "Right Knee",
-                 complaintSectionId: "rknSection",
-                 peSectionId: "rknPE"
-             },
-             {
-                 bodyPart: "Left Knee",
-                 complaintSectionId: "lknSection",
-                 peSectionId: "lknPE"
-             }
-         ];
-
-         for (const item of validations) {
-
-             const isValid = validateBodySection(
-                 item.bodyPart,
-                 item.complaintSectionId,
-                 item.peSectionId
-             );
-
-             if (!isValid)
+             if (!hasSectionValue(complaintSectionId)) {
+                 alert(`Please enter ${bodyPart} complaint before submitting.`);
                  return false;
+             }
+
+             if (!hasSectionValue(peSectionId)) {
+                 alert(`Please enter ${bodyPart} physical exam details before submitting.`);
+                 return false;
+             }
+
+             return true;
          }
 
-         return true;
-     }
+         function checkValidation() {
 
-     function toggleSection(condition, selector) {
-         $(selector).toggle(condition);
-     }
-    //  function validateDateStrict(dateStr, fieldLabel, blockFuture) {
+             const validations = [
+                 {
+                     bodyPart: "Neck",
+                     complaintSectionId: "neckSection",
+                     peSectionId: "neckPE"
+                 },
+                 {
+                     bodyPart: "Midback",
+                     complaintSectionId: "mbSection",
+                     peSectionId: "mbPE"
+                 },
+                 {
+                     bodyPart: "Lowback",
+                     complaintSectionId: "lbSection",
+                     peSectionId: "lbPE"
+                 },
+                 {
+                     bodyPart: "Right Shoulder",
+                     complaintSectionId: "rshSection",
+                     peSectionId: "rshPE"
+                 },
+                 {
+                     bodyPart: "Left Shoulder",
+                     complaintSectionId: "lshSection",
+                     peSectionId: "lshPE"
+                 },
+                 {
+                     bodyPart: "Right Knee",
+                     complaintSectionId: "rknSection",
+                     peSectionId: "rknPE"
+                 },
+                 {
+                     bodyPart: "Left Knee",
+                     complaintSectionId: "lknSection",
+                     peSectionId: "lknPE"
+                 }
+             ];
 
-    //     // Accept only YYYY-MM-DD (what <input type="date"> returns)
-    //     var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+             for (const item of validations) {
 
-    //     if (!regex.test(dateStr)) {
-    //         alert(fieldLabel + " must be after 01/01/1900");
-    //         return null;
-    //     }
+                 const isValid = validateBodySection(
+                     item.bodyPart,
+                     item.complaintSectionId,
+                     item.peSectionId
+                 );
 
-    //     var parts = dateStr.split('-');
-    //     var year  = parseInt(parts[0], 10);
-    //     var month = parseInt(parts[1], 10);
-    //     var day   = parseInt(parts[2], 10);
+                 if (!isValid)
+                     return false;
+             }
 
-    //     var date = new Date(year, month - 1, day);
+             return true;
+         }
 
-    //     // Invalid calendar date
-    //     if (
-    //         date.getFullYear() !== year ||
-    //         date.getMonth() !== month - 1 ||
-    //         date.getDate() !== day
-    //     ) {
-    //         alert("Invalid " + fieldLabel);
-    //         return null;
-    //     }
+         function toggleSection(condition, selector) {
+             $(selector).toggle(condition);
+         }
+        //  function validateDateStrict(dateStr, fieldLabel, blockFuture) {
 
-    //     // DOB cannot be future
-    //     if (blockFuture) {
-    //         var today = new Date();
-    //         today.setHours(0, 0, 0, 0);
+        //     // Accept only YYYY-MM-DD (what <input type="date"> returns)
+        //     var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-    //         if (date > today) {
-    //             alert(fieldLabel + " cannot be future date");
-    //             return null;
-    //         }
-    //     }
+        //     if (!regex.test(dateStr)) {
+        //         alert(fieldLabel + " must be after 01/01/1900");
+        //         return null;
+        //     }
 
-    //     return date;
-    // }
-            function validateDateStrict(dateStr, fieldLabel, blockFuture, fieldId) {
+        //     var parts = dateStr.split('-');
+        //     var year  = parseInt(parts[0], 10);
+        //     var month = parseInt(parts[1], 10);
+        //     var day   = parseInt(parts[2], 10);
 
-        var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+        //     var date = new Date(year, month - 1, day);
 
-        if (!regex.test(dateStr)) {
-            alert(fieldLabel + " must be after 01/01/1900");
+        //     // Invalid calendar date
+        //     if (
+        //         date.getFullYear() !== year ||
+        //         date.getMonth() !== month - 1 ||
+        //         date.getDate() !== day
+        //     ) {
+        //         alert("Invalid " + fieldLabel);
+        //         return null;
+        //     }
 
-            if (fieldId === "#DOB")
-                clearDOBFields();
-            else
-                $(fieldId).val('').focus();
+        //     // DOB cannot be future
+        //     if (blockFuture) {
+        //         var today = new Date();
+        //         today.setHours(0, 0, 0, 0);
 
-            return null;
-        }
+        //         if (date > today) {
+        //             alert(fieldLabel + " cannot be future date");
+        //             return null;
+        //         }
+        //     }
 
-        var parts = dateStr.split('-');
-        var year = parseInt(parts[0], 10);
-        var month = parseInt(parts[1], 10);
-        var day = parseInt(parts[2], 10);
+        //     return date;
+        // }
+                function validateDateStrict(dateStr, fieldLabel, blockFuture, fieldId) {
 
-        var date = new Date(year, month - 1, day);
+            var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-        if (
-            date.getFullYear() !== year ||
-            date.getMonth() !== month - 1 ||
-            date.getDate() !== day
-        ) {
-            alert("Invalid " + fieldLabel);
-
-            if (fieldId === "#DOB")
-                clearDOBFields();
-            else
-                $(fieldId).val('').focus();
-
-            return null;
-        }
-
-        if (blockFuture) {
-            var today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            if (date > today) {
-                alert(fieldLabel + " cannot be future date");
+            if (!regex.test(dateStr)) {
+                alert(fieldLabel + " must be after 01/01/1900");
 
                 if (fieldId === "#DOB")
                     clearDOBFields();
@@ -3794,243 +3821,280 @@
 
                 return null;
             }
+
+            var parts = dateStr.split('-');
+            var year = parseInt(parts[0], 10);
+            var month = parseInt(parts[1], 10);
+            var day = parseInt(parts[2], 10);
+
+            var date = new Date(year, month - 1, day);
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                alert("Invalid " + fieldLabel);
+
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
+
+                return null;
+            }
+
+            if (blockFuture) {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (date > today) {
+                    alert(fieldLabel + " cannot be future date");
+
+                    if (fieldId === "#DOB")
+                        clearDOBFields();
+                    else
+                        $(fieldId).val('').focus();
+
+                    return null;
+                }
+            }
+
+            return date;
+        }
+            function clearDOBFields() {
+            $('#DOB').val('');
+            $('#Age').val('');
+            $('#pdDOB').text('');
+            $('#pdAge').text('');
+            $('#DOB').focus();
+        }
+           function fnvalidateDatefields() {
+
+            var dob = $('#DOB').val();
+            var dos = $('#DOE').val();
+            var doa = $('#DOA').val();
+
+            var dobDate = null;
+            var dosDate = null;
+            var doaDate = null;
+
+               // DOB
+        if (dob) {
+            dobDate = validateDateStrict(dob, "DOB", true, "#DOB");
+            if (!dobDate) return;
         }
 
-        return date;
-    }
-        function clearDOBFields() {
-        $('#DOB').val('');
-        $('#Age').val('');
-        $('#pdDOB').text('');
-        $('#pdAge').text('');
-        $('#DOB').focus();
-    }
-       function fnvalidateDatefields() {
+        // DOS
+        if (dos) {
+            dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
+            if (!dosDate) return;
+        }
 
-        var dob = $('#DOB').val();
-        var dos = $('#DOE').val();
-        var doa = $('#DOA').val();
+        // DOA
+        if (doa) {
+            doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+            if (!doaDate) return;
+        }
 
-        var dobDate = null;
-        var dosDate = null;
-        var doaDate = null;
+            // ---------- DOA vs DOS ----------
+                if (dosDate && doaDate && doaDate > dosDate) {
+            alert("DOA cannot be greater than DOS");
 
-           // DOB
-    if (dob) {
-        dobDate = validateDateStrict(dob, "DOB", true, "#DOB");
-        if (!dobDate) return;
-    }
+            $('#DOA').val('').focus();
+            $('#pdDOA').text('');
 
-    // DOS
-    if (dos) {
-        dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
-        if (!dosDate) return;
-    }
+            return;
+        }
 
-    // DOA
-    if (doa) {
-        doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
-        if (!doaDate) return;
-    }
+            // // ---------- Side panel ----------
+            // var fullname = $("#lname").val() + ' ' + $("#fname").val();
+            // $('#pdName').text(fullname);
 
-        // ---------- DOA vs DOS ----------
-            if (dosDate && doaDate && doaDate > dosDate) {
-        alert("DOA cannot be greater than DOS");
+            // if (dos) $('#pdDOS').text(fngetAGE(dos));
+            // if (doa) $('#pdDOA').text(fngetAGE(doa));
 
-        $('#DOA').val('').focus();
-        $('#pdDOA').text('');
+            // ---------- Age ----------
+            if (dobDate && dosDate) {
+
+                var age = dosDate.getFullYear() - dobDate.getFullYear();
+                var m = dosDate.getMonth() - dobDate.getMonth();
+
+                if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
+                    age--;
+                }
+
+                   if (age > 90) {
+        alert("Age should not be greater than 90 years");
+
+        clearDOBFields();
 
         return;
     }
-
-        // // ---------- Side panel ----------
-        // var fullname = $("#lname").val() + ' ' + $("#fname").val();
-        // $('#pdName').text(fullname);
-
-        // if (dos) $('#pdDOS').text(fngetAGE(dos));
-        // if (doa) $('#pdDOA').text(fngetAGE(doa));
-
-        // ---------- Age ----------
-        if (dobDate && dosDate) {
-
-            var age = dosDate.getFullYear() - dobDate.getFullYear();
-            var m = dosDate.getMonth() - dobDate.getMonth();
-
-            if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
-                age--;
             }
 
-               if (age > 90) {
-    alert("Age should not be greater than 90 years");
-
-    clearDOBFields();
-
-    return;
-}
+              // $('#pdCT').text($("#compensation option:selected").text());
+              // $('#pdLoc').text($("#locationid option:selected").text());
+              // $('#pdGender').text($("#gender option:selected").text());
         }
+        function fngetAGE(inputDate) {
+            if (inputDate) {
+                var date = new Date(inputDate);
 
-          // $('#pdCT').text($("#compensation option:selected").text());
-          // $('#pdLoc').text($("#locationid option:selected").text());
-          // $('#pdGender').text($("#gender option:selected").text());
-    }
-    function fngetAGE(inputDate) {
-        if (inputDate) {
-            var date = new Date(inputDate);
+                // Extract month, date, and year
+                var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+                var day = date.getDate().toString().padStart(2, '0');
+                var year = date.getFullYear();
 
-            // Extract month, date, and year
-            var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-            var day = date.getDate().toString().padStart(2, '0');
-            var year = date.getFullYear();
+                // Format date as MM/dd/yyyy
+                var formattedDate = month + '/' + day + '/' + year;
 
-            // Format date as MM/dd/yyyy
-            var formattedDate = month + '/' + day + '/' + year;
-
-            return formattedDate;
+                return formattedDate;
+            }
+            return '';
         }
-        return '';
-    }
-    //  function validateYear(input) {
+        //  function validateYear(input) {
 
-    //     if (input.value) {
+        //     if (input.value) {
 
-    //         let year = input.value.split("-")[0];
+        //         let year = input.value.split("-")[0];
 
-    //         if (year.length > 4) {
+        //         if (year.length > 4) {
 
-    //             alert("Year must be 4 digits only.");
-    //             input.value = "";
-    //         }
-    //     }
-    // }
-    // function validateDOB(input) {
+        //             alert("Year must be 4 digits only.");
+        //             input.value = "";
+        //         }
+        //     }
+        // }
+        // function validateDOB(input) {
 
-    //     if (!input.value)
-    //         return;
+        //     if (!input.value)
+        //         return;
 
-    //     let year = input.value.split("-")[0];
+        //     let year = input.value.split("-")[0];
 
-    //     // Check year length
-    //     if (year.length > 4){
+        //     // Check year length
+        //     if (year.length > 4){
 
-    //         alert("Year must be 4 digits only");
-    //         input.value = "";
-    //         return;
-    //     }
+        //         alert("Year must be 4 digits only");
+        //         input.value = "";
+        //         return;
+        //     }
 
-    //     let selectedDate = new Date(input.value);
-    //     let minDate = new Date("1900-01-01");
-    //     let today = new Date();
+        //     let selectedDate = new Date(input.value);
+        //     let minDate = new Date("1900-01-01");
+        //     let today = new Date();
 
-    //     today.setHours(0, 0, 0, 0);
+        //     today.setHours(0, 0, 0, 0);
 
-    //     // Check minimum date
-    //     if (selectedDate < minDate) {
+        //     // Check minimum date
+        //     if (selectedDate < minDate) {
 
-    //         alert("DOB should be after 01/01/1900");
-    //         input.value = "";
-    //         return;
-    //     }
+        //         alert("DOB should be after 01/01/1900");
+        //         input.value = "";
+        //         return;
+        //     }
 
-    //     // Check future date
-    //     if (selectedDate > today) {
+        //     // Check future date
+        //     if (selectedDate > today) {
 
-    //         alert("Future date is not allowed");
-    //         input.value = "";
-    //         return;
-    //     }
-    // }
-    // function formatDOB(input) {
-    //     var dob = $('#dob').val();
-    //     // ---------- DOB ----------
-    //     if (dob) {
-    //         dobDate = validateDateStrict(dob, "DOB", true);
-    //         if (!dobDate) return;
-    //     }
-    // }
-    // function validateDateStrict(dateStr, fieldLabel, blockFuture) {
+        //         alert("Future date is not allowed");
+        //         input.value = "";
+        //         return;
+        //     }
+        // }
+        // function formatDOB(input) {
+        //     var dob = $('#dob').val();
+        //     // ---------- DOB ----------
+        //     if (dob) {
+        //         dobDate = validateDateStrict(dob, "DOB", true);
+        //         if (!dobDate) return;
+        //     }
+        // }
+        // function validateDateStrict(dateStr, fieldLabel, blockFuture) {
 
-    //     // Accept only YYYY-MM-DD (what <input type="date"> returns)
-    //     var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+        //     // Accept only YYYY-MM-DD (what <input type="date"> returns)
+        //     var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-    //     if (!regex.test(dateStr)) {
-    //         alert(fieldLabel + " must be after 01/01/1900");
-    //         return null;
-    //     }
+        //     if (!regex.test(dateStr)) {
+        //         alert(fieldLabel + " must be after 01/01/1900");
+        //         return null;
+        //     }
 
-    //     var parts = dateStr.split('-');
-    //     var year  = parseInt(parts[0], 10);
-    //     var month = parseInt(parts[1], 10);
-    //     var day   = parseInt(parts[2], 10);
+        //     var parts = dateStr.split('-');
+        //     var year  = parseInt(parts[0], 10);
+        //     var month = parseInt(parts[1], 10);
+        //     var day   = parseInt(parts[2], 10);
 
-    //     var date = new Date(year, month - 1, day);
+        //     var date = new Date(year, month - 1, day);
 
-    //     // Invalid calendar date
-    //     if (
-    //         date.getFullYear() !== year ||
-    //         date.getMonth() !== month - 1 ||
-    //         date.getDate() !== day
-    //     ) {
-    //         alert("Invalid " + fieldLabel);
-    //         return null;
-    //     }
+        //     // Invalid calendar date
+        //     if (
+        //         date.getFullYear() !== year ||
+        //         date.getMonth() !== month - 1 ||
+        //         date.getDate() !== day
+        //     ) {
+        //         alert("Invalid " + fieldLabel);
+        //         return null;
+        //     }
 
-    //     // DOB cannot be future
-    //     if (blockFuture) {
-    //         var today = new Date();
-    //         today.setHours(0, 0, 0, 0);
+        //     // DOB cannot be future
+        //     if (blockFuture) {
+        //         var today = new Date();
+        //         today.setHours(0, 0, 0, 0);
 
-    //         if (date > today) {
-    //             alert(fieldLabel + " cannot be future date");
-    //             return null;
-    //         }
-    //     }
+        //         if (date > today) {
+        //             alert(fieldLabel + " cannot be future date");
+        //             return null;
+        //         }
+        //     }
 
-    //     return date;
-    // }
-    function DownloadPdf(id) {
-       $('#pdfLoader').show();
-         var downloadurl = '@Url.Action("GeneratePdf", "IntakeForm")';
-                 downloadurl = downloadurl + '?pdffile=' + 'superbill.pdf' + '&id=' + id ;
-                 fetch(downloadurl)
-                     .then(response => {
-                         if (!response.ok) {
-                             throw new Error(`HTTP error! Status: ${response.status}`);
-                         }
-                           const disposition = response.headers.get('Content-Disposition');
-                                 let fileName = 'Superbill.pdf';
-                                  console.log(disposition);
-                                  
-                                    if (disposition) {
-                                     const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
-                                     if (utf8Match) {
-                                             fileName = decodeURIComponent(utf8Match[1]);
-                                         } else {
-                                             const match = disposition.match(/filename="?([^";]+)"?/i);
-                                             if (match) {
-                                                 fileName = match[1];
+        //     return date;
+        // }
+        function DownloadPdf(id) {
+           $('#pdfLoader').show();
+             var downloadurl = '@Url.Action("GeneratePdf", "IntakeForm")';
+                     downloadurl = downloadurl + '?pdffile=' + 'superbill.pdf' + '&id=' + id ;
+                     fetch(downloadurl)
+                         .then(response => {
+                             if (!response.ok) {
+                                 throw new Error(`HTTP error! Status: ${response.status}`);
+                             }
+                               const disposition = response.headers.get('Content-Disposition');
+                                     let fileName = 'Superbill.pdf';
+                                      console.log(disposition);
+
+                                        if (disposition) {
+                                         const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                                         if (utf8Match) {
+                                                 fileName = decodeURIComponent(utf8Match[1]);
+                                             } else {
+                                                 const match = disposition.match(/filename="?([^";]+)"?/i);
+                                                 if (match) {
+                                                     fileName = match[1];
+                                                 }
                                              }
                                          }
-                                     }
 
-                                 return response.blob().then(blob => ({
-                                         blob,
-                                         fileName
-                                  }));
-                     })
-                   .then(({ blob, fileName }) => {
-                         var link = document.createElement('a');
-                         link.href = window.URL.createObjectURL(blob);
-                         link.download = fileName ;
-                         link.click();
-                           $('#pdfLoader').hide();
-                     })
-                     .catch(error => {
-                         console.error('Error downloading Pdf file:', error);
-                     });
+                                     return response.blob().then(blob => ({
+                                             blob,
+                                             fileName
+                                      }));
+                         })
+                       .then(({ blob, fileName }) => {
+                             var link = document.createElement('a');
+                             link.href = window.URL.createObjectURL(blob);
+                             link.download = fileName ;
+                             link.click();
+                               $('#pdfLoader').hide();
+                         })
+                         .catch(error => {
+                             console.error('Error downloading Pdf file:', error);
+                         });
 
-             }
+                 }
 
-            
+
 </script>
 <!-- html2pdf library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

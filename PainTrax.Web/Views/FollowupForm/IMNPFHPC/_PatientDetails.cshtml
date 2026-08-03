@@ -20,7 +20,7 @@
 <div class="select-group">
 
     Patient Name:
-    <input id="PatientName" name="PatientName" class="form-control d-inline" style="width:250px;" />
+    <input id="PatientName" name="PatientName" class="form-control d-inline" required style="width:250px;" />
     Gender
     <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
         <option value="male">M</option>
@@ -41,7 +41,7 @@
     @* <span id="lblLocation">
                                                     @ViewBag.LocName
                                                 </span> *@
-    <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
+    <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" required class="form-select d-inline w-auto" style="width:230px !important">
     </select>
     <div id="patientGrid"
          class="table-responsive border bg-white position-absolute shadow"
@@ -63,17 +63,17 @@
 
 <div class="select-group">
     DOS
-    <input id="DOE" name="DOE" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+    <input id="DOE" name="DOE" type="date" required max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     DOB:
-    <input id="DOB" name="DOB" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" required />
+    <input id="DOB" name="DOB" type="date" required max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" required />
     &nbsp;&nbsp;&nbsp;
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:30px" /> years
     &nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" name="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+    <input id="DOA" name="DOA" required max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     <label>Case Type:</label>
     <label>
@@ -222,7 +222,7 @@
 
     // Row Select Event
     $(document).on("click", ".patient-row", function () {
-
+        $('#pdfLoader').show();
         let patientName = $(this).data("name");
         let patientId = $(this).data("patientid");
         let patientIEId = $(this).data("id");
@@ -267,6 +267,12 @@
                 $("#divDiagnosis").html(res.diagnosis);
                 console.log("Result: "+res.diagnosis);
                 bindForm(res.formData,res.forwardSetting);
+                var today = new Date().toISOString().split('T')[0];
+                formValidation();
+                $('#DOE').val(today);
+            },
+            error: function (xhr, status, error) {
+               $('#pdfLoader').hide();
             }
         });
     });

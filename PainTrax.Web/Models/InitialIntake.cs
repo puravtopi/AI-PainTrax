@@ -465,5 +465,6 @@ namespace PainTrax.Web.Models
         public string FormData { get; set; }
 
         public int? CmpId { get; set; }
+        public int? PatientIEId { get; set; }
     }
 }

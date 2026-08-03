@@ -78,7 +78,7 @@
                             <p id="btnSaveSection" class="mb-0 sticky-buttons">
                                 <button type="button"
                                         class="btn btn-secondary"
-                                        onclick="window.location.href='@Url.Action("GetProvider", "Home")'">
+                                        onclick="window.location.href='@Url.Action("Index", "Visit")'">
                                     <i class="bi bi-house-door-fill"></i> Home
                                 </button>
                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -849,18 +849,10 @@
                 function saveForm(isSubmit) {
 
 
-                       let isValid = true;
+                        var valid=formValidation();
 
-                        $(this).find("[required]").each(function () {
-                            if ($.trim($(this).val()) === "") {
-                                isValid = false;
-                            }
-                        });
-
-                        if (!isValid) {
-                           return; // Stop form submission
-                        }
-
+                        if(!valid)
+                        return false;
 
 
                     $('#pdfLoader').show();
@@ -885,7 +877,7 @@
             data: data,
 
             success: function (response) {
-
+                $('#pdfLoader').hide();
                 if (response.success) {
 
                     // If final submit
@@ -947,15 +939,46 @@
             },
             error: function () {
                 alert("An error occurred while saving data.");
+                $('#pdfLoader').hide();
             }
         });
-        }finally {
+        }catch (error) {
 
-        // HIDE LOADER
+        // Hide loader if JavaScript exception occurs
         $('#pdfLoader').hide();
+
+        console.error(error);
     }
 
     }
+
+     function formValidation()
+           {
+                let isValid = true;
+
+                // Validate required fields
+               $("input[required]").each(function () {
+                    if ($.trim($(this).val()) === "") {
+                        isValid = false;
+                        $(this).addClass("is-invalid");
+                    } else {
+                        $(this).removeClass("is-invalid");
+                    }
+                });
+
+                // Stop if validation fails
+                if (!isValid) {
+                    return false;
+                }
+                else
+                     return true;
+           }
+
+           $(document).on("input change", "[required]", function () {
+                if ($.trim($(this).val()) !== "") {
+                    $(this).removeClass("is-invalid");
+                }
+           });
             $(document).on('input', '.muscle-input', function () {
 
                     let val = $(this).val();
@@ -1159,7 +1182,10 @@
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
                     //updatePreview();
+                    $('#pdfLoader').hide();
                 }, 1000);
+
+
             }
 
             function formatDate(inputDate) {

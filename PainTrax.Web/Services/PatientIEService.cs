@@ -4,6 +4,7 @@ using System.Data;
 using MS.Models;
 using PainTrax.Services;
 using PainTrax.Web.Models;
+using Org.BouncyCastle.Asn1.Crmf;
 
 namespace MS.Services;
 public class PatientIEService : ParentService
@@ -1043,5 +1044,24 @@ WHERE Executed = @fDate and PatientIE_ID=@ieId;Select 1;", conn);
         cm.Parameters.AddWithValue("@poc_assesment", poc_assesment);
 
         Execute(cm);
+    }
+
+    public bool CheckFUDOS(int patientIEID, DateTime? dos)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("SELECT COUNT(1) FROM tbl_patient_fu fu WHERE fu.patientIE_ID=@ieId and fu.doe=@dos", conn);
+        cm.Parameters.AddWithValue("@ieId", patientIEID);
+        cm.Parameters.AddWithValue("@dos", dos?.ToString("yyyy-MM-dd"));
+        var datalist = GetData(cm);
+
+        if (datalist.Rows.Count > 0)
+        {
+            int count = Convert.ToInt32(datalist.Rows[0][0]);
+            return count > 0;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

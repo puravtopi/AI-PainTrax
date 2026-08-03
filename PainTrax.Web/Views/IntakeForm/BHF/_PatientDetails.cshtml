@@ -22,7 +22,7 @@
     </select>
     &nbsp;&nbsp;
     DOS
-    <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" required class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
+    <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" required class="form-control d-inline w-auto"  onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     Location: &nbsp;&nbsp;
     <span id="lblLocation">
@@ -41,7 +41,7 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
+    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" required class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
 </p>
 <div class="select-group">
     <strong>Case Type:</strong>

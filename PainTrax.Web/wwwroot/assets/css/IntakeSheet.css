@@ -175,3 +175,14 @@ textarea.form-control.d-inline {
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
+.is-invalid {
+    border: none;
+    border-bottom: 1px solid red;
+    border-radius: 0;
+    padding: 2px 5px;
+}
+
+input[type="date"].is-invalid {
+    padding-right: 1rem;
+    background-position: right 0.1rem center;
+}

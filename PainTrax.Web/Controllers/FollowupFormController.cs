@@ -161,7 +161,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeIMNPFHPCFU");
+            else return PartialView("_IntakeBHFFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -378,12 +378,15 @@ namespace PainTrax.Web.Controllers
             var model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+          
             var result = "0";
             if (model != null)
             {
+                
                 InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
                 {
                     Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
+                    PatientIEId = model.PatientIEId == "" ? 0 : Convert.ToInt32(model.PatientIEId),
                     CmpId = cmpid,
                     Visit_Type = "FU",
                     DOA = DateTime.TryParse(model.DOA, out var parsedDOA) ? parsedDOA : (DateTime?)null,
@@ -401,6 +404,17 @@ namespace PainTrax.Web.Controllers
                     TreatmentIds = model.TreatmentIds,
                     TreatmentDelimitDesc = model.TreatmentDelimitDesc
                 };
+                if (initialIntakeAI.Id == 0)
+                {
+                    var data = _ieService.CheckFUDOS(initialIntakeAI.PatientIEId.Value, initialIntakeAI.DOE);
+
+                    if (data)
+                    {
+                        return Json(new { success = false, message = "A visit has already been recorded for this patient on the selected DOS.", id = 0, locid = model.LocationId, provid = model.ProviderId });
+                    }
+                }
+
+
                 result = service.SaveInitialIntakeAI(initialIntakeAI);
 
                 var InjuryType = "MM";
@@ -434,28 +448,31 @@ namespace PainTrax.Web.Controllers
 
                     var fuData = _ieService.GetLastFU(objFU.patientIE_ID.Value, "FU");
                     int lFUId = 0;
-                    if(fuData.procedure_performed != null)
+                    if(fuData!=null)
                     {
-                        objFU.procedure_performed = fuData.procedure_performed;
+                        if(fuData.procedure_performed != null)
+                        {
+                            objFU.procedure_performed = fuData.procedure_performed;
+                        }
                     }
                     var newFU = _fuservices.Insert(objFU);
 
                     if (newFU > 0)
                     {
-                        var objPage1 = new tbl_fu_page1()
-                        {
-                            pmh = model.PMH != null ? string.Join(", ", model.PMH) : "",
-                            psh = model.PSH != null ? string.Join(", ", model.PSH) : "",
-                            bodypart = model.Complaints != null ? string.Join(",", model.Complaints) : "",
-                            allergies = "",
-                            assessment = model.Diagnosis,
-                            fu_id = newFU,
-                            vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.",
-                            cc = this.GetCC(model)
+                        //var objPage1 = new tbl_fu_page1()
+                        //{
+                        //    pmh = model.PMH != null ? string.Join(", ", model.PMH) : "",
+                        //    psh = model.PSH != null ? string.Join(", ", model.PSH) : "",
+                        //    bodypart = model.Complaints != null ? string.Join(",", model.Complaints) : "",
+                        //    allergies = "",
+                        //    assessment = model.Diagnosis,
+                        //    fu_id = newFU,
+                        //    vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.",
+                        //    cc = this.GetCC(model)
 
-                        };
+                        //};
 
-                        _fuPage1services.Insert(objPage1);
+                        //_fuPage1services.Insert(objPage1);
 
                        //var objOther = new tbl_fu_other()
                        //{
@@ -694,12 +711,12 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpGet]
+    
         public IActionResult GeneratePdf(string id, string pdffile = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
             Dictionary<string, string> controls = new Dictionary<string, string>();
-
 
 
             ParentService _parentService = new ParentService();
@@ -716,7 +733,6 @@ namespace PainTrax.Web.Controllers
                 var filePath = "";
                 var signPath = "";
                 controls.Add("chk_fu", "Yes");
-
                 try
                 {
                     controls.Add("location", dt.Rows[0]["location"].ToString());
@@ -770,9 +786,13 @@ namespace PainTrax.Web.Controllers
                                                .ToArray();
                         foreach (string data in planUTPI)
                         {
-                            if (data.Trim() != "")
+                            if (data.Trim().ToLower() == "ctpi" || data.Trim().ToLower() == "ttpi" || data.Trim().ToLower() == "ltpi")
                                 if (!controls.ContainsKey("utpi"))
                                     controls.Add("utpi", "Yes");
+                            if (data.Trim().ToLower() == "pt")
+                                if (!controls.ContainsKey("pt"))
+                                    controls.Add("pt", "Yes");
+
                         }
                     }
 
@@ -822,7 +842,159 @@ namespace PainTrax.Web.Controllers
 
             }
 
-            return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
+            return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf");
         }
+
+        [HttpGet]
+        public IActionResult CheckSign(string id)
+        {
+            ParentService _parentService = new ParentService();
+            DataTable dt = _parentService.GetData("select * from vm_patient_fu where intakeid=" + id);
+            if (dt.Rows.Count > 0)
+            {
+                string pid = dt.Rows[0]["patient_id"].ToString();
+                var data = new tbl_ie_sign();
+                try
+                {
+                    data = _ieService.GetOnesign(Convert.ToInt32(pid));
+                    if (data == null)
+                        return Json(new { id = 0 });
+                    return Json(new { id = data.patient_id }); ;
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { id = 0 });
+                }
+
+            }
+            return Json(new { id = 0 });
+
+        }
+
+
+        [HttpGet]
+        public IActionResult GenerateCF(string id, string pdffile = "")
+        {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+            Dictionary<string, string> controls = new Dictionary<string, string>();
+
+
+            ParentService _parentService = new ParentService();
+
+
+            byte[] pdfBytes = null;
+            DataTable dt = _parentService.GetData("select * from vm_patient_fu where intakeid=" + id);
+            if (dt.Rows.Count > 0)
+            {
+                PdfHelper _pdfhelper = new PdfHelper();
+                string outputfilename = "";
+                string ie_id = "";
+                var uploadsFolder = "";
+                var filePath = "";
+                var signPath = "";
+
+                try
+                {
+                    DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_fu where intakeid=" + id);
+                    if (dtdos.Rows.Count > 0)
+                    {
+                        controls.Add("txt_date", DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MM/dd/yyyy"));
+                        ie_id = dtdos.Rows[0]["id"].ToString();
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    DataTable dtplan = _parentService.GetData("select FormData from tbl_intake_ai where id=" + id);
+
+                    if (dtplan.Rows.Count > 0)
+                    {
+                        string jsonString = dtplan.Rows[0]["FormData"].ToString().ToLower();
+
+                        using JsonDocument doc = JsonDocument.Parse(jsonString);
+
+                        string[] planUTPI = doc.RootElement
+                                               .GetProperty("planutpi")
+                                               .EnumerateArray()
+                                               .Select(x => x.GetString()?.Trim().ToLower())
+                                               .ToArray();
+
+                        List<string> tpiList = new List<string>();
+
+                        foreach (string data in planUTPI)
+                        {
+                            switch (data)
+                            {
+                                case "ctpi":
+                                    tpiList.Add("Cervical");
+                                    break;
+
+                                case "ttpi":
+                                    tpiList.Add("Thoracic");
+                                    break;
+
+                                case "ltpi":
+                                    tpiList.Add("Lumbar");
+                                    break;
+
+
+                            }
+                        }
+
+                        if (tpiList.Count > 0)
+                        {
+                            controls["txt_tpi"] = string.Join(", ", tpiList) + " TPI";
+                        }
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+
+                try
+                {
+                    uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Downloads/" + cmpclientid);
+                    filePath = Path.Combine(uploadsFolder, pdffile);
+
+                    signPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/signatures/");
+                }
+                catch (Exception ex)
+                {
+                    //SaveLog(ex, "set Paths");
+                }
+
+
+                try
+                {
+                    pdfBytes = _pdfhelper.Stamping(filePath, "Id", dt.Rows[0]["patient_id"].ToString(), controls, cmpid, signPath);
+                }
+                catch (Exception ex)
+                {
+                    // SaveLog(ex, "Pdf Stamping");
+                }
+                string fileName = $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Consent Form_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf";
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                string destfilePath = Path.Combine(folder, fileName);
+
+                System.IO.File.WriteAllBytes(destfilePath, pdfBytes);
+
+                //string htmlContent = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "demo.html"));
+                // ViewBag.FileName = dt.Rows[0]["LastName"].ToString() + " " + dt.Rows[0]["FirstName"].ToString();
+
+
+            }
+
+            return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Consent Form_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf");
+        }
+
     }
 }
