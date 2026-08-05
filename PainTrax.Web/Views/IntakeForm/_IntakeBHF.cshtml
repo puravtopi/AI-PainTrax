@@ -965,6 +965,33 @@
                         $(this).removeClass("is-invalid");
                     }
                 });
+                 // WC validation
+    var injuryType = formData.InjuryType; // or $("#InjuryType").val()
+
+    if (injuryType === "WC") {
+
+        // Currently Working
+        if (!$('input[name="IsWorking"]:checked').length) {
+            alert("Please select Currently Working.");
+            $('input[name="IsWorking"]').first().focus();
+            return false;
+        }
+
+        // Disability Percentage
+        var disability = $("#DisabilityPercentage").val().trim();
+
+        if (disability === "") {
+            alert("Please enter Degree of Disability (%).");
+            $("#DisabilityPercentage").focus();
+            return false;
+        }
+
+        if (parseFloat(disability) < 0 || parseFloat(disability) > 100) {
+            alert("Degree of Disability must be between 0 and 100.");
+            $("#DisabilityPercentage").focus();
+            return false;
+        }
+    }
 
                 // Stop if validation fails
                 if (!isValid) {
