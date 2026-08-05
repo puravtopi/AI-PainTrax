@@ -1009,42 +1009,17 @@
                         // If final submit
                         if (isSubmit) {
 
-                            bootbox.confirm({
-                                message: 'Click "Yes" to continue creating the next visit.',
-                                swapButtonOrder: true,
+                            let locId = $("#LocationId").val() || 0;
+                            let provId = $("#ProviderId").val() || 0;
 
-                                buttons: {
-                                    confirm: {
-                                        label: 'Yes',
-                                        className: 'btn-primary'
-                                    },
-                                    cancel: {
-                                        label: 'No',
-                                        className: 'btn-secondary'
-                                    }
-                                },
-                                callback: function (result) {
-                                     let locId= $("#LocationId").val() || 0;
-                                     let provId=$("#ProviderId").val() || 0;
-
-                                    if (result) {
-
-                                            window.location.href =
-                                            '@Url.Action("Create", "FollowupForm")' +
-                                            '?providerId=' + provId +
-                                            '&id=0' +
-                                            '&locid=' + locId;
-                                           $('#pdfLoader').hide();
-                                    }
-                                    else {
-                                         window.location.href =
+                            // Automatically redirect to a blank 'Create' page
+                             window.location.href =
                                 '@Url.Action("Create", "FollowupForm")' +
                                 '?id=' + response.id +
-                                '&locid=' + locId+
-                                '&providerId=' + provId ;
-                                    }
-                                }
-                            });
+                                '&providerId='+ provId +
+                                '&locid=' + response.locid;
+        
+                            $('#pdfLoader').hide();
                         }
                         // Draft / Continue editing
                         else {
@@ -1052,6 +1027,7 @@
                             window.location.href =
                                 '@Url.Action("Create", "FollowupForm")' +
                                 '?id=' + response.id +
+                                '&providerId='+ provId +
                                 '&locid=' + response.locid;
 
                         }

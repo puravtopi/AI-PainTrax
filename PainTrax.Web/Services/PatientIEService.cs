@@ -212,11 +212,12 @@ public class PatientIEService : ParentService
 
     public void UpdateBodyPartFromIntakeFU(string bodypart, int id)
     {
-        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_fu_page1 SET
-				bodypart=@bodypart where fu_id=(select id from tbl_patient_fu where intakeid=@id)", conn);
-        cm.Parameters.AddWithValue("@id", id);
-        cm.Parameters.AddWithValue("@bodypart", bodypart);
-        Execute(cm);
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("CALL sp_UpdateBodParts(@BodyPart,@Id) ", conn);
+
+        cm.Parameters.AddWithValue("@BodyPart", bodypart);
+        cm.Parameters.AddWithValue("@Id", id);
+        var datalist = ConvertDataTable<int>(GetData(cm)).FirstOrDefault();
     }
 
     public void UpdateFromFU(tbl_patient_ie data)
