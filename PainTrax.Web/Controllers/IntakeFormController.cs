@@ -759,6 +759,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.FormData = "";
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
+           
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             tbl_locations objLoc = new tbl_locations()
@@ -821,7 +822,7 @@ namespace PainTrax.Web.Controllers
                 if (data != null)
                 {
                     ViewBag.FormData = data.FormData;
-                    ViewBag.PatientId = patientId;
+                  
                     ViewBag.Id = id;
                     ViewBag.SubmitDate = data.PatientSubmitDate;
                     ViewBag.Diagnosis = data.Diagnosis;
@@ -834,7 +835,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
             ViewBag.LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
             ViewBag.ATList = _commonservices.GetAccidenttype(cmpid.Value);
-
+            ViewBag.PatientId = patientId;
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
             else if (client_code.ToLower() == "bhfpc")
@@ -2121,10 +2122,15 @@ namespace PainTrax.Web.Controllers
             }
         }
 
-        private bool IsPatientPresent(string fname, string lname, DateTime doa)
+        private bool IsPatientPresent(string fname, string lname, DateTime? doa)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-            string cnd = " and fname='" + fname + "' and lname='" + lname + "' and DATE(DOA)='" + doa.ToString("yyyy-MM-dd") + "'  and cmp_id=" + cmpid;
+            string cnd = " and fname='" + fname + "' and lname='" + lname + "'  and cmp_id=" + cmpid;
+
+            if (doa.HasValue == false)
+                cnd = cnd + " and doa is null";
+            else
+                cnd = cnd + " and doa='" + doa.Value.ToString("yyyy-MM-dd") + "'";
 
 
             var data = _patientservices.GetAll(cnd);
@@ -2263,136 +2269,7 @@ namespace PainTrax.Web.Controllers
 
             return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
         }
-
-        [HttpGet]
-        //public IActionResult GeneratePdf(string id, string pdffile = "")
-        //{
-        //    string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-        //    string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
-        //    Dictionary<string, string> controls = new Dictionary<string, string>();
-
-
-
-        //    ParentService _parentService = new ParentService();
-
-
-        //    byte[] pdfBytes = null;
-        //    DataTable dt = _parentService.GetData("select * from vm_patient_ie where intakeid=" + id);
-        //    if (dt.Rows.Count > 0)
-        //    {
-        //        PdfHelper _pdfhelper = new PdfHelper();
-        //        string outputfilename = "";
-        //        string ie_id = "";
-        //        var uploadsFolder = "";
-        //        var filePath = "";
-        //        var signPath = "";
-        //        controls.Add("chk_ie", "Yes");
-        //        try
-        //        {
-        //            controls.Add("location", dt.Rows[0]["location"].ToString());
-        //        }
-        //        catch { }
-        //        try
-        //        {
-        //            DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
-        //            if (dtdos.Rows.Count > 0)
-        //            {
-        //                controls.Add("txt_dos", DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MM/dd/yyyy"));
-        //                ie_id = dtdos.Rows[0]["id"].ToString();
-        //            }
-        //        }
-        //        catch { }
-
-
-        //        try
-        //        {
-        //            DataTable dtbodypart = _parentService.GetData("select bodypart from tbl_ie_page1  where ie_id=" + ie_id);
-        //            if (dtbodypart.Rows.Count > 0)
-        //            {
-        //                string bodypart = dtbodypart.Rows[0]["bodypart"].ToString().ToLower();
-        //                string[] bodyparts = bodypart.Split(',', StringSplitOptions.RemoveEmptyEntries)
-        //                                                .Select(x => x.Trim())
-        //                                                .ToArray();
-        //                foreach (string data in bodyparts)
-        //                {
-        //                    controls.Add(data, "Yes");
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //        }
-
-        //        try
-        //        {
-        //            DataTable dtplan = _parentService.GetData("select FormData from tbl_intake_ai  where id=" + id);
-        //            if (dtplan.Rows.Count > 0)
-        //            {
-        //                string jsonString = dtplan.Rows[0]["FormData"].ToString().ToLower(); ;
-
-        //                using JsonDocument doc = JsonDocument.Parse(jsonString);
-
-        //                string[] planUTPI = doc.RootElement
-        //                                       .GetProperty("planutpi")
-        //                                       .EnumerateArray()
-        //                                       .Select(x => x.GetString())
-        //                                       .ToArray();
-        //                foreach (string data in planUTPI)
-        //                {
-        //                    if (data.Trim() != "")
-        //                        if (!controls.ContainsKey("utpi"))
-        //                            controls.Add("utpi", "Yes");
-        //                }
-        //            }
-
-        //        }
-        //        catch (Exception ex)
-        //        {
-
-        //        }
-
-
-        //        try
-        //        {
-        //            uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Downloads/" + cmpclientid);
-        //            filePath = Path.Combine(uploadsFolder, pdffile);
-
-        //            //  signPath = Path.Combine(Directory.GetCurrentDirectory(), "signatures");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            SaveLog(ex, "set Paths");
-        //        }
-
-
-        //        try
-        //        {
-        //            pdfBytes = _pdfhelper.Stamping(filePath, "Id", dt.Rows[0]["patient_id"].ToString(), controls, cmpid, signPath);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            SaveLog(ex, "Pdf Stamping");
-        //        }
-        //        string fileName = $"Superbill.pdf";
-        //        string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
-
-        //        if (!Directory.Exists(folder))
-        //        {
-        //            Directory.CreateDirectory(folder);
-        //        }
-
-        //        string destfilePath = Path.Combine(folder, fileName);
-
-        //        System.IO.File.WriteAllBytes(destfilePath, pdfBytes);
-
-        //        //string htmlContent = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "demo.html"));
-        //        // ViewBag.FileName = dt.Rows[0]["LastName"].ToString() + " " + dt.Rows[0]["FirstName"].ToString();
-
-
-        //    }
-
-        //    return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
-        //}
+                
         #endregion
 
         #region Consent Form
@@ -2676,6 +2553,35 @@ namespace PainTrax.Web.Controllers
             }
 
             return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Consent Form_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf");
+        }
+        #endregion
+
+        #region Report
+        [HttpGet]
+        public IActionResult GenerateReport(string id)
+        {
+            var data = service.GetInitialIntakeAIById(Convert.ToInt32(id));
+            if (data == null || string.IsNullOrEmpty(data.FormData))
+                return Json(new { });
+
+            byte[] pdfBytes = null;
+
+            var json = string.IsNullOrEmpty(data.FormData)
+       ? null
+       : data.FormData;
+
+            var model = new AIIntakeFormModel();
+            try
+            {
+                model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Path: {ex.Path}");
+                Console.WriteLine(ex.Message);
+            }
+
+            return File(pdfBytes, "application/pdf", $"{data.LN}_{data.FN}_{data.DOE?.ToString("MMddyyyy")}.pdf");
         }
         #endregion
     }

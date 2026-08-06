@@ -86,6 +86,12 @@
                                         onclick="DownloadPdf('@ViewBag.Id')">
                                     Super Bill
                                 </button>
+                                <button type="button" id="btnReport"
+                                        class="btn btn-outline-primary"
+                                @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                        onclick="DownloadPdf('@ViewBag.Id')">
+                                   Report
+                                </button>
                             </p>
 
                             <div class="dropdown">
@@ -2687,7 +2693,7 @@
                                        $('#divDiagnosis').html('');
                                        $('#pdfLoader').hide();
                                        selected.length = 0;
-                                        $("#btnSuperBill").prop("disabled", true);
+                                       $("#btnSuperBill").prop("disabled", true);
                                 }
                                 else {
                                      window.location.href = indexurl;
@@ -3907,7 +3913,49 @@
                          console.error('Error downloading Pdf file:', error);
                      });
 
-             }
+    }
+
+    function downloadReport(){
+     $('#pdfLoader').show();
+         var downloadurl = '@Url.Action("GenerateReport", "IntakeForm")';
+                 downloadurl = downloadurl + '?id=' + id ;
+                 fetch(downloadurl)
+                     .then(response => {
+                         if (!response.ok) {
+                             throw new Error(`HTTP error! Status: ${response.status}`);
+                         }
+                           const disposition = response.headers.get('Content-Disposition');
+                                 let fileName = 'Superbill.pdf';
+                                  console.log(disposition);
+
+                                    if (disposition) {
+                                     const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                                     if (utf8Match) {
+                                             fileName = decodeURIComponent(utf8Match[1]);
+                                         } else {
+                                             const match = disposition.match(/filename="?([^";]+)"?/i);
+                                             if (match) {
+                                                 fileName = match[1];
+                                             }
+                                         }
+                                     }
+
+                                 return response.blob().then(blob => ({
+                                         blob,
+                                         fileName
+                                  }));
+                     })
+                   .then(({ blob, fileName }) => {
+                         var link = document.createElement('a');
+                         link.href = window.URL.createObjectURL(blob);
+                         link.download = fileName ;
+                         link.click();
+                           $('#pdfLoader').hide();
+                     })
+                     .catch(error => {
+                         console.error('Error downloading Pdf file:', error);
+                     });
+    }
 </script>
 <!-- html2pdf library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

@@ -1,7 +1,7 @@
 ﻿
 <input type="hidden" id="FN" name="FN" />
 <input type="hidden" id="LN" name="LN" />
-<input type="hidden" id="PatientId" name="PatientId" />
+<input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId"/>
 <input type="hidden" id="PatientIEId" name="PatientIEId" />
 
 <style>
@@ -73,7 +73,7 @@
     &nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" name="DOA" required max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+    <input id="DOA" name="DOA"  max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     <label>Case Type:</label>
     <label>
@@ -239,11 +239,13 @@
 
         if(accidentType!='' && accidentType!=null)
             $("#AccidentType").val(accidentType);
-
+        
         // $("#DOB").val($(this).data("dob").split('T')[0]);
         // $("#DOA").val($(this).data("doa").split('T')[0]);
-        $("#DOB").val(formatToISODate($(this).data("dob")));
-        $("#DOA").val(formatToISODate($(this).data("doa")));
+        if($(this).data("dob")!=null)
+            $("#DOB").val(formatToISODate($(this).data("dob")));
+        if($(this).data("doa")!=null)
+            $("#DOA").val(formatToISODate($(this).data("doa")));
         //$('input[name="InjuryType"]').val($(this).data("injurytype"));
         console.log("InuryType:", $(this).data("injurytype"));
         $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
@@ -261,15 +263,19 @@
             url: url,
             type: 'GET',
             success: function (res) {
-
-                selected=[];
-                $('#bodyPartLinks').text('');
-                $("#divDiagnosis").html(res.diagnosis);
-                console.log("Result: "+res.diagnosis);
-                bindForm(res.formData,res.forwardSetting);
+                  $('#pdfLoader').hide();
+                    selected=[];
+                    $('#bodyPartLinks').text('');
+                    if (!$.isEmptyObject(res)) {
+                    $("#divDiagnosis").html(res.diagnosis);
+                    console.log("Result: "+res.diagnosis);
+                    bindForm(res.formData,res.forwardSetting);
+                     
+                }
                 var today = new Date().toISOString().split('T')[0];
                 formValidation();
                 $('#DOE').val(today);
+                $("#PatientId").val(patientId);
             },
             error: function (xhr, status, error) {
                $('#pdfLoader').hide();

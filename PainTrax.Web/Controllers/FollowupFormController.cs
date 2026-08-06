@@ -66,7 +66,7 @@ namespace PainTrax.Web.Controllers
         {
             return View();
         }
-        public IActionResult Create(int? locId, int? id, int? providerId)
+        public IActionResult Create(int? locId, int? id, int? providerId, int patientId = 0)
         {
             if (providerId == null)
             {
@@ -153,7 +153,7 @@ namespace PainTrax.Web.Controllers
             }
             ViewBag.ATList = _commonservices.GetAccidenttype(cmpid.Value);
             var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
-
+            ViewBag.PatientId = patientId;
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
             else if (client_code.ToLower() == "bhfpc")
@@ -162,7 +162,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeBHFFU");
+            else return PartialView("_IntakeIMNPFHPCFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -610,7 +610,7 @@ namespace PainTrax.Web.Controllers
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId, patientid = model.PatientId });
         }
 
         private string GetCC(AIIntakeFormModel model)
