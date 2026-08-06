@@ -409,7 +409,7 @@
             </div>
             <div class="modal-body">
 
-                <input type="hidden" id="sid" />
+                <input type="hidden" id="intid" />
                 <input type="hidden" id="pid" />
                 <div class="col-sm-10">
                     <div class="col-sm-10" id="signCon">
@@ -1617,10 +1617,8 @@
                     contentType: "application/json",
                     success: function (response) {
                         console.log("Signature saved successfully:", response);
+                        downloadConsentPdf($("#intid").val());
                         $("#signModal").modal("hide");
-                        downloadConsentPdf(pId);
-                        
-
                     },
                     error: function (xhr, status, error) {
                         console.log("Error saving signature:", xhr.status, error);
@@ -2098,6 +2096,7 @@
                 $.get('@Url.Action("CheckSign", "FollowupForm")', { id: id }, function (res) {
 
                 if (res.id == 0) {
+                     $("#intid").val(id);
                      $("#signModal").modal("show");
                      $("#signCon").html(function (_, html) {
                             return html.replace(/#pname/g, $("#PatientName").val() );

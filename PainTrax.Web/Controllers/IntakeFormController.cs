@@ -974,7 +974,7 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var result = "0";
 
-            DateTime doa = Convert.ToDateTime(model.DOA);
+            DateTime? doa = DateTime.TryParse(model.DOA, out var parsedDOA1) ? parsedDOA1 : (DateTime?)null;
 
             if (IsPatientPresent(model.FN, model.LN, doa) && model.Id == "0")
             {

@@ -2277,7 +2277,7 @@
             </div>
             <div class="modal-body">
 
-                <input type="hidden" id="sid" />
+                <input type="hidden" id="intid" />
                 <input type="hidden" id="pid" />
                 <div class="col-sm-10">
                     <div class="col-sm-10" id="signCon">
@@ -2292,12 +2292,10 @@
                     <button type="button" class="btn btn-danger" id="clear-signature">Clear</button>
                     <button type="button" class="btn btn-warning" id="undo-signature">Undo</button>
                     <button type="button" class="btn btn-secondary" id="redo-signature">Redo</button>
-                    <button type="button" class="btn btn-primary" id="save-signature" onclick="fnSaveSign()">Save Signature</button>
-                    <button type="button" class="btn btn-primary" id="save-signature" onclick="fnPrint()">Print</button>
+                    <button type="button" class="btn btn-primary" id="save-signature">Save Signature</button>
+                   
                 </div>
-                <div class="mt-3" id="changesign" style="display:none">
-                    <button type="button" class="btn btn-primary" onclick="fnChangeSave()">Change Signature</button>
-                </div>
+               
             </div>
         </div>
     </div>
@@ -3475,8 +3473,9 @@
                     contentType: "application/json",
                     success: function (response) {
                         console.log("Signature saved successfully:", response);
+                        downloadConsentPdf($("#intid").val());
                         $("#signModal").modal("hide");
-                        downloadConsentPdf(pId);
+                        
                         },
                     error: function (xhr, status, error) {
                         console.log("Error saving signature:", xhr.status, error);
@@ -3560,6 +3559,7 @@
                   $.get('@Url.Action("CheckSign", "IntakeForm")', { id: id }, function (res) {
 
                       if (res.id == 0) {
+                          $("#intid").val(id);
                           $("#signModal").modal("show");
                           $("#signCon").html(function (_, html) {
                             return html.replace(/#pname/g, $("#LN").val() + ' ' + $("#FN").val() );
