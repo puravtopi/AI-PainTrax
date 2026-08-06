@@ -206,13 +206,12 @@
                                         <div class="accordion-body">
 
                                             <ol> <div class="row" id="divDiagnosis" name="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
-
                                             <br>
                                             <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
                                             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    </div>                               
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingNE">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
@@ -595,13 +594,13 @@
 
                 // Clear values
                 $("#" + divCC).find("input").prop("checked", false).val("");
-                $("#" + divPE).find("input").prop("checked", false).val("");
+                $("#" + divPE).find("input").prop("checked", false).val("");                 
             }
 
             renderSectionsInOrder();
         }
 
-            function renderSectionsInOrder() {
+        function renderSectionsInOrder() {
 
             let ccContainer = $("#presentComplaintContainer");   // create this div
             let peContainer = $("#physicalExamContainer");       // create this div
@@ -1023,7 +1022,7 @@
                 $('#DOE').val(today);
                // loadTemplate();
                 if ('@ViewBag.FormData' != '') {
-                    bindForm('@ViewBag.FormData');
+                   bindForm('@ViewBag.FormData');                     
                 }
 
                 $('#patientForm').on('submit', function (e) {
@@ -1046,14 +1045,14 @@
 
 
 
-                        // $('input[name="Complaints"]:checked').each(function () {
+                   // $('input[name="Complaints"]:checked').each(function () {
                         //     selected.push($(this).val());
                         // });
                         var value = $(this).val();
 
 
 
-                        if ($(this).is(':checked')) {
+                       if ($(this).is(':checked')) {
                             // Add in click order
                             selected.push(value);
                         } else {
@@ -1102,7 +1101,7 @@
                             $("#acordPhyExam").show();
                             $("#acordDiagnosis").show();
 
-
+                           
                             var html = '';
 
                             selected.forEach(function(part) {
@@ -1122,15 +1121,35 @@
                              $("#acordPhyExam").hide();
                              $("#acordDiagnosis").hide();
                              $(".upper").hide();
-                             $(".lower").hide();
+                             $(".lower").hide();                            
                         }
 
                         var result = selected.join(', ');
-
+                        
                         console.log(result);
 
                         $('#BodyPart').val(result);
                 });
+
+      
+        $(document).on('change', 'input[name="NeckRadiates"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="NeckRadiates"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="NeckRadiatesTo"]').prop('checked', false);
+        }
+
+    });
+        $(document).on('change', 'input[name="LBRadiates"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="LBRadiates"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="LBRadiatesTo"]').prop('checked', false);
+        }
+
+    });   
 
                 $('#DOB').on('change', function () {
                     var dob = $(this).val(); // format: yyyy-mm-dd

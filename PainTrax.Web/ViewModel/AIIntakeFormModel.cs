@@ -616,6 +616,7 @@
         public string txtGait { get; set; }
         public string txtPAStatementOther { get; set; }
         public string txtPAStatement { get; set; }
+        public string DrNote { get; set; }
 
     }
 }

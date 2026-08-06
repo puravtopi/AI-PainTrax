@@ -95,6 +95,8 @@
             <input type="checkbox" class="chkMulti" name="NeckRadiates" value="fingers">
             <span class="select-btn">fingers</span>
         </label>
+        <input id="NeckRadiatesOther" class="form-control d-inline " style="width:300px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckRadiatesOther')"></i>
 
         Neck pain is associated with
 
@@ -287,6 +289,8 @@
         <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="leg"> <span class="select-btn">leg</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="ankle"> <span class="select-btn">ankle</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="foot"> <span class="select-btn">foot</span>. </label>
+        <input id="LBRadiatesOther" class="form-control d-inline " style="width:300px" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBRadiatesOther')"></i>
         Lower back pain is associated with
         <label>
             <input type="checkbox" class="chkMulti" name="LBAssociated" value="numbness">
@@ -902,4 +906,6 @@
             <span class="select-btn">Achy</span>
         </label>
     </div>
+    <input id="ComplaintsOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ComplaintsOther')"></i>
 </div>
