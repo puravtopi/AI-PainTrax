@@ -7,6 +7,7 @@
     Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
 }
 
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@latest/dist/signature_pad.umd.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
@@ -399,6 +400,40 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="signModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">General Consent Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <input type="hidden" id="intid" />
+                <input type="hidden" id="pid" />
+                <div class="col-sm-10">
+                    <div class="col-sm-10" id="signCon">
+                    </div>
+
+                    <center>
+                        <canvas id="signature-pad" style="border: 1px solid #000;" crossorigin="anonymous"></canvas>
+                        <img id="imgSign" style="display:none" />
+                    </center>
+                </div>
+                <div class="mt-3" id="signaction">
+                    <button type="button" class="btn btn-danger" id="clear-signature">Clear</button>
+                    <button type="button" class="btn btn-warning" id="undo-signature">Undo</button>
+                    <button type="button" class="btn btn-secondary" id="redo-signature">Redo</button>
+                    <button type="button" class="btn btn-primary" id="save-signature" onclick="fnSaveSign()">Save Signature</button>
+                    <button type="button" class="btn btn-primary" id="save-signature" onclick="fnPrint()">Print</button>
+                </div>
+                <div class="mt-3" id="changesign" style="display:none">
+                    <button type="button" class="btn btn-primary" onclick="fnChangeSave()">Change Signature</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
             var docTemplate = null;
@@ -410,26 +445,7 @@
             var selected = [];
             var recognition;
             var isRecording = false;
-        //     function calculateBMI()
-        // {
-        //         let weight = parseFloat($("#weight").val());
-        //         let heightCm = parseFloat($("#height").val());
-
-        //         if (!weight || !heightCm) {
-        //             $("#result").html("Please enter valid values");
-        //             return;
-        //         }
-
-        //         // Convert cm to meter
-        //         let heightM = heightCm / 100;
-
-        //         // BMI Formula
-        //         let bmi = weight / (heightM * heightM);
-
-        //         bmi = bmi.toFixed(2);
-
-        //         $("#bmi").val(bmi)
-        // }
+        
 
             function safeParse(json) {
                 if (typeof json !== "string") return json;
@@ -1009,42 +1025,18 @@
                         // If final submit
                         if (isSubmit) {
 
-                            bootbox.confirm({
-                                message: 'Click "Yes" to continue creating the next visit.',
-                                swapButtonOrder: true,
+                            let locId = $("#LocationId").val() || 0;
+                            let provId = $("#ProviderId").val() || 0;
 
-                                buttons: {
-                                    confirm: {
-                                        label: 'Yes',
-                                        className: 'btn-primary'
-                                    },
-                                    cancel: {
-                                        label: 'No',
-                                        className: 'btn-secondary'
-                                    }
-                                },
-                                callback: function (result) {
-                                     let locId= $("#LocationId").val() || 0;
-                                     let provId=$("#ProviderId").val() || 0;
-
-                                    if (result) {
-
-                                            window.location.href =
-                                            '@Url.Action("Create", "FollowupForm")' +
-                                            '?providerId=' + provId +
-                                            '&id=0' +
-                                            '&locid=' + locId;
-                                           $('#pdfLoader').hide();
-                                    }
-                                    else {
-                                         window.location.href =
+                            // Automatically redirect to a blank 'Create' page
+                             window.location.href =
                                 '@Url.Action("Create", "FollowupForm")' +
                                 '?id=' + response.id +
-                                '&locid=' + locId+
-                                '&providerId=' + provId ;
-                                    }
-                                }
-                            });
+                                '&providerId='+ provId +
+                                '&patientId='+ response.patientid +
+                                '&locid=' + response.locid;
+        
+                            $('#pdfLoader').hide();
                         }
                         // Draft / Continue editing
                         else {
@@ -1052,6 +1044,7 @@
                             window.location.href =
                                 '@Url.Action("Create", "FollowupForm")' +
                                 '?id=' + response.id +
+                                '&providerId='+ provId +
                                 '&locid=' + response.locid;
 
                         }
@@ -1090,7 +1083,7 @@
             let isValid = true;
 
             // Validate required fields
-            $("#PatientName, #DOE, #DOB, #DOA").each(function () {
+            $("#PatientName, #DOE, #DOB ").each(function () {
                 if ($.trim($(this).val()) === "") {
                     isValid = false;
                     $(this).addClass("is-invalid");
@@ -1312,6 +1305,7 @@
 
 
                $("#hdId").val('@ViewBag.Id');
+              // $("#PatientId").val('@ViewBag.PatientId');
 
 
                 setTimeout(function () {
@@ -1554,7 +1548,115 @@
                     // Set Age
                     $('#Age').val(calculateAge(formattedDate));
                 }
+
+
+        $(document).ready(function () {
+
+            fnShowSignatureContent();
+            var undoStack = [];
+            var canvas = document.getElementById("signature-pad");
+            var signaturePad = new SignaturePad(canvas, {
+                penColor: 'black',
+                backgroundColor: 'white',
+            });
+
+            $("#clear-signature").click(function () {
+                signaturePad.clear();
+                undoStack = [];
+            });
+
+            $("#undo-signature").click(function () {
+                var data = signaturePad.toData();
+                if (data.length > 0) {
+                    var removedStroke = data.pop();
+                    undoStack.push(removedStroke);
+                    signaturePad.fromData(data);
+                }
+            });
+
+            $("#redo-signature").click(function () {
+                if (undoStack.length > 0) {
+                    var redoStroke = undoStack.pop();
+                    var data = signaturePad.toData();
+                    data.push(redoStroke);
+                    signaturePad.fromData(data);
+                }
+            });
+
+            $("#save-signature").click(function () {
+                if (signaturePad.isEmpty()) {
+                    alert("Please draw your signature before saving.");
+                } else {
+                    debugger
+                    var signatureData = signaturePad.toDataURL("image/jpeg");
+                    fnSaveSign(signatureData);
+                }
+            });
+
+
+
+
+
+         function fnSaveSign(signatureData) {
+
+
+                var url = '@Url.Action("SaveSign", "Visit")';
+                
+                var pId = $("#PatientId").val();
+                var sid = "0";
+                var data = {
+                    id: sid,
+                    patient_id: pId,
+                    signatureData: signatureData,
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log("Signature saved successfully:", response);
+                        downloadConsentPdf($("#intid").val());
+                        $("#signModal").modal("hide");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error saving signature:", xhr.status, error);
+                    },
+                });
+            }
+
+    });
+
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+            signaturePad.clear();
+        }
+
+        function fnShowSignatureContent() {
+
+            var url = '';
+
+            url = '@Url.Action("GetSignContent", "Visit")';
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+
+                    $("#signCon").html(data.sign_content);
+                   
+                    console.log(data);
+                }
+            })
+        }
 </script>
+
+
 
 @* for file upload *@
 
@@ -1991,61 +2093,77 @@
 
              function DownloadCF(id) {
 
-            $.get('@Url.Action("CheckSign", "FollowupForm")', { id: id }, function (res) {
+                $.get('@Url.Action("CheckSign", "FollowupForm")', { id: id }, function (res) {
 
                 if (res.id == 0) {
-                    alert("Signature not found.");
-                    return;
+                     $("#intid").val(id);
+                     $("#signModal").modal("show");
+                     $("#signCon").html(function (_, html) {
+                            return html.replace(/#pname/g, $("#PatientName").val() );
+                     });
+                     return;
                 }
 
-                // Signature exists, download PDF
-                $('#pdfLoader').show();
+                 downloadConsentPdf(id);
 
-                var downloadurl = '@Url.Action("GenerateCF", "FollowupForm")';
-                downloadurl = downloadurl + '?pdffile=' + encodeURIComponent('Consent Form.pdf') + '&id=' + id;
-
-                fetch(downloadurl)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-
-                        const disposition = response.headers.get('Content-Disposition');
-                        let fileName = 'Consent Form.pdf';
-
-                        if (disposition) {
-                            const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
-                            if (utf8Match) {
-                                fileName = decodeURIComponent(utf8Match[1]);
-                            } else {
-                                const match = disposition.match(/filename="?([^";]+)"?/i);
-                                if (match) {
-                                    fileName = match[1];
-                                }
-                            }
-                        }
-
-                        return response.blob().then(blob => ({
-                            blob,
-                            fileName
-                        }));
-                    })
-                    .then(({ blob, fileName }) => {
-                        var link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(blob);
-                        link.download = fileName;
-                        link.click();
-                        $('#pdfLoader').hide();
-                    })
-                    .catch(error => {
-                        $('#pdfLoader').hide();
-                        console.error('Error downloading Pdf file:', error);
-                    });
-
-            }).fail(function () {
-                alert("Unable to verify signature.");
-            });
+                });
         }
+
+        function downloadConsentPdf(id,  defaultFileName = 'Consent Form.pdf', loaderSelector = '#pdfLoader') {
+        // Show loader
+        $(loaderSelector).show();
+
+        var baseUrl = '@Url.Action("GenerateCF", "FollowupForm")';
+        // Construct URL
+        const downloadUrl = baseUrl + '?pdffile=' + encodeURIComponent(defaultFileName) + '&id=' + id;
+
+        fetch(downloadUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Extract filename from Content-Disposition header
+                const disposition = response.headers.get('Content-Disposition');
+                let fileName = defaultFileName;
+
+                if (disposition) {
+                    const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                    if (utf8Match) {
+                        fileName = decodeURIComponent(utf8Match[1]);
+                    } else {
+                        const match = disposition.match(/filename="?([^";]+)"?/i);
+                        if (match) {
+                            fileName = match[1];
+                        }
+                    }
+                }
+
+                return response.blob().then(blob => ({
+                    blob,
+                    fileName
+                }));
+            })
+            .then(({ blob, fileName }) => {
+                // Create a link and trigger download
+                const link = document.createElement('a');
+                const url = window.URL.createObjectURL(blob);
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link); // Required for Firefox
+                link.click();
+
+                // Cleanup
+                window.URL.revokeObjectURL(url);
+                link.remove();
+                $(loaderSelector).hide();
+            })
+            .catch(error => {
+                $(loaderSelector).hide();
+                console.error('Error downloading Pdf file:', error);
+                alert("Failed to download the PDF. Please try again.");
+            });
+    }
 </script>
 <!-- html2pdf library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

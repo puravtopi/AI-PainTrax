@@ -271,14 +271,18 @@
             url: url,
             type: 'GET',
             success: function (res) {
-
+                debugger
                 selected=[];
                 $('#bodyPartLinks').text('');
-                $("#divDiagnosis").html(res.diagnosis);
-                console.log("Result: "+res.diagnosis);
-                bindForm(res.formData,res.forwardSetting);
+
+                if (!$.isEmptyObject(res)) {
+                    $("#divDiagnosis").html(res.diagnosis);
+                    console.log("Result: "+res.diagnosis);
+                    bindForm(res.formData,res.forwardSetting);
+                }
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
+                $('#pdfLoader').hide();
             },
             error: function (xhr, status, error) {
                $('#pdfLoader').hide();

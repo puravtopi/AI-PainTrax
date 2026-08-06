@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
+using MySqlX.XDevAPI;
 using Optivem.Framework.Core.Domain;
 using PainTrax.Services;
 using PainTrax.Web.AzureServices;
@@ -65,7 +66,7 @@ namespace PainTrax.Web.Controllers
         {
             return View();
         }
-        public IActionResult Create(int? locId, int? id, int? providerId)
+        public IActionResult Create(int? locId, int? id, int? providerId, int patientId = 0)
         {
             if (providerId == null)
             {
@@ -152,7 +153,7 @@ namespace PainTrax.Web.Controllers
             }
             ViewBag.ATList = _commonservices.GetAccidenttype(cmpid.Value);
             var client_code = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
-
+            ViewBag.PatientId = patientId;
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
             else if (client_code.ToLower() == "bhfpc")
@@ -161,7 +162,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeBHFFU");
+            else return PartialView("_IntakeIMNPFHPCFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -378,11 +379,11 @@ namespace PainTrax.Web.Controllers
             var model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
-          
+
             var result = "0";
             if (model != null)
             {
-                
+
                 InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
                 {
                     Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
@@ -427,6 +428,7 @@ namespace PainTrax.Web.Controllers
                 else
                     InjuryType = model.InjuryType;
 
+                int lFUId = 0;
 
                 if (initialIntakeAI.Id == 0)
                 {
@@ -447,10 +449,10 @@ namespace PainTrax.Web.Controllers
                     };
 
                     var fuData = _ieService.GetLastFU(objFU.patientIE_ID.Value, "FU");
-                    int lFUId = 0;
-                    if(fuData!=null)
+
+                    if (fuData != null)
                     {
-                        if(fuData.procedure_performed != null)
+                        if (fuData.procedure_performed != null)
                         {
                             objFU.procedure_performed = fuData.procedure_performed;
                         }
@@ -474,14 +476,14 @@ namespace PainTrax.Web.Controllers
 
                         //_fuPage1services.Insert(objPage1);
 
-                       //var objOther = new tbl_fu_other()
-                       //{
-                       //    fu_id = newFU,
-                       //    treatment_delimit = model.TreatmentIds,
-                       //    treatment_delimit_desc = model.TreatmentDelimitDesc,
-                       //    treatment_details = model.TreatmentDesc
-                       //};
-                       //_fuOtherService.Insert(objOther);
+                        //var objOther = new tbl_fu_other()
+                        //{
+                        //    fu_id = newFU,
+                        //    treatment_delimit = model.TreatmentIds,
+                        //    treatment_delimit_desc = model.TreatmentDelimitDesc,
+                        //    treatment_details = model.TreatmentDesc
+                        //};
+                        //_fuOtherService.Insert(objOther);
 
 
                         if (fuData != null)
@@ -496,7 +498,7 @@ namespace PainTrax.Web.Controllers
                         {
                         }
 
-                        _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), objFU.intakeid.Value);
+                        _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), newFU);
 
                         try
                         {
@@ -594,16 +596,21 @@ namespace PainTrax.Web.Controllers
                         doa = string.IsNullOrEmpty(model.DOA) ? null : Convert.ToDateTime(model.DOA),
                         doe = string.IsNullOrEmpty(model.DOE) ? null : Convert.ToDateTime(model.DOE),
                         compensation = InjuryType,
-                        intakeid = initialIntakeAI.Id
+                        intakeid = initialIntakeAI.Id,
+                        id = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
                     };
-                   // _ieService.UpdateFromIntake(objIE);
+                    var fuData = _ieService.GetLastFU(objIE.id.Value, "FU");
+
+                    if (fuData != null)
+                        lFUId = fuData.id.Value;
+                    // _ieService.UpdateFromIntake(objIE);
                     _ieService.UpdateFromIntakeFU(objIE);
-                    _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), initialIntakeAI.Id);
+                    _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), lFUId);
                 }
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId, patientid = model.PatientId });
         }
 
         private string GetCC(AIIntakeFormModel model)
@@ -711,7 +718,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpGet]
-    
+
         public IActionResult GeneratePdf(string id, string pdffile = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -724,6 +731,7 @@ namespace PainTrax.Web.Controllers
 
             byte[] pdfBytes = null;
             DataTable dt = _parentService.GetData("select * from vm_patient_fu where intakeid=" + id);
+            string _dos = "";
             if (dt.Rows.Count > 0)
             {
                 PdfHelper _pdfhelper = new PdfHelper();
@@ -738,7 +746,7 @@ namespace PainTrax.Web.Controllers
                     controls.Add("location", dt.Rows[0]["location"].ToString());
                 }
                 catch { }
-
+               
                 try
                 {
                     DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_fu  where intakeid=" + id);
@@ -746,6 +754,7 @@ namespace PainTrax.Web.Controllers
                     {
                         controls.Add("txt_dos", DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MM/dd/yyyy"));
                         fu_id = dtdos.Rows[0]["id"].ToString();
+                        _dos = DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MMddyyyy");
                     }
                 }
                 catch { }
@@ -824,7 +833,7 @@ namespace PainTrax.Web.Controllers
                 {
                     //SaveLog(ex, "Pdf Stamping");
                 }
-                string fileName = $"Superbill.pdf";
+                string fileName = $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill_{_dos}.pdf";
                 string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
 
                 if (!Directory.Exists(folder))
@@ -842,7 +851,7 @@ namespace PainTrax.Web.Controllers
 
             }
 
-            return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf");
+            return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill_{_dos}.pdf");
         }
 
         [HttpGet]
