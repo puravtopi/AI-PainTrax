@@ -2,32 +2,6 @@
 {
     public class AIIntakeFormModel
     {
-        /* public string Id { get; set; }
-         public string FN { get; set; }
-         public string LN { get; set; }
-         public string Gender { get; set; }
-         public string DominantHand { get; set; }
-         public string DOB { get; set; }
-         public string DOA { get; set; }
-         public string DOE { get; set; }
-         public int Age { get; set; }
-         public string Height { get; set; }
-         public string Weight { get; set; }
-         public string IsWorking { get; set; }
-         public string JobTitle { get; set; }
-         public string StoppedAfterAccident { get; set; }
-         public string NotWorkingReason { get; set; }
-         public List<string> Complaints { get; set; }
-         public string InjuryType { get; set; }
-         public string Activity { get; set; }
-         public string Incident { get; set; }
-         public string IncidentType { get; set; }
-         public string Mechanism { get; set; }
-         public string SymptomOnset { get; set; }
-         public string BodyPart { get; set; }
-         public string SymptomPattern { get; set; }
-         public string DailyActivities { get; set; }*/
-
         public string Id { get; set; }
         public string FN { get; set; }
         public string LN { get; set; }
@@ -236,7 +210,7 @@
         public string GeneralROS { get; set; }
         //public string SkinNormal { get; set; }
         public string SkinROS { get; set; }
-       // public string HEENTNormal { get; set; }
+        // public string HEENTNormal { get; set; }
         public string HEENTROS { get; set; }
 
         //public string NeckNormal { get; set; }
@@ -246,9 +220,9 @@
         //public string RespiratoryNormal { get; set; }
         public string RespiratoryROS { get; set; }
 
-       // public string GastrointestinalNormal { get; set; }
+        // public string GastrointestinalNormal { get; set; }
         public string GastrointestinalROS { get; set; }
-       // public string UrinaryNormal { get; set; }
+        // public string UrinaryNormal { get; set; }
         public string UrinaryROS { get; set; }
         //public string PeripheralvascularNormal { get; set; }
         public string PeripheralvascularROS { get; set; }
@@ -257,7 +231,7 @@
         public string MusculoskeletalROS { get; set; }
         //public string NeurologicalNormal { get; set; }
         public string NeurologicalROS { get; set; }
-       // public string EndocrineNormal { get; set; }
+        // public string EndocrineNormal { get; set; }
         public string EndocrineROS { get; set; }
 
         public List<string> CervicalPE { get; set; }
@@ -300,13 +274,13 @@
         public string CERVICALLeftT1 { get; set; }
 
         public string CevicalSpurling { get; set; }
-        public List<string> CevicalSpurlingRight { get; set; }
+        public List<string> CevicalSpurlingTest { get; set; }
         public string CERVICALRighttxt { get; set; }
         public string CERVICALLefttxt { get; set; }
         public string CERVICALbilateraltxt { get; set; }
 
         public string CevicalCompression { get; set; }
-        public string CevicalCompressionRight { get; set; }
+        public string CevicalCompressionTest { get; set; }
 
         public string THORACICBicepstendonright { get; set; }
         public string THORACICBicepstendonleft { get; set; }
@@ -374,7 +348,7 @@
         public string LumbarStraightRighttxt { get; set; }
         public string LumbarStraightLefttxt { get; set; }
         public string LumbarStraightbilateraltxt { get; set; }
-        
+
         public string LumbarFacetloading { get; set; }
         public string LumbarFacetloadingRight { get; set; }
 
@@ -386,7 +360,7 @@
         public string GAITrdo { get; set; }
         public string GAITOther { get; set; }
 
-       public List<string> ADL { get; set; }
+        public List<string> ADL { get; set; }
         public string ADLSit { get; set; }
         public string ADLSittxt { get; set; }
         public string ADLStand { get; set; }
@@ -612,7 +586,7 @@
         public string PESwellingLKn { get; set; }
         public string PESwellingrelbow { get; set; }
         public string PESwellinglelbow { get; set; }
-       
+
         public string txtGait { get; set; }
         public string txtPAStatementOther { get; set; }
         public string txtPAStatement { get; set; }

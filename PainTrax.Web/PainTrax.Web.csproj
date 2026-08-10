@@ -59,6 +59,7 @@
     <Folder Include="Uploads\Sign\" />
     <Folder Include="wwwroot\Forms\" />
     <Folder Include="wwwroot\audio\" />
+    <Folder Include="wwwroot\Logfiles\" />
     <Folder Include="wwwroot\Uploads\DriverLicense\" />
   </ItemGroup>
 
