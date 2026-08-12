@@ -1,7 +1,7 @@
 ﻿
 <input type="hidden" id="FN" name="FN" />
 <input type="hidden" id="LN" name="LN" />
-<input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId"/>
+<input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId" />
 <input type="hidden" id="PatientIEId" name="PatientIEId" />
 
 <style>
@@ -73,7 +73,7 @@
     &nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" name="DOA"  max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+    <input id="DOA" name="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     <label>Case Type:</label>
     <label>
@@ -86,7 +86,7 @@
         <span class="select-btn">WC</span>
     </label>
 
-   @*  <label>
+    @*  <label>
         <input type="radio" name="InjuryType" value="MM">
         <span class="select-btn">MM</span>
     </label>
@@ -120,7 +120,7 @@
 </div>
 
 <div class="select-group">
-    Chief complaint: The patient presents today 
+    Chief complaint: The patient presents today
     <label><input type="radio" name="PatientPresent" value="with ongoing pain "> <span class="select-btn">with ongoing pain </span></label>
     <label><input type="radio" name="PatientPresent" value="for evaluation of neck "> <span class="select-btn">for evaluation</span></label>
 
@@ -148,190 +148,165 @@
 </div>
 
 <script>
-    $("#PatientName").on("keyup", function () {
+        $("#PatientName").on("keyup", function () {
 
-        let search = $(this).val();
-         var url = '@Url.Action("SearchPatient", "FollowupForm")';
+            let search = $(this).val();
+             var url = '@Url.Action("SearchPatient", "FollowupForm")';
 
-        if (search.length < 2) {
-            $("#patientGrid").hide();
-            return;
-        }
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: { term: search },
-            success: function (data) {
-
-                let rows = "";
-
-
-                $.each(data, function (i, item) {
-
-                        rows += `
-        <tr class="patient-row"
-            data-id="${item.id}"
-            data-intakeid="${item.intakeid}"
-            data-patientid="${item.patient_id}"
-            data-providerid="${item.provider_id}"
-            data-name="${item.lname} ${item.fname}"
-            data-doa="${item.doa}"
-            data-injurytype="${item.compensation}"
-            data-accidenttype="${item.accidentType}"
-            data-dob="${item.dob}">
-
-            <td>${item.lname} ${item.fname}</td>
-
-            <td>
-                ${
-                    item.dob
-                        ? new Date(item.dob).toLocaleDateString('en-US', {
-                              month: '2-digit',
-                              day: '2-digit',
-                              year: 'numeric'
-                          })
-                        : ''
-                }
-            </td>
-             <td>
-                ${
-                    item.doa
-                        ? new Date(item.doa).toLocaleDateString('en-US', {
-                              month: '2-digit',
-                              day: '2-digit',
-                              year: 'numeric'
-                          })
-                        : ''
-                }
-            </td>
-        </tr>
-    `;
-                });
-
-                $("#patientGrid tbody").html(rows);
-
-                if (data.length > 0)
-                    $("#patientGrid").show();
-                else
-                    $("#patientGrid").hide();
+            if (search.length < 2) {
+                $("#patientGrid").hide();
+                return;
             }
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: { term: search },
+                success: function (data) {
+
+                    let rows = "";
+
+
+                    $.each(data, function (i, item) {
+
+                            rows += `
+            <tr class="patient-row"
+                data-id="${item.id}"
+                data-intakeid="${item.intakeid}"
+                data-patientid="${item.patient_id}"
+                data-providerid="${item.provider_id}"
+                data-name="${item.lname} ${item.fname}"
+                data-doa="${item.doa}"
+                data-gender="${item.gender}"
+                data-injurytype="${item.compensation}"
+                data-accidenttype="${item.accidentType}"
+                data-dob="${item.dob}">
+
+                <td>${item.lname} ${item.fname}</td>
+
+                <td>
+                    ${
+                        item.dob
+                            ? new Date(item.dob).toLocaleDateString('en-US', {
+                                  month: '2-digit',
+                                  day: '2-digit',
+                                  year: 'numeric'
+                              })
+                            : ''
+                    }
+                </td>
+                 <td>
+                    ${
+                        item.doa
+                            ? new Date(item.doa).toLocaleDateString('en-US', {
+                                  month: '2-digit',
+                                  day: '2-digit',
+                                  year: 'numeric'
+                              })
+                            : ''
+                    }
+                </td>
+            </tr>
+        `;
+                    });
+
+                    $("#patientGrid tbody").html(rows);
+
+                    if (data.length > 0)
+                        $("#patientGrid").show();
+                    else
+                        $("#patientGrid").hide();
+                }
+            });
+
         });
 
-    });
+        // Row Select Event
+        $(document).on("click", ".patient-row", function () {
+            $('#pdfLoader').show();
+            let patientName = $(this).data("name");
+            let patientId = $(this).data("patientid");
+            let patientIEId = $(this).data("id");
+            let patientIntakeId = $(this).data("intakeid");
+            let providerId= $(this).data("providerid");
+            let accidentType= $(this).data("accidenttype");
+            let gender= $(this).data("gender");
 
-    // Row Select Event
-    $(document).on("click", ".patient-row", function () {
-        $('#pdfLoader').show();
-        let patientName = $(this).data("name");
-        let patientId = $(this).data("patientid");
-        let patientIEId = $(this).data("id");
-        let patientIntakeId = $(this).data("intakeid");
-        let providerId= $(this).data("providerid");
-        let accidentType= $(this).data("accidenttype");
+            $("#PatientName").val(patientName);
+            $("#PatientIEId").val(patientIEId);
+            $("#PatientId").val(patientId);
 
-        $("#PatientName").val(patientName);
-        $("#PatientIEId").val(patientIEId);
-        $("#PatientId").val(patientId);
+            if(providerId!='' && providerId!=null)
+                $("#ProviderId").val(providerId);
 
-        if(providerId!='' && providerId!=null)
-            $("#ProviderId").val(providerId);
+            if(gender!='' && gender!=null)
+            {
+                let sex= gender=="1"?"male":"female";
+                $("#Gender").val(sex);
+            }
 
-        if(accidentType!='' && accidentType!=null)
-            $("#AccidentType").val(accidentType);
-        
-        // $("#DOB").val($(this).data("dob").split('T')[0]);
-        // $("#DOA").val($(this).data("doa").split('T')[0]);
-        if($(this).data("dob")!=null)
-            $("#DOB").val(formatToISODate($(this).data("dob")));
-        if($(this).data("doa")!=null)
-            $("#DOA").val(formatToISODate($(this).data("doa")));
-        //$('input[name="InjuryType"]').val($(this).data("injurytype"));
-        console.log("InuryType:", $(this).data("injurytype"));
-        $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
-        
-        console.log("Selected Patient Intake ID:", patientIntakeId);
+            if(accidentType!='' && accidentType!=null)
+                $("#AccidentType").val(accidentType);
 
-        $("#patientGrid").hide();
-        
-         $('input[name="RadicularPecentage"]').trigger('change');
-         $('input[name="VASPecentage"]').trigger('change');
+            if($(this).data("dob")!=null)
+            {
+                $("#DOB").val(formatToISODate($(this).data("dob")));
+                var age = calculateAge($("#DOB").val());
+                $('#Age').val(age);
+            }
+            if($(this).data("doa")!=null)
+                $("#DOA").val(formatToISODate($(this).data("doa")));
+            //$('input[name="InjuryType"]').val($(this).data("injurytype"));
+            console.log("InuryType:", $(this).data("injurytype"));
+            $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
 
-        let url="@Url.Action("GetIntakeData", "FollowupForm")?id="+patientId;
+            console.log("Selected Patient Intake ID:", patientIntakeId);
 
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function (res) {
-                  $('#pdfLoader').hide();
-                    selected=[];
-                    $('#bodyPartLinks').text('');
-                    if (!$.isEmptyObject(res)) {
-                    $("#divDiagnosis").html(res.diagnosis);
-                    console.log("Result: "+res.diagnosis);
-                    bindForm(res.formData,res.forwardSetting);
-                     
+            $("#patientGrid").hide();
+
+             $('input[name="RadicularPecentage"]').trigger('change');
+             $('input[name="VASPecentage"]').trigger('change');
+
+            let url="@Url.Action("GetIntakeData", "FollowupForm")?id="+patientId;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (res) {
+                      $('#pdfLoader').hide();
+                        selected=[];
+                        $('#bodyPartLinks').text('');
+                        if (!$.isEmptyObject(res)) {
+                        $("#divDiagnosis").html(res.diagnosis);
+                        console.log("Result: "+res.diagnosis);
+                        bindForm(res.formData,res.forwardSetting);
+
+                    }
+                    var today = new Date().toISOString().split('T')[0];
+                    formValidation();
+                    $('#DOE').val(today);
+                    $("#PatientId").val(patientId);
+                    $("#PatientId").val(patientId);
+                    $("#providerid").val($("#ProviderId").val());
+                },
+                error: function (xhr, status, error) {
+                   $('#pdfLoader').hide();
                 }
-                var today = new Date().toISOString().split('T')[0];
-                formValidation();
-                $('#DOE').val(today);
-                $("#PatientId").val(patientId);
-            },
-            error: function (xhr, status, error) {
-               $('#pdfLoader').hide();
+            });
+        });
+
+        // Hide grid when click outside
+        $(document).click(function (e) {
+            if (!$(e.target).closest('#PatientName, #patientGrid').length) {
+                $("#patientGrid").hide();
             }
         });
-    });
+        function validateDateStrict(dateStr, fieldLabel, blockFuture, fieldId) {
 
-    // Hide grid when click outside
-    $(document).click(function (e) {
-        if (!$(e.target).closest('#PatientName, #patientGrid').length) {
-            $("#patientGrid").hide();
-        }
-    });
-    function validateDateStrict(dateStr, fieldLabel, blockFuture, fieldId) {
+                var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-            var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
-
-            if (!regex.test(dateStr)) {
-                alert(fieldLabel + " must be after 01/01/1900");
-
-                if (fieldId === "#DOB")
-                    clearDOBFields();
-                else
-                    $(fieldId).val('').focus();
-
-                return null;
-            }
-
-            var parts = dateStr.split('-');
-            var year = parseInt(parts[0], 10);
-            var month = parseInt(parts[1], 10);
-            var day = parseInt(parts[2], 10);
-
-            var date = new Date(year, month - 1, day);
-
-            if (
-                date.getFullYear() !== year ||
-                date.getMonth() !== month - 1 ||
-                date.getDate() !== day
-            ) {
-                alert("Invalid " + fieldLabel);
-
-                if (fieldId === "#DOB")
-                    clearDOBFields();
-                else
-                    $(fieldId).val('').focus();
-
-                return null;
-            }
-
-            if (blockFuture) {
-                var today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                if (date > today) {
-                    alert(fieldLabel + " cannot be future date");
+                if (!regex.test(dateStr)) {
+                    alert(fieldLabel + " must be after 01/01/1900");
 
                     if (fieldId === "#DOB")
                         clearDOBFields();
@@ -340,99 +315,136 @@
 
                     return null;
                 }
+
+                var parts = dateStr.split('-');
+                var year = parseInt(parts[0], 10);
+                var month = parseInt(parts[1], 10);
+                var day = parseInt(parts[2], 10);
+
+                var date = new Date(year, month - 1, day);
+
+                if (
+                    date.getFullYear() !== year ||
+                    date.getMonth() !== month - 1 ||
+                    date.getDate() !== day
+                ) {
+                    alert("Invalid " + fieldLabel);
+
+                    if (fieldId === "#DOB")
+                        clearDOBFields();
+                    else
+                        $(fieldId).val('').focus();
+
+                    return null;
+                }
+
+                if (blockFuture) {
+                    var today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (date > today) {
+                        alert(fieldLabel + " cannot be future date");
+
+                        if (fieldId === "#DOB")
+                            clearDOBFields();
+                        else
+                            $(fieldId).val('').focus();
+
+                        return null;
+                    }
+                }
+
+                return date;
+            }
+                function clearDOBFields() {
+                $('#DOB').val('');
+                $('#Age').val('');
+                $('#pdDOB').text('');
+                $('#pdAge').text('');
+                $('#DOB').focus();
+            }
+               function fnvalidateDatefields() {
+
+                var dob = $('#DOB').val();
+                var dos = $('#DOE').val();
+                var doa = $('#DOA').val();
+
+                var dobDate = null;
+                var dosDate = null;
+                var doaDate = null;
+
+                   // DOB
+            if (dob) {
+                dobDate = validateDateStrict(dob, "DOB", true, "#DOB");
+                if (!dobDate) return;
             }
 
-            return date;
-        }
-            function clearDOBFields() {
-            $('#DOB').val('');
-            $('#Age').val('');
-            $('#pdDOB').text('');
-            $('#pdAge').text('');
-            $('#DOB').focus();
-        }
-           function fnvalidateDatefields() {
+            // DOS
+            if (dos) {
+                dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
+                if (!dosDate) return;
+            }
 
-            var dob = $('#DOB').val();
-            var dos = $('#DOE').val();
-            var doa = $('#DOA').val();
+            // DOA
+            if (doa) {
+                doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+                if (!doaDate) return;
+            }
 
-            var dobDate = null;
-            var dosDate = null;
-            var doaDate = null;
+                // ---------- DOA vs DOS ----------
+                    if (dosDate && doaDate && doaDate > dosDate) {
+                alert("DOA cannot be greater than DOS");
 
-               // DOB
-        if (dob) {
-            dobDate = validateDateStrict(dob, "DOB", true, "#DOB");
-            if (!dobDate) return;
-        }
+                $('#DOA').val('').focus();
+                $('#pdDOA').text('');
 
-        // DOS
-        if (dos) {
-            dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
-            if (!dosDate) return;
-        }
+                return;
+            }
 
-        // DOA
-        if (doa) {
-            doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
-            if (!doaDate) return;
-        }
+                // // ---------- Side panel ----------
+                // var fullname = $("#lname").val() + ' ' + $("#fname").val();
+                // $('#pdName').text(fullname);
 
-            // ---------- DOA vs DOS ----------
-                if (dosDate && doaDate && doaDate > dosDate) {
-            alert("DOA cannot be greater than DOS");
+                // if (dos) $('#pdDOS').text(fngetAGE(dos));
+                // if (doa) $('#pdDOA').text(fngetAGE(doa));
 
-            $('#DOA').val('').focus();
-            $('#pdDOA').text('');
+                // ---------- Age ----------
+                if (dobDate && dosDate) {
+
+                    var age = dosDate.getFullYear() - dobDate.getFullYear();
+                    var m = dosDate.getMonth() - dobDate.getMonth();
+
+                    if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
+                        age--;
+                    }
+
+                       if (age > 90) {
+            alert("Age should not be greater than 90 years");
+
+            clearDOBFields();
 
             return;
         }
-
-            // // ---------- Side panel ----------
-            // var fullname = $("#lname").val() + ' ' + $("#fname").val();
-            // $('#pdName').text(fullname);
-
-            // if (dos) $('#pdDOS').text(fngetAGE(dos));
-            // if (doa) $('#pdDOA').text(fngetAGE(doa));
-
-            // ---------- Age ----------
-            if (dobDate && dosDate) {
-
-                var age = dosDate.getFullYear() - dobDate.getFullYear();
-                var m = dosDate.getMonth() - dobDate.getMonth();
-
-                if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
-                    age--;
                 }
 
-                   if (age > 90) {
-        alert("Age should not be greater than 90 years");
-
-        clearDOBFields();
-
-        return;
-    }
+                  // $('#pdCT').text($("#compensation option:selected").text());
+                  // $('#pdLoc').text($("#locationid option:selected").text());
+                  // $('#pdGender').text($("#gender option:selected").text());
             }
+            function fngetAGE(inputDate) {
+                if (inputDate) {
+                    var date = new Date(inputDate);
 
-              // $('#pdCT').text($("#compensation option:selected").text());
-              // $('#pdLoc').text($("#locationid option:selected").text());
-              // $('#pdGender').text($("#gender option:selected").text());
-        }
-        function fngetAGE(inputDate) {
-            if (inputDate) {
-                var date = new Date(inputDate);
+                    // Extract month, date, and year
+                    var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+                    var day = date.getDate().toString().padStart(2, '0');
+                    var year = date.getFullYear();
 
-                // Extract month, date, and year
-                var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-                var day = date.getDate().toString().padStart(2, '0');
-                var year = date.getFullYear();
+                    // Format date as MM/dd/yyyy
+                    var formattedDate = month + '/' + day + '/' + year;
 
-                // Format date as MM/dd/yyyy
-                var formattedDate = month + '/' + day + '/' + year;
-
-                return formattedDate;
+                    return formattedDate;
+                }
+                return '';
             }
-            return '';
-        }
 </script>

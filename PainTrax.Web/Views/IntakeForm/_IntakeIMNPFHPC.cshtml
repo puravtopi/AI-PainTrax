@@ -105,7 +105,7 @@
                                         onclick="DownloadCF('@ViewBag.Id')">
                                     Consent Form
                                 </button>
-                                <button  type="button" id="btnReport"
+                                <button style="display:none;"  type="button" id="btnReport"
                                         class="btn btn-outline-primary"
                                         @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
                                         onclick="DownloadReport('@ViewBag.Id')">

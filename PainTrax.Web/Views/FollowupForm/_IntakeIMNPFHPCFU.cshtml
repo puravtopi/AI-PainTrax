@@ -1305,6 +1305,7 @@
 
 
                $("#hdId").val('@ViewBag.Id');
+             
               // $("#PatientId").val('@ViewBag.PatientId');
 
 
@@ -1327,6 +1328,8 @@
                                     .find('select')
                                     .prop('selectedIndex', 0);
                         }
+                      //alert($("#ProviderId").val());
+                      $("#providerid").val($("#ProviderId").val());
                       $('#pdfLoader').hide();
                    // updatePreview();
                 }, 1000);
