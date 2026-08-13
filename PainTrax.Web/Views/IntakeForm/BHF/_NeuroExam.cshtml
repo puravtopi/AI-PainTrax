@@ -1,4 +1,21 @@
-﻿<h6>REFLEX EXAMINATION</h6>
+﻿<div style="margin-bottom:10px; display:flex; gap:8px;">
+
+    <button type="button"
+            class="btn btn-sm btn-outline-danger"
+            title="Clear Upper Extremity"
+            onclick="clearNeuroPart('upper')">
+        <i class="fa fa-trash"></i> Upper
+    </button>
+
+    <button type="button"
+            class="btn btn-sm btn-outline-danger"
+            title="Clear Lower Extremity"
+            onclick="clearNeuroPart('lower')">
+        <i class="fa fa-trash"></i> Lower
+    </button>
+
+</div>
+<h6>REFLEX EXAMINATION</h6>
 <table style="width:100%">
     <tr>
         <td>
@@ -334,7 +351,20 @@
         </td>
     </tr>
 </table>
+<p>    
+    <textarea id="txtNeuro" name="txtNeuro" class="form-control d-inline" style="width:95%"></textarea>
+    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtNeuro')"></i>
+</p>
 
 <script>
+    function clearNeuroPart(part) {
 
+            document.querySelectorAll('table.' + part).forEach(function (table) {
+
+                table.querySelectorAll('input').forEach(function (input) {
+                    input.value = '';
+                });
+
+            });
+        }
 </script>

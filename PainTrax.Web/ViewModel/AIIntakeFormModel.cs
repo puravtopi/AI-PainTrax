@@ -591,6 +591,8 @@
         public string txtPAStatementOther { get; set; }
         public string txtPAStatement { get; set; }
         public string DrNote { get; set; }
+        public string txtNeuro { get; set; }
+        
 
     }
 }

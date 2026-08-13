@@ -1,4 +1,11 @@
-﻿<table cellspacing="0" cellpadding="5"
+﻿
+<button type="button"
+        class="btn btn-sm btn-outline-danger"
+        title="Clear All"
+        onclick="clearADLValues()">
+    <i class="fa fa-trash"></i> Clear All
+</button>
+<table id="adlTable"  cellspacing="0" cellpadding="5"
        style="border-collapse: collapse; width:100%;">
 
     <thead>
@@ -162,3 +169,20 @@
         </tr>
     </tbody>
 </table>
+<script>
+        function clearADLValues() {
+        const table = document.getElementById('adlTable');
+
+        table.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+            input.checked = false;
+        });
+
+        table.querySelectorAll('input[type="radio"]').forEach(function (input) {
+            input.checked = false;
+        });
+
+        table.querySelectorAll('input[type="text"]').forEach(function (input) {
+            input.value = '';
+        });
+    }
+</script>

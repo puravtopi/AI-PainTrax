@@ -81,10 +81,10 @@
                                         onclick="window.location.href='@Url.Action("Index", "Visit")'">
                                     <i class="bi bi-house-door-fill"></i> Home
                                 </button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                @* <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
                                         class="btn btn-outline-primary"
-                                        onclick="saveForm(false)">
+                                        onclick="saveForm(true)">
                                     Save
                                 </button>
                                 <button type="button" id="btnSuperBill"
@@ -1141,6 +1141,15 @@
         }
 
     });
+    $(document).on('change', 'input[name="NeckAssociated"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="NeckAssociated"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="NeckAssociatedTo"]').prop('checked', false);
+        }
+
+    });
         $(document).on('change', 'input[name="LBRadiates"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
@@ -1149,7 +1158,16 @@
             $('input[name="LBRadiatesTo"]').prop('checked', false);
         }
 
-    });   
+    }); 
+    $(document).on('change', 'input[name="LBAssociated"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="LBAssociated"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="LBAssociatedTo"]').prop('checked', false);
+        }
+
+    });
 
                 $('#DOB').on('change', function () {
                     var dob = $(this).val(); // format: yyyy-mm-dd

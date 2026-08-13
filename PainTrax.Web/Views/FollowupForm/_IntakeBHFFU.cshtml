@@ -76,11 +76,17 @@
                                         onclick="window.location.href='@Url.Action("GetProvider", "Home")'">
                                     <i class="bi bi-house-door-fill"></i> Home
                                 </button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                               @*  <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
                                         class="btn btn-outline-primary"
-                                        onclick="saveForm(false)">
+                                        onclick="saveForm(true)">
                                     Save
+                                </button>
+                                <button type="button" id="btnSuperBill"
+                                        class="btn btn-outline-primary"
+                                @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                        onclick="DownloadPdf('@ViewBag.Id')">
+                                    Super Bill
                                 </button>
                             </p>
                             <!-- Settings Button -->
@@ -1140,12 +1146,30 @@
         }
 
     });
+    $(document).on('change', 'input[name="NeckAssociated"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="NeckAssociated"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="NeckAssociatedTo"]').prop('checked', false);
+        }
+
+    });
         $(document).on('change', 'input[name="LBRadiates"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
         if ($('input[name="LBRadiates"]:checked').length === 0) {
             // Clear the Left/Right/Bilateral radio buttons
             $('input[name="LBRadiatesTo"]').prop('checked', false);
+        }
+
+    });
+    $(document).on('change', 'input[name="LBAssociated"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="LBAssociated"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="LBAssociatedTo"]').prop('checked', false);
         }
 
     });
@@ -1534,6 +1558,122 @@
                         // Set Age
                         $('#Age').val(calculateAge(formattedDate));
                     }
+                    function DownloadPdf(id) {
+       $('#pdfLoader').show();
+         var downloadurl = '@Url.Action("GeneratePdf", "FollowupForm")';
+                 downloadurl = downloadurl + '?pdffile=' + 'superbill.pdf' + '&id=' + id ;
+                 fetch(downloadurl)
+                     .then(response => {
+                         if (!response.ok) {
+                             throw new Error(`HTTP error! Status: ${response.status}`);
+                         }
+                           const disposition = response.headers.get('Content-Disposition');
+                                 let fileName = 'Superbill.pdf';
+                                  console.log(disposition);
+                                  debugger
+                                    if (disposition) {
+                                     const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                                     if (utf8Match) {
+                                             fileName = decodeURIComponent(utf8Match[1]);
+                                         } else {
+                                             const match = disposition.match(/filename="?([^";]+)"?/i);
+                                             if (match) {
+                                                 fileName = match[1];
+                                             }
+                                         }
+                                     }
+
+                                 return response.blob().then(blob => ({
+                                         blob,
+                                         fileName
+                                  }));
+                     })
+                   .then(({ blob, fileName }) => {
+                         var link = document.createElement('a');
+                         link.href = window.URL.createObjectURL(blob);
+                         link.download = fileName ;
+                         link.click();
+                           $('#pdfLoader').hide();
+                     })
+                     .catch(error => {
+                         console.error('Error downloading Pdf file:', error);
+                     });
+
+             }
+
+             function DownloadCF(id) {
+
+                $.get('@Url.Action("CheckSign", "FollowupForm")', { id: id }, function (res) {
+
+                if (res.id == 0) {
+                     $("#intid").val(id);
+                     $("#signModal").modal("show");
+                     $("#signCon").html(function (_, html) {
+                            return html.replace(/#pname/g, $("#PatientName").val() );
+                     });
+                     return;
+                }
+
+                 downloadConsentPdf(id);
+
+                });
+        }
+
+        function downloadConsentPdf(id,  defaultFileName = 'Consent Form.pdf', loaderSelector = '#pdfLoader') {
+        // Show loader
+        $(loaderSelector).show();
+
+        var baseUrl = '@Url.Action("GenerateCF", "FollowupForm")';
+        // Construct URL
+        const downloadUrl = baseUrl + '?pdffile=' + encodeURIComponent(defaultFileName) + '&id=' + id;
+
+        fetch(downloadUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Extract filename from Content-Disposition header
+                const disposition = response.headers.get('Content-Disposition');
+                let fileName = defaultFileName;
+
+                if (disposition) {
+                    const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                    if (utf8Match) {
+                        fileName = decodeURIComponent(utf8Match[1]);
+                    } else {
+                        const match = disposition.match(/filename="?([^";]+)"?/i);
+                        if (match) {
+                            fileName = match[1];
+                        }
+                    }
+                }
+
+                return response.blob().then(blob => ({
+                    blob,
+                    fileName
+                }));
+            })
+            .then(({ blob, fileName }) => {
+                // Create a link and trigger download
+                const link = document.createElement('a');
+                const url = window.URL.createObjectURL(blob);
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link); // Required for Firefox
+                link.click();
+
+                // Cleanup
+                window.URL.revokeObjectURL(url);
+                link.remove();
+                $(loaderSelector).hide();
+            })
+            .catch(error => {
+                $(loaderSelector).hide();
+                console.error('Error downloading Pdf file:', error);
+                alert("Failed to download the PDF. Please try again.");
+            });
+    }
 </script>
 
 @* for file upload *@
