@@ -883,41 +883,53 @@
                     if (response.success) {
 
                         if (isSubmit) {
+                            let locId = $("#LocationId").val() || 0;
+                            let provId = $("#ProviderId").val() || 0;
 
-                            bootbox.confirm({
-                                message: 'Your details have been saved successfully. Click "Yes" to continue creating the next visit.',
-                                swapButtonOrder: true,
+                            // Automatically redirect to a blank 'Create' page
+                             window.location.href =
+                                '@Url.Action("Create", "FollowupForm")' +
+                                '?id=' + response.id +
+                                '&providerId='+ provId +
+                                '&patientId='+ response.patientid +
+                                '&locid=' + response.locid;
 
-                                buttons: {
-                                    confirm: {
-                                        label: 'Yes',
-                                        className: 'btn-primary'
-                                    },
-                                    cancel: {
-                                        label: 'No',
-                                        className: 'btn-secondary'
-                                    }
-                                },
-
-                                callback: function (result) {
-
-                                    if (result) {
-
-                                        let locId = $("#LocationId").val() || 0;
-                                        let provId = $("#ProviderId").val() || 0;
-
-                                        window.location.href =
-                                            '@Url.Action("Create", "FollowupForm")' +
-                                            '?providerId=' + provId +
-                                            '&id=0' +
-                                            '&locid=' + locId;
-                                    }
-                                    else {
-                                        window.location.href = indexurl;
-                                    }
-                                }
-                            });
+                            $('#pdfLoader').hide();
                         }
+                            // bootbox.confirm({
+                            //     message: 'Your details have been saved successfully. Click "Yes" to continue creating the next visit.',
+                            //     swapButtonOrder: true,
+
+                            //     buttons: {
+                            //         confirm: {
+                            //             label: 'Yes',
+                            //             className: 'btn-primary'
+                            //         },
+                            //         cancel: {
+                            //             label: 'No',
+                            //             className: 'btn-secondary'
+                            //         }
+                            //     },
+
+                            //     callback: function (result) {
+
+                            //         if (result) {
+
+                            //             let locId = $("#LocationId").val() || 0;
+                            //             let provId = $("#ProviderId").val() || 0;
+
+                            //             window.location.href =
+                            //                 '@Url.Action("Create", "FollowupForm")' +
+                            //                 '?providerId=' + provId +
+                            //                 '&id=0' +
+                            //                 '&locid=' + locId;
+                            //         }
+                            //         else {
+                            //             window.location.href = indexurl;
+                            //         }
+                            //     }
+                            // });
+                        
                         else {
 
                             window.location.href =
@@ -943,37 +955,19 @@
                     }
                 },
 
-                error: function (xhr, status, error) {
-
-                    // Hide loader after AJAX error
-                    $('#pdfLoader').hide();
-
-                    console.log("Error:", error);
-                    console.log("Response:", xhr.responseText);
-
-                    bootbox.alert({
-                        title: "<span class='text-danger'>Error</span>",
-                        message: "An error occurred while saving data.",
-
-                        buttons: {
-                            ok: {
-                                label: "OK",
-                                className: "btn-danger"
-                            }
-                        }
-                    });
+             error: function () {
+                    alert("An error occurred while saving data.");
                 }
             });
+            }catch (error) {
 
-        }
-        catch (error) {
+        // Hide loader if JavaScript exception occurs
+        $('#pdfLoader').hide();
 
-            // Hide loader if JavaScript exception occurs
-            $('#pdfLoader').hide();
-
-            console.error(error);
-        }
+        console.error(error);
     }
+
+        }
 
         function formValidation()
                {
@@ -989,13 +983,14 @@
                         }
                     });
                     // WC validation
-    var injuryType = formData.InjuryType; // or $("#InjuryType").val()
+    //var injuryType = formData.InjuryType; // or $("#InjuryType").val()
+    var injuryType = $('input[name="InjuryType"]:checked').val();
 
     if (injuryType === "WC") {
 
         // Currently Working
         if (!$('input[name="IsWorking"]:checked').length) {
-            alert("Please select Currently Working.");
+            alert("Please select Work Status.");
             $('input[name="IsWorking"]').first().focus();
             return false;
         }
@@ -1046,8 +1041,21 @@
 
                     if ('@ViewBag.FormData' != '') {
                         bindForm('@ViewBag.FormData');
+                        clearWorkStatusIfRequired();
                     }
+                     function clearWorkStatusIfRequired() {
 
+        var injuryType = $('input[name="InjuryType"]:checked').val();
+
+        if (injuryType !== 'WC') {
+            $('input[name="IsWorking"]').prop('checked', false);
+            $('#DisabilityPercentage').val('');
+        }
+    }
+
+    $(document).on('change', 'input[name="InjuryType"]', function () {
+        clearWorkStatusIfRequired();
+    });
                     $('#patientForm').on('submit', function (e) {
 
                         if(!checkValidation())
@@ -1277,6 +1285,7 @@
                         $('input[name="FUType"]:checked').trigger('change');
                         $('input[name="RadicularPecentage"]:checked').trigger('change');
                         $('input[name="VASPecentage"]:checked').trigger('change');
+                        $('input[name="InjuryType"]:checked').trigger('change');
                         if($("#hdId").val()=="0"){
 
                                 $('#divRecommendation')

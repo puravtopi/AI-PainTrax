@@ -78,16 +78,17 @@
 
     Currently working:
     <label>
-        <input type="radio" name="IsWorking" value="The patient is currently working." />  <span class="select-btn">Yes</span>
+        <input type="radio" name="IsWorking" value="The patient is currently working.">  <span class="select-btn">Yes</span>
     </label>
     <label>
-        <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." />  <span class="select-btn">No</span>
+        <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident.">  <span class="select-btn">No</span>
     </label>
 
 
     Degree of Disability:
 
     <input id="DisabilityPercentage"
+           name="DisabilityPercentage"
            class="form-control d-inline"
            style="width:100px"
            type="number"
@@ -264,6 +265,9 @@
         $("#patientGrid").hide();
         $('input[name="RadicularPecentage"]').trigger('change');
         $('input[name="VASPecentage"]').trigger('change');
+        var injuryType = $(this).data("injurytype");
+
+    
 
         let url="@Url.Action("GetIntakeData", "FollowupForm")?id="+patientId;
 
@@ -279,6 +283,8 @@
                     $("#divDiagnosis").html(res.diagnosis);
                     console.log("Result: "+res.diagnosis);
                     bindForm(res.formData,res.forwardSetting);
+                     // Apply injury type rule AFTER bindForm
+                clearWorkStatusIfRequired();
                 }
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
@@ -289,8 +295,19 @@
             }
         });
     });
+               function clearWorkStatusIfRequired() {
 
-    // Hide grid when click outside
+        var injuryType = $('input[name="InjuryType"]:checked').val();
+
+        if (injuryType !== 'WC') {
+            $('input[name="IsWorking"]').prop('checked', false);
+            $('#DisabilityPercentage').val('');
+        }
+    }
+
+    $(document).on('change', 'input[name="InjuryType"]', function () {
+        clearWorkStatusIfRequired();
+    });    // Hide grid when click outside
     $(document).click(function (e) {
         if (!$(e.target).closest('#PatientName, #patientGrid').length) {
             $("#patientGrid").hide();

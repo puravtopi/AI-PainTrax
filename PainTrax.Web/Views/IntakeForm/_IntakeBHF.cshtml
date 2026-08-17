@@ -881,39 +881,47 @@
 
                     // If final submit
                     if (isSubmit) {
-
-                        bootbox.confirm({
-                            message: 'Your details have been saved successfully. Click "Yes" to continue creating the next visit.',
-                            swapButtonOrder: true,
-
-                            buttons: {
-                                confirm: {
-                                    label: 'Yes',
-                                    className: 'btn-primary'
-                                },
-                                cancel: {
-                                    label: 'No',
-                                    className: 'btn-secondary'
-                                }
-                            },
-                            callback: function (result) {
-                                if (result) {
-                                    let locId= $("#LocationId").val() || 0;
-                                    let provId=$("#ProviderId").val() || 0;
-                                       
+                         let locId= $("#LocationId").val() || 0;
+                                 let provId=$("#ProviderId").val() || 0;
                                         window.location.href =
-                                        '@Url.Action("AIInitialIntake", "IntakeForm")' +
-                                        '?providerId=' + provId +
-                                        '&id=0' + 
-                                        '&locid=' + locId;
-                                       $('#pdfLoader').hide();
+                            '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                            '?id=' + response.id +
+                            '&locid=' + locId+
+                            '&providerId=' + provId +
+                            '&patientId=' + response.patientid;
 
-                                }
-                                else {
-                                     window.location.href = indexurl;
-                                }
-                            }
-                        });
+                        // bootbox.confirm({
+                        //     message: 'Your details have been saved successfully. Click "Yes" to continue creating the next visit.',
+                        //     swapButtonOrder: true,
+
+                        //     buttons: {
+                        //         confirm: {
+                        //             label: 'Yes',
+                        //             className: 'btn-primary'
+                        //         },
+                        //         cancel: {
+                        //             label: 'No',
+                        //             className: 'btn-secondary'
+                        //         }
+                        //     },
+                        //     callback: function (result) {
+                        //         if (result) {
+                        //             let locId= $("#LocationId").val() || 0;
+                        //             let provId=$("#ProviderId").val() || 0;
+                                       
+                        //                 window.location.href =
+                        //                 '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                        //                 '?providerId=' + provId +
+                        //                 '&id=0' + 
+                        //                 '&locid=' + locId;
+                        //                $('#pdfLoader').hide();
+
+                        //         }
+                        //         else {
+                        //              window.location.href = indexurl;
+                        //         }
+                        //     }
+                        // });
                     }
                     // Draft / Continue editing
                     else {
@@ -965,13 +973,13 @@
                     }
                 });
                  // WC validation
-    var injuryType = formData.InjuryType; // or $("#InjuryType").val()
+    var injuryType = $('input[name="InjuryType"]:checked').val();
 
     if (injuryType === "WC") {
 
         // Currently Working
         if (!$('input[name="IsWorking"]:checked').length) {
-            alert("Please select Currently Working.");
+            alert("Please select Work Status.");
             $('input[name="IsWorking"]').first().focus();
             return false;
         }
