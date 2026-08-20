@@ -22,6 +22,7 @@ using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Data;
 using System.Diagnostics.Metrics;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -52,6 +53,8 @@ namespace PainTrax.Web.Controllers
         private readonly SettingsService _settingservices = new SettingsService();
         private readonly DefaultDataServices _defaultService = new DefaultDataServices();
         #endregion
+
+       
 
         public IntakeFormController(
          Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
@@ -827,6 +830,7 @@ namespace PainTrax.Web.Controllers
                     ViewBag.SubmitDate = data.PatientSubmitDate;
                     ViewBag.Diagnosis = data.Diagnosis;
                     ViewBag.TreatmentHTML = data.Treatment;
+                    ViewBag.AcidentDescriptionAudio = data.AccidentDescriptionAudio;
 
                 }
             }
@@ -959,7 +963,14 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult SaveForm([FromBody] object formData)
         {
+            //var options = new JsonSerializerOptions
+            //{
+            //    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            //    WriteIndented = true // Optional: for readability
+            //};
+
             var json = System.Text.Json.JsonSerializer.Serialize(formData);
+            json = json.Replace("\\u0027", "'");
             var model = new AIIntakeFormModel();
             try
             {
@@ -1002,7 +1013,8 @@ namespace PainTrax.Web.Controllers
                     Treatment = model.Treatment,
                     TreatmentIds = model.TreatmentIds,
                     TreatmentDelimitDesc = model.TreatmentDelimitDesc,
-                    AccidentType = model.AccidentType
+                    AccidentType = model.AccidentType,
+                    AccidentDescriptionAudio= model.AccidentDescriptionAudio
                 };
                 result = service.SaveInitialIntakeAI(initialIntakeAI);
 
@@ -1294,7 +1306,8 @@ namespace PainTrax.Web.Controllers
                         doa = string.IsNullOrEmpty(model.DOA) ? null : Convert.ToDateTime(model.DOA),
                         doe = string.IsNullOrEmpty(model.DOE) ? null : Convert.ToDateTime(model.DOE),
                         compensation = InjuryType,
-                        intakeid = initialIntakeAI.Id
+                        intakeid = initialIntakeAI.Id,
+                        provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
                     };
                     _ieService.UpdateFromIntake(objIE);
 
@@ -1454,18 +1467,18 @@ namespace PainTrax.Web.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UploadAudio(IFormFile file)
-        {
-            var path = Path.Combine("wwwroot/audio", file.FileName);
+        //[HttpPost]
+        //public async Task<IActionResult> UploadAudio(IFormFile file)
+        //{
+        //    var path = Path.Combine("wwwroot/audio", file.FileName);
 
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
+        //    using (var stream = new FileStream(path, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(stream);
+        //    }
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         [HttpPost]
         public async Task<IActionResult> UploadDL(IFormFile file)
@@ -2250,7 +2263,7 @@ namespace PainTrax.Web.Controllers
                     SaveLog(ex, "Pdf Stamping");
                 }
                 string fileName = $"Superbill.pdf";
-                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Other/" + dt.Rows[0]["patient_id"].ToString());
 
                 if (!Directory.Exists(folder))
                 {
@@ -2270,6 +2283,45 @@ namespace PainTrax.Web.Controllers
             return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill.pdf");
         }
 
+
+        public IActionResult UploadAudio(IFormFile audio_data, string controlName)
+        {
+            if (audio_data == null) return BadRequest();
+
+            // Create directory
+            string uploads = Path.Combine(_env.WebRootPath, "audio");
+            if (!Directory.Exists(uploads)) Directory.CreateDirectory(uploads);
+
+            // Create unique filename
+            string fileName = $"{controlName}_{Guid.NewGuid()}.webm";
+            string filePath = Path.Combine(uploads, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                audio_data.CopyToAsync(stream);
+            }
+
+            return Ok(new { success = true, fileName = fileName, url = "/audio/" + fileName });
+        }
+
+        public IActionResult DownloadAudio(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return Content("File not found");
+
+            // Path where your files are stored
+            var filePath = Path.Combine(_env.WebRootPath, "audio", fileName);
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+            // This forces the "Save As" dialog
+            return File(fileBytes, "audio/webm", fileName);
+        }
+
         #endregion
 
         #region Consent Form
@@ -2279,6 +2331,7 @@ namespace PainTrax.Web.Controllers
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
             Dictionary<string, string> controls = new Dictionary<string, string>();
+
 
 
             ParentService _parentService = new ParentService();
@@ -2302,15 +2355,30 @@ namespace PainTrax.Web.Controllers
                 catch { }
                 try
                 {
-                    DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
+                    DataTable dtdos = _parentService.GetData("select id,doe,provider_id from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
                     if (dtdos.Rows.Count > 0)
                     {
                         controls.Add("txt_dos", DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MM/dd/yyyy"));
                         ie_id = dtdos.Rows[0]["id"].ToString();
+
+                        DataTable dtpro = _parentService.GetData("select id,fullname,desigid,desig_name from vm_cm_user  where id=" + dtdos.Rows[0]["provider_id"].ToString());
+                        if (dtpro.Rows.Count > 0)
+                        {
+                            if (dtpro.Rows[0]["fullname"].ToString().StartsWith("Irina"))
+                            {
+                                controls.Add("chk_irina", "Yes");
+                            }
+                            else
+                            {
+                                controls.Add("chk_other", "Yes");
+                                controls.Add("txt_provname", dtpro.Rows[0]["fullname"].ToString());
+                            }
+
+
+                        }
                     }
                 }
                 catch { }
-
 
                 try
                 {
@@ -2340,21 +2408,95 @@ namespace PainTrax.Web.Controllers
 
                         using JsonDocument doc = JsonDocument.Parse(jsonString);
 
-                        string[] planUTPI = doc.RootElement
-                                               .GetProperty("planutpi")
-                                               .EnumerateArray()
-                                               .Select(x => x.GetString())
-                                               .ToArray();
-                        foreach (string data in planUTPI)
+                        try
                         {
-                            if (data.Trim().ToLower() == "ctpi" || data.Trim().ToLower() == "ttpi" || data.Trim().ToLower() == "ltpi")
-                                if (!controls.ContainsKey("utpi"))
-                                    controls.Add("utpi", "Yes");
-                            if (data.Trim().ToLower() == "pt")
-                                if (!controls.ContainsKey("pt"))
-                                    controls.Add("pt", "Yes");
+                            string[] planUTPI = doc.RootElement
+                                                   .GetProperty("planutpi")
+                                                   .EnumerateArray()
+                                                   .Select(x => x.GetString())
+                                                   .ToArray();
+                            foreach (string data in planUTPI)
+                            {
+                                if (data.Trim().ToLower() == "ctpi" || data.Trim().ToLower() == "ttpi" || data.Trim().ToLower() == "ltpi")
+                                    if (!controls.ContainsKey("utpi"))
+                                        controls.Add("utpi", "Yes");
+                                if (data.Trim().ToLower() == "pt")
+                                    if (!controls.ContainsKey("pt"))
+                                        controls.Add("pt", "Yes");
 
+                            }
                         }
+                        catch { }
+
+                        try
+                        {
+                            string[] planUTPI = doc.RootElement
+                                                   .GetProperty("planmri")
+                                                   .EnumerateArray()
+                                                   .Select(x => x.GetString())
+                                                   .ToArray();
+                            foreach (string data in planUTPI)
+                            {
+                                if (data.Trim().ToLower() == "cspine")
+                                    if (!controls.ContainsKey("cspine"))
+                                        controls.Add("cspine", "Yes");
+                                if (data.Trim().ToLower() == "tspine")
+                                    if (!controls.ContainsKey("tspine"))
+                                        controls.Add("tspine", "Yes");
+                                if (data.Trim().ToLower() == "lspine")
+                                    if (!controls.ContainsKey("lspine"))
+                                        controls.Add("lspine", "Yes");
+
+                            }
+                        }
+                        catch { }
+
+                        try
+                        {
+                            string[] planUTPI = doc.RootElement
+                                                   .GetProperty("planxray")
+                                                   .EnumerateArray()
+                                                   .Select(x => x.GetString())
+                                                   .ToArray();
+                            foreach (string data in planUTPI)
+                            {
+                                if (data.Trim().ToLower() == "cspine")
+                                    if (!controls.ContainsKey("cspine"))
+                                        controls.Add("cspine", "Yes");
+                                if (data.Trim().ToLower() == "tspine")
+                                    if (!controls.ContainsKey("tspine"))
+                                        controls.Add("tspine", "Yes");
+                                if (data.Trim().ToLower() == "lspine")
+                                    if (!controls.ContainsKey("lspine"))
+                                        controls.Add("lspine", "Yes");
+
+                            }
+                        }
+                        catch { }
+
+                        try
+                        {
+                            string[] planUTPI = doc.RootElement
+                                                   .GetProperty("planct")
+                                                   .EnumerateArray()
+                                                   .Select(x => x.GetString())
+                                                   .ToArray();
+                            foreach (string data in planUTPI)
+                            {
+                                if (data.Trim().ToLower() == "cspine")
+                                    if (!controls.ContainsKey("cspine"))
+                                        controls.Add("cspine", "Yes");
+                                if (data.Trim().ToLower() == "tspine")
+                                    if (!controls.ContainsKey("tspine"))
+                                        controls.Add("tspine", "Yes");
+                                if (data.Trim().ToLower() == "lspine")
+                                    if (!controls.ContainsKey("lspine"))
+                                        controls.Add("lspine", "Yes");
+
+                            }
+                        }
+                        catch { }
+
                     }
 
                 }
@@ -2379,6 +2521,7 @@ namespace PainTrax.Web.Controllers
 
                 try
                 {
+
                     pdfBytes = _pdfhelper.Stamping(filePath, "Id", dt.Rows[0]["patient_id"].ToString(), controls, cmpid, signPath);
                 }
                 catch (Exception ex)
@@ -2386,7 +2529,7 @@ namespace PainTrax.Web.Controllers
                     SaveLog(ex, "Pdf Stamping");
                 }
                 string fileName = $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf";
-                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Other/" + dt.Rows[0]["patient_id"].ToString());
 
                 if (!Directory.Exists(folder))
                 {
@@ -2405,6 +2548,7 @@ namespace PainTrax.Web.Controllers
 
             return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Superbill_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf");
         }
+
 
         [HttpGet]
         public IActionResult CheckSign(string id)
@@ -2431,13 +2575,14 @@ namespace PainTrax.Web.Controllers
 
         }
 
-
+        [HttpGet]
         [HttpGet]
         public IActionResult GenerateCF(string id, string pdffile = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
             Dictionary<string, string> controls = new Dictionary<string, string>();
+            int provid = 0;
 
 
             ParentService _parentService = new ParentService();
@@ -2453,14 +2598,19 @@ namespace PainTrax.Web.Controllers
                 var uploadsFolder = "";
                 var filePath = "";
                 var signPath = "";
-
                 try
                 {
-                    DataTable dtdos = _parentService.GetData("select id,doe from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
+                    DataTable dtdos = _parentService.GetData("select id,doe,provider_id from tbl_patient_ie  where patient_id=" + dt.Rows[0]["patient_id"].ToString());
                     if (dtdos.Rows.Count > 0)
                     {
                         controls.Add("txt_date", DateTime.Parse(dtdos.Rows[0]["doe"].ToString()).ToString("MM/dd/yyyy"));
                         ie_id = dtdos.Rows[0]["id"].ToString();
+                        DataTable dtpro = _parentService.GetData("select id,fullname,desigid,desig_name from vm_cm_user  where id=" + dtdos.Rows[0]["provider_id"].ToString());
+                        if (dtpro.Rows.Count > 0)
+                        {
+                            controls.Add("txt_provname", dtpro.Rows[0]["fullname"].ToString());
+                            provid = Convert.ToInt32(dtdos.Rows[0]["provider_id"].ToString());
+                        }
                     }
                 }
                 catch { }
@@ -2524,18 +2674,35 @@ namespace PainTrax.Web.Controllers
                 {
                     SaveLog(ex, "set Paths");
                 }
+                ///* new code inserted */
+                //int? provid = 0;
+                //if (HttpContext.Session.GetString(SessionKeys.SessionDesignation) == "Provider")
+                //     {
+                //    provid = HttpContext.Session.GetInt32(SessionKeys.SessionUserId);
+                //}
+                //var selectprovid = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+                //if (selectprovid != 0)
+                //{
+                //    provid = selectprovid;
+                //}
+                //DataTable dtpro = _parentService.GetData("select id,fullname from vm_cm_user  where id=" + provid.ToString());
+                //if (dtpro.Rows.Count > 0)
+                //{
+                //        controls.Add("txt_provname", dtpro.Rows[0]["fullname"].ToString());
+                //}
+                ///* code  end */
 
 
                 try
                 {
-                    pdfBytes = _pdfhelper.Stamping(filePath, "Id", dt.Rows[0]["patient_id"].ToString(), controls, cmpid, signPath);
+                    pdfBytes = _pdfhelper.Stamping(filePath, "Id", dt.Rows[0]["patient_id"].ToString(), controls, cmpid, signPath, provid); // update this line
                 }
                 catch (Exception ex)
                 {
                     SaveLog(ex, "Pdf Stamping");
                 }
                 string fileName = $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Consent Form_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf";
-                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Others/" + dt.Rows[0]["patient_id"].ToString());
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments/Other/" + dt.Rows[0]["patient_id"].ToString());
 
                 if (!Directory.Exists(folder))
                 {
@@ -2633,6 +2800,7 @@ namespace PainTrax.Web.Controllers
         { "{{Diagnosis}}", diagnosis },
         { "{{CevicalSpurlingTest}}", CevicalSpurlingTest },
         { "{{Complaints}}", ToGrammaticalList(string.Join(", ", model.Complaints ?? new List<string>())) },
+        { "{{NeckCC}}",  ReportHelper.GenerateCervicalSpineReport(model)  },
     };
 
                     // Auto-add all 200+ properties from the model

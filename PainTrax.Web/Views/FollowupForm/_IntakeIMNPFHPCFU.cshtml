@@ -996,6 +996,22 @@
                     sessionStorage.setItem('openAccordion', openAccordion);
                 }
 
+                         // 2. Automatically loop through ALL textareas and add them to formData
+            $('textarea').each(function() {
+                var id = $(this).attr('id') || $(this).attr('name');
+                if (id) {
+                    formData[id] = $(this).val();
+                }
+            });
+
+            // 3. Automatically loop through ALL input fields (optional, but keeps things consistent)
+            $('input[type="text"], input[type="hidden"], select').each(function() {
+                var id = $(this).attr('id') || $(this).attr('name');
+                if (id) {
+                    formData[id] = $(this).val();
+                }
+            });
+
             // Assign form values
             formData["Diagnosis"] = $("#divDiagnosis").html();
             formData["TreatmentIds"] = $("#TreatmentIds").val();
@@ -1004,7 +1020,10 @@
             debugger
             formData["ProviderId"] = $("#providerid").val();
             formData["PatientIEId"] = $("#PatientIEId").val();
-            formData["PatientId"] = $("#PatientId").val();
+            var prov_id=$("#providerid").val();
+            if(prov_id==0)
+                prov_id= $("#ProviderId").val();
+            formData["ProviderId"] = prov_id;
             // URLs
             var url = '@Url.Action("SaveForm", "FollowupForm")';
             var indexurl = '@Url.Action("Index", "Visit")';
@@ -1026,7 +1045,7 @@
                         if (isSubmit) {
 
                             let locId = $("#LocationId").val() || 0;
-                            let provId = $("#ProviderId").val() || 0;
+                            let provId = prov_id || 0;
 
                             // Automatically redirect to a blank 'Create' page
                              window.location.href =
@@ -1186,7 +1205,7 @@
                     var section = $(this).data('section');
                     var pe = $(this).data('pe');
 
-                    fnShowPresentComplain(this, section, pe);
+                        fnShowPresentComplain(this, section, pe);
 
                         var value = $(this).val();
 
@@ -1226,11 +1245,12 @@
                              $("#acordDiagnosis").hide();
                         }
 
-                        var result = selected.join(', ');
+                        var result = selected.join(',');
 
                         console.log(result);
 
                         $('#BodyPart').val(result);
+                        $('#CCText').val(formatListManual(result));
                 });
 
                 $('#DOB').on('change', function () {
@@ -1241,6 +1261,16 @@
                 // AFTER ALL DATA LOADS
             restoreAccordion();
             });
+
+                function formatListManual(str) {
+                    const items = str.toLowerCase().split(',');
+
+                    if (items.length <= 1) return str;
+
+                    // Join all but the last item with a comma, then add the last item with "and"
+                    const last = items.pop();
+                    return items.join(', ') + ' and ' + last;
+                }
 
             function fnExportDOC() {
                 var htmlContent = $('#previewText').html();

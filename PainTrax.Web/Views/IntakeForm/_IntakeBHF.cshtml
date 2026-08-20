@@ -1204,7 +1204,8 @@
                 // cleaned=cleaned.replace(/"/g, '\\"');
 
                 //
-                debugger
+                var decoded = decodeHtml(val);
+                var data = safeParse(decoded);
                 var data = safeParse(val);
 
 

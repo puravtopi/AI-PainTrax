@@ -1,4 +1,5 @@
 ﻿using PainTrax.Web.ViewModel;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Helper
@@ -59,7 +60,7 @@ namespace PainTrax.Web.Helper
             string hospitalNarrative = "";
             if (model.Hospital == "Yes")
             {
-                hospitalNarrative = $"The patient was taken on an emergent basis to {model.HospitalName} Hospital where the patient was treated and released.";
+                hospitalNarrative = $"The patient was taken on an emergent basis to {model.hospitalname} Hospital where the patient was treated and released.";
             }
             else
             {
@@ -74,6 +75,67 @@ namespace PainTrax.Web.Helper
                    $"{locBruiseNarrative} The patient sustained multiple skeletal injuries including injury to {injuriesStr}. " +
                    $"{hospitalNarrative} The patient has been undergoing physical therapy for the past ___ weeks/months. " +
                    $"My evaluation is limited to {injuriesStr} injury sustained in the accident of {doaStr}.";
+        }
+
+        public static string GenerateCervicalSpineReport(AIIntakeFormModel model)
+        {
+            var report = new StringBuilder("CERVICAL SPINE: ");
+
+            // 1. Pain and Stiffness
+            string stiffnessText = model.NeckStiffness.Contains("Stiffness") ? "pain and stiffness" : "pain";
+            report.Append($"The patient complains of {stiffnessText} in the neck region. ");
+
+            // 2. Radiation
+            if (!string.IsNullOrEmpty(model.NeckRadiatesTo) || model.NeckRadiates.Any())
+            {
+                string side = model.NeckRadiatesTo ?? "";
+                if (side == "Bilateral") side = "bilateral";
+
+                string radiationAreas = model.NeckRadiates.Any()
+                    ? string.Join(", ", model.NeckRadiates).ToLower()
+                    : "areas";
+
+                report.Append($"The pain radiates from the neck to {side} {radiationAreas} ");
+            }
+
+            // 3. Associated Symptoms
+            if (model.NeckAssociated.Any())
+            {
+                string associated = string.Join(", ", model.NeckAssociated).ToLower();
+                // Replace last comma with 'and' for better grammar
+                int lastComma = associated.LastIndexOf(',');
+                if (lastComma != -1)
+                    associated = associated.Remove(lastComma, 1).Insert(lastComma, " and");
+
+                report.Append($"and associated with {associated}. ");
+            }
+
+            // 4. Difficulties (Turning/Gripping)
+            var difficulties = new List<string>();
+            if (model.NeckStiffness.Contains("Diff turning") || model.NeckStiffness.Contains("rotating head"))
+                difficulties.Add("turning/rotating the head");
+            if (model.NeckStiffness.Contains("Diff gripping hand"))
+                difficulties.Add("gripping objects");
+
+            if (difficulties.Any())
+            {
+                report.Append($"The patient has difficulty {string.Join(" and ", difficulties)}. ");
+            }
+
+            // 5. PT Improvement
+            if (!string.IsNullOrEmpty(model.NeckSustainedStiffness))
+            {
+                report.Append($"{model.NeckSustainedStiffness}. ");
+            }
+
+            // 6. Worsening/Improving Factors (Optional based on your UI)
+            if (model.NeckWorsens.Any())
+                report.Append($"Symptoms are worsened by {string.Join(", ", model.NeckWorsens).ToLower()}. ");
+
+            // 7. Pain Score
+            report.Append($"Pain score is {model.NeckPain ?? "0"}/10.");
+
+            return report.ToString();
         }
 
         public static string GetDiagnosis(string html)
