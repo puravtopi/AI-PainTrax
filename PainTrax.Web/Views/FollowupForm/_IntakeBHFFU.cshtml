@@ -198,6 +198,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingNE">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
+                                            Neuro Exam
+                                        </button>
+                                    </h2>
+                                    <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="divNeuro">
+                                            <partial name="BHF/_NeuroExam" />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="accordion-item" id="acordDiagnosis" style="display:none">
                                     <h2 class="accordion-header" id="headingEight">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
@@ -215,18 +227,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingNE">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
-                                            Neuro Exam
-                                        </button>
-                                    </h2>
-                                    <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body" id="divNeuro">
-                                            <partial name="BHF/_NeuroExam" />
-                                        </div>
-                                    </div>
-                                </div>
+                              
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingADL">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseADL" aria-expanded="false" aria-controls="collapseADL">
@@ -242,7 +243,7 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingNote">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNote" aria-expanded="false" aria-controls="collapseNote">
-                                            Dr Ford Notes
+                                            Provider Notes
                                         </button>
                                     </h2>
                                     <div id="collapseNote" class="accordion-collapse collapse" aria-labelledby="headingNote" data-bs-parent="#accordionExample">
@@ -774,8 +775,8 @@
                 }
 
                 // Trigger on all inputs
-                $(document).on("keyup change", "#patientForm input, #patientForm select, .incident-type-option", function () {
-                    updatePreview();
+                $(document).on("keyup change","#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option",function () {
+            updatePreview();
                 });
 
                 function processTemplate(data) {
@@ -896,39 +897,7 @@
 
                             $('#pdfLoader').hide();
                         }
-                            // bootbox.confirm({
-                            //     message: 'Your details have been saved successfully. Click "Yes" to continue creating the next visit.',
-                            //     swapButtonOrder: true,
-
-                            //     buttons: {
-                            //         confirm: {
-                            //             label: 'Yes',
-                            //             className: 'btn-primary'
-                            //         },
-                            //         cancel: {
-                            //             label: 'No',
-                            //             className: 'btn-secondary'
-                            //         }
-                            //     },
-
-                            //     callback: function (result) {
-
-                            //         if (result) {
-
-                            //             let locId = $("#LocationId").val() || 0;
-                            //             let provId = $("#ProviderId").val() || 0;
-
-                            //             window.location.href =
-                            //                 '@Url.Action("Create", "FollowupForm")' +
-                            //                 '?providerId=' + provId +
-                            //                 '&id=0' +
-                            //                 '&locid=' + locId;
-                            //         }
-                            //         else {
-                            //             window.location.href = indexurl;
-                            //         }
-                            //     }
-                            // });
+                           
                         
                         else {
 

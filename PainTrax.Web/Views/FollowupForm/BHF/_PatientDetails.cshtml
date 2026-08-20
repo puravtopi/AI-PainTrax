@@ -1,5 +1,6 @@
-﻿
-<h6>Provider Name:  @ViewBag.ProviderName</h6>
+﻿Provider Name:
+<select id="providerid" name="providerid" asp-items="@ViewBag.providerList" class="form-select d-inline w-auto" style="width:230px !important">
+</select>
 
 <input type="hidden" id="FN" name="FN" />
 <input type="hidden" id="LN" name="LN" />
@@ -70,6 +71,10 @@
     <p>
         <select id="AccidentType" class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
     </p>
+    &nbsp;&nbsp;   
+    Location:    
+    <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" required class="form-select d-inline w-auto" style="width:200px !important">
+    </select>
 </div>
 
 

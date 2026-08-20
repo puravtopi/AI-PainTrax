@@ -357,14 +357,32 @@
 </p>
 
 <script>
+    // function clearNeuroPart(part) {
+
+    //         document.querySelectorAll('table.' + part).forEach(function (table) {
+
+    //             table.querySelectorAll('input').forEach(function (input) {
+    //                 input.value = '';
+    //             });
+
+    //         });
+    //     }
     function clearNeuroPart(part) {
 
-            document.querySelectorAll('table.' + part).forEach(function (table) {
+        // Confirmation before clearing
+        var partName = part === 'upper' ? 'Upper Extremity' : 'Lower Extremity';
 
-                table.querySelectorAll('input').forEach(function (input) {
-                    input.value = '';
-                });
-
-            });
+        if (!confirm('Are you sure you want to clear ' + partName + '?')) {
+            return; // Cancelled - do nothing
         }
+
+        // Clear all inputs in the selected part
+        document.querySelectorAll('table.' + part).forEach(function (table) {
+
+            table.querySelectorAll('input').forEach(function (input) {
+                input.value = '';
+            });
+
+        });
+    }
 </script>

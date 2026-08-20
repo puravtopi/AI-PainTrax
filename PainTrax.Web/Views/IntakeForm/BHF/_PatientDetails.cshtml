@@ -1,5 +1,9 @@
 ﻿
-<h6>Provider Name:  @ViewBag.ProviderName</h6>
+<h6>
+    Provider Name:
+    <select id="providerid" name="providerid" asp-items="@ViewBag.providerList" class="form-select d-inline w-auto" style="width:230px !important">
+    </select>
+</h6>
 
 <!-- Patient Info -->
 <p>
@@ -25,9 +29,8 @@
     <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" required class="form-control d-inline w-auto"  onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     Location: &nbsp;&nbsp;
-    <span id="lblLocation">
-        @ViewBag.LocName
-    </span>
+    <select id="LocationId" required name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:200px !important">
+    </select>
 
 </p>
 

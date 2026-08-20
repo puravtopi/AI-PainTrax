@@ -170,17 +170,41 @@
     </tbody>
 </table>
 <script>
+    //     function clearADLValues() {
+    //     const table = document.getElementById('adlTable');
+
+    //     table.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+    //         input.checked = false;
+    //     });
+
+    //     table.querySelectorAll('input[type="radio"]').forEach(function (input) {
+    //         input.checked = false;
+    //     });
+
+    //     table.querySelectorAll('input[type="text"]').forEach(function (input) {
+    //         input.value = '';
+    //     });
+    // }
         function clearADLValues() {
+
+        // Ask for confirmation before clearing
+        if (!confirm('Are you sure you want to clear all ADL values?')) {
+            return; // User clicked Cancel
+        }
+
         const table = document.getElementById('adlTable');
 
+        // Clear checkboxes
         table.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
             input.checked = false;
         });
 
+        // Clear radio buttons
         table.querySelectorAll('input[type="radio"]').forEach(function (input) {
             input.checked = false;
         });
 
+        // Clear text fields
         table.querySelectorAll('input[type="text"]').forEach(function (input) {
             input.value = '';
         });

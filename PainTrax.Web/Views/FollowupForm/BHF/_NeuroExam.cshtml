@@ -356,17 +356,35 @@
     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtNeuro')"></i>
 </p>
 <script>
-    function clearNeuroPart(part) {
+    // function clearNeuroPart(part) {
 
-        // Find all upper or lower examination tables
+    //     // Find all upper or lower examination tables
+    //     document.querySelectorAll('table.' + part).forEach(function (table) {
+
+    //         // Find all input fields inside that table
+    //         table.querySelectorAll('input').forEach(function (input) {
+
+    //             // Clear the value
+    //             input.value = '';
+    //         });
+    //     });
+    // }
+        function clearNeuroPart(part) {
+
+        // Confirmation before clearing
+        var partName = part === 'upper' ? 'Upper Extremity' : 'Lower Extremity';
+
+        if (!confirm('Are you sure you want to clear ' + partName + '?')) {
+            return; // Cancelled - do nothing
+        }
+
+        // Clear all inputs in the selected part
         document.querySelectorAll('table.' + part).forEach(function (table) {
 
-            // Find all input fields inside that table
             table.querySelectorAll('input').forEach(function (input) {
-
-                // Clear the value
                 input.value = '';
             });
+
         });
     }
 </script>
