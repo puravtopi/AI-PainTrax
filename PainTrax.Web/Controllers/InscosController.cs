@@ -131,6 +131,7 @@ namespace PainTrax.Web.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
                 string cnd ="and cmp_id=" + cmpid + " and cmpname like '%" + searchValue + "%' ";
+                //string cnd ="and cmp_id=0 and cmpname like '%" + searchValue + "%' ";
                 var Data = _services.GetAll(cnd);
                 //Sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
@@ -188,16 +189,18 @@ namespace PainTrax.Web.Controllers
                     {
                         if (!string.IsNullOrEmpty(dt.Rows[i]["InsCo"].ToString()))
                         {
+                            
+
                             tbl_inscos obj = new tbl_inscos()
                             {
-                                cmp_id = cmpid,
+                                cmp_id = 0,
                                 cmpname = (dt.Columns.Contains("InsCo") && dt.Rows[i]["InsCo"] != DBNull.Value ? dt.Rows[i]["InsCo"].ToString() : ""),
                                 address1 = (dt.Columns.Contains("Address1") && dt.Rows[i]["Address1"] != DBNull.Value ? dt.Rows[i]["Address1"].ToString() : ""),
                                 address2 = (dt.Columns.Contains("Address2") && dt.Rows[i]["Address2"] != DBNull.Value ? dt.Rows[i]["Address2"].ToString() : ""),
                                 city = (dt.Columns.Contains("City") && dt.Rows[i]["City"] != DBNull.Value ? dt.Rows[i]["City"].ToString() : ""),
                                 state = (dt.Columns.Contains("State") && dt.Rows[i]["State"] != DBNull.Value ? dt.Rows[i]["State"].ToString() : ""),
                                 emailid = (dt.Columns.Contains("EmailAddress") && dt.Rows[i]["EmailAddress"] != DBNull.Value ? dt.Rows[i]["EmailAddress"].ToString() : ""),
-                                telephone = (dt.Columns.Contains("Telephone") && dt.Rows[i]["Telephone"] != DBNull.Value ? dt.Rows[i]["Telephone"].ToString() : ""),
+                                telephone = (dt.Columns.Contains("Ph") && dt.Rows[i]["Ph"] != DBNull.Value ? dt.Rows[i]["Ph"].ToString() : ""),
                                 contactpersonname = (dt.Columns.Contains("ContactPerson") && dt.Rows[i]["ContactPerson"] != DBNull.Value ? dt.Rows[i]["ContactPerson"].ToString() : ""),
                                 setasdefault = false,
                                 isactive = true,

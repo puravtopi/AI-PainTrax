@@ -190,13 +190,14 @@ public class PatientIEService : ParentService
 		
 		doe=@doe,
 		doa=@doa,
+        provider_id=@provider_id,
 	    compensation=@compensation
 			where intakeid=@intakeid", conn);
         cm.Parameters.AddWithValue("@intakeid", data.intakeid);
        
         cm.Parameters.AddWithValue("@doe", data.doe);
         cm.Parameters.AddWithValue("@doa", data.doa);
-       
+        cm.Parameters.AddWithValue("@provider_id", data.provider_id);
         cm.Parameters.AddWithValue("@compensation", data.compensation);
       
         Execute(cm);
@@ -204,9 +205,19 @@ public class PatientIEService : ParentService
     public void UpdateFromIntakeFU(tbl_patient_ie data)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_fu SET
-				doe=@doe where intakeid=@intakeid", conn);
+				doe=@doe,provider_id=@provider_id where intakeid=@intakeid", conn);
         cm.Parameters.AddWithValue("@intakeid", data.intakeid);
         cm.Parameters.AddWithValue("@doe", data.doe);
+        cm.Parameters.AddWithValue("@provider_id", data.provider_id);
+        Execute(cm);
+    }
+
+    public void UpdateCompensationFU(tbl_patient_ie data)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET
+				compensation=@compensation where id=@id", conn);
+        cm.Parameters.AddWithValue("@id", data.id);
+        cm.Parameters.AddWithValue("@compensation", data.compensation);
         Execute(cm);
     }
 

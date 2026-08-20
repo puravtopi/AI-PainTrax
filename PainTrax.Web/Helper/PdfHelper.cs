@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Vml;
+﻿using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Vml;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 //using iText.Kernel.Pdf;
@@ -39,7 +40,7 @@ namespace PainTrax.Web.Helper
 
             return pdfBytes;
         }
-        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string> controls, string cmpid = "0", string path = "")
+        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string> controls, string cmpid = "0", string path = "", int provid=0)
         {
             WebHostBuilderContext webHost = new WebHostBuilderContext();
             ParentService _parentService = new ParentService();
@@ -62,6 +63,75 @@ namespace PainTrax.Web.Helper
 
                 string textvalue = pdfFormFields.GetField(de.Key.ToString());
                 string[] textpair = textvalue.Split('|');
+                if (textpair.Length == 1 && de.Key.StartsWith("^"))
+                {
+                    //var provid = context.Session.GetInt32(SessionKeys.SessionUserId);
+                    //var selectprovid = context.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+
+                    if (provid != 0)
+                    {
+                        DataTable provdt = _parentService.GetData("select  *  FROM  tbl_users where id=" + provid.ToString());
+                        if (provdt.Rows.Count > 0)
+                        {
+                            if (de.Key.ToLower().StartsWith("^sign"))
+                            {
+                                try
+                                {
+                                    if (path != "")
+                                    {
+                                        string provPath = System.IO.Path.Combine(
+                                            System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(path))!,
+                                            "uploads",
+                                            "sign",
+                                            cmpid
+
+                                        );
+                                        string[] files = System.IO.Directory.GetFiles(provPath, provdt.Rows[0]["signature"].ToString(), System.IO.SearchOption.TopDirectoryOnly);
+                                        if (files.Length > 0)
+                                        {
+
+                                            Stream inputImageStream = new FileStream(files[0], FileMode.Open, FileAccess.Read, FileShare.Read);
+                                            float[] fieldPosition = null;
+                                            fieldPosition = ae.GetFieldPositions(de.Key.ToString());
+                                            var pdfContentByte = pdfStamper.GetOverContent((int)fieldPosition[0]);
+                                            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(inputImageStream);
+                                            image.ScaleToFit(fieldPosition[3] - fieldPosition[1], fieldPosition[4] - fieldPosition[2] + 10);
+                                            image.SetAbsolutePosition(fieldPosition[1], fieldPosition[2]);
+                                            pdfContentByte.AddImage(image);
+                                        }
+                                    }
+                                }
+
+                                catch (Exception ex) { }
+                                finally { pdfFormFields.SetFieldProperty(de.Key.ToString(), "flags", PdfFormField.FLAGS_NOVIEW, null); }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    if (provdt.Rows[0][de.Key.Substring(1)] is DateTime)
+                                        pdfFormFields.SetField(de.Key.ToString(), DateTime.Parse(provdt.Rows[0][de.Key.Substring(1)].ToString()).ToString("MM/dd/yyyy"));
+                                    else
+                                        pdfFormFields.SetField(de.Key.ToString(), provdt.Rows[0][de.Key.Substring(1)].ToString());
+                                }
+                                catch (Exception ex)
+                                {
+                                    pdfFormFields.SetField(de.Key.ToString(), "");
+                                }
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (de.Key.ToLower().StartsWith("^sign"))
+                        {
+                            pdfFormFields.SetFieldProperty(de.Key.ToString(), "flags", PdfFormField.FLAGS_NOVIEW, null);
+                        }
+                    }
+
+                }
+              
                 if (textpair.Length > 1 && !de.Key.StartsWith("#"))
                 {
                     try

@@ -19,6 +19,7 @@ namespace PainTrax.Web.Controllers
             InscosService _inscosService = new InscosService();
             cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var cnd = " and cmp_id=" + cmp_id.Value + " and cmpname like '%" + prefix + "%'";
+           // var cnd = " and cmp_id=0 and cmpname like '%" + prefix + "%'";
             var customers = _inscosService.GetAautoComplete(cnd);
 
             return Json(customers);

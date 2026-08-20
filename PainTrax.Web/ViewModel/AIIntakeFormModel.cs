@@ -116,7 +116,7 @@
         public string txtPriorSymptoms { get; set; }
         public string txtPriorTrauma { get; set; }
         public string OtherComplaints { get; set; }
-        public string HospitalName { get; set; }
+        public string hospitalname { get; set; }
         public string IncidentType { get; set; }
         public string PatientFName { get; set; }
         public string PatientLName { get; set; }
@@ -142,6 +142,7 @@
         public string MechanismInvolving { get; set; }
         public string MechanismResulting { get; set; }
         public string AccidentDescription { get; set; }
+        public string AccidentDescriptionAudio { get; set; }
         public string StoppedAfterAccident { get; set; }
         public string __RequestVerificationToken { get; set; }
         public string PatientSubmitDate { get; set; }
@@ -172,6 +173,7 @@
         public string PT { get; set; }
         public string PProcedures { get; set; }
         public string NeckPain { get; set; }
+        public string NeckSustainedStiffness { get; set; }
         public List<string> NeckStiffness { get; set; }
         //public string NeckDiffturning { get; set; }
         //public string Neckrotatinghead { get; set; }
@@ -388,7 +390,9 @@
         public string FollowUpOther { get; set; }
         public string FollowUp { get; set; }
         public string OtherAsymptomatic { get; set; }
+        public string OtherAsymptomaticAudio { get; set; }
         public string OtherPriortrauma { get; set; }
+        public string OtherPriortraumaAudio { get; set; }
         public string OtherLOC { get; set; }
         public string OtherBruises { get; set; }
 
