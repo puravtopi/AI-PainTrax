@@ -1,32 +1,21 @@
-﻿using AutoMapper;
-using DocumentFormat.OpenXml;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using GroupDocs.Viewer.Results;
 using HtmlToOpenXml;
-using MailKit;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Asn1.Sec;
-using Org.BouncyCastle.Utilities.Collections;
 using PainTrax.Services;
 using PainTrax.Web.AzureServices;
-using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Data;
-using System.Diagnostics.Metrics;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using static PainTrax.Web.Helper.EnumHelper;
 
 
 namespace PainTrax.Web.Controllers
@@ -54,7 +43,7 @@ namespace PainTrax.Web.Controllers
         private readonly DefaultDataServices _defaultService = new DefaultDataServices();
         #endregion
 
-       
+
 
         public IntakeFormController(
          Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
@@ -848,7 +837,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeIMNPFHPC");
+            else return PartialView("_IntakeBHF");
             //return View();
         }
 
@@ -1014,12 +1003,21 @@ namespace PainTrax.Web.Controllers
                     TreatmentIds = model.TreatmentIds,
                     TreatmentDelimitDesc = model.TreatmentDelimitDesc,
                     AccidentType = model.AccidentType,
-                    AccidentDescriptionAudio= model.AccidentDescriptionAudio
+                    AccidentDescriptionAudio = model.AccidentDescriptionAudio
                 };
                 result = service.SaveInitialIntakeAI(initialIntakeAI);
 
                 var InjuryType = "MM";
+                var Handeness = "1";
+                var patientId = 0;
 
+                if (model.DominantHand != null)
+                {
+                    if (model.DominantHand.ToLower() == "right-handed")
+                        Handeness = "1";
+                    else if (model.DominantHand.ToLower() == "left-handed")
+                        Handeness = "2";
+                }
 
                 if (model.InjuryType == "work-related")
                     InjuryType = "WC";
@@ -1048,7 +1046,7 @@ namespace PainTrax.Web.Controllers
                             mc_details = null,
                             mname = null,
                             mobile = null,
-                            handeness = model.DominantHand,
+                            handeness = Handeness,
                             ssn = null,
                             state = null,
                             age = string.IsNullOrEmpty(model.Age) ? 0 : Convert.ToInt16(model.Age),
@@ -1056,7 +1054,7 @@ namespace PainTrax.Web.Controllers
 
                         };
 
-                        var patientId = _patientservices.Insert(objPatient);
+                        patientId = _patientservices.Insert(objPatient);
 
                         if (patientId > 0)
                         {
@@ -1310,6 +1308,8 @@ namespace PainTrax.Web.Controllers
                         provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
                     };
                     _ieService.UpdateFromIntake(objIE);
+                    patientId = string.IsNullOrEmpty(model.PatientId) ? 0 : Convert.ToInt32(model.PatientId);
+                    _ieService.UpdateHandeness(Handeness, patientId);
 
                     var objPage1 = new tbl_ie_page1()
                     {

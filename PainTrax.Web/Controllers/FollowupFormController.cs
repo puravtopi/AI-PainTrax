@@ -376,7 +376,17 @@ namespace PainTrax.Web.Controllers
         public IActionResult SaveForm([FromBody] object formData)
         {
             var json = System.Text.Json.JsonSerializer.Serialize(formData);
-            var model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
+            json = json.Replace("\\u0027", "'");
+            var model = new AIIntakeFormModel();
+            try
+            {
+                model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Path: {ex.Path}");
+                Console.WriteLine(ex.Message);
+            }
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
 
@@ -419,7 +429,16 @@ namespace PainTrax.Web.Controllers
                 result = service.SaveInitialIntakeAI(initialIntakeAI);
 
                 var InjuryType = "MM";
+                var Handeness = "1";
+                var patientId = 0;
 
+                if (model.DominantHand != null)
+                {
+                    if (model.DominantHand.ToLower() == "right-handed")
+                        Handeness = "1";
+                    else if (model.DominantHand.ToLower() == "left-handed")
+                        Handeness = "2";
+                }
 
                 if (model.InjuryType == "work-related")
                     InjuryType = "WC";
@@ -602,6 +621,8 @@ namespace PainTrax.Web.Controllers
                     };
                     var fuData = _ieService.GetLastFU(objIE.id.Value, "FU");
 
+                    
+
                     if (fuData != null)
                         lFUId = fuData.id.Value;
                     // _ieService.UpdateFromIntake(objIE);
@@ -609,7 +630,8 @@ namespace PainTrax.Web.Controllers
                     _ieService.UpdateCompensationFU(objIE);
                     _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), lFUId);
                 }
-
+                patientId = string.IsNullOrEmpty(model.PatientId) ? 0 : Convert.ToInt32(model.PatientId);
+                _ieService.UpdateHandeness(Handeness, patientId);
                 //return RedirectToAction("Index", "Visit");
             }
             return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId, patientid = model.PatientId });

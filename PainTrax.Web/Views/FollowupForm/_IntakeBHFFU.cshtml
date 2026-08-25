@@ -488,21 +488,41 @@
                 $("#BMI").val(bmi);
         }
 
-        function safeParse(json) {
-                    if (typeof json !== "string") return json;
+            function safeParse(json) {
+        if (typeof json !== "string") return json;
 
-                    try {
-                        json = json.trim();
-                        json = json.replace(/^\uFEFF/, '');
-                        json = json.replace(/&quot;/g, '"');
-                        json = json.replace(/&#x2B;/g, '+');
+        try {
+            let sanitized = json.trim();
 
-                        return JSON.parse(json);
-                    } catch (e) {
-                        console.error("Invalid JSON:", json);
-                        throw e;
-                    }
-         }
+            // 1. Remove Byte Order Mark (BOM)
+            sanitized = sanitized.replace(/^\uFEFF/, '');
+
+            // 2. Decode HTML entities (more robustly)
+            sanitized = sanitized.replace(/&quot;/g, '"')
+                                 .replace(/&#x2B;/g, '+')
+                                 .replace(/&lt;/g, '<')
+                                 .replace(/&gt;/g, '>')
+                                 .replace(/&amp;/g, '&');
+
+            // 3. Fix literal Control Characters
+            // This finds actual tabs, newlines, and carriage returns inside the string
+            // and converts them to the escaped version (\t, \n, \r) that JSON.parse requires.
+            sanitized = sanitized.replace(/[\x00-\x1F\x7F-\x9F]/g, function (match) {
+                switch (match) {
+                    case '\t': return '\\t';
+                    case '\n': return '\\n';
+                    case '\r': return '\\r';
+                    default: return ''; // Remove other illegal control characters
+                }
+            });
+
+            return JSON.parse(sanitized);
+        } catch (e) {
+            console.error("Invalid JSON content:", json);
+            console.error("Error details:", e.message);
+            throw e;
+        }
+    }
                 function startVoice(icon, ctrl) {
 
                 var input = $('#' + ctrl);
@@ -861,7 +881,7 @@
             formData["ProviderId"] = $("#ProviderId").val();
             formData["PatientIEId"] = $("#PatientIEId").val();
             formData["PatientId"] = $("#PatientId").val();
-            formData["LocationId"] = $("#LocationId").val();
+            //formData["LocationId"] = $("#LocationId").val();
 
             // URLs
             var url = '@Url.Action("SaveForm", "FollowupForm")';
@@ -1201,8 +1221,15 @@
 
                     // cleaned=cleaned.replace(/"/g, '\\"');
 
-                    //
-                    var data = safeParse(val);
+                    var data;
+                  // Check if val is a string before trying to decode/parse
+                    if (typeof val === "string") {
+                        var decode = decodeHtml(val);
+                        data = safeParse(decode);
+                    } else {
+                        // If it's already an object, just use it
+                        data = val;
+                    }
 
 
                     $('#patientForm').find('input, select, textarea').each(function () {

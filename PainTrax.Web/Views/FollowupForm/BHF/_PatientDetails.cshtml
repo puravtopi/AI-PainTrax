@@ -262,6 +262,13 @@
 
         $("#DOB").val(formatToISODate($(this).data("dob")));
         $("#DOA").val(formatToISODate($(this).data("doa")));
+
+         if($(this).data("dob")!=null)
+         {
+                $("#DOB").val(formatToISODate($(this).data("dob")));
+                var age = calculateAge($("#DOB").val());
+                $('#Age').val(age);
+         }
    
         console.log("InuryType:", $(this).data("injurytype"));
         $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);

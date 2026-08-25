@@ -105,7 +105,7 @@
                                         onclick="DownloadCF('@ViewBag.Id')">
                                     Consent Form
                                 </button>
-                                <button style="display:none;" type="button" id="btnReport"
+                                <butto type="button" id="btnReport"
                                         class="btn btn-outline-primary"
                                         @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
                                         onclick="DownloadReport('@ViewBag.Id')">
@@ -2329,19 +2329,41 @@
 
 
 
-            function safeParse(json) {
-                if (typeof json !== "string") return json;
+              function safeParse(json) {
+        if (typeof json !== "string") return json;
 
-                try {
-                    json = json.trim();
-                    json = json.replace(/^\uFEFF/, '');
-                    json = json.replace(/&quot;/g, '"');
-                    return JSON.parse(json);
-                } catch (e) {
-                    console.error("Invalid JSON:", json);
-                    throw e;
+        try {
+            let sanitized = json.trim();
+
+            // 1. Remove Byte Order Mark (BOM)
+            sanitized = sanitized.replace(/^\uFEFF/, '');
+
+            // 2. Decode HTML entities (more robustly)
+            sanitized = sanitized.replace(/&quot;/g, '"')
+                                 .replace(/&#x2B;/g, '+')
+                                 .replace(/&lt;/g, '<')
+                                 .replace(/&gt;/g, '>')
+                                 .replace(/&amp;/g, '&');
+
+            // 3. Fix literal Control Characters
+            // This finds actual tabs, newlines, and carriage returns inside the string
+            // and converts them to the escaped version (\t, \n, \r) that JSON.parse requires.
+            sanitized = sanitized.replace(/[\x00-\x1F\x7F-\x9F]/g, function (match) {
+                switch (match) {
+                    case '\t': return '\\t';
+                    case '\n': return '\\n';
+                    case '\r': return '\\r';
+                    default: return ''; // Remove other illegal control characters
                 }
-            }
+            });
+
+            return JSON.parse(sanitized);
+        } catch (e) {
+            console.error("Invalid JSON content:", json);
+            console.error("Error details:", e.message);
+            throw e;
+        }
+    }
         //     function startVoice(icon, ctrl) {
 
         //     var input = $('#' + ctrl);
@@ -2528,25 +2550,25 @@
                 $(this).hide();
             });
                 $('input[name="CevicalCompression"]').on('change', function () {
-                    debugger
+                    
                     if ($(this).val() === 'negative') {
                         $('input[name="CevicalCompressionTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="CevicalSpurling"]').on('change', function () {
-                    debugger
+                    
                     if ($(this).val() === 'negative') {
                         $('input[name="CevicalSpurlingTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="LumbarStraight"]').on('change', function () {
-                    debugger
+                    
                     if ($(this).val() === 'negative') {
                         $('input[name="LumbarStraightTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="LumbarFacetloading"]').on('change', function () {
-                    debugger
+                    
                     if ($(this).val() === 'negative') {
                         $('input[name="LumbarFacetloadingTest"]').prop('checked', false);
                     }
@@ -2895,13 +2917,7 @@
         }
     });
 
-    // 3. Automatically loop through ALL input fields (optional, but keeps things consistent)
-    $('input[type="text"], input[type="hidden"], select').each(function() {
-        var id = $(this).attr('id') || $(this).attr('name');
-        if (id) {
-            formData[id] = $(this).val();
-        }
-    });
+    
 
             // Assign form values
             formData["Diagnosis"] = $("#divDiagnosis").html();
@@ -2909,7 +2925,11 @@
             formData["TreatmentDesc"] = $("#TreatmentDesc").val();
             formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
             formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
-            formData["ProviderId"] = $("#ProviderId").val();
+            formData["AccidentDescriptionAudio"] = $("#AccidentDescriptionAudio").val();
+            var prov_id=$("#providerid").val();
+            if(prov_id==0)
+                prov_id= $("#ProviderId").val();
+            formData["ProviderId"] = prov_id;
 
             // URLs
             var url = '@Url.Action("SaveForm", "IntakeForm")';
@@ -2932,8 +2952,8 @@
                         // If final submit
                         if (isSubmit) {
 
-                                     let locId= $("#LocationId").val() || 0;
-                                     let provId=$("#ProviderId").val() || 0;
+                                    let locId= $("#LocationId").val() || 0;
+                                    let provId = prov_id || 0;
                                             window.location.href =
                                 '@Url.Action("AIInitialIntake", "IntakeForm")' +
                                 '?id=' + response.id +
@@ -3138,8 +3158,9 @@
                 // cleaned=cleaned.replace(/"/g, '\\"');
 
                 //
+                
                 var decode= decodeHtml(val);
-                    var data = safeParse(decode);
+                var data = safeParse(decode);
 
                 $('#patientForm').find('input, select, textarea').each(function () {
 
@@ -3472,7 +3493,7 @@
                     if (signaturePad.isEmpty()) {
                         alert("Please draw your signature before saving.");
                     } else {
-                        debugger
+                        
                         var signatureData = signaturePad.toDataURL("image/jpeg");
                         fnSaveSign(signatureData);
                     }
@@ -3486,7 +3507,7 @@
 
 
                     var url = '@Url.Action("SaveSign", "Visit")';
-                    debugger
+                    
                     var pId = $("#PatientId").val();
                     var sid = "0";
                     var data = {

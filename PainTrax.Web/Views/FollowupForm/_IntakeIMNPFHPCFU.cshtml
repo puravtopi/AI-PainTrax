@@ -447,19 +447,41 @@
             var isRecording = false;
         
 
-            function safeParse(json) {
-                if (typeof json !== "string") return json;
+             function safeParse(json) {
+        if (typeof json !== "string") return json;
 
-                try {
-                    json = json.trim();
-                    json = json.replace(/^\uFEFF/, '');
-                    json = json.replace(/&quot;/g, '"');
-                    return JSON.parse(json);
-                } catch (e) {
-                    console.error("Invalid JSON:", json);
-                    throw e;
+        try {
+            let sanitized = json.trim();
+
+            // 1. Remove Byte Order Mark (BOM)
+            sanitized = sanitized.replace(/^\uFEFF/, '');
+
+            // 2. Decode HTML entities (more robustly)
+            sanitized = sanitized.replace(/&quot;/g, '"')
+                                 .replace(/&#x2B;/g, '+')
+                                 .replace(/&lt;/g, '<')
+                                 .replace(/&gt;/g, '>')
+                                 .replace(/&amp;/g, '&');
+
+            // 3. Fix literal Control Characters
+            // This finds actual tabs, newlines, and carriage returns inside the string
+            // and converts them to the escaped version (\t, \n, \r) that JSON.parse requires.
+            sanitized = sanitized.replace(/[\x00-\x1F\x7F-\x9F]/g, function (match) {
+                switch (match) {
+                    case '\t': return '\\t';
+                    case '\n': return '\\n';
+                    case '\r': return '\\r';
+                    default: return ''; // Remove other illegal control characters
                 }
-            }
+            });
+
+            return JSON.parse(sanitized);
+        } catch (e) {
+            console.error("Invalid JSON content:", json);
+            console.error("Error details:", e.message);
+            throw e;
+        }
+    }
             function startVoice(icon, ctrl) {
 
             var input = $('#' + ctrl);
@@ -633,25 +655,25 @@
             });
 
              $('input[name="CevicalCompression"]').on('change', function () {
-                    debugger
+                    
                     if ($(this).val() === 'negative') {
                         $('input[name="CevicalCompressionTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="CevicalSpurling"]').on('change', function () {
-                    debugger
+                    
                     if ($(this).val() === 'negative') {
                         $('input[name="CevicalSpurlingTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="LumbarStraight"]').on('change', function () {
-                    debugger
+                    
                     if ($(this).val() === 'negative') {
                         $('input[name="LumbarStraightTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="LumbarFacetloading"]').on('change', function () {
-                    debugger
+                    
                     if ($(this).val() === 'negative') {
                         $('input[name="LumbarFacetloadingTest"]').prop('checked', false);
                     }
@@ -804,7 +826,7 @@
             });
 
             function processTemplate(data) {
-                debugger;
+                ;
                 let html = $('#previewText').html();
 
                 // Replace placeholders
@@ -1004,20 +1026,14 @@
                 }
             });
 
-            // 3. Automatically loop through ALL input fields (optional, but keeps things consistent)
-            $('input[type="text"], input[type="hidden"], select').each(function() {
-                var id = $(this).attr('id') || $(this).attr('name');
-                if (id) {
-                    formData[id] = $(this).val();
-                }
-            });
+           
 
             // Assign form values
             formData["Diagnosis"] = $("#divDiagnosis").html();
             formData["TreatmentIds"] = $("#TreatmentIds").val();
             formData["TreatmentDesc"] = $("#TreatmentDesc").val();
             formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
-            debugger
+            
             formData["ProviderId"] = $("#providerid").val();
             formData["PatientIEId"] = $("#PatientIEId").val();
             var prov_id=$("#providerid").val();
@@ -1053,7 +1069,7 @@
                                 '?id=' + response.id +
                                 '&providerId='+ provId +
                                 '&patientId='+ response.patientid +
-                                '&locid=' + response.locid;
+                                '&locid=' +locId;
         
                             $('#pdfLoader').hide();
                         }
@@ -1064,7 +1080,7 @@
                                 '@Url.Action("Create", "FollowupForm")' +
                                 '?id=' + response.id +
                                 '&providerId='+ provId +
-                                '&locid=' + response.locid;
+                                '&locid=' + locId;
 
                         }
 
@@ -1285,14 +1301,20 @@
             }
 
             function bindForm(val) {
-                // var cleaned = val
-                //     .replace(/&quot;/g, '"')   // decode HTML quotes
-                //     .trim();
+                 var data;
 
-                // cleaned=cleaned.replace(/"/g, '\\"');
+                // Check if val is a string before trying to decode/parse
+                if (typeof val === "string") {
+                    var decode = decodeHtml(val);
+                    data = safeParse(decode);
+                } else {
+                    // If it's already an object, just use it
+                    data = val;
+                }
 
-                //
-                var data = safeParse(val);
+                 // debugger
+                 // var decode= decodeHtml(val);
+                 // var data = safeParse(decode);
 
                 $('#patientForm').find('input, select, textarea').each(function () {
 
@@ -1486,7 +1508,7 @@
 
                         contentType: "application/x-www-form-urlencoded",
                         success: function (data, status, xhr) {
-                            debugger
+                            
                             $('#modelDaignoCode').html(data);
                         },
                         error: function (xhr, status, error) {
@@ -1620,7 +1642,7 @@
                 if (signaturePad.isEmpty()) {
                     alert("Please draw your signature before saving.");
                 } else {
-                    debugger
+                    
                     var signatureData = signaturePad.toDataURL("image/jpeg");
                     fnSaveSign(signatureData);
                 }
@@ -2093,7 +2115,7 @@
                            const disposition = response.headers.get('Content-Disposition');
                                  let fileName = 'Superbill.pdf';
                                   console.log(disposition);
-                                  debugger
+                                  
                                     if (disposition) {
                                      const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
                                      if (utf8Match) {

@@ -211,13 +211,21 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@provider_id", data.provider_id);
         Execute(cm);
     }
-
     public void UpdateCompensationFU(tbl_patient_ie data)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET
 				compensation=@compensation where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@compensation", data.compensation);
+        Execute(cm);
+    }
+
+    public void UpdateHandeness(string handeness,int patientId)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET
+				handeness=@handeness where id=@id", conn);
+        cm.Parameters.AddWithValue("@id", patientId);
+        cm.Parameters.AddWithValue("@handeness", handeness);
         Execute(cm);
     }
 
