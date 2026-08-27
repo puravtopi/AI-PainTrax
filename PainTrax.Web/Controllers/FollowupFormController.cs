@@ -66,7 +66,7 @@ namespace PainTrax.Web.Controllers
         {
             return View();
         }
-        public IActionResult Create(int? locId, int? id, int? providerId, int patientId = 0)
+        public IActionResult Create(int? locId, int? id, int? providerId, int patientId = 0, string fType = "FU")
         {
             if (providerId == null)
             {
@@ -88,6 +88,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
             ViewBag.ProviderId = providerId;
+            ViewBag.Type = (fType == "TelFU" || fType == "Tele FU") ? "Tele FU" : "FU";
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             tbl_locations objLoc = new tbl_locations()
@@ -156,13 +157,13 @@ namespace PainTrax.Web.Controllers
             ViewBag.PatientId = patientId;
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
-            else if (client_code.ToLower() == "bhfpc")
+            else if (client_code.ToLower() == "bhfpc" || client_code.ToLower() == "paintest")
                 return PartialView("_IntakeBHFFU");
             else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeIMNPFHPCFU");
+            else return PartialView("_IntakeBHFFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -399,7 +400,7 @@ namespace PainTrax.Web.Controllers
                     Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
                     PatientIEId = model.PatientIEId == "" ? 0 : Convert.ToInt32(model.PatientIEId),
                     CmpId = cmpid,
-                    Visit_Type = "FU",
+                    Visit_Type = model.VisitType,
                     DOA = DateTime.TryParse(model.DOA, out var parsedDOA) ? parsedDOA : (DateTime?)null,
                     DOB = DateTime.TryParse(model.DOB, out var parsedDOB) ? parsedDOB : (DateTime?)null,
                     //DOE = System.DateTime.Now,
@@ -460,7 +461,7 @@ namespace PainTrax.Web.Controllers
                         created_date = System.DateTime.Now,
                         is_active = true,
                         patient_id = string.IsNullOrEmpty(model.PatientId) ? null : Convert.ToInt32(model.PatientId),
-                        type = "FU",
+                        type = model.VisitType,
                         intakeid = Convert.ToInt32(result),
                         location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
                         provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
@@ -621,7 +622,7 @@ namespace PainTrax.Web.Controllers
                     };
                     var fuData = _ieService.GetLastFU(objIE.id.Value, "FU");
 
-                    
+
 
                     if (fuData != null)
                         lFUId = fuData.id.Value;

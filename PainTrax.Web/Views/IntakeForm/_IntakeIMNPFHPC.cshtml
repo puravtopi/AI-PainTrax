@@ -2910,12 +2910,12 @@
 
 
                 // 2. Automatically loop through ALL textareas and add them to formData
-    $('textarea').each(function() {
-        var id = $(this).attr('id') || $(this).attr('name');
-        if (id) {
-            formData[id] = $(this).val();
-        }
-    });
+                $('textarea').each(function() {
+                    var id = $(this).attr('id') || $(this).attr('name');
+                    if (id) {
+                        formData[id] = $(this).val();
+                    }
+                });
 
     
 
@@ -2926,8 +2926,10 @@
             formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
             formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
             formData["AccidentDescriptionAudio"] = $("#AccidentDescriptionAudio").val();
+
+            debugger
             var prov_id=$("#providerid").val();
-            if(prov_id==0)
+            if(prov_id=="0")
                 prov_id= $("#ProviderId").val();
             formData["ProviderId"] = prov_id;
 

@@ -66,6 +66,7 @@
                         <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
                         <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
+                        <input type="hidden" id="VisitType" name="VisitType" value="@ViewBag.Type" />
                         <h4 class="text-center mb-4 fw-bold">
                             Follow up Intake
                         </h4>
@@ -73,7 +74,7 @@
                             <p id="btnSaveSection" class="mb-0 sticky-buttons">
                                 <button type="button"
                                         class="btn btn-secondary"
-                                        onclick="window.location.href='@Url.Action("GetProvider", "Home")'">
+                                        onclick="window.location.href='@Url.Action("Index", "Visit")'">
                                     <i class="bi bi-house-door-fill"></i> Home
                                 </button>
                                @*  <button type="submit" class="btn btn-primary">Submit</button> *@

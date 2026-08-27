@@ -270,14 +270,14 @@
                 $('#Age').val(age);
          }
    
-        console.log("InuryType:", $(this).data("injurytype"));
-        $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
-        console.log("Selected Patient Intake ID:", patientIntakeId);
+        // console.log("InuryType:", $(this).data("injurytype"));
+        // $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
+        // console.log("Selected Patient Intake ID:", patientIntakeId);
 
         $("#patientGrid").hide();
         $('input[name="RadicularPecentage"]').trigger('change');
         $('input[name="VASPecentage"]').trigger('change');
-        var injuryType = $(this).data("injurytype");
+        // var injuryType = $(this).data("injurytype");
 
     
 
@@ -296,24 +296,26 @@
                     console.log("Result: "+res.diagnosis);
                     bindForm(res.formData,res.forwardSetting);
                      // Apply injury type rule AFTER bindForm
-                clearWorkStatusIfRequired();
+                    clearWorkStatusIfRequired();
                 }
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
                 $('#pdfLoader').hide();
+                $('input[name="InjuryType"]').prop('checked', false);
             },
             error: function (xhr, status, error) {
                $('#pdfLoader').hide();
             }
         });
     });
-               function clearWorkStatusIfRequired() {
+
+    function clearWorkStatusIfRequired() {
 
         var injuryType = $('input[name="InjuryType"]:checked').val();
 
         if (injuryType !== 'WC') {
             $('input[name="IsWorking"]').prop('checked', false);
-            $('#DisabilityPercentage').val('');
+            $('#DisabilityPercentage').val('');         
         }
     }
 

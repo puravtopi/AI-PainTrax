@@ -367,6 +367,10 @@
                                                 <button id="btnFUIntake" class="btn btn-sm btn-warning" onclick="fnshowIntake('FU')">
                                                     Add FU Intake
                                                 </button>
+                                                 <!-- FU Intake -->
+                                                <button id="btnTelFUIntake" class="btn btn-sm btn-primary" onclick="fnshowIntake('TelFU')">
+                                                    Add Tel FU Intake
+                                                </button>
                                             </div>
 
                                         </div>
@@ -967,7 +971,7 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(0,' + value.patientIE_ID + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + value.patientFU + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowProcReport(0,' + value.patientFU + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Prop Report</span></a></li>';
-                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + intakeurl + '?id=' + value.intakeid +'&locid='+ value.location_id + '&providerid='+value.provider_id+'&patientId=' + value.patient_id + '" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Intake Form "></i><span> Intake Form</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + intakeurl + '?id=' + value.intakeid +'&locid='+ value.location_id + '&providerid='+value.provider_id+'&patientId=' + value.patient_id + '&fType='+value.type+'" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Intake Form "></i><span> Intake Form</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="checkAuthorizationForm(' + value.patient_id + ',' + '\'' + `${value.email}` + '\')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Send Authorization" data-bs-original-title="Send Authorization"></i><span>Send Authorization</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + value.patientFU + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li></ul>';
 
@@ -1060,12 +1064,17 @@
               window.location.href = '@Url.Action("Index", "ExportExcel")?id=' + id;
         }
 
-         function fnshowIntake(type)
+         function fnshowIntake(fuType)
          {
-           if(type=='IE')
+           if(fuType=='IE')
                 window.location.href = '@Url.Action("AIInitialIntake", "IntakeForm", new { locid = locationId, providerId = providerId })';
-           else
-                window.location.href = '@Url.Action("Create", "FollowupForm", new { locid = locationId, providerId = providerId })';
+           else{
+                // Use a placeholder like "REPLACEME"
+                var url = '@Url.Action("Create", "FollowupForm", new { locid = locationId, providerId = providerId })';
+                debugger
+                // Replace the placeholder with the actual JS variable
+                window.location.href = url+"&fType="+ fuType;
+           }
          }
 
         function fnPrint() {

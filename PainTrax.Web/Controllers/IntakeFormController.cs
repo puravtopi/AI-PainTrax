@@ -831,13 +831,13 @@ namespace PainTrax.Web.Controllers
             ViewBag.PatientId = patientId;
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
-            else if (client_code.ToLower() == "bhfpc")
+            else if (client_code.ToLower() == "bhfpc" || client_code.ToLower()=="paintest")
                 return PartialView("_IntakeBHF");
             else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeBHF");
+            else return PartialView("_IntakeIMNPFHPC");
             //return View();
         }
 
@@ -974,9 +974,15 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var result = "0";
 
-            DateTime? doa = DateTime.TryParse(model.DOA, out var parsedDOA1) ? parsedDOA1 : (DateTime?)null;
+            DateTime? doa = DateTime.TryParse(model.DOA, out var parsedDOA) ? parsedDOA : (DateTime?)null;
+            DateTime? dob = DateTime.TryParse(model.DOB, out var parsedDOB) ? parsedDOB : (DateTime?)null;
 
-            if (IsPatientPresent(model.FN, model.LN, doa) && model.Id == "0")
+            var patientId = 0;
+
+            if (model.Id != "0")
+                patientId = model.PatientId != null ? Convert.ToInt32(model.PatientId) : 0;
+
+            if (IsPatientPresent(model.FN, model.LN, doa, dob, patientId))
             {
                 return Json(new { success = false, message = "The patient already exists in the system. Please verify the patient details before proceeding." });
             }
@@ -988,8 +994,8 @@ namespace PainTrax.Web.Controllers
                     Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
                     CmpId = cmpid,
                     Visit_Type = "IE",
-                    DOA = DateTime.TryParse(model.DOA, out var parsedDOA) ? parsedDOA : (DateTime?)null,
-                    DOB = DateTime.TryParse(model.DOB, out var parsedDOB) ? parsedDOB : (DateTime?)null,
+                    DOA = doa,
+                    DOB = dob,
                     //DOE = System.DateTime.Now,
                     DOE = DateTime.TryParse(model.DOE, out var parsedDOE) ? parsedDOE : (DateTime?)null,
                     FormData = json,
@@ -1009,7 +1015,7 @@ namespace PainTrax.Web.Controllers
 
                 var InjuryType = "MM";
                 var Handeness = "1";
-                var patientId = 0;
+
 
                 if (model.DominantHand != null)
                 {
@@ -2135,7 +2141,7 @@ namespace PainTrax.Web.Controllers
             }
         }
 
-        private bool IsPatientPresent(string fname, string lname, DateTime? doa)
+        private bool IsPatientPresent(string fname, string lname, DateTime? doa,DateTime? dob, int Id = 0)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             string cnd = " and fname='" + fname + "' and lname='" + lname + "'  and cmp_id=" + cmpid;
@@ -2145,8 +2151,16 @@ namespace PainTrax.Web.Controllers
             else
                 cnd = cnd + " and doa='" + doa.Value.ToString("yyyy-MM-dd") + "'";
 
+            if (dob.HasValue == false)
+                cnd = cnd + " and dob is null";
+            else
+                cnd = cnd + " and dob='" + dob.Value.ToString("yyyy-MM-dd") + "'";
 
-            var data = _patientservices.GetAll(cnd);
+            if (Id > 0)
+                cnd = cnd + " and patient_id<>" + Id;
+
+
+            var data = _ieService.GetAll(cnd);
 
             if (data.Count > 0)
                 return true;

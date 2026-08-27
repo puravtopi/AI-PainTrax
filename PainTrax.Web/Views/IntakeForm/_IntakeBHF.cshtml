@@ -64,6 +64,7 @@
                         <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
                         <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
                         <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
+                        <input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
                         <input type="hidden" id="hdIEId" name="hdIEId" />
                         <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
@@ -878,14 +879,24 @@
         $('#pdfLoader').show();
          try{
         // Assign form values
+
+          // 2. Automatically loop through ALL textareas and add them to formData
+    $('textarea').each(function() {
+        var id = $(this).attr('id') || $(this).attr('name');
+        if (id) {
+            formData[id] = $(this).val();
+        }
+    });
+
+
         formData["Diagnosis"] = $("#divDiagnosis").html();
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
-
+     
         formData["ProviderId"] = $("#ProviderId").val();
         formData["PatientIEId"] = $("#PatientIEId").val();
-        formData["PatientId"] = $("#PatientId").val();
+        //formData["PatientId"] = $("#PatientId").val();
         //formData["LocationId"] = $("#LocationId").val();
 
         // URLs
