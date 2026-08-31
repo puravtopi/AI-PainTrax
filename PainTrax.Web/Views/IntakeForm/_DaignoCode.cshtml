@@ -43,58 +43,98 @@
 
 <script>
 
-    $("#btnDaignoCode").click(function () {
+         $("#btnDaignoCode").click(function () {
+        // 1. Identify all codes currently present in the Modal (both checked and unchecked)
+        // We will remove these from the main list first to "reset" the current body part's state
+        $(".diag-group input[type=checkbox]").each(function () {
+            var codeInModal = $(this).closest("tr").find("td:eq(1)").text().trim();
 
-        var finalHtml = "";
-      
-        finalHtml = $("#divDiagnosis").html();
-        // Loop each group table (or wrapper)
-        $(".diag-group").each(function () {
-
-            var groupName = $(this).data("group"); // group name
-            var groupHtml = "";
-
-
-            $(this).find("input[type=checkbox]:checked").each(function () {
-
-                var row = $(this).closest("tr")[0];
-
-                var code = row.cells[1].innerHTML;
-                var desc = row.cells[2].querySelector('input[type="text"]').value;
-
-                 // Check if code already exists inside divDiagnosis
-            var alreadyExists = false;
-
+            // Find and remove this specific code from the main list if it exists
             $("#divDiagnosis li").each(function () {
-
-        var existingText = $(this).text().trim();
-
-        // Check starting code
-        if (existingText.startsWith(code + " ")) {
-            alreadyExists = true;
-            return false; // break loop
-        }
-    });
-
-    // Add only if not exists
-    if (!alreadyExists) {
-        groupHtml += "<li>" + code + " " + desc + "</li>";
-    }
+                var existingText = $(this).text().trim();
+                if (existingText.startsWith(codeInModal + " ")) {
+                    $(this).remove();
+                }
             });
-
-
-            // Only add group if it has selected items
-            if (groupHtml !== "") {
-                 finalHtml +=  groupHtml;
-            }
-
         });
 
-        $("#divDiagnosis").html(finalHtml);
+        // 2. Now, only loop through the CHECKED ones and add them back
+        var newItemsHtml = "";
+        $(".diag-group input[type=checkbox]:checked").each(function () {
+            var row = $(this).closest("tr")[0];
+            var code = row.cells[1].innerHTML.trim();
+            var desc = row.cells[2].querySelector('input[type="text"]').value;
+
+            // Double check for duplicates just in case (optional)
+            var exists = false;
+            $("#divDiagnosis li").each(function() {
+                if($(this).text().trim().startsWith(code + " ")) { exists = true; return false; }
+            });
+
+            if(!exists) {
+                newItemsHtml += "<li>" + code + " " + desc + "</li>";
+            }
+        });
+
+        // 3. Append the new items (this keeps items from other body parts safe)
+        $("#divDiagnosis").append(newItemsHtml);
 
         $('#daignoCodeModal').modal('hide');
         return false;
     });
+
+    // $("#btnDaignoCode").click(function () {
+
+    //     var finalHtml = "";
+      
+    //     finalHtml = $("#divDiagnosis").html();
+    //     // Loop each group table (or wrapper)
+    //     $(".diag-group").each(function () {
+
+    //         var groupName = $(this).data("group"); // group name
+    //         var groupHtml = "";
+
+
+    //         $(this).find("input[type=checkbox]:checked").each(function () {
+
+    //             var row = $(this).closest("tr")[0];
+
+    //             var code = row.cells[1].innerHTML;
+    //             var desc = row.cells[2].querySelector('input[type="text"]').value;
+
+    //              // Check if code already exists inside divDiagnosis
+    //         var alreadyExists = false;
+
+    //         $("#divDiagnosis li").each(function () {
+
+    //     var existingText = $(this).text().trim();
+
+    //     // Check starting code
+    //     if (existingText.startsWith(code + " ")) {
+    //         alreadyExists = true;
+    //         return false; // break loop
+    //     }
+    // });
+
+    // // Add only if not exists
+    // if (!alreadyExists) {
+    //     groupHtml += "<li>" + code + " " + desc + "</li>";
+    // }
+    //         });
+
+
+    //         // Only add group if it has selected items
+    //         if (groupHtml !== "") {
+    //              finalHtml +=  groupHtml;
+    //         }
+
+    //     });
+
+    //     $("#divDiagnosis").html(finalHtml);
+
+    //     $('#daignoCodeModal').modal('hide');
+    //     return false;
+    // });
 
 
 </script>
