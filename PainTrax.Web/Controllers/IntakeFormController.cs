@@ -1326,6 +1326,18 @@ namespace PainTrax.Web.Controllers
                     };
 
                     _ieService.UpdatePage1Intake(objPage1);
+                    var objpatient = new tbl_patient()
+                    {                       
+                        dob = string.IsNullOrEmpty(model.DOB) ? null : Convert.ToDateTime(model.DOB),                       
+                        fname = model.FN,
+                        gender = model.Gender.ToLower() == "male" ? "1" : "2",                       
+                        lname = model.LN,                        
+                        handeness = Handeness,                       
+                        age = string.IsNullOrEmpty(model.Age) ? 0 : Convert.ToInt16(model.Age),
+                        cmp_id = cmpid,
+                        id=patientId,
+                    };
+                    _patientservices.Update(objpatient);
                 }
 
                 //return RedirectToAction("Index", "Visit");
