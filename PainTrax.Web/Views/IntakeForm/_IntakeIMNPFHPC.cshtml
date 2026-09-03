@@ -2357,6 +2357,13 @@
                 }
             });
 
+             // 1. Remove BOM
+        sanitized = sanitized.replace(/^\uFEFF/, '');
+
+        // 2. Fix invalid backslashes (like \d)
+        // This looks for a backslash NOT followed by valid JSON escape chars and escapes it.
+        sanitized = sanitized.replace(/\\([^"\\\/bfnrtu])/g, '\\\\$1');
+
             return JSON.parse(sanitized);
         } catch (e) {
             console.error("Invalid JSON content:", json);
@@ -2704,7 +2711,7 @@
             }
         }
             // Trigger on all inputs
-            $(document).on("keyup change", "#patientForm input, #patientForm select, .incident-type-option", function () {
+            $(document).on("keyup change", "#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option", function () {
                 updatePreview();
             });
 
@@ -3047,7 +3054,7 @@
                 // Load template and initialize preview
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
-                loadTemplate();
+                //loadTemplate();
                 if ('@ViewBag.FormData' != '') {
                     bindForm('@ViewBag.FormData');
                 }
