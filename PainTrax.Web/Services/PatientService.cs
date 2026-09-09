@@ -71,6 +71,32 @@ public class PatientService : ParentService
         var result = ExecuteScalar(cm);
         return result;
     }
+    public void UpdateIntakePatient(tbl_patient data)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET
+		fname=@fname,
+		lname=@lname,
+		mname=@mname,
+		gender=@gender,
+		dob=@dob,
+		age=@age,		
+		handeness=@handeness,		  
+		updatedate=@updatedate,
+		updatedby=@updatedby
+		where id=@id", conn);
+        cm.Parameters.AddWithValue("@id", data.id);
+        cm.Parameters.AddWithValue("@fname", data.fname);
+        cm.Parameters.AddWithValue("@lname", data.lname);
+        cm.Parameters.AddWithValue("@mname", data.mname);
+        cm.Parameters.AddWithValue("@gender", data.gender);
+        cm.Parameters.AddWithValue("@dob", data.dob);
+        cm.Parameters.AddWithValue("@age", data.age);       
+        cm.Parameters.AddWithValue("@handeness", data.handeness);     
+        cm.Parameters.AddWithValue("@updatedate", System.DateTime.Now);
+        cm.Parameters.AddWithValue("@updatedby", data.updatedby);
+
+        Execute(cm);
+    }
     public void Update(tbl_patient data)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET

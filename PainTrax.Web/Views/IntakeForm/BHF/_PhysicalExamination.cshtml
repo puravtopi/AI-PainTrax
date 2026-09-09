@@ -2,11 +2,14 @@
     <h6 class="fw-bold">Neck</h6>
     <div class="select-group">
         Patient has pain and tenderness over the   <input id="NeckTenderness" class="form-control d-inline " style="width:100px" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i> facet joints. Facet loading maneuvers are positive.
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i> *@ facet joints. Facet loading maneuvers are positive.
         Spurling’s Test:
-        <label><input type="radio" name="NeckSpurlingTest" value="Positive">  <span class="select-btn">+</span></label>
-        <label><input type="radio" name="NeckSpurlingTest" value="Negative">  <span class="select-btn">-</span></label>
-        <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:100px" placeholder="Other" />
+        <label><input type="radio" name="NeckSpurlingTest" value="Positive" onclick="uncheckRadio(this)">  <span class="select-btn">+</span></label>
+        <label><input type="radio" name="NeckSpurlingTest" value="Negative" onclick="uncheckRadio(this)">  <span class="select-btn">-</span></label>
+        
+    </div>
+    <div class="select-group">
+        <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
     </div>
     <table style="width:100%">
         <thead>
@@ -82,20 +85,20 @@
     <h6 class="fw-bold">Low back</h6>
     <p>
         Patient has pain and tenderness over the   <input id="LBTenderness" class="form-control d-inline " style="width:100px" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i> facet joints. Facet loading maneuvers are positive.
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i>  *@facet joints. Facet loading maneuvers are positive.
     </p>
     <div class="select-group">
         On exam, patient has tenderness over the   <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> bilateral SI joints.
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> *@ bilateral SI joints.
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> <span class="select-btn">Faber</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"><span class="select-btn">Gaenslen</span> </label>
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Yeoman"> <span class="select-btn">Yeoman</span></label> sign are positive.
     </div>
     <div class="select-group">
         SLR Test:
-        <label><input type="radio" name="LBSlrTest" value="Positive"> <span class="select-btn">+</span></label>
-        <label><input type="radio" name="LBSlrTest" value="Negative"> <span class="select-btn">-</span></label>
-        <input id="LBSlrTestOther" class="form-control d-inline " style="width:100px" placeholder="Other" />
+        <label><input type="radio" name="LBSlrTest" value="Positive" onclick="uncheckRadio(this)"> <span class="select-btn">+</span></label>
+        <label><input type="radio" name="LBSlrTest" value="Negative" onclick="uncheckRadio(this)"> <span class="select-btn">-</span></label>
+        <input id="LBSlrTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
     </div>
     <table style="width:100%">
         <thead>
@@ -629,6 +632,19 @@
         <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Other"> <span class="select-btn">Other</span></label>
 
         <input id="GAITOther" class="form-control d-inline w-25" style="min-width:37%" placeholder="Specify other" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOther')"></i>
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOther')"></i> *@
     </div>
 </div>
+<script>
+    function uncheckRadio(radio) {
+        if (radio.dataset.wasChecked === "true") {
+            radio.checked = false;
+            radio.dataset.wasChecked = "false";
+        } else {
+            document.querySelectorAll(`input[name="${radio.name}"]`)
+                .forEach(r => r.dataset.wasChecked = "false");
+
+            radio.dataset.wasChecked = "true";
+        }
+    }
+</script>

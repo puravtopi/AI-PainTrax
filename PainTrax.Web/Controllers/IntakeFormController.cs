@@ -1337,7 +1337,7 @@ namespace PainTrax.Web.Controllers
                         cmp_id = cmpid,
                         id=patientId,
                     };
-                    _patientservices.Update(objpatient);
+                    _patientservices.UpdateIntakePatient(objpatient);
                 }
 
                 //return RedirectToAction("Index", "Visit");
