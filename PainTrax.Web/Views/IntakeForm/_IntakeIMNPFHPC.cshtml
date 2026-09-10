@@ -106,11 +106,11 @@
                                     Consent Form
                                 </button>
                                 <butto style="display:none" type="button" id="btnReport"
-                                        class="btn btn-outline-primary"
-                                        @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                        onclick="DownloadReport('@ViewBag.Id')">
+                                       class="btn btn-outline-primary"
+                                       @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                       onclick="DownloadReport('@ViewBag.Id')">
                                     Report
-                                </button>
+                                    </button>
                             </p>
 
                             <div class="dropdown">
@@ -2440,10 +2440,10 @@
                     .replace(/\bnew line\b/gi, "\n")
                     .replace(/\bnext line\b/gi, "\n");
             }
-                let selectedSections = [];
+        let selectedSections = [];
         let selectedPESections = [];
 
-        function fnShowPresentComplain(cntrl, divCC, divPE) {
+        function fnShowPresentComplain(cntrl, divCC, divPE,bodyPart) {
 
             if (!divCC) return;
 
@@ -2460,6 +2460,8 @@
                 }
 
             } else {
+
+                removeDaignosis(bodyPart);
 
                 // Remove complaint section
                 selectedSections = selectedSections.filter(x => x !== divCC);
@@ -2529,6 +2531,7 @@
             });
         }
 
+       
 
             // CLOSE (❌)
             $("#closePreview").click(function () {
@@ -2557,25 +2560,25 @@
                 $(this).hide();
             });
                 $('input[name="CevicalCompression"]').on('change', function () {
-                    
+
                     if ($(this).val() === 'negative') {
                         $('input[name="CevicalCompressionTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="CevicalSpurling"]').on('change', function () {
-                    
+
                     if ($(this).val() === 'negative') {
                         $('input[name="CevicalSpurlingTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="LumbarStraight"]').on('change', function () {
-                    
+
                     if ($(this).val() === 'negative') {
                         $('input[name="LumbarStraightTest"]').prop('checked', false);
                     }
                  });
                  $('input[name="LumbarFacetloading"]').on('change', function () {
-                    
+
                     if ($(this).val() === 'negative') {
                         $('input[name="LumbarFacetloadingTest"]').prop('checked', false);
                     }
@@ -2924,7 +2927,7 @@
                     }
                 });
 
-    
+
 
             // Assign form values
             formData["Diagnosis"] = $("#divDiagnosis").html();
@@ -3075,14 +3078,16 @@
                     var section = $(this).data('section');
                     var pe = $(this).data('pe');
 
-                    fnShowPresentComplain(this, section, pe);
+                    var value = $(this).val();
+
+                    fnShowPresentComplain(this, section, pe,value);
 
 
 
                         // $('input[name="Complaints"]:checked').each(function () {
                         //     selected.push($(this).val());
                         // });
-                        var value = $(this).val();
+
 
                         if ($(this).is(':checked')) {
                             // Add in click order
@@ -3127,7 +3132,7 @@
                         $('#BodyPart').val(result);
                 });
                             $('input[name="MidbackRadiatesTo"]').change(function () {
-            $('#chkNoRadiate').prop('checked', false);
+                            $('#chkNoRadiate').prop('checked', false);
         });
 
 
@@ -3167,7 +3172,7 @@
                 // cleaned=cleaned.replace(/"/g, '\\"');
 
                 //
-                
+
                 var decode= decodeHtml(val);
                 var data = safeParse(decode);
 
@@ -3502,7 +3507,7 @@
                     if (signaturePad.isEmpty()) {
                         alert("Please draw your signature before saving.");
                     } else {
-                        
+
                         var signatureData = signaturePad.toDataURL("image/jpeg");
                         fnSaveSign(signatureData);
                     }
@@ -3516,7 +3521,7 @@
 
 
                     var url = '@Url.Action("SaveSign", "Visit")';
-                    
+
                     var pId = $("#PatientId").val();
                     var sid = "0";
                     var data = {

@@ -224,5 +224,28 @@
     <script src="~/assets/js/intakeform/recordVoice.js"></script>
 
     @RenderSection("Scripts", required: false)
+    <script>
+          function removeDaignosis(bodyPart)
+        {
+            var targetWord=[];
+
+            if(bodyPart=="Neck")
+                targetWord=["Neck","Cervical"]
+            else  if(bodyPart=="Midback")
+                targetWord=["Midback","Thoracic"]
+            else  if(bodyPart=="Lowback")
+                targetWord=["Lowback","Lumbar","Low back"]
+
+            const regex = new RegExp(`\\b(${targetWord.join('|')})\\b`, 'i');
+
+            document.querySelectorAll('#divDiagnosis li').forEach(li => {
+              const sentence = li.textContent.trim();
+
+              if (regex.test(sentence)) {
+                li.remove();
+              }
+            });
+        }
+    </script>
 </body>
 </html>
