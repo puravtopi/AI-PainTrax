@@ -597,7 +597,8 @@
         public string DrNote { get; set; }
         public string txtNeuro { get; set; }
         public string VisitType { get; set; }
-        
+        public List<string> currentmedications { get; set; }       
+
 
     }
 }

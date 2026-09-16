@@ -1038,7 +1038,7 @@
 
                     if ('@ViewBag.FormData' != '') {
                         bindForm('@ViewBag.FormData');
-                        clearWorkStatusIfRequired();
+                        // clearWorkStatusIfRequired();
                     }
                      function clearWorkStatusIfRequired() {
 
@@ -1050,9 +1050,9 @@
         }
     }
 
-    $(document).on('change', 'input[name="InjuryType"]', function () {
-        clearWorkStatusIfRequired();
-    });
+    // $(document).on('change', 'input[name="InjuryType"]', function () {
+    //     clearWorkStatusIfRequired();
+    // });
                     $('#patientForm').on('submit', function (e) {
 
                         if(!checkValidation())
