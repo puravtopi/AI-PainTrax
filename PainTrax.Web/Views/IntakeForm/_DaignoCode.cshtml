@@ -44,6 +44,8 @@
 <script>
 
          $("#btnDaignoCode").click(function () {
+             debugger;
+             var cmp_id = '@ViewBag.CmpId';
         // 1. Identify all codes currently present in the Modal (both checked and unchecked)
         // We will remove these from the main list first to "reset" the current body part's state
         $(".diag-group input[type=checkbox]").each(function () {
@@ -71,9 +73,19 @@
                 if($(this).text().trim().startsWith(code + " ")) { exists = true; return false; }
             });
 
-            if(!exists) {
-                newItemsHtml += "<li>" + code + " " + desc + "</li>";
-            }
+            // if(!exists) {
+            //     newItemsHtml += "<li>" + code + " " + desc + "</li>";
+            // }
+            // if(!exists) {
+            //     newItemsHtml += "<li>" + desc + " - " + code + "</li>";
+            // }
+                if (!exists) {
+        if (cmp_id == "18") {
+            newItemsHtml += "<li>" + desc + " - " + code + "</li>";
+        } else {
+            newItemsHtml += "<li>" + code + " " + desc + "</li>";
+        }
+    }
         });
 
         // 3. Append the new items (this keeps items from other body parts safe)

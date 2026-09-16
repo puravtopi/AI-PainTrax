@@ -1553,6 +1553,7 @@ namespace PainTrax.Web.Controllers
                 ViewBag.BodyPart = bodyparts.ToUpper();
                 var _bodyparts = _commonservices.GetBodyPartIntake(bodyparts);
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                ViewBag.CmpId = cmpid.ToString();
 
                 var formatted = string.Join("','", _bodyparts.Split(',').Select(x => x.Trim()));
 
