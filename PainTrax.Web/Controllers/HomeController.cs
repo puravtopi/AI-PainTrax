@@ -32,7 +32,7 @@ namespace PainTrax.Web.Controllers
         private readonly POCServices _pocservices = new POCServices();
         private readonly SurgeryCentreService _surgeryCentreService = new SurgeryCentreService();
         private readonly DataTransferService _dataTransferService;
-      
+
 
 
 
@@ -47,7 +47,7 @@ namespace PainTrax.Web.Controllers
             _session = _httpContextAccessor.HttpContext.Session;
             _emailService = emailService;
             _dataTransferService = dataTransferService;
-            
+
 
         }
 
@@ -256,7 +256,7 @@ namespace PainTrax.Web.Controllers
 
                     if (setting != null)
                     {
-                        HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, setting.location.Value);
+                        HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, setting.location.HasValue ? setting.location.Value : 0);
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, setting.page_size);
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat == null ? "MM/dd/yyyy" : setting.dateformat);
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, setting.pageBreakForInjection.ToString().ToLower());

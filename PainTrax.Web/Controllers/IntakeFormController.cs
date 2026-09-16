@@ -726,7 +726,7 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index", "Visit");
         }
 
-        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId, int patientId = 0)
+        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId, int patientId = 0, string type = "")
         {
             if (providerId == null)
             {
@@ -751,7 +751,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.FormData = "";
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
-
+            ViewBag.IntakeType = type;
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             tbl_locations objLoc = new tbl_locations()
@@ -831,13 +831,13 @@ namespace PainTrax.Web.Controllers
             ViewBag.PatientId = patientId;
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
-            else if (client_code.ToLower() == "bhfpc" || client_code.ToLower()=="paintest")
+            else if (client_code.ToLower() == "bhfpc" || client_code.ToLower() == "paintest")
                 return PartialView("_IntakeBHF");
             else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeIMNPFHPC");
+            else return PartialView("_IntakeBHF");
             //return View();
         }
 
@@ -1127,7 +1127,7 @@ namespace PainTrax.Web.Controllers
                                     vital = string.IsNullOrEmpty(vital) ? defaultPage1.vital : vital,
                                     cc = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model),
                                     daignosis_desc = assessment,
-                                    pe = defaultPage1.pe,
+                                    pe = string.IsNullOrEmpty(this.GetPE(model)) ? defaultPage1.pe : this.GetPE(model),
                                     family_history = defaultPage1.family_history,
                                     history = history,
                                     medication = defaultPage1.medication,
@@ -1327,15 +1327,15 @@ namespace PainTrax.Web.Controllers
 
                     _ieService.UpdatePage1Intake(objPage1);
                     var objpatient = new tbl_patient()
-                    {                       
-                        dob = string.IsNullOrEmpty(model.DOB) ? null : Convert.ToDateTime(model.DOB),                       
+                    {
+                        dob = string.IsNullOrEmpty(model.DOB) ? null : Convert.ToDateTime(model.DOB),
                         fname = model.FN,
-                        gender = model.Gender.ToLower() == "male" ? "1" : "2",                       
-                        lname = model.LN,                        
-                        handeness = Handeness,                       
+                        gender = model.Gender.ToLower() == "male" ? "1" : "2",
+                        lname = model.LN,
+                        handeness = Handeness,
                         age = string.IsNullOrEmpty(model.Age) ? 0 : Convert.ToInt16(model.Age),
                         cmp_id = cmpid,
-                        id=patientId,
+                        id = patientId,
                     };
                     _patientservices.UpdateIntakePatient(objpatient);
                 }
@@ -2153,7 +2153,47 @@ namespace PainTrax.Web.Controllers
             }
         }
 
-        private bool IsPatientPresent(string fname, string lname, DateTime? doa,DateTime? dob, int Id = 0)
+        private string GetPE(AIIntakeFormModel model)
+        {
+            string pe = "";
+
+            if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right shoulder", "Shoulder.html");
+            }
+            if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left shoulder", "Shoulder.html");
+            }
+            if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right knee", "Knee.html");
+            }
+            if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left knee", "Knee.html");
+            }
+            if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right ankle", "Ankle.html");
+            }
+            if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left ankle", "Ankle.html");
+            }
+            if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right hip", "Hip.html");
+            }
+            if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left hip", "Hip.html");
+            }
+
+            return pe;
+        }
+
+        private bool IsPatientPresent(string fname, string lname, DateTime? doa, DateTime? dob, int Id = 0)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             string cnd = " and fname='" + fname + "' and lname='" + lname + "'  and cmp_id=" + cmpid;
@@ -2933,6 +2973,102 @@ namespace PainTrax.Web.Controllers
 
             // 4. Final Touch: Capitalize the very first letter of the sentence
             return char.ToUpper(result[0]) + result.Substring(1);
+        }
+
+        public string GetROM(AIIntakeFormModel model, string bodyPart, string fileName)
+        {
+            string rom = "";
+
+            var templateDir = Path.Combine(Environment.WebRootPath, "templates");
+
+            //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
+            var filePath = templateDir + "/BHF/" + fileName;
+
+
+            // 2. Read the entire file content into a string asynchronously
+            string htmlString = System.IO.File.ReadAllText(filePath);
+
+
+            switch (bodyPart.ToLower())
+            {
+                case "left shoulder":
+                    htmlString = htmlString.Replace("#AbductionROM", model.LSHAbductionROM)
+                                           .Replace("#ExternalRotationROM", model.LSHERROM)
+                                           .Replace("#FlexionROM", model.LSHFlexionROM)
+                                           .Replace("#InternalRotationROM", model.LSHIRROM)
+                                           .Replace("#AdductionROM", model.LSHAdductionROM)
+                                           .Replace("#ExtensionROM", model.LSHExtOM);
+                    break;
+                case "right shoulder":
+                    htmlString = htmlString.Replace("#AbductionROM", model.RSHAbductionROM)
+                                           .Replace("#ExternalRotationROM", model.RSHERROM)
+                                           .Replace("#FlexionROM", model.RSHFlexionROM)
+                                           .Replace("#InternalRotationROM", model.RSHIRROM)
+                                           .Replace("#AdductionROM", model.RSHAdductionROM)
+                                           .Replace("#ExtensionROM", model.RSHExtOM);
+                    break;
+                case "left knee":
+                    htmlString = htmlString.Replace("#FlexionROM", model.LKNFlexionROM)
+                                           .Replace("#ExtensionROM", model.LKNExtROM)
+                                           .Replace("#FlexionNormal", model.LKNFlexionNormal)
+                                           .Replace("#ExtensionNormal", model.LKNExtRNormal)
+                                           .Replace("#FlexionTitle", model.LKNTitleROM)
+                                           .Replace("#ExtensionTitle", model.LKNExtTitleROM);
+                    break;
+                case "right knee":
+                    htmlString = htmlString.Replace("#FlexionROM", model.RKNFlexionROM)
+                                          .Replace("#ExtensionROM", model.RKNExtROM)
+                                          .Replace("#FlexionNormal", model.RKNFlexionNormal)
+                                          .Replace("#ExtensionNormal", model.RKNExtRNormal)
+                                          .Replace("#FlexionTitle", model.RKNTitleROM)
+                                          .Replace("#ExtensionTitle", model.RKNExtTitleROM);
+                    break;
+                case "left ankle":
+                    htmlString = htmlString.Replace("#PlantarFlexionROM", model.LAnkleFlexionROM)
+                                           .Replace("#InversionROM", model.LAnkleInversionROM)
+                                           .Replace("#DorsiflexionROM", model.LAnkleDorsiflexionROM)
+                                           .Replace("#EversionROM", model.LAnkleEversionROM);
+
+                    break;
+                case "right ankle":
+                    htmlString = htmlString.Replace("#PlantarFlexionROM", model.RAnkleFlexionROM)
+                                           .Replace("#InversionROM", model.RAnkleInversionROM)
+                                           .Replace("#DorsiflexionROM", model.RAnkleDorsiflexionROM)
+                                           .Replace("#EversionROM", model.RAnkleEversionROM);
+                    break;
+                case "left elbow":
+                    htmlString = htmlString.Replace("#FlexionROM", model.LElbowFlexionROM)
+                                           .Replace("#ExtensionROM", model.LElbowExtensionROM)
+                                           .Replace("#SupinationROM", model.LElbowSupinationROM)
+                                           .Replace("#PronationROM", model.LElbowPronationROM);
+                    break;
+                case "right elbow":
+                    htmlString = htmlString.Replace("#FlexionROM", model.RElbowFlexionROM)
+                                           .Replace("#ExtensionROM", model.RElbowExtensionROM)
+                                           .Replace("#SupinationROM", model.RElbowSupinationROM)
+                                           .Replace("#PronationROM", model.RElbowPronationROM);
+                    break;
+                case "left hip":
+                    htmlString = htmlString.Replace("#FlexionROM", model.LHipFlexionROM)
+                                           .Replace("#AdductionROM", model.LHipExtensionROM)
+                                           .Replace("#ExtensionROM", model.LHipExtensionROM)
+                                           .Replace("#InternalRotationROM", model.LHipIRotationROM)
+                                           .Replace("#AbductionROM", model.LHipAbductionROM)
+                                           .Replace("#ExternalRotationROM", model.LHipERotationROM);
+                    break;
+                case "right hip":
+                    htmlString = htmlString.Replace("#FlexionROM", model.RHipFlexionROM)
+                                           .Replace("#AdductionROM", model.RHipExtensionROM)
+                                           .Replace("#ExtensionROM", model.RHipExtensionROM)
+                                           .Replace("#InternalRotationROM", model.RHipIRotationROM)
+                                           .Replace("#AbductionROM", model.RHipAbductionROM)
+                                           .Replace("#ExternalRotationROM", model.RHipERotationROM);
+                    break;
+                default:
+                    rom = "No ROM data available for this body part.";
+                    break;
+            }
+            return htmlString;
         }
         #endregion
     }
