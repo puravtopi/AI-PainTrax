@@ -79,11 +79,11 @@
                             <p id="btnSaveSection" class="mb-0 sticky-buttons">
                                 @if (ViewBag.IntakeType != "p")
                                 {
-                                <button type="button"
-                                        class="btn btn-secondary"
-                                        onclick="window.location.href='@Url.Action("Index", "Visit")'">
-                                    <i class="bi bi-house-door-fill"></i> Home
-                                </button>
+                                    <button type="button"
+                                            class="btn btn-secondary"
+                                            onclick="window.location.href='@Url.Action("Index", "Visit")'">
+                                        <i class="bi bi-house-door-fill"></i> Home
+                                    </button>
                                 }
                                 @* <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
@@ -93,12 +93,12 @@
                                 </button>
                                 @if (ViewBag.IntakeType != "p")
                                 {
-                                <button type="button" id="btnSuperBill"
-                                        class="btn btn-outline-primary"
-                                        @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                        onclick="DownloadPdf('@ViewBag.Id')">
-                                    Super Bill
-                                </button>
+                                    <button type="button" id="btnSuperBill"
+                                            class="btn btn-outline-primary"
+                                            @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                            onclick="DownloadPdf('@ViewBag.Id')">
+                                        Super Bill
+                                    </button>
                                 }
                             </p>
 
@@ -108,14 +108,14 @@
                                 <div class="dropdown">
                                     @if (ViewBag.IntakeType != "p")
                                     {
-                                    <button class="btn btn-light border shadow-sm rounded-circle"
-                                            type="button"
-                                            id="settingsDropdown"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false">
+                                        <button class="btn btn-light border shadow-sm rounded-circle"
+                                                type="button"
+                                                id="settingsDropdown"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false">
 
-                                        <i class="bi bi-gear-fill"></i>
-                                    </button>
+                                            <i class="bi bi-gear-fill"></i>
+                                        </button>
                                     }
 
                                     <ul class="dropdown-menu dropdown-menu-end shadow"
@@ -181,61 +181,61 @@
                                 </div>
                                 @if (ViewBag.IntakeType != "p")
                                 {
-                                <div class="accordion-item" id="acordPresentComp" style="display:none">
-                                    <h2 class="accordion-header" id="headingSix">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseTwo">
-                                            Present Complaints
-                                        </button>
-                                    </h2>
-                                    <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <partial name="BHF/_PresentComplain" />
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="accordion-item" id="acordPhyExam" style="display:none">
-                                    <h2 class="accordion-header" id="headingSeven">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseTwo">
-                                            Physical Examination
-                                        </button>
-                                    </h2>
-                                    <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <partial name="BHF/_PhysicalExamination" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingNE">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
-                                            Neuro Exam
-                                        </button>
-                                    </h2>
-                                    <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <partial name="BHF/_NeuroExam" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="accordion-item" id="acordDiagnosis" style="display:none">
-                                    <h2 class="accordion-header" id="headingEight">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                            Diagnosis <span id="bodyPartLinks" style="margin-left:10px;"></span>
-                                        </button>
-                                    </h2>
-                                    <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-
-                                            <ol> <div class="row" id="divDiagnosis" name="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
-                                            <br>
-                                            <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
-                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
+                                    <div class="accordion-item" id="acordPresentComp" style="display:none">
+                                        <h2 class="accordion-header" id="headingSix">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseTwo">
+                                                Present Complaints
+                                            </button>
+                                        </h2>
+                                        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <partial name="BHF/_PresentComplain" />
                                             </div>
                                         </div>
-                                    </div>       
-                                    }
+                                    </div>
+
+
+                                    <div class="accordion-item" id="acordPhyExam" style="display:none">
+                                        <h2 class="accordion-header" id="headingSeven">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseTwo">
+                                                Physical Examination
+                                            </button>
+                                        </h2>
+                                        <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <partial name="BHF/_PhysicalExamination" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingNE">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
+                                                Neuro Exam
+                                            </button>
+                                        </h2>
+                                        <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <partial name="BHF/_NeuroExam" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item" id="acordDiagnosis" style="display:none">
+                                        <h2 class="accordion-header" id="headingEight">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                                                Diagnosis <span id="bodyPartLinks" style="margin-left:10px;"></span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+
+                                                <ol> <div class="row" id="divDiagnosis" name="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
+                                                <br>
+                                                <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingADL">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseADL" aria-expanded="false" aria-controls="collapseADL">
@@ -636,7 +636,7 @@
 
                 // Clear values
                 $("#" + divCC).find("input").prop("checked", false).val("");
-                $("#" + divPE).find("input").prop("checked", false).val("");                 
+                $("#" + divPE).find("input").prop("checked", false).val("");
             }
 
             renderSectionsInOrder();
@@ -812,7 +812,7 @@
                 processTemplate(values)
             }
 
-            // Trigger on all inputs            
+            // Trigger on all inputs
                 $(document).on("keyup change","#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option",function () {
                      updatePreview();
                 }
@@ -890,6 +890,7 @@
 
                 function saveForm(isSubmit) {
 
+                const intake_type = @Json.Serialize(ViewBag.IntakeType);
 
                         var valid=formValidation();
 
@@ -914,7 +915,7 @@
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
-     
+
         formData["ProviderId"] = $("#ProviderId").val();
         formData["PatientIEId"] = $("#PatientIEId").val();
         //formData["PatientId"] = $("#PatientId").val();
@@ -941,14 +942,41 @@
                         if (isSubmit) {
                             let locId= $("#LocationId").val() || 0;
                             let provId=$("#ProviderId").val() || 0;
-                            window.location.href =
-                            '@Url.Action("AIInitialIntake", "IntakeForm")' +
-                            '?id=' + response.id +
-                            '&locid=' + locId+
-                            '&providerId=' + provId +
-                            '&patientId=' + response.patientid;
+
+                            if(intake_type==="p")
+                            {
+                                bootbox.alert({
+                                    title: "<span class='text-success'>PainTrax</span>",
+                                        message: "<div class='text-secondary'>Thank you for submitting your details. We have received your information successfully.</div>",
+
+                                    buttons: {
+                                        ok: {
+                                            label: "OK",
+                                            className: "btn-success"
+                                        }
+                                    },
+                                    callback: function () {
+                                        // This will execute only AFTER the user clicks "OK"
+                                        window.location.href =
+                                            '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                                            '?id=' + response.id +
+                                            '&locid=' + locId +
+                                            '&providerId=' + provId +
+                                            '&patientId=' + response.patientid +
+                                            '&type=' + intake_type;
+                                    }
+                                });
+
+                            }else{
+                                window.location.href =
+                                '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                                '?id=' + response.id +
+                                '&locid=' + locId+
+                                '&providerId=' + provId +
+                                '&patientId=' + response.patientid;
+                            }
                             $('#pdfLoader').hide();
-                       
+
                         }
                     // Draft / Continue editing
                         else {
@@ -1063,7 +1091,7 @@
                 $('#DOE').val(today);
                // loadTemplate();
                 if ('@ViewBag.FormData' != '') {
-                   bindForm('@ViewBag.FormData');                     
+                   bindForm('@ViewBag.FormData');
                 }
 
                 $('#patientForm').on('submit', function (e) {
@@ -1142,7 +1170,7 @@
                             $("#acordPhyExam").show();
                             $("#acordDiagnosis").show();
 
-                           
+
                             var html = '';
 
                             selected.forEach(function(part) {
@@ -1162,17 +1190,17 @@
                              $("#acordPhyExam").hide();
                              $("#acordDiagnosis").hide();
                              $(".upper").hide();
-                             $(".lower").hide();                            
+                             $(".lower").hide();
                         }
 
                         var result = selected.join(', ');
-                        
+
                         console.log(result);
 
                         $('#BodyPart').val(result);
                 });
 
-      
+
         $(document).on('change', 'input[name="NeckRadiates"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
@@ -1199,7 +1227,7 @@
             $('input[name="LBRadiatesTo"]').prop('checked', false);
         }
 
-    }); 
+    });
     $(document).on('change', 'input[name="LBAssociated"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
