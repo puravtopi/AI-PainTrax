@@ -1,12 +1,32 @@
 ﻿<div id="neckPE" style="display:none">
     <h6 class="fw-bold">Neck</h6>
     <div class="select-group">
-        Patient has pain and tenderness over the   <input id="NeckTenderness" class="form-control d-inline " style="width:100px" />
+        Patient has pain and tenderness over the   @* <input id="NeckTenderness" class="form-control d-inline " style="width:100px" /> *@
+        <label><input type="radio" name="NeckTendernessPosition" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="NeckTendernessPosition" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="NeckTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="C3/4">
+            <span class="select-btn">C3/4</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="C4/5">
+            <span class="select-btn">C4/5</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="C5/6">
+            <span class="select-btn">C5/6</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="C6/7">
+            <span class="select-btn">C6/7</span>
+        </label>
         @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i> *@ facet joints. Facet loading maneuvers are positive.
         Spurling’s Test:
         <label><input type="radio" name="NeckSpurlingTest" value="Positive" onclick="uncheckRadio(this)">  <span class="select-btn">+</span></label>
         <label><input type="radio" name="NeckSpurlingTest" value="Negative" onclick="uncheckRadio(this)">  <span class="select-btn">-</span></label>
-        
+
     </div>
     <div class="select-group">
         <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
@@ -83,10 +103,27 @@
 </div>
 <div id="lbPE" style="display:none">
     <h6 class="fw-bold">Low back</h6>
-    <p>
-        Patient has pain and tenderness over the   <input id="LBTenderness" class="form-control d-inline " style="width:100px" />
+    <div class="select-group">
+        Patient has pain and tenderness over the
+        <label><input type="radio" name="LBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBTendernessOptions" value="L3/4">
+            <span class="select-btn">L3/4</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBTendernessOptions" value="L4/5">
+            <span class="select-btn">L4/5</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBTendernessOptions" value="L5/S1">
+            <span class="select-btn">L5/S1</span>
+        </label>
+
         @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i>  *@facet joints. Facet loading maneuvers are positive.
-    </p>
+    </div>
     <div class="select-group">
         On exam, patient has tenderness over the   <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" />
         @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> *@ bilateral SI joints.
@@ -265,10 +302,10 @@
             <tr>
                 <td><input id="RKNTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Flexion" /></td>
                 <td><input id="RKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td><input id="RKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150"/> </td>
+                <td><input id="RKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150" /> </td>
                 <td><input id="RKNExtTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Extension" /></td>
                 <td><input id="RKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td><input id="RKNExtNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0"/></td>
+                <td><input id="RKNExtNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0" /></td>
             </tr>
 
         </tbody>
@@ -293,10 +330,10 @@
             <tr>
                 <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Flexion" /></td>
                 <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150"/> </td>
+                <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150" /> </td>
                 <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Extension" /></td>
                 <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0"/></td>
+                <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0" /></td>
             </tr>
 
         </tbody>
