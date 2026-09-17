@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
+using OpenAI.Audio;
+using OpenAI.Chat;
 using PainTrax.Services;
 using PainTrax.Web.AzureServices;
 using PainTrax.Web.Helper;
@@ -41,6 +43,9 @@ namespace PainTrax.Web.Controllers
         private readonly DefaultValueSettingServices _defaultSettingService = new DefaultValueSettingServices();
         private readonly SettingsService _settingservices = new SettingsService();
         private readonly DefaultDataServices _defaultService = new DefaultDataServices();
+        private readonly TranscribeService _transcribeService = new TranscribeService();
+
+        private string _apiKey = "";
         #endregion
 
 
@@ -48,13 +53,15 @@ namespace PainTrax.Web.Controllers
         public IntakeFormController(
          Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
          IWebHostEnvironment env, AzureAIServices azureService,
-         ILogger<IntakeFormController> logger
+         ILogger<IntakeFormController> logger,
+         IConfiguration config
         )
         {
             Environment = environment;
             _env = env;
             _azureService = azureService;
             _logger = logger;
+            _apiKey = config["OpenAI:ApiKey"];
 
         }
 
@@ -831,13 +838,13 @@ namespace PainTrax.Web.Controllers
             ViewBag.PatientId = patientId;
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
-            else if (client_code.ToLower() == "bhfpc" || client_code.ToLower()=="paintest")
+            else if (client_code.ToLower() == "bhfpc" || client_code.ToLower() == "paintest")
                 return PartialView("_IntakeBHF");
             else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeIMNPFHPC");
+            else return PartialView("_IntakeBHF");
             //return View();
         }
 
@@ -2141,7 +2148,7 @@ namespace PainTrax.Web.Controllers
             }
         }
 
-        private bool IsPatientPresent(string fname, string lname, DateTime? doa,DateTime? dob, int Id = 0)
+        private bool IsPatientPresent(string fname, string lname, DateTime? doa, DateTime? dob, int Id = 0)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             string cnd = " and fname='" + fname + "' and lname='" + lname + "'  and cmp_id=" + cmpid;
@@ -2866,6 +2873,152 @@ namespace PainTrax.Web.Controllers
         }
         #endregion
 
+        #region Recordings
+        [HttpPost]
+        public async Task<IActionResult> ProcessRecording(IFormFile audioFile)
+        {
+            if (audioFile == null || audioFile.Length == 0) return Json(new { success = false });
+
+            // 1. Create Directory
+            string folder = Path.Combine(_env.WebRootPath, "recordings");
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+
+            // 2. Save File
+            string fileName = $"{DateTime.Now.Ticks}.wav";
+            string filePath = Path.Combine(folder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await audioFile.CopyToAsync(stream);
+            }
+
+            try
+            {
+                // 3. Whisper API Call
+                AudioClient client = new("whisper-1", _apiKey);
+                AudioTranscription transcription = await client.TranscribeAudioAsync(filePath);
+
+                return Json(new
+                {
+                    success = true,
+                    text = transcription.Text,
+                    savedPath = $"/recordings/{fileName}"
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+
+        public async Task<ClinicalReport> GenerateStructuredReport([FromBody] ReportRequest request)
+        {
+            var transribeData = _transcribeService.GetOne(request.intake_id);
+
+            if (transribeData != null)
+            {
+                ChatClient client = new(model: "gpt-4o", apiKey: _apiKey);
+
+                // This is the "Magic" Prompt
+                string systemPrompt = @"You are a professional medical scribe. 
+Take the provided transcript and generate a structured clinical report in JSON format.
+
+IMPORTANT: Each value must be a single string (a formatted paragraph), NOT a nested object or array.
+Keys: History, ChiefComplaint, Subjective, Assessment, Plan.
+Use professional medical terminology. 
+
+CHIEF COMPLAINT FORMATTING RULES:
+The ""ChiefComplaint"" string must be broken down by anatomical region in UPPERCASE headers (e.g., CERVICAL SPINE:, LUMBAR SPINE:, THORACIC SPINE:) separated by line breaks. For each affected region mentioned in the transcript, follow this clinical narrative style:
+1. Primary complaint & location (e.g., pain, stiffness).
+2. Radiation & neurological/associated symptoms (e.g., radiating to shoulders/buttock, numbness, tingling, spasms).
+3. Functional limitations / aggravating factors (e.g., difficulty turning head, lifting, bending, driving).
+4. Response to prior therapies (if mentioned).
+5. Pain score (e.g., Pain score is X/10).
+
+ChiefComplaint Example:
+""ChiefComplaint"": ""CERVICAL SPINE: The patient complains of pain and stiffness in the neck region. The pain radiates from the neck to bilateral shoulders and elbows, associated with tingling and numbness. The patient has difficulty turning/rotating the head. Symptoms are worsened by cervical flexion, extension, exercise, and driving. Pain score is 7/10.\n\nLUMBAR SPINE: The patient complains of pain and stiffness in the low back region. The pain radiates from the low back to the right buttock, thigh, ankle, and toes, associated with tingling, numbness, burning sensation, and spasms. The patient has difficulty sleeping on the back, lifting objects, and bending. There is no sustained improvement with physical therapy. Pain score is 8/10.""
+
+Return ONLY valid JSON.";
+
+                ChatCompletion completion = await client.CompleteChatAsync(new List<ChatMessage>
+    {
+        new SystemChatMessage(systemPrompt),
+        new UserChatMessage(request.Transcript)
+    });
+
+                string jsonResponse = completion.Content[0].Text;
+
+                // Clean JSON (remove ```json wrappers if present)
+                jsonResponse = jsonResponse.Replace("```json", "").Replace("```", "").Trim();
+
+
+                var data = JsonSerializer.Deserialize<ClinicalReport>(jsonResponse);
+
+                transribeData = new tbl_transcribe
+                {
+                    length = request.length,
+                    intake_id = request.intake_id,
+                    content = request.Transcript,
+                    history = data.History,
+                    cc = data.ChiefComplaint,
+                    subjective = data.Subjective,
+                    assessment = data.Assessment,
+                    plan = data.Plan,
+                    cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId) ?? 0,
+                };
+
+                _transcribeService.Insert(transribeData);
+
+                data.Transcript = request.Transcript;
+
+                return data;
+            }
+            else
+            {
+                var data = new ClinicalReport
+                {
+                    History = transribeData.history,
+                    ChiefComplaint = transribeData.cc,
+                    Plan = transribeData.plan,
+                    Assessment = transribeData.assessment,
+                    Subjective = transribeData.subjective,
+                    Transcript = transribeData.content
+                };
+                return data;
+            }
+        }
+
+        #endregion
+
+        #region Transcribe
+        public IActionResult GetTranscribe(int patient_id)
+        {
+
+            var model = _ieService.GetOnebyPatientIdNew(patient_id);
+            var data = new TranscribeData()
+            {
+                DOE = model.doe?.ToString("MM/dd/yyyy"),
+                PatientName = $"{model.lname} {model.fname}",
+            };
+
+            
+            if (model.intakeid.HasValue)
+            {
+                var transribeData = _transcribeService.GetOne(model.intakeid.Value);
+
+                if (transribeData != null)
+                {
+                    data.Transcript = transribeData.content;
+                    data.Length = transribeData.length;
+                }
+            }
+
+            return PartialView("_voiceRecording", data);
+        }
+        #endregion
+
         #region private methods
         private string CleanPlaceholdersInXml(string xml)
         {
@@ -2877,7 +3030,6 @@ namespace PainTrax.Web.Controllers
                 return System.Text.RegularExpressions.Regex.Replace(m.Value, @"<[^>]+>", "");
             });
         }
-
 
         public string ToGrammaticalList(object input)
         {

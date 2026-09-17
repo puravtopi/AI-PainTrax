@@ -1,0 +1,535 @@
+﻿@model PainTrax.Web.Models.TranscribeData
+<style>
+    /* Clinical Dashboard Styles */
+    .scribe-modal-content {
+        border-radius: 12px;
+        border: none;
+        background-color: #fff;
+    }
+
+    .scribe-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .patient-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-right: 10px;
+    }
+
+    .meta-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+        display: flex;
+        gap: 15px;
+        margin-top: 5px;
+    }
+
+    /* Tabs Style */
+    .scribe-tabs {
+        border-bottom: 1px solid #dee2e6;
+        padding: 0 24px;
+    }
+
+        .scribe-tabs .nav-link {
+            color: #6c757d;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+            .scribe-tabs .nav-link.active {
+                color: #0d6efd;
+                background: none;
+            }
+
+                .scribe-tabs .nav-link.active::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 3px;
+                    background-color: #0d6efd;
+                }
+
+    /* Main Workspace */
+    .workspace-container {
+        background-color: #f9f9f9;
+        padding: 30px;
+        min-height: 400px;
+    }
+
+    .recording-card {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 16px;
+        min-height: 350px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    /* Mic Animation */
+    .mic-circle {
+        width: 60px;
+        height: 60px;
+        border: 1px solid #ff4d4d;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ff4d4d;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    /* Action Buttons */
+    .btn-end-visit {
+        background-color: #f8f1eb;
+        border: 1px solid #e2d1c3;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .btn-pause {
+        background-color: #ff4d4d;
+        color: white;
+        font-weight: 500;
+        border: none;
+    }
+
+    .btn-copy {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #6c757d;
+        border: 1px solid #dee2e6;
+        font-size: 0.85rem;
+    }
+
+    /* Transcript Area */
+    .transcript-text {
+        padding: 40px;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #2c3e50;
+        text-align: left;
+        width: 100%;
+    }
+</style>
+<style>
+    .note-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    .note-section {
+        position: relative;
+        margin-bottom: 25px;
+        padding-right: 40px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .section-title {
+        font-weight: 700;
+        color: #2c5282; /* Professional Blue */
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+
+    .section-content {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #4a5568;
+        white-space: pre-line; /* Preserves AI line breaks */
+    }
+
+    .copy-section-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #718096;
+        transition: all 0.2s;
+    }
+
+        .copy-section-btn:hover {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+
+        .copy-section-btn i {
+            font-size: 1rem;
+        }
+</style>
+
+
+<!-- 1. Top Header -->
+<div class="scribe-header d-flex justify-content-between align-items-center">
+    <div>
+        <div class="d-flex align-items-center">
+            <span class="patient-name" id="patientName">@Model.PatientName</span>
+            <i class="bi bi-pencil text-muted small me-2" style="cursor:pointer"></i>
+            <i class="bi bi-eye text-muted small" style="cursor:pointer"></i>
+        </div>
+        <div class="meta-info">
+            <span><i class="bi bi-calendar3 me-1"></i> <span>@Model.DOE</span></span>
+            <span><i class="bi bi-clock me-1"></i> <span id="timerDisplay">@Model.Length sec</span></span>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-end-visit px-4 rounded-3"><i class="bi bi-arrow-counterclockwise me-2"></i>End Visit</button>
+        <button id="btnToggleRecord" class="btn btn-pause px-4 rounded-3"><i id="recordIcon" class="bi bi-pause-fill me-2"></i>Start Recording</button>
+    </div>
+</div>
+
+<!-- 2. Navigation Tabs -->
+<ul class="nav scribe-tabs">
+    <li class="nav-item d-none"><a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-context')"><i class="bi bi-justify-left me-2"></i>Context</a></li>
+    <li class="nav-item"><a class="nav-link active" href="javascript:void(0)" onclick="openTab(event, 'tab-transcript')"><i class="bi bi-reception-4 me-2"></i>Transcript</a></li>
+    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-note')"><i class="bi bi-pencil-square me-2"></i>Note</a></li>
+    <li class="nav-item d-none"><a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-tasks')">Tasks <span class="badge bg-light text-primary rounded-pill">0</span></a></li>
+    <li class="nav-item d-none"><a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-billing')">Billing codes</a></li>
+</ul>
+
+<!-- 3. Workspace Area -->
+<div class="workspace-container">
+
+    <div id="tab-note" class="tab-pane-content" style="display:none">
+        <div class="mb-3"><span class="badge bg-light text-muted border">H&P</span></div>
+
+        <!-- 1. History Section -->
+        <div class="note-section">
+            <div class="section-header">
+                <span class="section-title">History of Present Illness</span>
+                <button class="copy-section-btn" onclick="copySection('contentHistory')">
+                    <i class="bi bi-copy"></i> Copy section
+                </button>
+            </div>
+            <div id="contentHistory" class="section-content"></div>
+        </div>
+
+        <!-- 2. Chief Complaint Section -->
+        <div class="note-section">
+            <div class="section-header">
+                <span class="section-title">Chief Complaint</span>
+                <button class="copy-section-btn" onclick="copySection('contentCC')">
+                    <i class="bi bi-copy"></i> Copy section
+                </button>
+            </div>
+            <div id="contentCC" class="section-content"></div>
+        </div>
+
+        <!-- 3. Assessment & Plan Section -->
+        <div class="note-section">
+            <div class="section-header">
+                <span class="section-title">Assessment & Plan</span>
+                <button class="copy-section-btn" onclick="copySection('contentPlan')">
+                    <i class="bi bi-copy"></i> Copy section
+                </button>
+            </div>
+            <div id="contentPlan" class="section-content"></div>
+        </div>
+    </div>
+
+    <div class="recording-card tab-pane-content" id="tab-transcript">
+        <button class="btn btn-copy bg-white"><i class="bi bi-copy me-2"></i>Copy transcript</button>
+
+        <!-- State 1: Recording -->
+        <div id="uiRecording" style="display:none">
+            <div class="mic-circle">
+                <i class="bi bi-mic-fill"></i>
+            </div>
+            <h4 class="fw-bold mb-1">Recording in Progress</h4>
+            <p class="text-muted">Your transcript will appear here once you click 'Pause'.</p>
+        </div>
+
+        <!-- State 2: Result (Hidden by default) -->
+        <div id="uiResult" class="transcript-text">
+            @Html.Raw(Model.Transcript)
+            @*  Speaker 0: Hi. Good morning,
+
+                        Speaker 1: mister Devata. How are you doing?
+
+                        Speaker 0: I'm fine. Thank you, doc.
+
+                        Speaker 1: So we're gonna send you message. Yes.
+
+                        Speaker 0: I was in a... I was at a traffic stop and it rear ended, and I had an incoming cardiac arrest.
+
+                        Speaker 1: So you were the driver?
+
+                        Speaker 0: I was the driver.
+
+                        Speaker 1: K. So did you guys have a hospital?
+
+                        Speaker 0: No. I didn't go to the hospital.
+
+                        Speaker 1: No. No. K. So is it. Right?
+
+                        Speaker 0: The date of action was 08/01/2026.
+
+                        Speaker 1: Yes.
+
+                        Speaker 0: I have been going for physical therapy three times a week. It's not that helpful as of now.
+
+                        Speaker 1: On a scale of two, how much your low back is staying?
+
+                        Speaker 0: The low back is around nine.
+
+                        Speaker 1: It's
+
+                        Speaker 0: very painful. It's constant.
+
+                        Speaker 1: Is it sharp or dull?
+
+                        Speaker 0: Sharp.
+
+                        Speaker 1: Traveled for weeks.
+
+                        Speaker 0: Yes.
+
+                        Speaker 1: K. And Yeah. Other than the plus? So if there's anything make it feel better or worse, basically?
+
+                        Speaker 0: When I take pain medications or, like, when I go to sleep resting, that helps me out.
+
+                        Speaker 1: K. So I would like you to make physical examination on you. Now I'll put that on the picture of my eyes. We'll get you up. Yes.
+
+                        ZLX now. Very... Alright. So we can do a few more examination. You're looking at your marks.
+
+                        Looks like, yeah, right here, it gets it all four above. That explains the numbness and tingling out and going down the back. The recommendation is to just type of steroid injections for you. Okay? Alright.
+
+                        So the next five three injections are injections are cortisone injections, which are on the nerve. Except treatment is not acute. The regular acute is to show two rejections. Each injections can run zero to one month to three months. And they're pretty straightforward.
+
+                        It's got a journal with a smaller spanning 100,000 people at end. Serious complication. We aren't even ready to do that. So are you going to aspirate blood thinners?
+
+                        Speaker 0: No. Not at present.
+
+                        Speaker 1: So in that case, the risk is probably very good. You have any questions concerning the diabetes line?
+
+                        Speaker 0: Not right now, except for the pain, if I can reduce the pain. Do I to take any other medications as well? Yes.
+
+                        Speaker 1: I can send you some pain medication. Are you having trouble sleeping at night?
+
+                        Speaker 0: Yes.
+
+                        Speaker 1: K. So you wanna pay that medication, I can say it's a personalized cycle. That's okay. So I'm gonna take it early at night. Couple days, we don't have to worry about.
+
+                        Speaker 0: Nothing right now, doc.
+
+                        Speaker 1: So Alright.
+
+                        Speaker 0: Thank you, doc. *@
+        </div>
+
+        <!-- State 3: Loading AI -->
+        <div id="uiLoading" class="d-none text-center">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <p class="text-muted fw-bold">AI is generating transcript...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+        // let mediaRecorder;
+    let audioTChunks = [];
+    let seconds = 0;
+    let timerInterval;
+    let isTRecording = false;
+
+    // Format current date for the header
+    document.getElementById('currentDate').innerText = new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+
+    const btnToggle = document.getElementById('btnToggleRecord');
+    const recordIcon = document.getElementById('recordIcon');
+    const uiRecording = document.getElementById('uiRecording');
+    const fname = document.getElementById('FN').innerText;
+    const lname =  document.getElementById('LN').innerText;
+
+
+
+    //document.getElementById('patientName').innerText = fname + " " + lname;
+
+    btnToggle.addEventListener('click', async () => {
+        if (!isTRecording) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    });
+
+    async function startRecording() {
+        // debugger
+        // document.getElementById('patientName').innerText = fname + " " + lname;
+
+        alert(fname);
+
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioTChunks = [];
+
+        mediaRecorder.ondataavailable = e => audioTChunks.push(e.data);
+        mediaRecorder.onstop = processWithWhisper;
+
+        mediaRecorder.start();
+        isTRecording = true;
+
+        // UI Updates
+        recordIcon.className = "bi bi-pause-fill me-2";
+        btnToggle.innerText = "Pause";
+        btnToggle.style.backgroundColor = "#ff4d4d";
+
+        uiRecording.style.display="block";
+
+        startTimer();
+    }
+
+    function stopRecording() {
+        mediaRecorder.stop();
+        isTRecording = false;
+
+        // UI Updates
+        recordIcon.className = "bi bi-mic-fill me-2";
+        btnToggle.innerText = "Resume";
+        btnToggle.style.backgroundColor = "#28a745"; // Green for resume
+
+        clearInterval(timerInterval);
+
+        // Show Loading
+        document.getElementById('uiRecording').classList.add('d-none');
+        document.getElementById('uiLoading').classList.remove('d-none');
+    }
+
+    function startTimer() {
+        seconds = 0;
+        timerInterval = setInterval(() => {
+            seconds++;
+            document.getElementById('timerDisplay').innerText = seconds + " sec";
+        }, 1000);
+    }
+
+    function openTab(evt, tabName) {
+        // 1. Hide all tab content
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-pane-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // 2. Remove "active" class from all tab links
+        tablinks = document.querySelectorAll(".scribe-tabs .nav-link");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+
+        // 3. Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+
+        if(tabName=="tab-note")
+        {
+            generateAINote();
+        }
+    }
+
+    // Function to Copy Specific Sections
+    function copySection(elementId) {
+        const text = document.getElementById(elementId).innerText;
+
+        navigator.clipboard.writeText(text).then(() => {
+            // Visual feedback (Change button text temporarily)
+            const btn = document.querySelector(`[onclick="copySection('${elementId}')"]`);
+            const originalHTML = btn.innerHTML;
+
+            btn.innerHTML = '<i class="bi bi-check2 text-success"></i> Copied!';
+            btn.classList.add('bg-success-subtle');
+
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('bg-success-subtle');
+            }, 2000);
+        });
+    }
+
+    async function processWithWhisper() {
+        const audioBlob = new Blob(audioTChunks, { type: 'audio/wav' });
+        const formData = new FormData();
+        formData.append("audioFile", audioBlob, "visit_record.wav");
+
+        try {
+            const response = await fetch('/IntakeForm/ProcessRecording', { method: 'POST', body: formData });
+            const result = await response.json();
+
+            document.getElementById('uiLoading').classList.add('d-none');
+            document.getElementById('uiResult').classList.remove('d-none');
+
+            if (result.success) {
+                document.getElementById('uiResult').innerText = result.text;
+            } else {
+                document.getElementById('uiResult').innerHTML = `<span class="text-danger">Error: ${result.error}</span>`;
+            }
+        } catch (err) {
+            console.error("AI processing failed", err);
+        }
+    }
+
+    async function generateAINote() {
+        debugger
+        var rawTranscript= document.getElementById('uiResult').innerText;
+        var ie_id= $("#hdIEId").val();
+        var intake_id= $("#hdId").val();
+        var length= document.getElementById('timerDisplay').innerText.split(" ")[0];
+        // Show loading spinner in your UI here
+        document.getElementById('uiLoading').style.display = 'block';
+        var url="@Url.Action("GenerateStructuredReport", "IntakeForm")";
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ transcript: rawTranscript, intake_id: intake_id, length:length }) // Sending raw transcript string
+            });
+
+            const result = await response.json();
+
+            // if (result.success) {
+                // Hide loading, show note container
+                // document.getElementById('uiLoading').style.display = 'none';
+                // document.getElementById('aiNoteResult').classList.remove('d-none');
+
+                // Inject AI content into specific divs
+                document.getElementById('contentHistory').innerText = result.history;
+                document.getElementById('contentCC').innerText = result.chiefComplaint;
+                document.getElementById('uiResult').innerText = result.transcript;
+
+                // Combining Assessment and Plan for the Skriber look
+                document.getElementById('contentPlan').innerText =
+                    result.assessment + "\n\n" + result.plan;
+            // }
+        } catch (error) {
+            console.error("Error generating note:", error);
+        }
+    }
+</script>

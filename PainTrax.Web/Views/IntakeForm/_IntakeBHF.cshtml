@@ -88,6 +88,11 @@
                                         onclick="saveForm(true)">
                                     Save
                                 </button>
+                                <button type="button" class="btn btn-primary"
+                                        @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                       id="btnTranscribe">
+                                    Open Voice Recorder
+                                </button>
                                 <button type="button" id="btnSuperBill"
                                         class="btn btn-outline-primary"
                                         @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
@@ -222,9 +227,9 @@
                                             <br>
                                             <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
                                             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
-                                            </div>
                                         </div>
-                                    </div>                               
+                                    </div>
+                                </div>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingADL">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseADL" aria-expanded="false" aria-controls="collapseADL">
@@ -408,14 +413,47 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
             </div>
 
         </div>
     </div>
 </div>
+<div class="modal fade" id="transribeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content scribe-modal-content">
+
+            <div class="modal-body" id="transribeModalCode">
+            </div>
+
+        </div>
+    </div>
+</div>
+@* <partial name="_voiceRecording" /> *@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+     $('#btnTranscribe').click(function() {
+
+         $.ajax({
+            url: '@Url.Action("GetTranscribe", "IntakeForm")?patient_id=' + $("#PatientId").val(),
+            type: 'GET',
+
+            success: function (response) {
+
+                $('#transribeModalCode').html(response);
+                $("#transribeModal").modal('show');
+            },
+
+            error: function () {
+
+                alert('Error loading patient list.');
+
+            }
+        });
+    });
+
+</script>
 
 <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
 <script>
@@ -615,7 +653,7 @@
 
                 // Clear values
                 $("#" + divCC).find("input").prop("checked", false).val("");
-                $("#" + divPE).find("input").prop("checked", false).val("");                 
+                $("#" + divPE).find("input").prop("checked", false).val("");
             }
 
             renderSectionsInOrder();
@@ -791,7 +829,7 @@
                 processTemplate(values)
             }
 
-            // Trigger on all inputs            
+            // Trigger on all inputs
                 $(document).on("keyup change","#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option",function () {
             updatePreview();
         }
@@ -893,7 +931,7 @@
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
-     
+
         formData["ProviderId"] = $("#ProviderId").val();
         formData["PatientIEId"] = $("#PatientIEId").val();
         //formData["PatientId"] = $("#PatientId").val();
@@ -949,7 +987,7 @@
                         //                 window.location.href =
                         //                 '@Url.Action("AIInitialIntake", "IntakeForm")' +
                         //                 '?providerId=' + provId +
-                        //                 '&id=0' + 
+                        //                 '&id=0' +
                         //                 '&locid=' + locId;
                         //                $('#pdfLoader').hide();
 
@@ -1073,7 +1111,7 @@
                 $('#DOE').val(today);
                // loadTemplate();
                 if ('@ViewBag.FormData' != '') {
-                   bindForm('@ViewBag.FormData');                     
+                   bindForm('@ViewBag.FormData');
                 }
 
                 $('#patientForm').on('submit', function (e) {
@@ -1152,7 +1190,7 @@
                             $("#acordPhyExam").show();
                             $("#acordDiagnosis").show();
 
-                           
+
                             var html = '';
 
                             selected.forEach(function(part) {
@@ -1172,17 +1210,17 @@
                              $("#acordPhyExam").hide();
                              $("#acordDiagnosis").hide();
                              $(".upper").hide();
-                             $(".lower").hide();                            
+                             $(".lower").hide();
                         }
 
                         var result = selected.join(', ');
-                        
+
                         console.log(result);
 
                         $('#BodyPart').val(result);
                 });
 
-      
+
         $(document).on('change', 'input[name="NeckRadiates"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
@@ -1209,7 +1247,7 @@
             $('input[name="LBRadiatesTo"]').prop('checked', false);
         }
 
-    }); 
+    });
     $(document).on('change', 'input[name="LBAssociated"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
@@ -1252,7 +1290,7 @@
                 var data = safeParse(val);
 
 
-                $('#patientForm').find('input, select, textarea').each(function () {
+               $('#patientForm').find('input, select, textarea').each(function () {
 
                     var key = $(this).attr('name') || $(this).attr('id');
                     if (!key || data[key] === undefined || data[key] === null) return;
@@ -1293,6 +1331,7 @@
 
 
                $("#hdId").val('@ViewBag.Id');
+               $("#PatientId").val('@ViewBag.PatientId');
 
 
                 setTimeout(function () {

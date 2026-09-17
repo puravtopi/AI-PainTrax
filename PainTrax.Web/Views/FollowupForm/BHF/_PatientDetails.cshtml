@@ -297,6 +297,23 @@
                     bindForm(res.formData,res.forwardSetting);
                      // Apply injury type rule AFTER bindForm
                     clearWorkStatusIfRequired();
+
+                    $("#PatientIEId").val(patientIEId);
+                    $("#PatientId").val(patientId);
+
+                    if(providerId!='' && providerId!=null)
+                        $("#ProviderId").val(providerId);
+
+                    if(accidentType!='' && accidentType!=null)
+                        $("#AccidentType").val(accidentType);
+
+                     if($(this).data("dob")!=null)
+                     {
+                            $("#DOB").val(formatToISODate($(this).data("dob")));
+                            var age = calculateAge($("#DOB").val());
+                            $('#Age').val(age);
+                     }
+
                 }
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
