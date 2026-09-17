@@ -223,7 +223,7 @@ namespace PainTrax.Web.Controllers
                 }
                 else if (designation == "Admin")
                 {
-                    cnd += " and desig_name in ('Provider','Staff','Client Admin','Admin','FD')";
+                    cnd += " and desig_name in ('Provider','Staff','Client Admin','Admin','FD','MA')";
                 }
 
                 var Data = _services.GetAll(cnd);

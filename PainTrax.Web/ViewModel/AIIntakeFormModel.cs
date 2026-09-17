@@ -597,7 +597,85 @@
         public string DrNote { get; set; }
         public string txtNeuro { get; set; }
         public string VisitType { get; set; }
-        
+        public List<string> currentmedications { get; set; }       
+
+
+        //Left Knee and Right Knee ROM
+        public string LKNTitleROM { get; set; }
+        public string LKNFlexionROM { get; set; }
+        public string LKNFlexionNormal { get; set; }
+        public string LKNExtTitleROM { get; set; }
+        public string LKNExtROM { get; set; }
+        public string LKNExtRNormal { get; set; }
+
+        public string RKNTitleROM { get; set; }
+        public string RKNFlexionROM { get; set; }
+        public string RKNFlexionNormal { get; set; }
+        public string RKNExtTitleROM { get; set; }
+        public string RKNExtROM { get; set; }
+        public string RKNExtRNormal { get; set; }
+
+        //left Ankle and Right Ankle ROM
+        public string RAnkleFlexionROM { get; set; }
+        public string LAnkleFlexionROM { get; set; }
+        public string RAnkleInversionROM { get; set; }
+        public string LAnkleInversionROM { get; set; }
+        public string RAnkleDorsiflexionROM { get; set; }
+        public string LAnkleDorsiflexionROM { get; set; }
+        public string RAnkleEversionROM { get; set; }
+        public string LAnkleEversionROM { get; set; }
+
+        //left shoulder and right shoulder ROM
+
+        public string RSHAbductionROM { get; set; }
+        public string RSHERROM { get; set; }
+        public string RSHFlexionROM { get; set; }
+        public string RSHIRROM { get; set; }
+        public string RSHAdductionROM { get; set; }
+        public string RSHExtOM { get; set; }
+
+        public string LSHAbductionROM { get; set; }
+        public string LSHERROM { get; set; }
+        public string LSHFlexionROM { get; set; }
+        public string LSHIRROM { get; set; }
+        public string LSHAdductionROM { get; set; }
+        public string LSHExtOM { get; set; }
+
+        //left and right elbow ROM
+
+        public string RElbowFlexionROM { get; set; }
+        public string RElbowSupinationROM { get; set; }
+        public string RElbowExtensionROM { get; set; }
+        public string RElbowPronationROM { get; set; }
+
+        public string LElbowFlexionROM { get; set; }
+        public string LElbowSupinationROM { get; set; }
+        public string LElbowExtensionROM { get; set; }
+        public string LElbowPronationROM { get; set; }
+
+        //left and right Hip ROM
+
+        public string RHipFlexionROM { get; set; }
+        public string RHipAdductionROM { get; set; }
+        public string RHipExtensionROM { get; set; }
+        public string RHipIRotationROM { get; set; }
+        public string RHipAbductionROM { get; set; }
+        public string RHipERotationROM { get; set; }
+
+        public string LHipFlexionROM { get; set; }
+        public string LHipAdductionROM { get; set; }
+        public string LHipExtensionROM { get; set; }
+        public string LHipIRotationROM { get; set; }
+        public string LHipAbductionROM { get; set; }
+        public string LHipERotationROM { get; set; }
+
+        //left and right Wrist ROM
+
+        public string RWristFlexionROM { get; set; }
+        public string RWristUDROM { get; set; }
+        public string RWristExtensionROM { get; set; }
+        public string RWristRDROM { get; set; }
+        //public string RWristRDROM { get; set; }
 
     }
 }

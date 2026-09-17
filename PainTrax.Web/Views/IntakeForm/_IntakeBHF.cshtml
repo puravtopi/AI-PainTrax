@@ -73,21 +73,33 @@
                         <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
                         <h4 class="text-center mb-4 fw-bold">
-                            Initial Intake
+                            @(ViewBag.IntakeType?.ToString() != "p" ? "Initial Intake" : "Patient Details Form")
                         </h4>
                         <div class="position-relative">
                             <p id="btnSaveSection" class="mb-0 sticky-buttons">
-                                <button type="button"
-                                        class="btn btn-secondary"
-                                        onclick="window.location.href='@Url.Action("Index", "Visit")'">
-                                    <i class="bi bi-house-door-fill"></i> Home
-                                </button>
+                                @if (ViewBag.IntakeType != "p")
+                                {
+                                    <button type="button"
+                                            class="btn btn-secondary"
+                                            onclick="window.location.href='@Url.Action("Index", "Visit")'">
+                                        <i class="bi bi-house-door-fill"></i> Home
+                                    </button>
+                                }
                                 @* <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
                                         class="btn btn-outline-primary"
                                         onclick="saveForm(true)">
                                     Save
                                 </button>
+                                @if (ViewBag.IntakeType != "p")
+                                {
+                                    <button type="button" id="btnSuperBill"
+                                            class="btn btn-outline-primary"
+                                            @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                            onclick="DownloadPdf('@ViewBag.Id')">
+                                        Super Bill
+                                    </button>
+                                }
                                 <button type="button" class="btn btn-primary"
                                         @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
                                        id="btnTranscribe">
@@ -105,14 +117,17 @@
                             <div class="position-absolute top-0 end-0 m-2">
 
                                 <div class="dropdown">
-                                    <button class="btn btn-light border shadow-sm rounded-circle"
-                                            type="button"
-                                            id="settingsDropdown"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false">
+                                    @if (ViewBag.IntakeType != "p")
+                                    {
+                                        <button class="btn btn-light border shadow-sm rounded-circle"
+                                                type="button"
+                                                id="settingsDropdown"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false">
 
-                                        <i class="bi bi-gear-fill"></i>
-                                    </button>
+                                            <i class="bi bi-gear-fill"></i>
+                                        </button>
+                                    }
 
                                     <ul class="dropdown-menu dropdown-menu-end shadow"
                                         aria-labelledby="settingsDropdown">
@@ -175,61 +190,63 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="accordion-item" id="acordPresentComp" style="display:none">
-                                    <h2 class="accordion-header" id="headingSix">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseTwo">
-                                            Present Complaints
-                                        </button>
-                                    </h2>
-                                    <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <partial name="BHF/_PresentComplain" />
+                                @if (ViewBag.IntakeType != "p")
+                                {
+                                    <div class="accordion-item" id="acordPresentComp" style="display:none">
+                                        <h2 class="accordion-header" id="headingSix">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseTwo">
+                                                Present Complaints
+                                            </button>
+                                        </h2>
+                                        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <partial name="BHF/_PresentComplain" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
 
-                                <div class="accordion-item" id="acordPhyExam" style="display:none">
-                                    <h2 class="accordion-header" id="headingSeven">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseTwo">
-                                            Physical Examination
-                                        </button>
-                                    </h2>
-                                    <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <partial name="BHF/_PhysicalExamination" />
+                                    <div class="accordion-item" id="acordPhyExam" style="display:none">
+                                        <h2 class="accordion-header" id="headingSeven">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseTwo">
+                                                Physical Examination
+                                            </button>
+                                        </h2>
+                                        <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <partial name="BHF/_PhysicalExamination" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingNE">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
-                                            Neuro Exam
-                                        </button>
-                                    </h2>
-                                    <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <partial name="BHF/_NeuroExam" />
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingNE">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
+                                                Neuro Exam
+                                            </button>
+                                        </h2>
+                                        <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <partial name="BHF/_NeuroExam" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="accordion-item" id="acordDiagnosis" style="display:none">
-                                    <h2 class="accordion-header" id="headingEight">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                            Diagnosis <span id="bodyPartLinks" style="margin-left:10px;"></span>
-                                        </button>
-                                    </h2>
-                                    <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
+                                    <div class="accordion-item" id="acordDiagnosis" style="display:none">
+                                        <h2 class="accordion-header" id="headingEight">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                                                Diagnosis <span id="bodyPartLinks" style="margin-left:10px;"></span>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
 
-                                            <ol> <div class="row" id="divDiagnosis" name="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
-                                            <br>
-                                            <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
-                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
+                                                <ol> <div class="row" id="divDiagnosis" name="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
+                                                <br>
+                                                <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingADL">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseADL" aria-expanded="false" aria-controls="collapseADL">
@@ -242,34 +259,37 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingNote">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNote" aria-expanded="false" aria-controls="collapseNote">
-                                            Provider Notes
-                                        </button>
-                                    </h2>
-                                    <div id="collapseNote" class="accordion-collapse collapse" aria-labelledby="headingNote" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <p>
+                                @if (ViewBag.IntakeType != "p")
+                                {
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingNote">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNote" aria-expanded="false" aria-controls="collapseNote">
+                                                Provider Notes
+                                            </button>
+                                        </h2>
+                                        <div id="collapseNote" class="accordion-collapse collapse" aria-labelledby="headingNote" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <p>
 
-                                                <textarea id="DrNote" name="DrNote" rows="4 " class="form-control d-inline" style="width:95%"></textarea>
-                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DrNote')"></i>
-                                            </p>
+                                                    <textarea id="DrNote" name="DrNote" rows="4 " class="form-control d-inline" style="width:95%"></textarea>
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DrNote')"></i>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingNine">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
-                                            RECOMMENDATIONS
-                                        </button>
-                                    </h2>
-                                    <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <partial name="BHF/_Recommendation" />
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingNine">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                                                RECOMMENDATIONS
+                                            </button>
+                                        </h2>
+                                        <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <partial name="BHF/_Recommendation" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             </div>
 
 
@@ -551,6 +571,13 @@
                 }
             });
 
+              // 1. Remove BOM
+        sanitized = sanitized.replace(/^\uFEFF/, '');
+
+        // 2. Fix invalid backslashes (like \d)
+        // This looks for a backslash NOT followed by valid JSON escape chars and escapes it.
+        sanitized = sanitized.replace(/\\([^"\\\/bfnrtu])/g, '\\\\$1');
+
             return JSON.parse(sanitized);
         } catch (e) {
             console.error("Invalid JSON content:", json);
@@ -831,8 +858,8 @@
 
             // Trigger on all inputs
                 $(document).on("keyup change","#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option",function () {
-            updatePreview();
-        }
+                     updatePreview();
+                }
     );
 
             function processTemplate(data) {
@@ -907,6 +934,7 @@
 
                 function saveForm(isSubmit) {
 
+                const intake_type = @Json.Serialize(ViewBag.IntakeType);
 
                         var valid=formValidation();
 
@@ -958,31 +986,40 @@
                         if (isSubmit) {
                             let locId= $("#LocationId").val() || 0;
                             let provId=$("#ProviderId").val() || 0;
-                                        window.location.href =
-                            '@Url.Action("AIInitialIntake", "IntakeForm")' +
-                            '?id=' + response.id +
-                            '&locid=' + locId+
-                            '&providerId=' + provId +
-                            '&patientId=' + response.patientid;
-                            $('#pdfLoader').hide();
-                        // bootbox.confirm({
-                        //     message: 'Your details have been saved successfully. Click "Yes" to continue creating the next visit.',
-                        //     swapButtonOrder: true,
 
-                        //     buttons: {
-                        //         confirm: {
-                        //             label: 'Yes',
-                        //             className: 'btn-primary'
-                        //         },
-                        //         cancel: {
-                        //             label: 'No',
-                        //             className: 'btn-secondary'
-                        //         }
-                        //     },
-                        //     callback: function (result) {
-                        //         if (result) {
-                        //             let locId= $("#LocationId").val() || 0;
-                        //             let provId=$("#ProviderId").val() || 0;
+                            if(intake_type==="p")
+                            {
+                                bootbox.alert({
+                                    title: "<span class='text-success'>PainTrax</span>",
+                                        message: "<div class='text-secondary'>Thank you for submitting your details. We have received your information successfully.</div>",
+
+                                    buttons: {
+                                        ok: {
+                                            label: "OK",
+                                            className: "btn-success"
+                                        }
+                                    },
+                                    callback: function () {
+                                        // This will execute only AFTER the user clicks "OK"
+                                        window.location.href =
+                                            '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                                            '?id=' + response.id +
+                                            '&locid=' + locId +
+                                            '&providerId=' + provId +
+                                            '&patientId=' + response.patientid +
+                                            '&type=' + intake_type;
+                                    }
+                                });
+
+                            }else{
+                                window.location.href =
+                                '@Url.Action("AIInitialIntake", "IntakeForm")' +
+                                '?id=' + response.id +
+                                '&locid=' + locId+
+                                '&providerId=' + provId +
+                                '&patientId=' + response.patientid;
+                            }
+                            $('#pdfLoader').hide();
 
                         //                 window.location.href =
                         //                 '@Url.Action("AIInitialIntake", "IntakeForm")' +

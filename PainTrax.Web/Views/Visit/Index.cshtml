@@ -371,6 +371,7 @@
                                                 <button id="btnTelFUIntake" class="btn btn-sm btn-primary" onclick="fnshowIntake('TelFU')">
                                                     Add Tel FU Intake
                                                 </button>
+                                               
                                             </div>
 
                                         </div>
@@ -531,6 +532,7 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowProcReport(' + full.id + ',0)" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Prop Report</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="checkAuthorizationForm(' + full.patient_id + ',' + '\'' + `${full.email}` + '\')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Send Authorization" data-bs-original-title="Send Authorization"></i><span>Send Authorization</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + intakeurl + '?id=' + full.intakeid +'&locid='+ full.location_id + '&providerId='+full.provider_id+'&patientId=' + full.patient_id + '" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Intake Form</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + intakeurl + '?id=' + full.intakeid +'&locid='+ full.location_id + '&providerId='+full.provider_id+'&patientId=' + full.patient_id + '&type=p" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Patient Intake Form</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + `${full.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${full.lname.replace(/'/g, "\\'")}` + '\')" href="#"  ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Print Demo</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="DownloadExcel(' + full.patient_id  + ')" href="#"  ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Export Excel "></i><span> Export Excel</span></a></li></ul></a>';
 
@@ -1075,6 +1077,11 @@
                 // Replace the placeholder with the actual JS variable
                 window.location.href = url+"&fType="+ fuType;
            }
+         }
+
+         function fnshowPatientIntake()
+         {
+                window.location.href = '@Url.Action("AIInitialIntake", "IntakeForm", new { locid = locationId, providerId = providerId,type="p" })';
          }
 
         function fnPrint() {

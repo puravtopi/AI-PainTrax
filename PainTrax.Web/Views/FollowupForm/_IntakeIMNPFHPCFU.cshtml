@@ -475,6 +475,13 @@
                 }
             });
 
+              // 1. Remove BOM
+        sanitized = sanitized.replace(/^\uFEFF/, '');
+
+        // 2. Fix invalid backslashes (like \d)
+        // This looks for a backslash NOT followed by valid JSON escape chars and escapes it.
+        sanitized = sanitized.replace(/\\([^"\\\/bfnrtu])/g, '\\\\$1');
+
             return JSON.parse(sanitized);
         } catch (e) {
             console.error("Invalid JSON content:", json);
@@ -554,7 +561,7 @@
             let selectedSections = [];
         let selectedPESections = [];
 
-        function fnShowPresentComplain(cntrl, divCC, divPE) {
+        function fnShowPresentComplain(cntrl, divCC, divPE,bodyPart) {
 
             if (!divCC) return;
 
@@ -571,6 +578,8 @@
                 }
 
             } else {
+
+                 removeDaignosis(bodyPart);
 
                 // Remove complaint section
                 selectedSections = selectedSections.filter(x => x !== divCC);
@@ -821,7 +830,7 @@
             }
         }
             // Trigger on all inputs
-            $(document).on("keyup change", "#patientForm input, #patientForm select, .incident-type-option", function () {
+            $(document).on("keyup change", "#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option", function () {
                 updatePreview();
             });
 
@@ -1221,9 +1230,11 @@
                     var section = $(this).data('section');
                     var pe = $(this).data('pe');
 
-                        fnShowPresentComplain(this, section, pe);
+                    var value = $(this).val();
 
-                        var value = $(this).val();
+                        fnShowPresentComplain(this, section, pe,value);
+
+                       
 
                         if ($(this).is(':checked')) {
                             // Add in click order
@@ -1449,7 +1460,7 @@
                     $("#treatmentModal").modal('show');
                 }
 
-                function fnTreatmentDetails() {
+            function fnTreatmentDetails() {
                             var strContent = '<ol>';
                             var strIds = '', strDesc = '';
 
