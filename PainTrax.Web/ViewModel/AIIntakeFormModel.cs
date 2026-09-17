@@ -676,6 +676,8 @@
         public string RWristExtensionROM { get; set; }
         public string RWristRDROM { get; set; }
         //public string RWristRDROM { get; set; }
+        public List<string> Headachesare { get; set; }
+        public List<string> Headache { get; set; }
 
     }
 }

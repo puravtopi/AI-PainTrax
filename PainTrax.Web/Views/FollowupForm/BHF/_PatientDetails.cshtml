@@ -318,7 +318,7 @@
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
                 $('#pdfLoader').hide();
-                $('input[name="InjuryType"]').prop('checked', false);
+                // $('input[name="InjuryType"]').prop('checked', false);
             },
             error: function (xhr, status, error) {
                $('#pdfLoader').hide();
