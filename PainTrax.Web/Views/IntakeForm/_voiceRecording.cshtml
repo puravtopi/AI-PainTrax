@@ -201,8 +201,8 @@
         </div>
     </div>
     <div class="d-flex gap-2">
-        <button class="btn btn-end-visit px-4 rounded-3"><i class="bi bi-arrow-counterclockwise me-2"></i>End Visit</button>
-        <button id="btnToggleRecord" class="btn btn-pause px-4 rounded-3"><i id="recordIcon" class="bi bi-pause-fill me-2"></i>Start Recording</button>
+        @*  <button class="btn btn-end-visit px-4 rounded-3"><i class="bi bi-arrow-counterclockwise me-2"></i>End Visit</button> *@
+        <button id="btnToggleRecord" class="btn btn-pause px-4 rounded-3" style="background-color:#28a745">Start Recording</button>
     </div>
 </div>
 
@@ -361,13 +361,13 @@
     let isTRecording = false;
 
     // Format current date for the header
-    document.getElementById('currentDate').innerText = new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    //document.getElementById('currentDate').innerText = new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
     const btnToggle = document.getElementById('btnToggleRecord');
     const recordIcon = document.getElementById('recordIcon');
     const uiRecording = document.getElementById('uiRecording');
-    const fname = document.getElementById('FN').innerText;
-    const lname =  document.getElementById('LN').innerText;
+    // const fname = document.getElementById('FN').innerText;
+    // const lname =  document.getElementById('LN').innerText;
 
 
 
@@ -385,7 +385,6 @@
         // debugger
         // document.getElementById('patientName').innerText = fname + " " + lname;
 
-        alert(fname);
 
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
@@ -413,7 +412,7 @@
 
         // UI Updates
         recordIcon.className = "bi bi-mic-fill me-2";
-        btnToggle.innerText = "Resume";
+        btnToggle.innerText = "Close";
         btnToggle.style.backgroundColor = "#28a745"; // Green for resume
 
         clearInterval(timerInterval);

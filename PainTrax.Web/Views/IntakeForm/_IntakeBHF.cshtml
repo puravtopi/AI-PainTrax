@@ -87,30 +87,31 @@
                                 }
                                 @* <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
-                                        class="btn btn-outline-primary"
-                                        onclick="saveForm(true)">
+                                class="btn btn-outline-primary"
+                                onclick="saveForm(true)">
                                     Save
                                 </button>
                                 @if (ViewBag.IntakeType != "p")
                                 {
                                     <button type="button" id="btnSuperBill"
-                                            class="btn btn-outline-primary"
-                                            @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                            onclick="DownloadPdf('@ViewBag.Id')">
+                                    class="btn btn-outline-primary"
+                                    @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                    onclick="DownloadPdf('@ViewBag.Id')">
+                                        Super Bill
+                                    </button>
+
+                                    <button type="button" class="btn btn-primary"
+                                    @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                    id="btnTranscribe">
+                                        Open Voice Recorder
+                                    </button>
+                                    <button type="button" id="btnSuperBill"
+                                    class="btn btn-outline-primary"
+                                    @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                    onclick="DownloadPdf('@ViewBag.Id')">
                                         Super Bill
                                     </button>
                                 }
-                                <button type="button" class="btn btn-primary"
-                                        @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                       id="btnTranscribe">
-                                    Open Voice Recorder
-                                </button>
-                                <button type="button" id="btnSuperBill"
-                                        class="btn btn-outline-primary"
-                                        @( Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                        onclick="DownloadPdf('@ViewBag.Id')">
-                                    Super Bill
-                                </button>
                             </p>
 
                             <!-- Settings Button -->

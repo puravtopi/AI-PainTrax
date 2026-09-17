@@ -1134,8 +1134,8 @@ namespace PainTrax.Web.Controllers
                                     vital = string.IsNullOrEmpty(vital) ? defaultPage1.vital : vital,
                                     cc = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model),
                                     daignosis_desc = assessment,
-                                   // pe = string.IsNullOrEmpty(this.GetPE(model)) ? defaultPage1.pe : this.GetPE(model),
-                                    pe =  defaultPage1.pe,
+                                    // pe = string.IsNullOrEmpty(this.GetPE(model)) ? defaultPage1.pe : this.GetPE(model),
+                                    pe = defaultPage1.pe,
                                     family_history = defaultPage1.family_history,
                                     history = history,
                                     medication = defaultPage1.medication,
@@ -2971,7 +2971,7 @@ namespace PainTrax.Web.Controllers
         {
             var transribeData = _transcribeService.GetOne(request.intake_id);
 
-            if (transribeData != null)
+            if (transribeData == null)
             {
                 ChatClient client = new(model: "gpt-4o", apiKey: _apiKey);
 
@@ -3031,19 +3031,33 @@ Return ONLY valid JSON.";
             }
             else
             {
-                var data = new ClinicalReport
+                if (transribeData != null)
                 {
-                    History = transribeData.history,
-                    ChiefComplaint = transribeData.cc,
-                    Plan = transribeData.plan,
-                    Assessment = transribeData.assessment,
-                    Subjective = transribeData.subjective,
-                    Transcript = transribeData.content
-                };
-                return data;
+                    var data = new ClinicalReport
+                    {
+                        History = transribeData.history,
+                        ChiefComplaint = transribeData.cc,
+                        Plan = transribeData.plan,
+                        Assessment = transribeData.assessment,
+                        Subjective = transribeData.subjective,
+                        Transcript = transribeData.content
+                    };
+                    return data;
+                }
+                else
+                {
+                    return new ClinicalReport
+                    {
+                        History = "",
+                        ChiefComplaint = "",
+                        Plan = "",
+                        Assessment = "",
+                        Subjective = "",
+                        Transcript = ""
+                    };
+                }
             }
         }
-
         #endregion
 
         #region Transcribe
@@ -3057,7 +3071,7 @@ Return ONLY valid JSON.";
                 PatientName = $"{model.lname} {model.fname}",
             };
 
-            
+
             if (model.intakeid.HasValue)
             {
                 var transribeData = _transcribeService.GetOne(model.intakeid.Value);
