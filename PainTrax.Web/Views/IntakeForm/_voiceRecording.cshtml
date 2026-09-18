@@ -201,8 +201,8 @@
         </div>
     </div>
     <div class="d-flex gap-2">
-        @*  <button class="btn btn-end-visit px-4 rounded-3"><i class="bi bi-arrow-counterclockwise me-2"></i>End Visit</button> *@
-        <button id="btnToggleRecord" class="btn btn-pause px-4 rounded-3" style="background-color:#28a745">Start Recording</button>
+        <button class="btn btn-end-visit px-4 rounded-3" onclick="closeModal()"><i class="bi bi-arrow-counterclockwise me-2"></i>Close</button>
+        <button id="btnToggleRecord" class="btn btn-pause px-4 rounded-3" style="background-color:#28a745"><i id="recordIcon" class=""></i>Start Recording</button>
     </div>
 </div>
 
@@ -381,6 +381,11 @@
         }
     });
 
+    function closeModal()
+    {
+        $("#transribeModal").modal('hide');
+    }
+
     async function startRecording() {
         // debugger
         // document.getElementById('patientName').innerText = fname + " " + lname;
@@ -411,8 +416,8 @@
         isTRecording = false;
 
         // UI Updates
-        recordIcon.className = "bi bi-mic-fill me-2";
-        btnToggle.innerText = "Close";
+        //recordIcon.className = "bi bi-mic-fill me-2";
+        btnToggle.innerText = "Re-Generate";
         btnToggle.style.backgroundColor = "#28a745"; // Green for resume
 
         clearInterval(timerInterval);
@@ -477,9 +482,9 @@
         const audioBlob = new Blob(audioTChunks, { type: 'audio/wav' });
         const formData = new FormData();
         formData.append("audioFile", audioBlob, "visit_record.wav");
-
+        const url= "@Url.Action("ProcessRecording","IntakeForm")";
         try {
-            const response = await fetch('/IntakeForm/ProcessRecording', { method: 'POST', body: formData });
+            const response = await fetch(url, { method: 'POST', body: formData });
             const result = await response.json();
 
             document.getElementById('uiLoading').classList.add('d-none');

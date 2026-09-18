@@ -2976,25 +2976,117 @@ namespace PainTrax.Web.Controllers
                 ChatClient client = new(model: "gpt-4o", apiKey: _apiKey);
 
                 // This is the "Magic" Prompt
-                string systemPrompt = @"You are a professional medical scribe. 
-Take the provided transcript and generate a structured clinical report in JSON format.
+                string systemPrompt = @"You are a professional medical scribe.
 
-IMPORTANT: Each value must be a single string (a formatted paragraph), NOT a nested object or array.
-Keys: History, ChiefComplaint, Subjective, Assessment, Plan.
-Use professional medical terminology. 
+Your task is to convert the provided medical transcript into a structured clinical report in JSON format.
 
-CHIEF COMPLAINT FORMATTING RULES:
-The ""ChiefComplaint"" string must be broken down by anatomical region in UPPERCASE headers (e.g., CERVICAL SPINE:, LUMBAR SPINE:, THORACIC SPINE:) separated by line breaks. For each affected region mentioned in the transcript, follow this clinical narrative style:
-1. Primary complaint & location (e.g., pain, stiffness).
-2. Radiation & neurological/associated symptoms (e.g., radiating to shoulders/buttock, numbness, tingling, spasms).
-3. Functional limitations / aggravating factors (e.g., difficulty turning head, lifting, bending, driving).
-4. Response to prior therapies (if mentioned).
-5. Pain score (e.g., Pain score is X/10).
+STRICT SOURCE RULES:
 
-ChiefComplaint Example:
-""ChiefComplaint"": ""CERVICAL SPINE: The patient complains of pain and stiffness in the neck region. The pain radiates from the neck to bilateral shoulders and elbows, associated with tingling and numbness. The patient has difficulty turning/rotating the head. Symptoms are worsened by cervical flexion, extension, exercise, and driving. Pain score is 7/10.\n\nLUMBAR SPINE: The patient complains of pain and stiffness in the low back region. The pain radiates from the low back to the right buttock, thigh, ankle, and toes, associated with tingling, numbness, burning sensation, and spasms. The patient has difficulty sleeping on the back, lifting objects, and bending. There is no sustained improvement with physical therapy. Pain score is 8/10.""
+1. Use ONLY information explicitly stated in the provided transcript.
+2. DO NOT invent, assume, infer, predict, or add any medical information that is not explicitly present in the transcript.
+3. DO NOT use information from the examples below as patient information.
+4. If a symptom, body part, diagnosis, treatment, medication, pain score, or clinical detail is NOT mentioned in the transcript, DO NOT generate it.
+5. Never assume that a patient has symptoms in a body region simply because that region appears in the formatting example.
+6. Do not add normal/negative findings unless they are explicitly stated in the transcript.
+7. If information required for a section is not present in the transcript, return an empty string ("""") for that section.
+8. For anatomical regions, include ONLY the regions explicitly mentioned in the transcript as having a complaint or relevant clinical finding.
+9. Do not create additional body regions based on the presence of another body region.
+10. Preserve uncertainty from the transcript. Do not convert uncertain statements into confirmed facts.
 
-Return ONLY valid JSON.";
+OUTPUT REQUIREMENTS:
+Return ONLY valid JSON.
+
+Each value must be a single string (formatted paragraph), NOT a nested object or array.
+
+Required keys:
+
+* History
+* ChiefComplaint
+* Subjective
+* Assessment
+* Plan
+
+CHIEF COMPLAINT RULES:
+The ""ChiefComplaint"" value must contain ONLY complaints and clinical details explicitly supported by the transcript.
+
+If one or more anatomical regions are mentioned, organize the content using UPPERCASE anatomical headers, such as:
+
+CERVICAL SPINE:
+LUMBAR SPINE:
+THORACIC SPINE:
+RIGHT SHOULDER:
+LEFT KNEE:
+
+Only include an anatomical header if that anatomical region is explicitly associated with a complaint or relevant finding in the transcript.
+
+For each included anatomical region, describe only the information that is explicitly available in the transcript, such as:
+
+1. Primary complaint and location.
+2. Radiation and associated neurological symptoms.
+3. Functional limitations or aggravating factors.
+4. Response to prior therapies.
+5. Pain score.
+
+IMPORTANT:
+
+* Do NOT fill missing details.
+* Do NOT assume radiation.
+* Do NOT assume numbness or tingling.
+* Do NOT assume spasms.
+* Do NOT assume functional limitations.
+* Do NOT assume aggravating factors.
+* Do NOT assume prior treatment response.
+* Do NOT assume a pain score.
+* If a particular detail is not mentioned, simply leave that detail out.
+* If an anatomical region is not mentioned as a complaint in the transcript, DO NOT include that region.
+
+EXAMPLE OF CORRECT BEHAVIOR:
+
+If the transcript says:
+""The patient reports low back pain radiating to the right buttock. Pain is 7/10.""
+
+Then ChiefComplaint should contain only:
+
+""LUMBAR SPINE: The patient reports low back pain radiating to the right buttock. Pain score is 7/10.""
+
+DO NOT generate cervical spine, thoracic spine, shoulder, or other complaints because they were not mentioned.
+
+If the transcript says only:
+""The patient reports neck pain.""
+
+Then ChiefComplaint should be:
+
+""CERVICAL SPINE: The patient reports neck pain.""
+
+Do NOT add radiation, numbness, tingling, stiffness, functional limitations, aggravating factors, treatment response, or a pain score unless they are explicitly present in the transcript.
+
+HISTORY:
+Include only historical information explicitly stated in the transcript.
+
+SUBJECTIVE:
+Include only symptoms, patient-reported information, and subjective complaints explicitly stated in the transcript.
+
+ASSESSMENT:
+Include only diagnoses, clinical impressions, or assessments explicitly stated or clearly documented by the clinician in the transcript.
+Do not create a diagnosis based only on symptoms.
+
+PLAN:
+Include only treatments, medications, referrals, investigations, follow-up instructions, or other plans explicitly stated in the transcript.
+
+FINAL VALIDATION BEFORE RESPONDING:
+Before generating the JSON, verify:
+
+* Every piece of information in the JSON can be directly supported by the transcript.
+* No anatomical region was added unless supported by the transcript.
+* No symptom was invented.
+* No diagnosis was inferred.
+* No pain score was invented.
+* No treatment was invented.
+* No example content was copied into the patient's report.
+* Missing information is represented by an empty string or omitted from the relevant narrative, rather than being fabricated.
+
+Return ONLY valid JSON.
+";
 
                 ChatCompletion completion = await client.CompleteChatAsync(new List<ChatMessage>
     {
