@@ -1,0 +1,384 @@
+﻿
+<h6>
+    Provider Name:
+    <select id="providerid" name="providerid" asp-items="@ViewBag.providerList" class="form-select d-inline w-auto" style="width:230px !important">
+    </select>
+</h6>
+
+<!-- Patient Info -->
+<p>
+    Patient LName:
+    <input id="LN" name="LN" class="form-control d-inline" required style="width:150px;" onchange="fnCheckPatientNameOnly()" />
+    FName:
+    <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" required onchange="fnCheckPatientNameOnly()" />
+    @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
+    Gender
+    <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+        <option value="male">M</option>
+        <option value="female">F</option>
+    </select>
+    &nbsp;&nbsp;
+    handed:
+    <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+        <option value="right-handed">R</option>
+        <option value="left-handed">L</option>
+        <option value="ambidextrous">A</option>
+    </select>
+    &nbsp;&nbsp;
+    DOS
+    <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" required class="form-control d-inline w-auto"  onblur="fnvalidateDatefields()" />
+    &nbsp;&nbsp;
+    Location: &nbsp;&nbsp;
+    <select id="LocationId" required name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:200px !important">
+    </select>
+
+</p>
+
+<p>
+    DOB:
+    <input id="DOB" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOB" type="date" class="form-control d-inline w-auto" min="1900-01-01" onblur="fnvalidateDatefields()"
+            required onchange="fnCheckPatientNameOnly()" />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Age:
+    <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    DOA:
+    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" required class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
+</p>
+<div class="select-group">
+    <strong>Case Type:</strong>
+    <label>
+        <input type="radio" name="InjuryType" value="NF">
+        <span class="select-btn">NF</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="WC">
+        <span class="select-btn">WC</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="MM">
+        <span class="select-btn">MM</span>
+    </label>
+
+    <label>
+        <input type="radio" name="InjuryType" value="PI">
+        <span class="select-btn">PI</span>
+    </label>
+    <label>
+        <input type="radio" name="InjuryType" value="LIEN">
+        <span class="select-btn">LIEN</span>
+    </label>
+    <p>
+        <select id="AccidentType"  class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
+    </p>
+</div>
+<div class="select-group">
+    <b> Chief complaint:</b>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" />  <span class="select-btn">Neck</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="mbSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" />  <span class="select-btn">Low back</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" />  <span class="select-btn">R/SH</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" />  <span class="select-btn">L/SH</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> <span class="select-btn">R/KN</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" />  <span class="select-btn">L/KN</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Ankle" data-section="rankleSection" data-pe="ranklePE" /> <span class="select-btn">R/Ank</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Ankle" data-section="lankleSection" data-pe="lanklePE" />  <span class="select-btn">L/Ank</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Elbow" data-section="relbowSection" data-pe="relbowPE" /> <span class="select-btn">R/El</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Elbow" data-section="lelbowSection" data-pe="lelbowPE" />  <span class="select-btn">L/El</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Hip" data-section="rhipSection" data-pe="rhipPE" /> <span class="select-btn">R/Hip</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" />  <span class="select-btn">L/Hip</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Wrist" data-section="rwristSection" data-pe="rwristPE" /> <span class="select-btn">R/Wrist</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Wrist" data-section="lwristSection" data-pe="lwristPE" />  <span class="select-btn">L/Wrist</span></label>
+    <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+</div>
+<p>
+    <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Height:
+    <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />ft
+    <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />inches
+    Weight:
+    <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:50px" />
+
+    lbs,
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpO2:
+    <input id="SpO" name="SpO" class="form-control d-inline" style="width:100px" />%,
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HR:
+    <input id="HR" name="HR" class="form-control d-inline" style="width:100px" />,
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
+    <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
+</p>
+
+<!-- Work -->
+<div class="selet-group">
+
+    Currently working:
+    <label>
+        <input type="radio" name="IsWorking" value="The patient is currently working.">  <span class="select-btn">Yes</span>
+    </label>
+    <label>
+        <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident.">  <span class="select-btn">No</span>
+    </label>
+
+
+    Degree of Disability:
+
+    <input id="DisabilityPercentage"
+           name="DisabilityPercentage"
+           class="form-control d-inline"
+           style="width:100px"
+           type="number"
+           min="0"
+           max="100" />
+
+    % temporarily disabled
+</div>
+
+<div id="divWC1" style="display:none;">
+    <p>
+        Occupation:
+        <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
+       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i> *@
+        <br />
+        Job Description:
+        <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:95%;" />
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i> *@
+    </p>
+    <p>
+        Sit <input id="SitHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Drive <input id="DriveHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Stand <input id="StandHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Walk <input id="WalkHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Kneel/Stoop <input id="KneelHr" class="form-control d-inline" style="width:80px" /> hr.
+
+        Reach Overhead <input id="ReachOverhead" class="form-control d-inline" style="width:80px" />
+
+        Reach Below Waist <input id="ReachBelowWaist" class="form-control d-inline" style="width:80px" />
+    </p>
+    <p>
+        On your job how many hours a day do you spend:
+
+        Sitting <input id="JobSitting" class="form-control d-inline" style="width:80px" /> hr.
+
+        Standing <input id="JobStanding" class="form-control d-inline" style="width:80px" /> hr.
+
+        Driving <input id="JobDriving" class="form-control d-inline" style="width:80px" /> hr.
+
+        Bending <input id="JobBending" class="form-control d-inline" style="width:80px" /> hr.
+
+        Kneeling <input id="JobKneeling" class="form-control d-inline" style="width:80px" /> hr.
+
+        Crouching <input id="JobCrouching" class="form-control d-inline" style="width:80px" /> hr.
+
+        Lifting <input id="JobLifting" class="form-control d-inline" style="width:80px" /> hr.
+    </p>
+
+    <div class="select-group">
+        If lifting, how many pounds:
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="5">  <span class="select-btn">5</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="10">  <span class="select-btn">10</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="10-20">  <span class="select-btn">10-20</span></label>
+
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="greater than 20"> <span class="select-btn">Greater than 20</span></label>
+    </div>
+    @* <p>
+                                                If not working, stopped immediately after accident:
+                                                <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
+                                                <input type="radio" name="StoppedAfterAccident" value="No" /> No
+                                                <br />
+                                                Reason:
+                                                <textarea id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
+                                            </p> *@
+</div>
+
+<script>
+    function fnCheckPatientNameOnly() {
+        var url = '@Url.Action("CheckPatientNameOnly", "IntakeForm")';
+
+        var id=$("#hdId").val();
+
+        if(id!="0");
+        {
+        var model = {
+            "fname": $("#FN").val(),
+            "lname": $("#LN").val(),
+            "dob": $("#DOB").val(),
+            "id": $("#hdId").val(),
+            "account_no": $("#AccountNo").val()
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+             success: function (data, status, xhr) {
+
+                if (data.result === 1) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>The patient already exists in the system. Please verify the patient details before proceeding.</p>');
+                }
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+        }
+    }
+    function validateDateStrict(dateStr, fieldLabel, blockFuture, fieldId) {
+
+            var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+            if (!regex.test(dateStr)) {
+                alert(fieldLabel + " must be after 01/01/1900");
+
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
+
+                return null;
+            }
+
+            var parts = dateStr.split('-');
+            var year = parseInt(parts[0], 10);
+            var month = parseInt(parts[1], 10);
+            var day = parseInt(parts[2], 10);
+
+            var date = new Date(year, month - 1, day);
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                alert("Invalid " + fieldLabel);
+
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
+
+                return null;
+            }
+
+            if (blockFuture) {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (date > today) {
+                    alert(fieldLabel + " cannot be future date");
+
+                    if (fieldId === "#DOB")
+                        clearDOBFields();
+                    else
+                        $(fieldId).val('').focus();
+
+                    return null;
+                }
+            }
+
+            return date;
+        }
+            function clearDOBFields() {
+            $('#DOB').val('');
+            $('#Age').val('');
+            $('#pdDOB').text('');
+            $('#pdAge').text('');
+            $('#DOB').focus();
+        }
+           function fnvalidateDatefields() {
+
+            var dob = $('#DOB').val();
+            var dos = $('#DOE').val();
+            var doa = $('#DOA').val();
+
+            var dobDate = null;
+            var dosDate = null;
+            var doaDate = null;
+
+               // DOB
+        if (dob) {
+            dobDate = validateDateStrict(dob, "DOB", true, "#DOB");
+            if (!dobDate) return;
+        }
+
+        // DOS
+        if (dos) {
+            dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
+            if (!dosDate) return;
+        }
+
+        // DOA
+        if (doa) {
+            doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+            if (!doaDate) return;
+        }
+
+            // ---------- DOA vs DOS ----------
+                if (dosDate && doaDate && doaDate > dosDate) {
+            alert("DOA cannot be greater than DOS");
+
+            $('#DOA').val('').focus();
+            $('#pdDOA').text('');
+
+            return;
+        }
+
+            // // ---------- Side panel ----------
+            // var fullname = $("#lname").val() + ' ' + $("#fname").val();
+            // $('#pdName').text(fullname);
+
+            // if (dos) $('#pdDOS').text(fngetAGE(dos));
+            // if (doa) $('#pdDOA').text(fngetAGE(doa));
+
+            // ---------- Age ----------
+            if (dobDate && dosDate) {
+
+                var age = dosDate.getFullYear() - dobDate.getFullYear();
+                var m = dosDate.getMonth() - dobDate.getMonth();
+
+                if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
+                    age--;
+                }
+
+                   if (age > 90) {
+        alert("Age should not be greater than 90 years");
+
+        clearDOBFields();
+
+        return;
+    }
+            }
+
+              // $('#pdCT').text($("#compensation option:selected").text());
+              // $('#pdLoc').text($("#locationid option:selected").text());
+              // $('#pdGender').text($("#gender option:selected").text());
+        }
+        function fngetAGE(inputDate) {
+            if (inputDate) {
+                var date = new Date(inputDate);
+
+                // Extract month, date, and year
+                var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+                var day = date.getDate().toString().padStart(2, '0');
+                var year = date.getFullYear();
+
+                // Format date as MM/dd/yyyy
+                var formattedDate = month + '/' + day + '/' + year;
+
+                return formattedDate;
+            }
+            return '';
+        }
+</script>

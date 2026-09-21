@@ -1,0 +1,1936 @@
+﻿<link href="~/assets/img/favicon.png" rel="icon">
+<link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+@{
+    Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
+}
+
+<link href="~/assets/css/intakesheet.css" rel="stylesheet" />
+<main id="main" class="main" style="margin-left:0px!important">
+
+    <section class="section">
+        <div class="col-lg-12">
+
+            <div class="row">
+                <!-- LEFT: FORM -->
+                <div class="col-md-12 col-12" id="formSection" name="formSection">
+
+                    <button id="uploadDL"
+                            class="btn btn-sm btn-outline-primary mt-3" onclick="fnshowDLPopup()" style="display:none;">
+                        Upload Driving License
+                    </button>
+                    <!-- Loader -->
+
+
+                    <div id="pdfLoader" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,0.8);
+    z-index:99999;
+    text-align:center;
+">
+                        <div style="
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+    ">
+                            <div class="spinner-border text-primary" role="status"
+                                 style="width:4rem;height:4rem;">
+                            </div>
+
+                            <div style="margin-top:15px;font-size:18px;font-weight:bold;">
+                                Loading...
+                            </div>
+                        </div>
+                    </div>
+                    <form method="post" id="patientForm" name="patientForm" class="container my-4">
+                        <input type="hidden" id="hdId" name="hdId" value="@ViewBag.Id" />
+                        <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
+                        <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
+                        <input type="hidden" id="DLPath" name="DLPath" />
+                        <input type="hidden" id="hdIEId" name="hdIEId" />
+                        <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
+                        <input type="hidden" id="Diagnosis" name="Diagnosis" />
+                        <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
+                        <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
+                        <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
+                        <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
+                        <input type="hidden" id="VisitType" name="VisitType" value="@ViewBag.Type" />
+                        <h4 class="text-center mb-4 fw-bold">
+                            Follow up Intake
+                        </h4>
+                        <div class="position-relative">
+                            <p id="btnSaveSection" class="mb-0 sticky-buttons">
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        onclick="window.location.href='@Url.Action("Index", "Visit")'">
+                                    <i class="bi bi-house-door-fill"></i> Home
+                                </button>
+                               @*  <button type="submit" class="btn btn-primary">Submit</button> *@
+                                <button type="button"
+                                        class="btn btn-outline-primary"
+                                        onclick="saveForm(true)">
+                                    Save
+                                </button>
+                                <button type="button" id="btnSuperBill"
+                                        class="btn btn-outline-primary"
+                                @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                        onclick="DownloadPdf('@ViewBag.Id')">
+                                    Super Bill
+                                </button>
+                            </p>
+                            <!-- Settings Button -->
+                            <div class="position-absolute top-0 end-0 m-2">
+
+                                <div class="dropdown">
+                                    <button class="btn btn-light border shadow-sm rounded-circle"
+                                            type="button"
+                                            id="settingsDropdown"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+
+                                        <i class="bi bi-gear-fill"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end shadow"
+                                        aria-labelledby="settingsDropdown">
+
+                                        <li>
+                                            <a class="dropdown-item" onclick="fnshowPatientList()" href="javascript:void(0)">
+                                                <i class="bi bi-calendar-check me-2"></i>
+                                                Today's Visit
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="fndownloadPDF()">
+                                                <i class="bi bi-file-earmark-text me-2"></i> Export as PDF
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                               href="javascript:void(0)"
+                                               onclick="fnAddIE()">
+                                                <i class="bi bi-file-earmark-text me-2"></i>
+                                                Add Initial
+                                            </a>
+                                        </li>
+
+                                        @* <li><hr class="dropdown-divider"></li>
+
+                                        <li>
+                                            <a class="dropdown-item text-danger" href="/logout">
+                                                <i class="bi bi-box-arrow-right me-2"></i>
+                                                Logout
+                                            </a>
+                                        </li> *@
+
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <br />
+                        <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white">
+                            <b><i>*Note: Please do not use single quot(') in any fields.</i></b>
+
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Patient Details
+                                        </button>
+
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <partial name="KDVPC/_PatientDetails" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            History
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <partial name="KDVPC/_History" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item" id="acordPresentComp" style="display:none">
+                                    <h2 class="accordion-header" id="headingSix">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseTwo">
+                                            Present Complaints
+                                        </button>
+                                    </h2>
+                                    <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="divCC">
+                                            <partial name="KDVPC/_PresentComplain" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="accordion-item" id="acordPhyExam" style="display:none">
+                                    <h2 class="accordion-header" id="headingSeven">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseTwo">
+                                            Physical Examination
+                                        </button>
+                                    </h2>
+                                    <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="divPE">
+                                            <partial name="KDVPC/_PhysicalExamination" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingNE">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNE" aria-expanded="false" aria-controls="collapseNine">
+                                            Neuro Exam
+                                        </button>
+                                    </h2>
+                                    <div id="collapseNE" class="accordion-collapse collapse" aria-labelledby="headingNE" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="divNeuro">
+                                            <partial name="KDVPC/_NeuroExam" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item" id="acordDiagnosis" style="display:none">
+                                    <h2 class="accordion-header" id="headingEight">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                                            Diagnosis <span id="bodyPartLinks" style="margin-left:10px;"></span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="divDiag">
+
+                                            <ol> <div class="row" id="divDiagnosis">@Html.Raw(ViewBag.Diagnosis)</div></ol>
+
+                                            <br>
+                                            <input id="DiagnosisOther" class="form-control d-inline" style="width:95%" placeholder="Other" />
+                                            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiagnosisOther')"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingADL">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseADL" aria-expanded="false" aria-controls="collapseADL">
+                                            ADL
+                                        </button>
+                                    </h2>
+                                    <div id="collapseADL" class="accordion-collapse collapse" aria-labelledby="headingADL" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="divADL">
+                                            <partial name="KDVPC/_ADL" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingNote">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNote" aria-expanded="false" aria-controls="collapseNote">
+                                            Provider Notes
+                                        </button>
+                                    </h2>
+                                    <div id="collapseNote" class="accordion-collapse collapse" aria-labelledby="headingNote" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="divNote">
+                                            <p>
+
+                                                <textarea id="DrNote" name="DrNote" rows="4 " class="form-control d-inline" style="width:95%"></textarea>
+                                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DrNote')"></i>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingNine">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                                            RECOMMENDATIONS
+                                        </button>
+                                    </h2>
+                                    <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <partial name="KDVPC/_Recommendation" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </form>
+                </div>
+                <!-- RIGHT: PREVIEW -->
+                <div class="col-md-5 col-12" id="previewSection" name="previewSection" style="display:none">
+                    <div class="container my-4">
+                        <h4 class="text-center mb-4 fw-bold">
+                            Live Report Preview
+                        </h4>
+
+                        <div class="d-flex justify-content-end mb-2">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Export
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="fnExportDOC()">Export as DOC</a></li>
+                                    <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white" id="previewBox">
+                            <!-- ❌ CLOSE ICON -->
+                            <span id="closePreview"
+                                  style="position:absolute; top:8px; right:12px; cursor:pointer; font-size:18px;">
+                                ❌
+                            </span>
+                            <p id="previewText">
+                                Patient report will appear here...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<div class="modal fade" id="fuModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modeltitle">Upload Driving License</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Patient Name -->
+                @*   <div class="mb-3">
+                    <label class="form-label">Upload Image</label>
+                    <input type="file" id="fup" accept="image/*" capture="environment" />
+                </div> *@
+                <div class="upload-box" id="dropArea">
+                    Drag & Drop or Click
+                    <input type="file" id="fup" accept="image/*" capture="environment" hidden />
+                </div>
+
+                <div id="previewGrid" class="preview-grid"></div>
+
+                <!-- ✅ Loader Overlay -->
+                <div id="uploadLoader"
+                     style="display:none; position:absolute; top:0; left:0; width:100%; height:100%;
+                background: rgba(255,255,255,0.7); z-index:999;
+                align-items:center; justify-content:center;">
+
+                    <div style="text-align:center;">
+                        <div class="spinner-border text-primary"></div>
+                        <p>Processing image...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="fnUploadDL()">Upload</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="treatmentModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modeltitle">Select Treatment / Plan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                @foreach (var item in (List<MS.Models.tbl_treatment_master>)ViewBag.Treatment)
+                {
+                    var check = item.pre_select.Value ? "checked='checked''" : "";
+                    <div class="form-check">
+                        <input class="form-check-input treatment" type="checkbox" id="@item.id" onclick="fnTreatmentDetails();" @check>
+                        <input type="text" value="@item.treatment_details" class="form-check-label form-control" onchange="fnTreatmentDetails();" id="chk_@item.id" for="@item.id" onclick="fnTreatmentDetails();">
+                    </div>
+                }
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="daignoCodeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+
+        <div class="modal-body" id="modelDaignoCode">
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="PatientVisitModel" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modeltitle">Patient List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="patientlistContainer">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+                var docTemplate = null;
+                var formData = null;
+                // Path to your saved template file (relative to this HTML file).
+                // (The DOCX is stored alongside this page.)
+                var templateUrlDocx = '@ViewBag.TemplateDOCURL';
+                var templateUrl = '@ViewBag.TemplateURL';
+
+                var recognition;
+                var isRecording = false;
+
+        function fndownloadPDF(){
+            var fileName =
+            $("#FN").val() + ", " +
+            $("#LN").val() + "_" +
+            $("#DOE").val() +
+            "_IE_IntakeForm.pdf";
+            downloadPDF(fileName);
+        }
+
+        function fnAddIE()
+        {
+        // window.location.href= '@Url.Action("AIInitialIntake", "IntakeForm")?id='+null+'&locid='+$("#LocationId").val();
+             window.location.href= '@Url.Action("AIInitialIntake", "IntakeForm")?locid=' + $("#LocationId").val();
+        }
+
+        function fnshowPatientList() {
+             $.ajax({
+                url: '@Url.Action("TodayVisitList", "IntakeForm")?locid=' + $("#LocationId").val(),
+                type: 'GET',
+
+                success: function (response) {
+
+                    $('#patientlistContainer').html(response);
+                    $("#PatientVisitModel").modal('show');
+                },
+
+                error: function () {
+
+                    alert('Error loading patient list.');
+
+                }
+            });
+
+        }
+
+        function calculateBMI()
+        {
+
+                let weight = parseFloat($("#Weight").val());      // Weight in lbs
+                let heightFt = parseFloat($("#Heightft").val()); // Feet
+                let heightInc = parseFloat($("#Heightinch").val()); // Inches
+
+                if (isNaN(weight) || isNaN(heightFt) || isNaN(heightInc)) {
+
+                    return;
+                }
+
+                // Convert height to total inches
+                let totalHeightInches = (heightFt * 12) + heightInc;
+
+                // BMI Formula
+                let bmi = (703 * weight) / (totalHeightInches * totalHeightInches);
+
+                bmi = bmi.toFixed(2);
+
+                $("#BMI").val(bmi);
+        }
+
+            function safeParse(json) {
+        if (typeof json !== "string") return json;
+
+        try {
+            let sanitized = json.trim();
+
+            // 1. Remove Byte Order Mark (BOM)
+            sanitized = sanitized.replace(/^\uFEFF/, '');
+
+            // 2. Decode HTML entities (more robustly)
+            sanitized = sanitized.replace(/&quot;/g, '"')
+                                 .replace(/&#x2B;/g, '+')
+                                 .replace(/&lt;/g, '<')
+                                 .replace(/&gt;/g, '>')
+                                 .replace(/&amp;/g, '&');
+
+            // 3. Fix literal Control Characters
+            // This finds actual tabs, newlines, and carriage returns inside the string
+            // and converts them to the escaped version (\t, \n, \r) that JSON.parse requires.
+            sanitized = sanitized.replace(/[\x00-\x1F\x7F-\x9F]/g, function (match) {
+                switch (match) {
+                    case '\t': return '\\t';
+                    case '\n': return '\\n';
+                    case '\r': return '\\r';
+                    default: return ''; // Remove other illegal control characters
+                }
+            });
+
+              // 1. Remove BOM
+        sanitized = sanitized.replace(/^\uFEFF/, '');
+
+        // 2. Fix invalid backslashes (like \d)
+        // This looks for a backslash NOT followed by valid JSON escape chars and escapes it.
+        sanitized = sanitized.replace(/\\([^"\\\/bfnrtu])/g, '\\\\$1');
+
+            return JSON.parse(sanitized);
+        } catch (e) {
+            console.error("Invalid JSON content:", json);
+            console.error("Error details:", e.message);
+            throw e;
+        }
+    }
+                function startVoice(icon, ctrl) {
+
+                var input = $('#' + ctrl);
+
+                if (!('webkitSpeechRecognition' in window)) {
+                    alert("Voice recognition not supported in this browser");
+                    return;
+                }
+
+                // 👉 STOP if already recording
+                if (isRecording) {
+                    recognition.stop();
+                    isRecording = false;
+                    $(icon).css("color", "#007bff");
+                    $(icon).attr("title", "Start Recording");
+                    return;
+                }
+
+                // 👉 START recording
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = true;   // 🔥 IMPORTANT
+                recognition.interimResults = false;
+                recognition.lang = "en-US";
+
+                recognition.start();
+                isRecording = true;
+
+                $(icon).css("color", "red");
+                 $(icon).attr("title", "Stop Recording");
+
+                recognition.onresult = function (event) {
+
+                    var transcript = convertPunctuation(
+                        event.results[event.results.length - 1][0].transcript
+                    );
+
+                    if (transcript.toLowerCase() === "clear all") {
+                        if (confirm("Clear all text?")) {
+                            input.val('');
+                        }
+                    } else {
+                        var currentText = input.val() || "";
+                        input.val((currentText + "" + transcript).trim());
+                    }
+
+                    //updatePreview();
+                };
+
+                recognition.onend = function () {
+                    isRecording = false;
+                    $(icon).css("color", "#007bff");
+                  $(icon).attr("title", "Stop Recording");
+                };
+            }
+
+
+                function convertPunctuation(text) {
+                    return text
+                        .replace(/\bfull stop\b/gi, ".")
+                        .replace(/\bstop\b/gi, ".")
+                        .replace(/\bdot\b/gi, ".")
+                        .replace(/\bcomma\b/gi, ",")
+                        .replace(/\bquestion mark\b/gi, "?")
+                        .replace(/\bexclamation mark\b/gi, "!")
+                        .replace(/\bcolon\b/gi, ":")
+                        .replace(/\bsemicolon\b/gi, ";")
+                        .replace(/\bnew line\b/gi, "\n")
+                        .replace(/\bnext line\b/gi, "\n");
+                }
+                let selectedSections = [];
+                let selectedPESections = [];
+
+                function fnShowPresentComplain(cntrl, divCC, divPE) {
+
+                if (!divCC) return;
+
+                if ($(cntrl).is(":checked")) {
+
+                    // Add in order
+                    if (!selectedSections.includes(divCC)) {
+                        selectedSections.push(divCC);
+                    }
+
+                    if (divPE && !selectedPESections.includes(divPE)) {
+                        selectedPESections.push(divPE);
+                    }
+
+                } else {
+
+                    // Remove when unchecked
+                    selectedSections = selectedSections.filter(x => x !== divCC);
+                    selectedPESections = selectedPESections.filter(x => x !== divPE);
+
+                    // Clear values
+                    $("#" + divCC).find("input").prop("checked", false).val("");
+                    $("#" + divPE).find("input").prop("checked", false).val("");
+                }
+
+                renderSectionsInOrder();
+            }
+
+                function renderSectionsInOrder() {
+
+                let ccContainer = $("#presentComplaintContainer");   // create this div
+                let peContainer = $("#physicalExamContainer");       // create this div
+
+                ccContainer.empty();
+                peContainer.empty();
+
+                // Render CC sections in order
+                selectedSections.forEach(function (id) {
+                    let el = $("#" + id);
+                    el.show();                 // ensure visible
+                    ccContainer.append(el);    // append in order
+                });
+
+                //Render PE sections in order
+                selectedPESections.forEach(function (id) {
+                    let el = $("#" + id);
+                    el.show();
+                    peContainer.append(el);
+                });
+            }
+
+                // CLOSE (❌)
+                $("#closePreview").click(function () {
+
+                    $("#previewSection").hide();
+
+                    // Expand form to full width
+                    $("#formSection")
+                        .removeClass("col-md-6")
+                        .addClass("col-md-12");
+
+                    // Show open button
+                    $("#openPreview").show();
+                });
+
+                // OPEN AGAIN
+                $("#openPreview").click(function () {
+
+                    $("#previewSection").show();
+
+                    // Back to split layout
+                    $("#formSection")
+                        .removeClass("col-md-12")
+                        .addClass("col-md-6");
+
+                    $(this).hide();
+                });
+
+
+                function loadTemplate() {
+                    // Try loading a DOCX template first; fall back to plain text.
+                    loadDocxTemplate(templateUrlDocx)
+                        .catch(function () {
+                            return loadTextTemplate(templateUrl);
+                        })
+                        .then(function () {
+                            //updatePreview();
+                        });
+                }
+
+                function loadDocxTemplate(url) {
+                    return fetch(url)
+                        .then(function (res) {
+                            if (!res.ok) throw new Error("Failed to load DOCX template");
+                            return res.arrayBuffer();
+                        })
+                        .then(function (arrayBuffer) {
+                            return mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+                        })
+                        .then(function (result) {
+                            // Convert to HTML so formatting (bold, line breaks, etc.) is preserved.
+                            docTemplate = result.value;
+                        });
+                }
+
+                function loadTextTemplate(url) {
+                    return fetch(url)
+                        .then(function (res) {
+                            if (!res.ok) throw new Error("Failed to load text template");
+                            return res.text();
+                        })
+                        .then(function (text) {
+                            docTemplate = text;
+                        });
+                }
+
+                function applyTemplate(template, values) {
+                    return template.replace(/{{\s*([^}]+)\s*}}/g, function (_, key) {
+                        return values[key] || "";
+                    });
+                }
+
+                function updatePreview() {
+
+                    var values = {};
+
+                    $('#patientForm').find('input, select, textarea').each(function () {
+                        var key = $(this).attr('name') || $(this).attr('id');
+                        var cls = $(this).attr('class');
+                        if (!key) return;
+
+                        var type = $(this).attr('type');
+
+                        if (type === 'radio') {
+                            if ($(this).is(':checked')) {
+                                values[key] = $(this).val();
+                            }
+                        }
+                        else if (type === 'checkbox') {
+
+                            // 🔹 Special handling for Complaints (multi-checkbox)
+                            if (cls === "chkMulti") {
+                                if (!values[key]) values[key] = [];
+                                if ($(this).is(':checked')) {
+                                    values[key].push($(this).val());
+                                }
+                            }
+                            else {
+                                // normal checkbox (true/false)
+                                values[key] = $(this).is(':checked');
+                            }
+                        }
+                        else {
+                            values[key] = $(this).val() || "";
+                        }
+                    });
+
+                   values["Id"]= $("#hdId").val();
+
+                    var today = new Date();
+
+                    var options = {
+                        month: 'short',
+                        day: '2-digit',
+                        year: 'numeric'
+                    };
+
+                    // var formattedDate = today.toLocaleDateString('en-US', options);
+
+                    // values["DOE"] = formattedDate.replace(',', '');
+
+                     if ($("#DOE").val() != '')
+                        values["DOE"] = formatDate($("#DOE").val());
+
+                    if ($("#DOB").val() != '')
+                        values["DOB"] = formatDate($("#DOB").val());
+
+                    if ($("#DOA").val() != '') {
+                        $("#lblDOA").val($("#DOA").val());
+                        values["DOA"] = formatDate($("#DOA").val());
+                    }
+
+                    formData = values;
+
+                    var template = docTemplate ||
+                        "Patient {{PatientName}} ({{Gender}}), dominant hand {{DominantHand}},\n" +
+                        "reports that on {{DOA}}, while working as {{JobTitle}},\n" +
+                        "they sustained an injury when {{Incident}}.\n\n" +
+                        "The incident occurred {{IncidentTypes}} and involved {{BodyPart}}.\n" +
+                        "Since the incident, symptoms have been persistent and\n" +
+                        "interfere with daily activities.";
+
+                    var output = applyTemplate(template, values);
+                    $("#previewText").html(output);
+
+                    processTemplate(values)
+                }
+
+                // Trigger on all inputs
+                $(document).on("keyup change","#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option",function () {
+            updatePreview();
+                });
+
+                function processTemplate(data) {
+                    let html = $('#previewText').html();
+
+                    // Replace placeholders
+                    Object.keys(data).forEach(key => {
+                        let regex = new RegExp('{{' + key + '}}', 'g');
+                        html = html.replace(regex, data[key]);
+                    });
+
+                        toggleSection(data.Hospital === "Yes", "#divHospital");
+                        toggleSection(data.Allergy === "Yes", "#divAllergy");
+                        toggleSection(data.Smoke === "Yes", "#divSmoke");
+                        toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
+                        toggleSection(data.PT === "Yes", "#divPT");
+                        toggleSection(data.Chiro === "Yes", "#divChiro");
+
+                        if(data.PreInjury==="No")
+                            $("#preInjuryDetailsBox").show();
+                        else
+                            $("#preInjuryDetailsBox").hide();
+
+
+                       $(".mmClass").show();
+                       if (data.InjuryType === "WC") {
+                            $("#divWC").show();
+                            $("#divWC1").show();
+                            $("#divNF").hide();
+                            $("#divPI").hide();
+                            html = html.replace('[WC_START]', '').replace('[WC_END]', '');
+                            html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+                        }
+                        else if (data.InjuryType === "NF" || data.InjuryType === "PI" ||
+                        data.InjuryType === "LIEN") {
+                            // Keep MVA, remove WC
+                            html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
+                            html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+                            $("#divWC").hide();
+                            $("#divWC1").hide();
+                            $("#divNF").show();
+
+                        }
+                        else if (data.InjuryType === "MM") {
+                            // $("#divNF").hide();
+                            // $("#divMM").hide();
+                            // $("#divWC1").hide();
+                            $(".mmClass").hide();
+
+                        }
+                                           else {
+                            // Remove both
+                            html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+                            html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+                            $("#divNF").hide();
+                            $("#divMM").hide();
+                            $("#divWC1").hide();
+
+                        }
+
+                        $('#previewText').html(html);
+                }
+
+             function saveForm(isSubmit) {
+
+             var valid=formValidation();
+
+                     if(!valid)
+                         return false;
+
+        // Show loader
+        $('#pdfLoader').show();
+
+        try {
+
+            // Assign form values
+            formData["Diagnosis"] = $("#divDiagnosis").html();
+            formData["TreatmentIds"] = $("#TreatmentIds").val();
+            formData["TreatmentDesc"] = $("#TreatmentDesc").val();
+            formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
+
+            // formData["ProviderId"] = $("#ProviderId").val();
+            // formData["PatientIEId"] = $("#PatientIEId").val();
+            // formData["PatientId"] = $("#PatientId").val();
+            //formData["LocationId"] = $("#LocationId").val();
+
+            // URLs
+            var url = '@Url.Action("SaveForm", "FollowupForm")';
+            var indexurl = '@Url.Action("Index", "Visit")';
+
+            // Convert form data to JSON
+            var data = JSON.stringify(formData);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                data: data,
+
+                success: function (response) {
+
+                    // Hide loader after AJAX response
+                    $('#pdfLoader').hide();
+
+                    if (response.success) {
+
+                        if (isSubmit) {
+                            let locId = $("#LocationId").val() || 0;
+                            let provId = $("#ProviderId").val() || 0;
+
+                            // Automatically redirect to a blank 'Create' page
+                             window.location.href =
+                                '@Url.Action("Create", "FollowupForm")' +
+                                '?id=' + response.id +
+                                '&providerId='+ provId +
+                                '&patientId='+ response.patientid +
+                                '&locid=' + response.locid;
+
+                            $('#pdfLoader').hide();
+                        }
+                           
+                        
+                        else {
+
+                            window.location.href =
+                                '@Url.Action("Create", "FollowupForm")' +
+                                '?id=' + response.id +
+                                '&providerId=' + response.provid +
+                                '&locid=' + response.locid;
+                        }
+                    }
+                    else {
+
+                        bootbox.alert({
+                            title: "<span class='text-danger'>Error</span>",
+                            message: response.message,
+
+                            buttons: {
+                                ok: {
+                                    label: "OK",
+                                    className: "btn-danger"
+                                }
+                            }
+                        });
+                    }
+                },
+
+             error: function () {
+                    alert("An error occurred while saving data.");
+                }
+            });
+            }catch (error) {
+
+        // Hide loader if JavaScript exception occurs
+        $('#pdfLoader').hide();
+
+        console.error(error);
+    }
+
+        }
+
+        function formValidation()
+               {
+                    let isValid = true;
+
+                    // Validate required fields
+                    $("#PatientName, #DOE, #DOB, #DOA").each(function () {
+                        if ($.trim($(this).val()) === "") {
+                            isValid = false;
+                            $(this).addClass("is-invalid");
+                        } else {
+                            $(this).removeClass("is-invalid");
+                        }
+                    });
+                    // WC validation
+    //var injuryType = formData.InjuryType; // or $("#InjuryType").val()
+    var injuryType = $('input[name="InjuryType"]:checked').val();
+
+    if (injuryType === "WC") {
+
+        // Currently Working
+        if (!$('input[name="IsWorking"]:checked').length) {
+            alert("Please select Work Status.");
+            $('input[name="IsWorking"]').first().focus();
+            return false;
+        }
+
+        // Disability Percentage
+        var disability = $("#DisabilityPercentage").val().trim();
+
+        if (disability === "") {
+            alert("Please enter Degree of Disability (%).");
+            $("#DisabilityPercentage").focus();
+            return false;
+        }
+
+        if (parseFloat(disability) < 0 || parseFloat(disability) > 100) {
+            alert("Degree of Disability must be between 0 and 100.");
+            $("#DisabilityPercentage").focus();
+            return false;
+        }
+    }
+                    // Stop if validation fails
+                    if (!isValid) {
+                        return false;
+                    }
+                    else
+                         return true;
+               }
+
+               $(document).on("input change", "[required]", function () {
+                    if ($.trim($(this).val()) !== "") {
+                        $(this).removeClass("is-invalid");
+                    }
+               });
+                $(document).on('input', '.muscle-input', function () {
+
+                        let val = $(this).val();
+
+                        // If starts with D or d
+                        if (val.toLowerCase() === 'd') {
+                            $(this).val('Decreased');
+                        }
+                });
+
+                $(document).ready(function () {
+                    // Load template and initialize preview
+                    var today = new Date().toISOString().split('T')[0];
+                    $('#DOE').val(today);
+                    loadTemplate();
+
+                    if ('@ViewBag.FormData' != '') {
+                        bindForm('@ViewBag.FormData');
+                        // clearWorkStatusIfRequired();
+                    }
+                     function clearWorkStatusIfRequired() {
+
+        var injuryType = $('input[name="InjuryType"]:checked').val();
+
+        if (injuryType !== 'WC') {
+            $('input[name="IsWorking"]').prop('checked', false);
+            $('#DisabilityPercentage').val('');
+        }
+    }
+
+    // $(document).on('change', 'input[name="InjuryType"]', function () {
+    //     clearWorkStatusIfRequired();
+    // });
+                    $('#patientForm').on('submit', function (e) {
+
+                        if(!checkValidation())
+                            return false;
+
+                        e.preventDefault(); // Stop page reload
+                        saveForm(true);
+
+                    });
+                    var selected = [];
+                    $(document).on('change', 'input[name="Complaints"]', function () {
+
+                        var section = $(this).data('section');
+                        var pe = $(this).data('pe');
+
+                        fnShowPresentComplain(this, section, pe);
+
+
+
+                            // $('input[name="Complaints"]:checked').each(function () {
+                            //     selected.push($(this).val());
+                            // });
+                            var value = $(this).val();
+
+
+
+                            if ($(this).is(':checked')) {
+                                // Add in click order
+                                selected.push(value);
+                            } else {
+                                // Remove if unchecked
+                                selected = selected.filter(function (item) {
+                                    return item !== value;
+                                });
+                            }
+
+                            if(selected.length>0){
+
+                                if (selected.includes("Neck"))
+                                {
+                                    $(".upper").show();
+                                }
+                                else
+                                {
+                                     $(".upper").hide();
+                                }
+
+                               if (selected.includes("Lowback"))
+                                {
+                                    $(".lower").show();
+                                }
+                                else
+                                {
+                                     $(".lower").hide();
+                                }
+
+
+
+                                $("#acordPresentComp").show();
+                                $("#acordPhyExam").show();
+                                $("#acordDiagnosis").show();
+
+
+                                var html = '';
+
+                                selected.forEach(function(part) {
+                                    part = part.trim();
+
+                                    html += `<span class="diagnosis-link"
+                                                    data-part="${part}"
+                                                    style="margin-left:8px; color:blue; cursor:pointer; text-decoration:underline;">
+                                                ${part}
+                                             </span>`;
+                                });
+
+                                $('#bodyPartLinks').html(html);
+                            }
+                            else{
+                                 $("#acordPresentComp").hide();
+                                 $("#acordPhyExam").hide();
+                                 $("#acordDiagnosis").hide();
+                            }
+
+                            var result = selected.join(', ');
+
+                            console.log(result);
+
+                            $('#BodyPart').val(result);
+                    });
+                     $(document).on('change', 'input[name="NeckRadiates"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="NeckRadiates"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="NeckRadiatesTo"]').prop('checked', false);
+        }
+
+    });
+    $(document).on('change', 'input[name="NeckAssociated"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="NeckAssociated"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="NeckAssociatedTo"]').prop('checked', false);
+        }
+
+    });
+        $(document).on('change', 'input[name="LBRadiates"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="LBRadiates"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="LBRadiatesTo"]').prop('checked', false);
+        }
+
+    });
+    $(document).on('change', 'input[name="LBAssociated"]', function () {
+
+        // Check if any NeckRadiates checkbox is checked
+        if ($('input[name="LBAssociated"]:checked').length === 0) {
+            // Clear the Left/Right/Bilateral radio buttons
+            $('input[name="LBAssociatedTo"]').prop('checked', false);
+        }
+
+    });
+                    $('#DOB').on('change', function () {
+                        var dob = $(this).val(); // format: yyyy-mm-dd
+                        var age = calculateAge(dob);
+                        $('#Age').val(age);
+                    });
+
+        $('input[name="FUType"]').on('change', function() {
+                if ($(this).val() === 'Post injection FU') {
+                    $('#divInjectionFU').show();
+                    $('#divNormalFU').hide();
+                } else {
+                    $('#divNormalFU').show();
+                    $('#divInjectionFU').hide();
+                }
+            });
+         $(document).on('change', 'input[name="RadicularPecentage"]', function () {
+            if ($(this).is(':checked')) {
+                $('#divRadicularPecentage').show();
+            } else {
+                $('#divRadicularPecentage').hide();
+            }
+        });
+
+        $(document).on('change', 'input[name="VASPecentage"]', function () {
+            if ($(this).is(':checked')) {
+                $('#divVASPecentage').show();
+            } else {
+                $('#divVASPecentage').hide();
+            }
+        });
+                });
+
+                function fnExportDOC() {
+                    var htmlContent = $('#previewText').html();
+                    var url = '@Url.Action("ExportWord", "IntakeForm")';
+                    var form = $('<form method="post" action="' + url + '"></form>');
+
+                    form.append('<input type="hidden" name="htmlContent" value="'
+                        + $('<div>').text(htmlContent).html() + '">');
+
+                    $('body').append(form);
+                    form.submit();
+                }
+
+                function bindForm(val,forwardSetting=null) {
+                    // var cleaned = val
+                    //     .replace(/&quot;/g, '"')   // decode HTML quotes
+                    //     .trim();
+
+                    // cleaned=cleaned.replace(/"/g, '\\"');
+
+                    var data;
+                  // Check if val is a string before trying to decode/parse
+                    if (typeof val === "string") {
+                        var decode = decodeHtml(val);
+                        data = safeParse(decode);
+                    } else {
+                        // If it's already an object, just use it
+                        data = val;
+                    }
+
+
+                    $('#patientForm').find('input, select, textarea').each(function () {
+
+                        var key = $(this).attr('name') || $(this).attr('id');
+                        if (!key || data[key] === undefined || data[key] === null) return;
+
+                        var type = $(this).attr('type');
+                        var value = data[key];
+
+                         // 🔹 Fix DATE format
+                        if (type === 'date') {
+                            value = formatToISODate(value);
+                        }
+
+                        if (type === 'radio') {
+                            if ($(this).val() == value) {
+                                $(this).prop("checked", true);
+                            }
+                        }
+                        else if (type === 'checkbox') {
+
+                            // 🔹 Handle multi-checkbox (like Complaints array)
+                            if (Array.isArray(value)) {
+                                if (value.includes($(this).val())) {
+                                    $(this).prop("checked", true);
+                                } else {
+                                    $(this).prop("checked", false);
+                                }
+                            }
+                            else {
+                                // normal checkbox (true/false)
+                                $(this).prop("checked", value === true || value === "true");
+                            }
+                        }
+                        else {
+                            $(this).val(value);
+                        }
+
+                    });
+
+
+                   $("#hdId").val('@ViewBag.Id');
+
+
+                    setTimeout(function () {
+                        $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
+                        // ADD THESE LINES
+                        $('input[name="FUType"]:checked').trigger('change');
+                        $('input[name="RadicularPecentage"]:checked').trigger('change');
+                        $('input[name="VASPecentage"]:checked').trigger('change');
+                        $('input[name="InjuryType"]:checked').trigger('change');
+                        if($("#hdId").val()=="0"){
+
+                                $('#divRecommendation')
+                                .find('input:text, textarea')
+                                .val('');
+
+                                $('#divRecommendation')
+                                    .find('input:checkbox, input:radio')
+                                    .prop('checked', false);
+
+                                $('#divRecommendation')
+                                    .find('select')
+                                    .prop('selectedIndex', 0);
+
+                                if(forwardSetting!=null){
+
+                                    if(!forwardSetting.cc){
+                                        $('#divCC').find('input:text, textarea').val('');
+                                        $('#divCC').find('input:checkbox, input:radio').prop('checked', false);
+                                        $('#divCC').find('select').prop('selectedIndex', 0);
+                                    }
+                                    if(!forwardSetting.pe){
+                                        $('#divPE').find('input:text, textarea').val('');
+                                        $('#divPE').find('input:checkbox, input:radio').prop('checked', false);
+                                        $('#divPE').find('select').prop('selectedIndex', 0);
+                                    }
+                                    if(!forwardSetting.diagnosis){
+                                        $('#divDiag').find('input:text, textarea').val('');
+                                        $('#divDiag').find('input:checkbox, input:radio').prop('checked', false);
+                                        $('#divDiag').find('select').prop('selectedIndex', 0);
+                                        $('#divDiagnosis').html('');
+                                    }
+                                    if(!forwardSetting.neroexam){
+                                        $('#divNeuro').find('input:text, textarea').val('');
+                                        $('#divNeuro').find('input:checkbox, input:radio').prop('checked', false);
+                                        $('#divNeuro').find('select').prop('selectedIndex', 0);
+
+                                        $('#tblRE input[type="text"]').each(function() {
+                                             $(this).val('2+');
+                                        });
+                                        $('#tblSE input[type="text"]').each(function() {
+                                             $(this).val('Normal');
+                                        });
+                                        $('#tblME input[type="text"]').each(function() {
+                                             $(this).val('5');
+                                        });
+                                    }
+                                    if(!forwardSetting.adl){
+                                        $('#divADL').find('input:text, textarea').val('');
+                                        $('#divADL').find('input:checkbox, input:radio').prop('checked', false);
+                                        $('#divADL').find('select').prop('selectedIndex', 0);
+                                    }
+                                    if(forwardSetting.note){
+                                        $('#divNote').find('input:text, textarea').val('');
+                                        $('#divNote').find('input:checkbox, input:radio').prop('checked', false);
+                                        $('#divNote').find('select').prop('selectedIndex', 0);
+                                    }
+                                }
+                                $('#pdfLoader').hide();
+                        }
+                        //updatePreview();
+                    }, 2000);
+                }
+
+                function formatDate(inputDate) {
+                    if(inputDate!= undefined){
+                    var date = inputDate.split('-');
+
+                    // Extract date components
+                    var month = parseInt(date[1]); // Months are zero based
+                    var day = parseInt(date[2])
+                    var year = date[0];
+
+                    // Pad single digit month and day with leading zeros
+                    if (month < 10) {
+                        month = "0" + month;
+                    }
+                    if (day < 10) {
+                        day = "0" + day;
+                    }
+
+                    // Return formatted date
+                    return month + "/" + day + "/" + year;
+                    }
+                }
+
+                function formatToISODate(dateStr) {
+                        if (!dateStr) return "";
+
+                // Already correct
+                if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+
+                let date = new Date(dateStr);
+
+                if (isNaN(date)) return "";
+
+                let year = date.getFullYear();
+                let month = String(date.getMonth() + 1).padStart(2, '0');
+                let day = String(date.getDate()).padStart(2, '0');
+
+                return `${year}-${month}-${day}`;
+            }
+
+                function calculateAge(dob) {
+                    var birthDate = new Date(dob);
+                    var today = new Date();
+
+                    var age = today.getFullYear() - birthDate.getFullYear();
+                    var monthDiff = today.getMonth() - birthDate.getMonth();
+
+                    // Adjust if birthday hasn't occurred yet this year
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+
+                    return age;
+                }
+
+                function fnshowDLPopup(){
+                    $("#fuModal").modal('show');
+                }
+
+                function fnshowTreatment()
+                {
+                    $("#treatmentModal").modal('show');
+                }
+
+                function fnTreatmentDetails() {
+                            var strContent = '<ol>';
+                            var strIds = '', strDesc = '';
+
+                            $('input[type=checkbox].treatment').each(function (i, e) {
+                                // Check if the checkbox is selected
+                                if (e.checked) {
+                                    var checkboxValue = $("#chk_" + e.id).val();
+
+                                    // Only append to strContent if checkboxValue is not undefined or empty
+                                    if (checkboxValue) {
+                                        strContent += '<li>' + checkboxValue + '</li>';
+                                        strIds += (strIds ? ',' : '') + e.id;  // Ensure no leading comma
+                                        strDesc += (strDesc ? '^' : '') + checkboxValue;  // Ensure no leading ^ for first value
+                                    }
+                                }
+                            });
+
+                            // Close the ordered list
+                            strContent += '</ol>';
+
+                            // If no valid checkboxes were selected, clear the content (optional)
+                            if (strContent === '<ol></ol>') {
+                                strContent = '';  // Or handle this case as needed
+                            }
+
+                            var cmp_id = '@ViewBag.CmpId';
+
+                            // if (cmp_id === '18' || cmp_id === '15' || cmp_id === '10' || cmp_id === '2') {
+
+                            //     strContent = strContent.replace(/<ol>/g, '')     // remove opening <ol>
+                            //         .replace(/<\/ol>/g, '')   // remove closing </ol>
+                            //         .replace(/<li>/g, '')     // remove opening <li>
+                            //         .replace(/<\/li>/g, ''); // replace closing </li> with <br/>;
+                            // }
+
+                            $("#divTreatment").html(strContent);
+                            $('#TreatmentIds').val(strIds);
+                            $('#TreatmentDelimitDesc').val(strDesc);
+                            $('#TreatmentDesc').val(strContent);
+                        }
+
+                    $(document).on('click', '.diagnosis-link', function(e) {
+                        e.stopPropagation(); // 🔥 prevents accordion from opening/closing
+
+                        var part = $(this).data('part');
+                        fnShowDiagnosis(part);
+                    });
+
+                function fnShowDiagnosis(bodyParts){
+
+                    var url = '@Url.Action("GetDaignoCodeList", "IntakeForm")?bodyparts=' + bodyParts + "&id=" + $("#hdId").val();
+                    $("#hdSelectedBody").val(bodyParts);
+                    $.ajax({
+                        type: "Post",
+                        url: url,
+
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function (data, status, xhr) {
+
+                            $('#modelDaignoCode').html(data);
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error!" + error);
+                        },
+                    });
+
+                    $('#daignoCodeModal').modal('show');
+                    return false;
+                }
+
+               function fnUploadDL() {
+
+                //var fileInput = $('#fup')[0];
+
+                if (filesArr.length === 0) {
+                    alert("Please select an image");
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append("file", filesArr[0]);
+
+                var url = '@Url.Action("UploadDL", "IntakeForm")';
+
+                // ✅ Show loader inside modal
+                $('#uploadLoader').addClass('show');
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+
+                    success: function (response) {
+
+                        let data = response.parsedData;
+
+                        $('#FN').val(data.firstName);
+                        $('#LN').val(data.lastName);
+                        $('#Gender').val(data.gender);
+                        $('#DLPath').val(data.fileName);
+
+                        setDateToInput(data.dob, "DOB");
+                        $('#uploadLoader').addClass('hide');
+                        $("#fuModal").modal('hide');
+                        $("#previewGrid").html('');
+
+                    },
+
+                    error: function (err) {
+                        console.log(err);
+                        alert("Something went wrong!");
+                    },
+
+                    complete: function () {
+                        // ✅ Hide loader
+                        $('#uploadLoader').removeClass('show');
+                    }
+                });
+            }
+
+                function setDateToInput(dateStr,inputId) {
+
+                                    if (!dateStr) return;
+
+                        // Normalize separator
+                        dateStr = dateStr.replace(/-/g, "/");
+
+                        var parts = dateStr.split("/");
+
+                        if (parts.length !== 3) return;
+
+                        var mm = parts[0].padStart(2, '0');
+                        var dd = parts[1].padStart(2, '0');
+                        var yy = parts[2];
+
+                        // 🔥 Handle 2-digit year
+                        if (yy.length === 2) {
+                            var currentYear = new Date().getFullYear() % 100;
+
+                            // Rule: 00–currentYear → 2000s, else 1900s
+                            yy = (parseInt(yy) <= currentYear ? '20' : '19') + yy;
+                        }
+
+                        var formattedDate = `${yy}-${mm}-${dd}`;
+
+                        // Set DOB
+                        $('#' + inputId).val(formattedDate);
+
+                        // Set Age
+                        $('#Age').val(calculateAge(formattedDate));
+                    }
+                    function DownloadPdf(id) {
+       $('#pdfLoader').show();
+         var downloadurl = '@Url.Action("GeneratePdf", "FollowupForm")';
+                 downloadurl = downloadurl + '?pdffile=' + 'superbill.pdf' + '&id=' + id ;
+                 fetch(downloadurl)
+                     .then(response => {
+                         if (!response.ok) {
+                             throw new Error(`HTTP error! Status: ${response.status}`);
+                         }
+                           const disposition = response.headers.get('Content-Disposition');
+                                 let fileName = 'Superbill.pdf';
+                                  console.log(disposition);
+                                  debugger
+                                    if (disposition) {
+                                     const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                                     if (utf8Match) {
+                                             fileName = decodeURIComponent(utf8Match[1]);
+                                         } else {
+                                             const match = disposition.match(/filename="?([^";]+)"?/i);
+                                             if (match) {
+                                                 fileName = match[1];
+                                             }
+                                         }
+                                     }
+
+                                 return response.blob().then(blob => ({
+                                         blob,
+                                         fileName
+                                  }));
+                     })
+                   .then(({ blob, fileName }) => {
+                         var link = document.createElement('a');
+                         link.href = window.URL.createObjectURL(blob);
+                         link.download = fileName ;
+                         link.click();
+                           $('#pdfLoader').hide();
+                     })
+                     .catch(error => {
+                         console.error('Error downloading Pdf file:', error);
+                     });
+
+             }
+
+             function DownloadCF(id) {
+
+                $.get('@Url.Action("CheckSign", "FollowupForm")', { id: id }, function (res) {
+
+                if (res.id == 0) {
+                     $("#intid").val(id);
+                     $("#signModal").modal("show");
+                     $("#signCon").html(function (_, html) {
+                            return html.replace(/#pname/g, $("#PatientName").val() );
+                     });
+                     return;
+                }
+
+                 downloadConsentPdf(id);
+
+                });
+        }
+
+        function downloadConsentPdf(id,  defaultFileName = 'Consent Form.pdf', loaderSelector = '#pdfLoader') {
+        // Show loader
+        $(loaderSelector).show();
+
+        var baseUrl = '@Url.Action("GenerateCF", "FollowupForm")';
+        // Construct URL
+        const downloadUrl = baseUrl + '?pdffile=' + encodeURIComponent(defaultFileName) + '&id=' + id;
+
+        fetch(downloadUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Extract filename from Content-Disposition header
+                const disposition = response.headers.get('Content-Disposition');
+                let fileName = defaultFileName;
+
+                if (disposition) {
+                    const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+                    if (utf8Match) {
+                        fileName = decodeURIComponent(utf8Match[1]);
+                    } else {
+                        const match = disposition.match(/filename="?([^";]+)"?/i);
+                        if (match) {
+                            fileName = match[1];
+                        }
+                    }
+                }
+
+                return response.blob().then(blob => ({
+                    blob,
+                    fileName
+                }));
+            })
+            .then(({ blob, fileName }) => {
+                // Create a link and trigger download
+                const link = document.createElement('a');
+                const url = window.URL.createObjectURL(blob);
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link); // Required for Firefox
+                link.click();
+
+                // Cleanup
+                window.URL.revokeObjectURL(url);
+                link.remove();
+                $(loaderSelector).hide();
+            })
+            .catch(error => {
+                $(loaderSelector).hide();
+                console.error('Error downloading Pdf file:', error);
+                alert("Failed to download the PDF. Please try again.");
+            });
+    }
+</script>
+
+@* for file upload *@
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+<script>
+    let filesArr = [];
+
+    const dropArea = document.getElementById("dropArea");
+    const fileInput = document.getElementById("fup");
+    const previewGrid = document.getElementById("previewGrid");
+
+    // Click
+    dropArea.onclick = () => fileInput.click();
+
+    // Select
+    fileInput.onchange = (e) => handleFiles(e.target.files);
+
+    // Drag
+    dropArea.ondragover = e => e.preventDefault();
+    dropArea.ondrop = e => {
+        e.preventDefault();
+        handleFiles(e.dataTransfer.files);
+    };
+
+    // Handle files
+    function handleFiles(files) {
+        [...files].forEach(file => {
+            file.id = Date.now() + Math.random();
+            filesArr.push(file);
+            renderPreview(file);
+        });
+    }
+
+    // Preview
+    function renderPreview(file) {
+        const reader = new FileReader();
+
+        reader.onload = e => {
+            const div = document.createElement("div");
+            div.className = "preview-item";
+            div.dataset.id = file.id;
+
+            div.innerHTML = `
+                <button class="remove-btn">×</button>
+                <img src="${e.target.result}" />
+                <div class="progress"><div class="progress-bar"></div></div>
+            `;
+
+            // Remove
+            div.querySelector(".remove-btn").onclick = () => {
+                filesArr = filesArr.filter(f => f.id !== file.id);
+                div.remove();
+            };
+
+            previewGrid.appendChild(div);
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    // Reorder
+    new Sortable(previewGrid, {
+        animation: 150,
+        onEnd: () => {
+            let newOrder = [];
+            document.querySelectorAll(".preview-item").forEach(item => {
+                let id = item.dataset.id;
+                let file = filesArr.find(f => f.id == id);
+                if (file) newOrder.push(file);
+            });
+            filesArr = newOrder;
+        }
+    });
+
+    // Upload
+        document.getElementById("uploadBtn").onclick = function (e) {
+
+        e.preventDefault();
+
+        if (!filesArr || filesArr.length === 0) {
+            alert("Please select files first.");
+            return;
+        }
+
+        const progressBars = document.querySelectorAll(".progress-bar");
+
+        filesArr.forEach((file, index) => {
+
+            let formData = new FormData();
+            formData.append("file", file);
+            formData.append("order", index);
+
+            let xhr = new XMLHttpRequest();
+
+            xhr.open("POST", "/Media/UploadNew", true);
+
+            // Upload progress
+            xhr.upload.onprogress = function (e) {
+
+                if (e.lengthComputable && progressBars[index]) {
+
+                    let percent = Math.round((e.loaded / e.total) * 100);
+
+                    progressBars[index].style.width = percent + "%";
+                    progressBars[index].innerText = percent + "%";
+                }
+            };
+
+            // Success
+            xhr.onload = function () {
+
+                if (xhr.status === 200) {
+                    console.log("Uploaded:", file.name);
+                }
+                else {
+                    console.error("Upload failed:", file.name);
+                }
+            };
+
+            // Error
+            xhr.onerror = function () {
+                console.error("Network error while uploading:", file.name);
+            };
+
+            xhr.send(formData);
+        });
+    };
+
+
+        function hasSectionValue(sectionId) {
+
+        let hasValue = false;
+
+        $("#" + sectionId)
+            .find("input, textarea, select")
+            .each(function () {
+
+                const type = $(this).attr("type");
+
+                // checkbox / radio
+                if ((type === "checkbox" || type === "radio") && $(this).is(":checked")) {
+                    hasValue = true;
+                    return false;
+                }
+
+                // text / textarea / select
+                if (type !== "checkbox" && type !== "radio") {
+
+                    const value = $(this).val();
+
+                    if (value != null && value.toString().trim() !== "") {
+                        hasValue = true;
+                        return false;
+                    }
+                }
+            });
+
+        return hasValue;
+    }
+
+    function validateBodySection(bodyPart, complaintSectionId, peSectionId) {
+
+        const isSelected = $(`input[name='Complaints'][value='${bodyPart}']`).is(":checked");
+
+        if (!isSelected)
+            return true;
+
+        if (!hasSectionValue(complaintSectionId)) {
+            alert(`Please enter ${bodyPart} complaint before submitting.`);
+            return false;
+        }
+
+        if (!hasSectionValue(peSectionId)) {
+            alert(`Please enter ${bodyPart} physical exam details before submitting.`);
+            return false;
+        }
+
+        return true;
+    }
+
+    function checkValidation() {
+
+        const validations = [
+            {
+                bodyPart: "Neck",
+                complaintSectionId: "neckSection",
+                peSectionId: "neckPE"
+            },
+            {
+                bodyPart: "Midback",
+                complaintSectionId: "mbSection",
+                peSectionId: "mbPE"
+            },
+            {
+                bodyPart: "Lowback",
+                complaintSectionId: "lbSection",
+                peSectionId: "lbPE"
+            },
+            {
+                bodyPart: "Right Shoulder",
+                complaintSectionId: "rshSection",
+                peSectionId: "rshPE"
+            },
+            {
+                bodyPart: "Left Shoulder",
+                complaintSectionId: "lshSection",
+                peSectionId: "lshPE"
+            },
+            {
+                bodyPart: "Right Knee",
+                complaintSectionId: "rknSection",
+                peSectionId: "rknPE"
+            },
+            {
+                bodyPart: "Left Knee",
+                complaintSectionId: "lknSection",
+                peSectionId: "lknPE"
+            }
+        ];
+
+        for (const item of validations) {
+
+            const isValid = validateBodySection(
+                item.bodyPart,
+                item.complaintSectionId,
+                item.peSectionId
+            );
+
+            if (!isValid)
+                return false;
+        }
+
+        return true;
+    }
+
+    function toggleSection(condition, selector) {
+        $(selector).toggle(condition);
+    }
+
+
+</script>
+
+<!-- html2pdf library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="~/assets/js/intaketopdf.js"></script>
