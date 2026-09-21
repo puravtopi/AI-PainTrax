@@ -9,6 +9,7 @@
         public string plan { get; set; }
         public string subjective { get; set; }
         public string assessment { get; set; }
+        public string file_path { get; set; }
         public long ie_id { get; set; }
         public long fu_id { get; set; }
         public int length { get; set; }

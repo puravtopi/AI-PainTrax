@@ -15,14 +15,15 @@
         public int length { get; set; }
         public int intake_id { get; set; }
         public string Transcript { get; set; }
+        public string file_path { get; set; }
     }
 
     public class TranscribeData
     {
         public string PatientName { get; set; }
         public string DOE { get; set; }
-
         public string Transcript { get; set; }
+        public string FilePath { get; set; }
         public int Length { get; set; } = 0;
     }
 }

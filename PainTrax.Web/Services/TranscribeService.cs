@@ -11,8 +11,8 @@ namespace PainTrax.Web.Services
         public int Insert(tbl_transcribe data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_transcribe
-		(content,history,cc,plan,subjective,assessment,ie_id,fu_id,length,intake_id,cmp_id,date)Values
-				(@content,@history,@cc,@plan,@subjective,@assessment,@ie_id,@fu_id,@length,@intake_id,@cmp_id,@date);select @@identity;", conn);
+		(content,history,cc,plan,subjective,assessment,ie_id,fu_id,length,intake_id,cmp_id,date,file_path)Values
+				(@content,@history,@cc,@plan,@subjective,@assessment,@ie_id,@fu_id,@length,@intake_id,@cmp_id,@date,@file_path);select @@identity;", conn);
             cm.Parameters.AddWithValue("@content", data.content);
             cm.Parameters.AddWithValue("@history", data.history);
             cm.Parameters.AddWithValue("@cc", data.cc);
@@ -25,6 +25,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@intake_id", data.intake_id);
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             cm.Parameters.AddWithValue("@date", data.date);
+            cm.Parameters.AddWithValue("@file_path", data.file_path);
 
             var result = ExecuteScalar(cm);
             return result;

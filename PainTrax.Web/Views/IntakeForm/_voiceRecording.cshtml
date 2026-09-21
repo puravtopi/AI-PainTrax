@@ -186,6 +186,7 @@
         }
 </style>
 
+<input type="hidden" id="hidFilePath" value="@Model.FilePath"/>
 
 <!-- 1. Top Header -->
 <div class="scribe-header d-flex justify-content-between align-items-center">
@@ -492,6 +493,7 @@
 
             if (result.success) {
                 document.getElementById('uiResult').innerText = result.text;
+                $("#hidFilePath").val(result.savedpath);
             } else {
                 document.getElementById('uiResult').innerHTML = `<span class="text-danger">Error: ${result.error}</span>`;
             }
@@ -505,6 +507,7 @@
         var rawTranscript= document.getElementById('uiResult').innerText;
         var ie_id= $("#hdIEId").val();
         var intake_id= $("#hdId").val();
+        var file_path= $("#hidFilePath").val();
         var length= document.getElementById('timerDisplay').innerText.split(" ")[0];
         // Show loading spinner in your UI here
         document.getElementById('uiLoading').style.display = 'block';
@@ -513,7 +516,7 @@
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ transcript: rawTranscript, intake_id: intake_id, length:length }) // Sending raw transcript string
+                body: JSON.stringify({ transcript: rawTranscript, intake_id: intake_id, length:length, file_path:file_path }) // Sending raw transcript string
             });
 
             const result = await response.json();

@@ -2956,7 +2956,7 @@ namespace PainTrax.Web.Controllers
                 {
                     success = true,
                     text = transcription.Text,
-                    savedPath = $"/recordings/{fileName}"
+                    savedpath = $"/recordings/{fileName}"
                 });
 
             }
@@ -3113,6 +3113,7 @@ Return ONLY valid JSON.
                     assessment = data.Assessment,
                     plan = data.Plan,
                     cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId) ?? 0,
+                    file_path= request.file_path
                 };
 
                 _transcribeService.Insert(transribeData);
