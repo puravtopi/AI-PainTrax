@@ -125,12 +125,8 @@
         @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i>  *@facet joints. Facet loading maneuvers are positive.
     </div>
     <div class="select-group">
-        On exam, patient has tenderness over the   @* <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" /> *@
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> *@ 
-         <label><input type="radio" name="LBOnexam" value="left">  <span class="select-btn">L</span></label>
-        <label><input type="radio" name="LBOnexam" value="right">  <span class="select-btn">R</span></label>
-        <label><input type="radio" name="LBOnexam" value="bilateral">  <span class="select-btn">B</span></label>
-        SI joints.
+        On exam, patient has tenderness over the   <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" />
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> *@ bilateral SI joints.
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> <span class="select-btn">Faber</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"><span class="select-btn">Gaenslen</span> </label>
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Yeoman"> <span class="select-btn">Yeoman</span></label> sign are positive.
@@ -290,7 +286,7 @@
 </div>
 
 <div id="rknPE" style="display:none">
-    <h6 class="fw-bold">Right Knee (R/Sh)</h6>
+    <h6 class="fw-bold">Right Knee </h6>
     <table style="width:100%">
         <thead>
             <tr>
@@ -304,12 +300,12 @@
         </thead>
         <tbody>
             <tr>
-                <td>Flexion</td>
+                <td><input id="RKNTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Flexion" /></td>
                 <td><input id="RKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>150</td>
-                <td>Extension</td>
-                <td><input id="RKNExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>0</td>
+                <td><input id="RKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150" /> </td>
+                <td><input id="RKNExtTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Extension" /></td>
+                <td><input id="RKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="RKNExtNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0" /></td>
             </tr>
 
         </tbody>
@@ -317,7 +313,7 @@
 </div>
 
 <div id="lknPE" style="display:none">
-    <h6 class="fw-bold">Left Knee (R/Sh)</h6>
+    <h6 class="fw-bold">Left Knee </h6>
 
     <table style="width:100%">
         <thead>
@@ -332,12 +328,12 @@
         </thead>
         <tbody>
             <tr>
-                <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Flexion" /></td>
+                <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Flexion" /></td>
                 <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Extension" /></td>
+                <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150" /> </td>
+                <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Extension" /></td>
                 <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0" /></td>
             </tr>
 
         </tbody>
@@ -405,7 +401,7 @@
                 <td><input id="LAnkleDorsiflexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>40</td>
                 <td>Eversion</td>
-                <td><input id="RLnkleEversionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="LAnkleEversionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>20</td>
             </tr>
         </tbody>
@@ -663,10 +659,10 @@
     <div class="select-group">
         <strong>GAIT:</strong>
 
-        <label><input type="radio" class="chkMulti" name="GAIT" value="Normal" checked> <span class="select-btn">Normal</span></label>
+        <label><input type="radio" class="chkMulti" name="GAITMulti" value="Normal" checked> <span class="select-btn">Normal</span></label>
 
-        <label><input type="radio" class="chkMulti" name="GAIT" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
-        <label><input type="radio" class="chkMulti" name="GAIT" value="Altered"> <span class="select-btn">Altered</span></label>
+        <label><input type="radio" class="chkMulti" name="GAITMulti" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
+        <label><input type="radio" class="chkMulti" name="GAITMulti" value="Altered"> <span class="select-btn">Altered</span></label>
 
         <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Ambulates with a cane"> <span class="select-btn">Ambulates with a cane</span></label>
 
@@ -677,7 +673,6 @@
     </div>
 </div>
 <script>
-        
     function uncheckRadio(radio) {
         if (radio.dataset.wasChecked === "true") {
             radio.checked = false;

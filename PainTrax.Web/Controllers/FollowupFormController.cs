@@ -157,8 +157,10 @@ namespace PainTrax.Web.Controllers
             ViewBag.PatientId = patientId;
             if (client_code.ToLower() == "qmppc")
                 return PartialView("_IntakeQMPPC");
-            else if (client_code.ToLower() == "bhfpc" || client_code.ToLower() == "paintest")
+            else if (client_code.ToLower() == "bhfpc")
                 return PartialView("_IntakeBHFFU");
+            else if (client_code.ToLower() == "paintest")
+                return PartialView("_IntakeKDVPCFU");
             else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
