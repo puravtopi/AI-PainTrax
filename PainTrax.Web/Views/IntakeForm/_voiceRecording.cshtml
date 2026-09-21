@@ -185,8 +185,61 @@
             font-size: 1rem;
         }
 </style>
+<style>
+    /* Styling for Question & Answer dialogue */
+    .qa-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-height: 550px;
+        overflow-y: auto;
+        padding: 10px;
+    }
 
-<input type="hidden" id="hidFilePath" value="@Model.FilePath"/>
+    .qa-card {
+        border-radius: 8px;
+        padding: 12px 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        transition: all 0.2s ease;
+    }
+
+        .qa-card.question {
+            border-left: 4px solid #0d6efd; /* Blue for Doctor/Question */
+            background-color: #f0f6ff;
+        }
+
+        .qa-card.answer {
+            border-left: 4px solid #198754; /* Green for Patient/Answer */
+            background-color: #f4fbf7;
+        }
+
+        .qa-card .qa-speaker {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qa-card.question .qa-speaker {
+            color: #0d6efd;
+        }
+
+        .qa-card.answer .qa-speaker {
+            color: #198754;
+        }
+
+        .qa-card .qa-body {
+            font-size: 0.95rem;
+            color: #212529;
+            line-height: 1.5;
+            margin: 0;
+        }
+</style>
+<input type="hidden" id="hidFilePath" value="@Model.FilePath" />
 
 <!-- 1. Top Header -->
 <div class="scribe-header d-flex justify-content-between align-items-center">
@@ -201,19 +254,60 @@
             <span><i class="bi bi-clock me-1"></i> <span id="timerDisplay">@Model.Length sec</span></span>
         </div>
     </div>
-    <div class="d-flex gap-2">
+    @* <div class="d-flex gap-2">
         <button class="btn btn-end-visit px-4 rounded-3" onclick="closeModal()"><i class="bi bi-arrow-counterclockwise me-2"></i>Close</button>
         <button id="btnToggleRecord" class="btn btn-pause px-4 rounded-3" style="background-color:#28a745"><i id="recordIcon" class=""></i>Start Recording</button>
+    </div> *@
+
+    <div class="d-flex align-items-center gap-2">
+        <!-- Start Button -->
+        <button id="btnStartRecord" class="btn btn-success px-3 rounded-3" onclick="startRecording()">
+            <i class="bi bi-mic-fill me-1"></i> Start
+        </button>
+
+        <!-- Pause / Resume Button -->
+        <button id="btnPauseRecord" class="btn btn-warning px-3 rounded-3 text-dark" onclick="togglePauseRecording()" disabled>
+            <i class="bi bi-pause-fill me-1"></i> Pause
+        </button>
+
+        <!-- End Button -->
+        <button id="btnEndRecord" class="btn btn-danger px-3 rounded-3" onclick="endRecording()" disabled>
+            <i class="bi bi-stop-fill me-1"></i> End
+        </button>
+
+        <button class="btn btn-outline-secondary px-3 rounded-3 ms-2" onclick="closeModal()">
+            <i class="bi bi-x-lg me-1"></i> Close
+        </button>
+
+        <button id="btnDownloadAudio"
+                class="btn btn-outline-primary px-3 rounded-3"
+                onclick="downloadAudioFromDB()"
+                @(string.IsNullOrEmpty(Model.FilePath) ? "disabled" : "")>
+            <i class="bi bi-download me-1"></i>Download Audio
+        </button>
     </div>
 </div>
 
 <!-- 2. Navigation Tabs -->
-<ul class="nav scribe-tabs">
+@* <ul class="nav scribe-tabs">
     <li class="nav-item d-none"><a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-context')"><i class="bi bi-justify-left me-2"></i>Context</a></li>
     <li class="nav-item"><a class="nav-link active" href="javascript:void(0)" onclick="openTab(event, 'tab-transcript')"><i class="bi bi-reception-4 me-2"></i>Transcript</a></li>
     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-note')"><i class="bi bi-pencil-square me-2"></i>Note</a></li>
     <li class="nav-item d-none"><a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-tasks')">Tasks <span class="badge bg-light text-primary rounded-pill">0</span></a></li>
     <li class="nav-item d-none"><a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-billing')">Billing codes</a></li>
+</ul> *@
+
+<ul class="nav nav-tabs scribe-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link active" href="javascript:void(0)" onclick="openTab(event, 'tab-transcript')">
+            <i class="bi bi-reception-4 me-2"></i>Transcript (Q&amp;A)
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)" onclick="openTab(event, 'tab-note')">
+            <i class="bi bi-pencil-square me-2"></i>Note
+        </a>
+    </li>
 </ul>
 
 <!-- 3. Workspace Area -->
@@ -271,7 +365,7 @@
         <!-- State 2: Result (Hidden by default) -->
         <div id="uiResult" class="transcript-text">
             @Html.Raw(Model.Transcript)
-            @*  Speaker 0: Hi. Good morning,
+                        @* Speaker 0: Hi. Good morning,
 
                         Speaker 1: mister Devata. How are you doing?
 
@@ -355,6 +449,441 @@
 </div>
 
 <script>
+    (() => {
+        // 1. Persist state across modal opens without redeclaration
+        window.ScribeRecorderState = window.ScribeRecorderState || {
+            mediaRecorder: null,
+            audioStream: null,
+            audioTChunks: [],
+            seconds: 0,
+            timerInterval: null,
+            isPaused: false
+        };
+
+        const state = window.ScribeRecorderState;
+
+        // 2. Helper to get raw transcript text safely
+        function getRawTranscript() {
+            const rawEl = document.getElementById('rawTranscriptData');
+            if (rawEl) return rawEl.value || "";
+            const resultEl = document.getElementById('uiResult');
+            return resultEl ? resultEl.innerText : "";
+        }
+
+        function setRawTranscript(val) {
+            const rawEl = document.getElementById('rawTranscriptData');
+            if (rawEl) rawEl.value = val;
+        }
+
+        // 3. Render initial transcript if loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialText = getRawTranscript().trim();
+            if (initialText) {
+                window.renderQATranscript(initialText);
+            }
+        });
+
+        // Also run immediately in case DOM is already parsed (e.g. AJAX modal)
+        setTimeout(() => {
+            const initialText = getRawTranscript().trim();
+            if (initialText) {
+                window.renderQATranscript(initialText);
+            }
+        }, 100);
+
+        // ==========================================
+        // RECORDING CONTROLS: START, PAUSE, END
+        // ==========================================
+
+        window.startRecording = async function () {
+            // Step A: Request Microphone
+            try {
+                state.audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            } catch (micErr) {
+                console.error("Microphone hardware/permission error:", micErr);
+                alert("Could not access microphone. Please check your browser/system microphone permissions.");
+                return;
+            }
+
+            // Step B: Initialize Recording & Update UI safely
+            try {
+                state.mediaRecorder = new MediaRecorder(state.audioStream);
+                state.audioTChunks = [];
+
+                state.mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) state.audioTChunks.push(e.data);
+                };
+
+                state.mediaRecorder.onstop = processWithWhisper;
+
+                state.mediaRecorder.start();
+                state.isPaused = false;
+
+                // Safe button updates
+                const btnStart = document.getElementById('btnStartRecord');
+                const btnPause = document.getElementById('btnPauseRecord');
+                const btnEnd = document.getElementById('btnEndRecord');
+
+                if (btnStart) btnStart.disabled = true;
+                if (btnPause) {
+                    btnPause.disabled = false;
+                    btnPause.innerHTML = '<i class="bi bi-pause-fill me-1"></i> Pause';
+                    btnPause.classList.replace('btn-secondary', 'btn-warning');
+                }
+                if (btnEnd) btnEnd.disabled = false;
+
+                // Safe container updates
+                const uiResult = document.getElementById('uiResult');
+                const uiRecording = document.getElementById('uiRecording');
+                const recordingStatusText = document.getElementById('recordingStatusText');
+
+                if (uiResult) uiResult.innerHTML = '';
+                setRawTranscript('');
+
+                if (uiRecording) uiRecording.style.display = 'block';
+                if (recordingStatusText) {
+                    recordingStatusText.innerText = "Recording in progress...";
+                    recordingStatusText.className = "fw-bold mb-1 text-danger";
+                }
+
+                startTimer();
+            } catch (err) {
+                console.error("Error setting up recorder:", err);
+            }
+        };
+
+        window.togglePauseRecording = function () {
+            if (!state.mediaRecorder) return;
+
+            const btnPause = document.getElementById('btnPauseRecord');
+            const recordingStatusText = document.getElementById('recordingStatusText');
+
+            if (!state.isPaused) {
+                state.mediaRecorder.pause();
+                state.isPaused = true;
+                clearInterval(state.timerInterval);
+
+                if (btnPause) {
+                    btnPause.innerHTML = '<i class="bi bi-play-fill me-1"></i> Resume';
+                    btnPause.classList.replace('btn-warning', 'btn-secondary');
+                }
+                if (recordingStatusText) {
+                    recordingStatusText.innerText = "Recording Paused";
+                    recordingStatusText.className = "fw-bold mb-1 text-warning";
+                }
+            } else {
+                state.mediaRecorder.resume();
+                state.isPaused = false;
+                resumeTimer();
+
+                if (btnPause) {
+                    btnPause.innerHTML = '<i class="bi bi-pause-fill me-1"></i> Pause';
+                    btnPause.classList.replace('btn-secondary', 'btn-warning');
+                }
+                if (recordingStatusText) {
+                    recordingStatusText.innerText = "Recording in progress...";
+                    recordingStatusText.className = "fw-bold mb-1 text-danger";
+                }
+            }
+        };
+
+        window.endRecording = function () {
+            if (!state.mediaRecorder || state.mediaRecorder.state === "inactive") return;
+
+            state.mediaRecorder.stop();
+
+            if (state.audioStream) {
+                state.audioStream.getTracks().forEach(track => track.stop());
+            }
+
+            clearInterval(state.timerInterval);
+            state.isPaused = false;
+
+            const btnStart = document.getElementById('btnStartRecord');
+            const btnPause = document.getElementById('btnPauseRecord');
+            const btnEnd = document.getElementById('btnEndRecord');
+            const uiRecording = document.getElementById('uiRecording');
+            const uiLoading = document.getElementById('uiLoading');
+
+            if (btnStart) btnStart.disabled = false;
+            if (btnPause) {
+                btnPause.disabled = true;
+                btnPause.innerHTML = '<i class="bi bi-pause-fill me-1"></i> Pause';
+                btnPause.classList.replace('btn-secondary', 'btn-warning');
+            }
+            if (btnEnd) btnEnd.disabled = true;
+
+            if (uiRecording) uiRecording.style.display = 'none';
+            if (uiLoading) uiLoading.classList.remove('d-none');
+        };
+
+        function startTimer() {
+            state.seconds = 0;
+            clearInterval(state.timerInterval);
+            resumeTimer();
+        }
+
+        function resumeTimer() {
+            state.timerInterval = setInterval(() => {
+                state.seconds++;
+                const timerDisplay = document.getElementById('timerDisplay');
+                if (timerDisplay) timerDisplay.innerText = state.seconds + " sec";
+            }, 1000);
+        }
+
+        // ==========================================
+        // Q&A PARSER & UI FORMATTER
+        // ==========================================
+
+              window.renderQATranscript = function (rawText) {
+        const uiResult = document.getElementById('uiResult');
+        if (!uiResult) return;
+        uiResult.innerHTML = '';
+        if (!rawText || rawText.trim() === "") return;
+
+        // Split text into individual lines
+        const lines = rawText.split(/\r?\n+/).map(l => l.trim()).filter(l => l.length > 0);
+
+        const turns = [];
+        let currentSpeaker = null; // 'doctor' or 'patient'
+        let currentContent = [];
+
+        function flushTurn() {
+            if (currentSpeaker && currentContent.length > 0) {
+                turns.push({
+                    speaker: currentSpeaker,
+                    text: currentContent.join(" ")
+                });
+                currentContent = [];
+            }
+        }
+
+        lines.forEach(line => {
+            // Strip markdown asterisks like **Doctor (Question)**
+            const cleanLine = line.replace(/^\*+|\*+$/g, '').trim();
+
+            // 1. Check if line is ONLY a header (e.g., "Doctor (Question)", "Doctor:", "Patient (Response)")
+            const isDoctorHeader = /^(?:doctor|dr\.?|physician)(?:\s*\([^)]*\))?\s*:?$/i.test(cleanLine);
+            const isPatientHeader = /^(?:patient)(?:\s*\([^)]*\))?\s*:?$/i.test(cleanLine);
+
+            if (isDoctorHeader) {
+                flushTurn();
+                currentSpeaker = 'doctor';
+                return; // Skip line so "Doctor (Question)" does NOT appear as speech content
+            }
+
+            if (isPatientHeader) {
+                flushTurn();
+                currentSpeaker = 'patient';
+                return; // Skip line so "Patient (Response)" does NOT appear as speech content
+            }
+
+            // 2. Check if line is an inline tag (e.g., "Doctor: Good morning...", "Doctor (Question): How are you?")
+            const inlineDoctorMatch = cleanLine.match(/^(?:doctor|dr\.?|physician)(?:\s*\([^)]*\))?\s*[:\-]\s*(.+)$/i);
+            const inlinePatientMatch = cleanLine.match(/^(?:patient)(?:\s*\([^)]*\))?\s*[:\-]\s*(.+)$/i);
+
+            if (inlineDoctorMatch) {
+                flushTurn();
+                currentSpeaker = 'doctor';
+                currentContent.push(inlineDoctorMatch[1].trim());
+                flushTurn();
+                return;
+            }
+
+            if (inlinePatientMatch) {
+                flushTurn();
+                currentSpeaker = 'patient';
+                currentContent.push(inlinePatientMatch[1].trim());
+                flushTurn();
+                return;
+            }
+
+            // 3. Regular dialogue line without explicit speaker tag:
+            if (!currentSpeaker) {
+                // Fallback: If line contains a question mark, treat as Doctor; otherwise Patient
+                currentSpeaker = cleanLine.includes('?') ? 'doctor' : 'patient';
+            }
+
+            currentContent.push(cleanLine);
+        });
+
+        // Flush any remaining dialogue
+        flushTurn();
+
+        // 4. Render the dialogue cards
+        let containerHTML = "";
+        turns.forEach(turn => {
+            const isDoctor = turn.speaker === 'doctor';
+            const speakerLabel = isDoctor ? "Doctor (Question)" : "Patient (Response)";
+            const badgeIcon = isDoctor ? '<i class="bi bi-person-badge"></i>' : '<i class="bi bi-person"></i>';
+            const cardClass = isDoctor ? "question" : "answer";
+
+            containerHTML += `
+                <div class="qa-card ${cardClass}" style="margin-bottom: 12px;">
+                    <div class="qa-speaker">${badgeIcon} ${speakerLabel}</div>
+                    <p class="qa-body">${turn.text}</p>
+                </div>
+            `;
+        });
+
+        uiResult.innerHTML = containerHTML;
+    };
+
+        // ==========================================
+        // TAB NAVIGATION & GUARD
+        // ==========================================
+
+        window.openTab = function (evt, tabName) {
+            // Prevent opening Note tab if transcript is empty
+            if (tabName === "tab-note") {
+                const transcriptContent = getRawTranscript().trim();
+                if (!transcriptContent) {
+                    alert("Please record or provide a transcript first. Note generation requires consultation text.");
+                    return;
+                }
+            }
+
+            const tabContents = document.getElementsByClassName("tab-pane-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].style.display = "none";
+            }
+
+            const tabLinks = document.querySelectorAll(".scribe-tabs .nav-link");
+            for (let i = 0; i < tabLinks.length; i++) {
+                tabLinks[i].classList.remove("active");
+            }
+
+            const targetTab = document.getElementById(tabName);
+            if (targetTab) targetTab.style.display = "block";
+            if (evt && evt.currentTarget) evt.currentTarget.classList.add("active");
+
+            if (tabName === "tab-note") {
+                generateAINote();
+            }
+        };
+
+        // ==========================================
+        // SERVER CALLS & HELPERS
+        // ==========================================
+
+        async function processWithWhisper() {
+            const audioBlob = new Blob(state.audioTChunks, { type: 'audio/wav' });
+            const formData = new FormData();
+            formData.append("audioFile", audioBlob, "visit_record.wav");
+            const url = "@Url.Action("ProcessRecording", "IntakeForm")";
+
+            const uiLoading = document.getElementById('uiLoading');
+            const uiResult = document.getElementById('uiResult');
+
+            try {
+                const response = await fetch(url, { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (uiLoading) uiLoading.classList.add('d-none');
+
+                if (result.success) {
+                    setRawTranscript(result.text);
+                    window.renderQATranscript(result.text);
+
+                    if (result.savedpath) {
+                        const hidPath = document.getElementById("hidFilePath");
+                        if (hidPath) hidPath.value = result.savedpath;
+                    }
+                } else {
+                    if (uiResult) uiResult.innerHTML = `<div class="alert alert-danger">Error: ${result.error}</div>`;
+                }
+            } catch (err) {
+                if (uiLoading) uiLoading.classList.add('d-none');
+                if (uiResult) uiResult.innerHTML = `<div class="alert alert-danger">Transcription failed. Please try again.</div>`;
+                console.error("AI processing failed", err);
+            }
+        }
+
+        async function generateAINote() {
+            const rawTranscript = getRawTranscript().trim();
+            const intake_id = $("#hdId").val();
+            const file_path = $("#hidFilePath").val();
+            const timerEl = document.getElementById('timerDisplay');
+            const length = timerEl ? timerEl.innerText.split(" ")[0] : "0";
+
+            const url = "@Url.Action("GenerateStructuredReport", "IntakeForm")";
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        transcript: rawTranscript,
+                        intake_id: intake_id,
+                        length: length,
+                        file_path: file_path
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success || result.history) {
+                    const hEl = document.getElementById('contentHistory');
+                    const cEl = document.getElementById('contentCC');
+                    const pEl = document.getElementById('contentPlan');
+
+                    if (hEl) hEl.innerText = result.history || '';
+                    if (cEl) cEl.innerText = result.chiefComplaint || '';
+                    if (pEl) pEl.innerText = (result.assessment || '') + "\n\n" + (result.plan || '');
+                }
+            } catch (error) {
+                console.error("Error generating note:", error);
+            }
+        }
+
+        window.copyRawTranscript = function () {
+            const text = getRawTranscript();
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Transcript copied to clipboard!");
+            });
+        };
+
+        window.copySection = function (elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            navigator.clipboard.writeText(el.innerText).then(() => {
+                const btn = document.querySelector(`[onclick="copySection('${elementId}')"]`);
+                if (btn) {
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<i class="bi bi-check2 text-success"></i> Copied!';
+                    setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+                }
+            });
+        };
+
+        window.closeModal = function () {
+            if (state.mediaRecorder && state.mediaRecorder.state !== "inactive") {
+                window.endRecording();
+            }
+            $("#transribeModal").modal('hide');
+        };
+
+            // Function to download audio file directly from the DB via Controller
+         window.downloadAudioFromDB = function () {
+            // Read the Intake ID (or record ID) from your hidden field
+            const intakeId = $("#hdId").val() || $("#hdIEId").val();
+            const pname = $("#patientName").text().trim();
+
+            if (!intakeId || intakeId === "0") {
+                alert("No saved record found to download audio from.");
+                return;
+            }
+
+            // Build the download URL
+            const downloadUrl = "@Url.Action("DownloadAudio", "IntakeForm")?intakeId=" + encodeURIComponent(intakeId)+"&pname="+encodeURIComponent(pname);
+
+            // Trigger file download in browser
+            window.location.href = downloadUrl;
+        };
+    })();
+</script>
+
+@* <script>
         // let mediaRecorder;
     let audioTChunks = [];
     let seconds = 0;
@@ -483,7 +1012,7 @@
         const audioBlob = new Blob(audioTChunks, { type: 'audio/wav' });
         const formData = new FormData();
         formData.append("audioFile", audioBlob, "visit_record.wav");
-        const url= "@Url.Action("ProcessRecording","IntakeForm")";
+        const url= "@Url.Action("ProcessRecording", "IntakeForm")";
         try {
             const response = await fetch(url, { method: 'POST', body: formData });
             const result = await response.json();
@@ -539,4 +1068,5 @@
             console.error("Error generating note:", error);
         }
     }
-</script>
+</script> *@
+
