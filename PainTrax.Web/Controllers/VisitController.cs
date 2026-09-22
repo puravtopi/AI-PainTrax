@@ -2815,7 +2815,7 @@ namespace PainTrax.Web.Controllers
             {
                 int? ieId = HttpContext.Session.GetInt32(SessionKeys.SessionIEId);
 
-                var Data = _pocService.GetPropReport(patientIEId,patientFUId);
+                var Data = _pocService.GetPropReport(patientIEId, patientFUId);
 
                 return PartialView("_POCSummary", Data);
             }
@@ -2972,6 +2972,8 @@ namespace PainTrax.Web.Controllers
                     {
                         body = body.Replace("#PC", "");
                     }
+
+                    body = body.Replace("#Carrier", patientData.primary_ins ?? "");
 
                     string cc = "";
                     string pe = "";
