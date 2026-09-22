@@ -1,51 +1,6 @@
 ﻿<div id="neckSection" style="display:none;">
     <h6 class="fw-bold">Neck</h6>
-    <div class="select-group">
-        Chiropractor:
-        <label>
-            <input type="radio" class="chkMulti" name="PainOption" value="FACET PAIN">
-            <span class="select-btn">FACET PAIN</span>
-        </label>
-
-        @*  <label>
-            <input type="radio" class="chkMulti" name="PainOption" value="SI JOINT PAIN">
-            <span class="select-btn">SI JOINT PAIN</span>
-        </label> *@
-        <label>
-            <input type="radio" class="chkMulti" name="PainOption" value="RADICULAR PAIN">
-            <span class="select-btn">RADICULAR PAIN</span>
-        </label>
-    </div>
-    <div class="select-group">
-        Axial pain – Facet pain exacerbated by
-        
-        <label>
-            <input type="checkbox" class="chkMulti" name="Axial" value="prolonged">
-            <span class="select-btn">prolonged</span>
-        </label>
-        <label>
-            <input type="checkbox" class="chkMulti" name="Axial" value="bending">
-            <span class="select-btn">bending</span>
-        </label>
-
-        <label>
-            <input type="checkbox" class="chkMulti" name="Axial" value="sitting">
-            <span class="select-btn">sitting</span>
-        </label>
-
-        <label>
-            <input type="checkbox" class="chkMulti" name="Axial" value="standing">
-            <span class="select-btn">standing</span>
-        </label>
-        <label>
-            <input type="checkbox" class="chkMulti" name="Axial" value="twisting">
-            <span class="select-btn">twisting</span>
-        </label>
-        <label>
-            <input type="checkbox" class="chkMulti" name="Axial" value="sleeping">
-            <span class="select-btn">sleeping</span>
-        </label>
-    </div>
+   
     <div class="select-group">
         Pain:
         <input id="NeckPain" class="form-control d-inline " style="width:100px;" maxlength="5" />
@@ -94,6 +49,52 @@
         <label>
             <input type="checkbox" class="chkMulti" name="NeckSymptoms" value="Achy">
             <span class="select-btn">Achy</span>
+        </label>
+    </div>
+    <div class="select-group">
+
+        <label>
+            <input type="radio" class="chkMulti" name="PainOption" value="FACET PAIN">
+            <span class="select-btn">FACET PAIN</span>
+        </label>
+
+        @*  <label>
+            <input type="radio" class="chkMulti" name="PainOption" value="SI JOINT PAIN">
+            <span class="select-btn">SI JOINT PAIN</span>
+        </label> *@
+        <label>
+            <input type="radio" class="chkMulti" name="PainOption" value="RADICULAR PAIN">
+            <span class="select-btn">RADICULAR PAIN</span>
+        </label>
+   
+        Axial pain – Facet pain exacerbated by
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="Axial" value="prolonged">
+            <span class="select-btn">prolonged</span>
+        </label>
+        
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="Axial" value="sitting">
+            <span class="select-btn">sitting</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="Axial" value="standing">
+            <span class="select-btn">standing</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="Axial" value="twisting">
+            <span class="select-btn">twisting</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="Axial" value="sleeping">
+            <span class="select-btn">sleeping</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="Axial" value="bending">
+            <span class="select-btn">bending</span>
         </label>
     </div>
     <div class="select-group">
@@ -308,14 +309,30 @@
 </div>
 <div id="lbSection" style="display:none;">
     <h6 class="fw-bold">Lower back</h6>
+    
     <div class="select-group">
-        Chiropractor:
+        Pain:
+        <input id="LBPain" class="form-control d-inline " style="width:100px;" maxlength="5" />
+       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBPain')"></i> *@/10
+
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Sharp"> <span class="select-btn">Sharp</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Electric"> <span class="select-btn">Electric</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Shooting"> <span class="select-btn">Shooting</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Throbbing"> <span class="select-btn">Throbbing</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Pulsating"> <span class="select-btn">Pulsating</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Dull"> <span class="select-btn">Dull</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Achy"> <span class="select-btn">Achy</span></label>
+    </div>
+    <div class="select-group">
+
         <label>
             <input type="radio" class="chkMulti" name="LBPainOption" value="FACET PAIN">
             <span class="select-btn">FACET PAIN</span>
         </label>
 
-         <label>
+        <label>
             <input type="radio" class="chkMulti" name="LBPainOption" value="SI JOINT PAIN">
             <span class="select-btn">SI JOINT PAIN</span>
         </label>
@@ -323,18 +340,13 @@
             <input type="radio" class="chkMulti" name="LBPainOption" value="RADICULAR PAIN">
             <span class="select-btn">RADICULAR PAIN</span>
         </label>
-    </div>
-    <div class="select-group">
+    
         Axial pain – Facet pain exacerbated by
 
         <label>
             <input type="checkbox" class="chkMulti" name="LBAxial" value="prolonged">
             <span class="select-btn">prolonged</span>
-        </label>
-        <label>
-            <input type="checkbox" class="chkMulti" name="LBAxial" value="bending">
-            <span class="select-btn">bending</span>
-        </label>
+        </label>       
 
         <label>
             <input type="checkbox" class="chkMulti" name="LBAxial" value="sitting">
@@ -353,21 +365,10 @@
             <input type="checkbox" class="chkMulti" name="LBAxial" value="sleeping">
             <span class="select-btn">sleeping</span>
         </label>
-    </div>
-    <div class="select-group">
-        Pain:
-        <input id="LBPain" class="form-control d-inline " style="width:100px;" maxlength="5" />
-       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBPain')"></i> *@/10
-
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Sharp"> <span class="select-btn">Sharp</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Electric"> <span class="select-btn">Electric</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Shooting"> <span class="select-btn">Shooting</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Throbbing"> <span class="select-btn">Throbbing</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Pulsating"> <span class="select-btn">Pulsating</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Dull"> <span class="select-btn">Dull</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBSymptoms" value="Achy"> <span class="select-btn">Achy</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBAxial" value="bending">
+            <span class="select-btn">bending</span>
+        </label>
     </div>
     <div class="select-group">
         Lower back pain radiates to
