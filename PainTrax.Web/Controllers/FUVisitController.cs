@@ -2319,6 +2319,8 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
+                body = body.Replace("#Carrier", patientData.primary_ins ?? "");
+
                 var Presentillness = string.IsNullOrEmpty(preData.txtPresentillness) ? "" : preData.txtPresentillness;
                 Presentillness = Presentillness.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                 Presentillness = Presentillness.Replace("#sex", Common.GetGenderFromSex(patientData.gender));

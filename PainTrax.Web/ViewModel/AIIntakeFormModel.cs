@@ -675,6 +675,121 @@
         public string RWristUDROM { get; set; }
         public string RWristExtensionROM { get; set; }
         public string RWristRDROM { get; set; }
+
+        public string LWristFlexionROM { get; set; }
+        public string LWristUDROM { get; set; }
+        public string LWristExtensionROM { get; set; }
+        public string LWristRDROM { get; set; }
+
+        // Neck ROM
+
+        public string NeckFFROM { get; set; }
+        public string NeckFFLeft { get; set; }
+        public string NeckFFRight { get; set; }
+        public string NeckExt { get; set; }
+        public string NeckExtLeft { get; set; }
+        public string NeckExtRight { get; set; }
+
+        // lowback ROM
+        public string LbFFROM { get; set; }
+        public string LbFFLeft { get; set; }
+        public string LbFFRight { get; set; }
+        public string LbExt { get; set; }
+        // Midback ROM
+        public string MbFFROM { get; set; }
+        public string MbFFLeft { get; set; }
+        public string MbFFRight { get; set; }
+        public string MbExt { get; set; }
+
+        //NE
+
+        public string TricepsLeft { get; set; }
+        public string TricepsRight { get; set; }
+        public string BicepsLeft { get; set; }
+        public string BicepsRight { get; set; }
+        public string BrachioradialisLeft { get; set; }
+        public string BrachioradialisRight { get; set; }
+        public string KneeRELeft { get; set; }
+        public string KneeRERight { get; set; }
+        public string AnkleRELeft { get; set; }
+        public string AnkleRERight { get; set; }
+        public string UpperShoulderLeft { get; set; }
+        public string UpperShoulderRight { get; set; }
+        public string LateralArmLeft { get; set; }
+        public string LateralArmRight { get; set; }
+        public string ForearmC6Left { get; set; }
+        public string ForearmC6Right { get; set; }
+        public string MiddleFingerLeft { get; set; }
+        public string MiddleFingerRight { get; set; }
+        public string ForearmC8Left { get; set; }
+        public string ForearmC8Right { get; set; }
+        public string MedialArmLeft { get; set; }
+        public string MedialArmRight { get; set; }
+        public string CervicalLeft { get; set; }
+        public string CervicalRight { get; set; }
+        public string ThighLeft { get; set; }
+        public string ThighRight { get; set; }
+        public string FootMedialLeft { get; set; }
+        public string FootMedialRight { get; set; }
+        public string FootDorsumLeft { get; set; }
+        public string FootDorsumRight { get; set; }
+        public string FootLateralLeft { get; set; }
+        public string FootLateralRight { get; set; }
+        public string LumbarLeft { get; set; }
+        public string LumbarRight { get; set; }
+
+        public string ShoulderAbductionLeft { get; set; }
+        public string ShoulderAbductionRight { get; set; }
+
+        public string ShoulderFlexionLeft { get; set; }
+        public string ShoulderFlexionRight { get; set; }
+
+        public string ElbowExtensionLeft { get; set; }
+        public string ElbowExtensionRight { get; set; }
+
+        public string ElbowFlexionLeft { get; set; }
+        public string ElbowFlexionRight { get; set; }
+
+        public string ElbowSupinationLeft { get; set; }
+        public string ElbowSupinationRight { get; set; }
+
+        public string ElbowPronationLeft { get; set; }
+        public string ElbowPronationRight { get; set; }
+
+        public string WristFlexionLeft { get; set; }
+        public string WristFlexionRight { get; set; }
+
+        public string WristExtensionLeft { get; set; }
+        public string WristExtensionRight { get; set; }
+
+        public string GripLeft { get; set; }
+        public string GripRight { get; set; }
+
+        public string FingerAbductionLeft { get; set; }
+        public string FingerAbductionRight { get; set; }
+
+
+        public string HipFlexionLeft { get; set; }
+        public string HipFlexionRight { get; set; }
+
+        public string HipAbductionLeft { get; set; }
+        public string HipAbductionRight { get; set; }
+
+        public string KneeExtensionLeft { get; set; }
+        public string KneeExtensionRight { get; set; }
+
+        public string KneeFlexionLeft { get; set; }
+        public string KneeFlexionRight { get; set; }
+
+        public string AnkleDorsiLeft { get; set; }
+        public string AnkleDorsiRight { get; set; }
+
+        public string AnklePlantarLeft { get; set; }
+        public string AnklePlantarRight { get; set; }
+
+        public string EHLLeft { get; set; }
+        public string EHLRight { get; set; }
+
         //public string RWristRDROM { get; set; }
         public List<string> Headachesare { get; set; }
         public List<string> Headache { get; set; }

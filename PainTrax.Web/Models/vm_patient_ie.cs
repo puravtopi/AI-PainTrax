@@ -17,6 +17,7 @@ public class vm_patient_ie
     public int? location_id { get; set; }
     public int? attorney_id { get; set; }
     public int? primary_ins_cmp_id { get; set; }
+    public string? primary_ins { get; set; }
     public int? secondary_ins_cmp_id { get; set; }
     public int? emp_id { get; set; }
     public int? adjuster_id { get; set; }
