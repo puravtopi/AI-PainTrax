@@ -72,6 +72,10 @@
             <span class="select-btn">shoulder</span>
         </label>
         <label>
+            <input type="checkbox" class="chkMulti" name="NeckRadiates" value="scapulae">
+            <span class="select-btn">scapulae</span>
+        </label>
+        <label>
             <input type="checkbox" class="chkMulti" name="NeckRadiates" value="arm">
             <span class="select-btn">arm</span>
         </label>
@@ -129,6 +133,10 @@
             <span class="select-btn">shoulder</span>
         </label>
         <label>
+            <input type="checkbox" class="chkMulti" name="NeckAssociated" value="scapulae">
+            <span class="select-btn">scapulae</span>
+        </label>
+        <label>
             <input type="checkbox" class="chkMulti" name="NeckAssociated" value="arm">
             <span class="select-btn">arm</span>
         </label>
@@ -155,7 +163,7 @@
         <input id="NeckAssociatedOther" class="form-control d-inline " style="width:300px" />
         @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckAssociatedOther')"></i> *@
     </div>
-    <div class="select-group">
+    @* <div class="select-group">
         Neck pain worsens with
         <label>
             <input type="checkbox" class="chkMulti" name="NeckWorsens" value="looking up">
@@ -172,6 +180,94 @@
             <span class="select-btn">turning head to right</span>
         </label>
 
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="turning head to left">
+            <span class="select-btn">turning head to left</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="driving">
+            <span class="select-btn">driving</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="twisting">
+            <span class="select-btn">twisting.</span>
+        </label>
+    </div> *@
+    <div class="select-group">
+        Neck pain worsens with
+        @* <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="sitting">
+            <span class="select-btn">sitting</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="standing">
+            <span class="select-btn">standing</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="lying down">
+            <span class="select-btn">lying down</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="movement activities">
+            <span class="select-btn">movement activities</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="going from sitting to standing up">
+            <span class="select-btn">going from sitting to standing up</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="walking">
+            <span class="select-btn">walking</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="climbing stairs">
+            <span class="select-btn">climbing stairs</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="descending stairs">
+            <span class="select-btn">descending stairs</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="driving">
+            <span class="select-btn">driving</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="working">
+            <span class="select-btn">working</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="bending">
+            <span class="select-btn">bending</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="lifting">
+            <span class="select-btn">lifting</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="twisting ">
+            <span class="select-btn">twisting </span>
+        </label> *@
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="looking up">
+            <span class="select-btn">looking up</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="looking down">
+            <span class="select-btn">looking down</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="turning head to right">
+            <span class="select-btn">turning head to right</span>
+        </label>
         <label>
             <input type="checkbox" class="chkMulti" name="NeckWorsens" value="turning head to left">
             <span class="select-btn">turning head to left</span>
@@ -239,13 +335,71 @@
 
     <div class="select-group">
         Mid back worsens with
-        <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sitting">  <span class="select-btn">sitting</span></label>
+        @* <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sitting">  <span class="select-btn">sitting</span></label>
         <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="standing">  <span class="select-btn">standing</span></label>
         <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="bending forward">  <span class="select-btn">bending forward</span></label>
         <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="bending backwards"> <span class="select-btn">bending backwards</span></label>
         <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="sleep">  <span class="select-btn">sleep</span></label>
         <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="twisting">  <span class="select-btn">twisting</span>.</label>
-        <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="lifting">  <span class="select-btn">lifting</span>.</label>
+        <label><input type="checkbox" class="chkMulti" name="MbWorsens" value="lifting">  <span class="select-btn">lifting</span>.</label> *@
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="sitting">
+            <span class="select-btn">sitting</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="standing">
+            <span class="select-btn">standing</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="lying down">
+            <span class="select-btn">lying down</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="movement">
+            <span class="select-btn">movement</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="bending">
+            <span class="select-btn">bending</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="lifting">
+            <span class="select-btn">lifting</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="going from seating to standing up">
+            <span class="select-btn">going from seating to standing up</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="walking">
+            <span class="select-btn">walking</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="climbing stairs">
+            <span class="select-btn">climbing stairs</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="descending stairs">
+            <span class="select-btn">descending stairs</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="driving">
+            <span class="select-btn">driving</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MbWorsens" value="working">
+            <span class="select-btn">working</span>
+        </label>
+        <input id="MbWorse" class="form-control d-inline " style="width:300px" />
+        
+        @* <label>
+            <input type="checkbox" class="chkMulti" name="NeckWorsens" value="twisting ">
+            <span class="select-btn">twisting </span>
+        </label> *@
     </div>
     <div class="select-group">
         Mid back pain improves with
@@ -283,6 +437,8 @@
         <label><input type="radio" name="LBRadiatesTo" value="Right"> <span class="select-btn">R</span></label>
         <label><input type="radio" name="LBRadiatesTo" value="Bilateral"> <span class="select-btn">B</span></label>
 
+        <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="sides"> <span class="select-btn">sides</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="buttok"> <span class="select-btn">buttok</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="hip"> <span class="select-btn">hip</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="thigh"> <span class="select-btn">thigh</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBRadiates" value="knee"> <span class="select-btn">knee</span></label>
@@ -306,6 +462,8 @@
             <label><input type="radio" name="LBAssociatedTo" value="Bilateral">  <span class="select-btn">B</span></label>
         </label>
        
+        <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="sides"> <span class="select-btn">sides</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="buttok"> <span class="select-btn">buttok</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="hip"> <span class="select-btn">hip</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="thigh"> <span class="select-btn">thigh</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBAssociated" value="knee"> <span class="select-btn">knee</span></label>
@@ -317,14 +475,67 @@
     </div>
     <div class="select-group">
         Lower back pain worsens with
-        <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sitting"> <span class="select-btn">sitting</span></label>
+        @* <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sitting"> <span class="select-btn">sitting</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="standing"> <span class="select-btn">standing</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="bending forward"><span class="select-btn">bending forward</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="bending backwards"> <span class="select-btn">bending backwards</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="sleep"> <span class="select-btn">sleep</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="twisting right"> <span class="select-btn">twisting right</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="twisting left"> <span class="select-btn">twisting left</span></label>
-        <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="lifting"> <span class="select-btn">lifting</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LBWorsens" value="lifting"> <span class="select-btn">lifting</span></label> *@
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="sitting">
+            <span class="select-btn">sitting</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="standing">
+            <span class="select-btn">standing</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="lying down">
+            <span class="select-btn">lying down</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="movement">
+            <span class="select-btn">movement</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="bending">
+            <span class="select-btn">bending</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="lifting">
+            <span class="select-btn">lifting</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="going from seating to standing up">
+            <span class="select-btn">going from seating to standing up</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="walking">
+            <span class="select-btn">walking</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="climbing stairs">
+            <span class="select-btn">climbing stairs</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="descending stairs">
+            <span class="select-btn">descending stairs</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="driving">
+            <span class="select-btn">driving</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LBWorsens" value="working">
+            <span class="select-btn">working</span>
+        </label>
+        <input id="LBWorse" class="form-control d-inline " style="width:300px" />
     </div>
     <div class="select-group">
         Lower back pain improves with

@@ -1,7 +1,7 @@
 ﻿<div id="neckPE" style="display:none">
     <h6 class="fw-bold">Neck</h6>
-    <div class="select-group">
-        Patient has pain and tenderness over the   @* <input id="NeckTenderness" class="form-control d-inline " style="width:100px" /> *@
+   @*  <div class="select-group">
+        Patient has pain and tenderness over the   @* <input id="NeckTenderness" class="form-control d-inline " style="width:100px" /> 
         <label><input type="radio" name="NeckTendernessPosition" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="NeckTendernessPosition" value="right">  <span class="select-btn">R</span></label>
         <label><input type="radio" name="NeckTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>
@@ -22,15 +22,58 @@
             <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="C6/7">
             <span class="select-btn">C6/7</span>
         </label>
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i> *@ facet joints. Facet loading maneuvers are positive.
+         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i>  facet joints. Facet loading maneuvers are positive.
         Spurling’s Test:
         <label><input type="radio" name="NeckSpurlingTest" value="Positive" onclick="uncheckRadio(this)">  <span class="select-btn">+</span></label>
         <label><input type="radio" name="NeckSpurlingTest" value="Negative" onclick="uncheckRadio(this)">  <span class="select-btn">-</span></label>
 
-    </div>
+    </div> *@
     <div class="select-group">
-        <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
+        The cervical spine exam reveals tenderness upon palpation at <input id="NeckTenderness" class="form-control d-inline " value="C2-C7" style="width:100px" />
+        <label><input type="radio" name="NeckTendernessPosition" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="NeckTendernessPosition" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="NeckTendernessPosition" value="bilateral">  <span class="select-btn">B.</span></label> 
+        The Spurling’s Test is
+        <label><input type="radio" name="NeckSpurlingTest" value="Positive" onclick="uncheckRadio(this)">  <span class="select-btn">+</span></label>
+        <label><input type="radio" name="NeckSpurlingTest" value="Negative" onclick="uncheckRadio(this)">  <span class="select-btn">-</span></label>
+        <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:23%" placeholder="Other" />
+        The cervical distraction test is
+        <label><input type="radio" name="NeckcervicaldistractionTest" value="Positive" onclick="uncheckRadio(this)">  <span class="select-btn">+</span></label>
+        <label><input type="radio" name="NeckcervicaldistractionTest" value="Negative" onclick="uncheckRadio(this)">  <span class="select-btn">-</span></label>
+        There are palpable taut bands/trigger points at 
+        <label><input type="radio" name="Neckpalpabletaut" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="Neckpalpabletaut" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="Neckpalpabletaut" value="bilateral">  <span class="select-btn">B</span></label>
+        <input id="Neckpalpable" class="form-control d-inline " value="C5-C7" style="width:100px" />
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="levator scapulae">
+            <span class="select-btn">levator scapulae</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="trapezius">
+            <span class="select-btn">trapezius</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="posterior scalenes">
+            <span class="select-btn">posterior scalenes</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="sternocleidomastoid">
+            <span class="select-btn">sternocleidomastoid</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="​splenius cervicis">
+            <span class="select-btn">​splenius cervicis</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="splenius capitis">
+            <span class="select-btn">splenius capitis</span>
+        </label>
+
     </div>
+   @*  <div class="select-group">
+        <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
+    </div> *@
     <table style="width:100%">
         <thead>
             <tr>
@@ -67,7 +110,34 @@
 </div>
 <div id="mbPE" style="display:none">
     <h6 class="fw-bold">Mid back</h6>
-    <table style="width:100%">
+    <div class="select-group">
+        The thoracic spine exam reveals tenderness upon palpation at <input id="MbTenderness" class="form-control d-inline " value="T1-T12" style="width:100px" />
+        <label><input type="radio" name="MBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="MBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="MBTendernessPosition" value="bilateral">  <span class="select-btn">B.</span></label>with muscle spasm present.
+
+        ROM is <input id="MROM" class="form-control d-inline " value="mildly" style="width:100px" /> decreased
+       
+        Trigger points with palpable taut bands were noted at
+        <label><input type="radio" name="MBpalpabletaut" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="MBpalpabletaut" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="MBpalpabletaut" value="bilateral">  <span class="select-btn">B.</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="rhomboids">
+            <span class="select-btn">rhomboids</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="trapezius">
+            <span class="select-btn">trapezius</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="☐​serratus posterior superior">
+            <span class="select-btn">serratus posterior superior</span>
+        </label>
+        
+
+    </div>
+    @* <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -99,11 +169,11 @@
                 <td></td>
             </tr>
         </tbody>
-    </table>
+    </table> *@
 </div>
 <div id="lbPE" style="display:none">
     <h6 class="fw-bold">Low back</h6>
-    <div class="select-group">
+    @* <div class="select-group">
         Patient has pain and tenderness over the
         <label><input type="radio" name="LBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="LBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
@@ -122,11 +192,11 @@
             <span class="select-btn">L5/S1</span>
         </label>
 
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i>  *@facet joints. Facet loading maneuvers are positive.
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTenderness')"></i>  facet joints. Facet loading maneuvers are positive.
     </div>
     <div class="select-group">
         On exam, patient has tenderness over the   <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> *@ bilateral SI joints.
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i>  bilateral SI joints.
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> <span class="select-btn">Faber</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"><span class="select-btn">Gaenslen</span> </label>
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Yeoman"> <span class="select-btn">Yeoman</span></label> sign are positive.
@@ -136,6 +206,27 @@
         <label><input type="radio" name="LBSlrTest" value="Positive" onclick="uncheckRadio(this)"> <span class="select-btn">+</span></label>
         <label><input type="radio" name="LBSlrTest" value="Negative" onclick="uncheckRadio(this)"> <span class="select-btn">-</span></label>
         <input id="LBSlrTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
+    </div> *@
+    <div class="select-group">
+        The lumbar spine exam reveals tenderness upon palpation at <input id="LBTenderness" class="form-control d-inline" value="L1-S1" style="width:100px" /> levels
+        <label><input type="radio" name="LBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>with muscle spasm present.
+
+    </div>
+
+    <div class="select-group">
+        SLR Test:
+        <label><input type="radio" name="LBSlrTest" value="Positive" onclick="uncheckRadio(this)"> <span class="select-btn">+</span></label>
+        <label><input type="radio" name="LBSlrTest" value="Negative" onclick="uncheckRadio(this)"> <span class="select-btn">-</span></label>
+        Sacrol notch test:
+        <input id="LBSlrTestOther" class="form-control d-inline " style="width:23%" placeholder="Other" />
+        Trigger points with palpable taut bands were noted at
+        <label><input type="radio" name="LBTriggerpoints" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBTriggerpoints" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBTriggerpoints" value="bilateral">  <span class="select-btn">B</span></label>paraspinal levels
+        <input id="LBTrigger" class="form-control d-inline " value="L3-S1" style="width:100px" />
+        with referral patterns laterally to the region in a fan-like pattern.
     </div>
     <table style="width:100%">
         <thead>
