@@ -332,6 +332,65 @@ namespace PainTrax.Web.Controllers
             return number;
         } //end GetColumnIndexFromName method
 
+        [HttpPost]
+        public IActionResult MoveDoc(string sourceFolder,    string targetFolder,    string file)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(sourceFolder) ||    string.IsNullOrWhiteSpace(targetFolder) ||  string.IsNullOrWhiteSpace(file))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid source folder, target folder or file."
+                    });
+                }
+
+                if (sourceFolder == targetFolder)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Source and target folder cannot be same."
+                    });
+                }
+
+                string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
+                var SourceFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", sourceFolder, PatientID);
+                var SourceFile = Path.Combine(SourceFolderPath, file);
+
+                var TargetFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", targetFolder, PatientID);
+                var TargetFile = Path.Combine(TargetFolderPath, file);
+
+                // Don't overwrite existing file
+                if (System.IO.File.Exists(TargetFile))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "File already exists in target folder."
+                    });
+                }
+
+                // MOVE FILE
+                System.IO.File.Move(SourceFile, TargetFile);
+
+                return Json(new
+                {
+                    success = true,
+                    message = "File moved successfully."
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
+
         #region private Method
         private void SaveLog(Exception ex, string acctionname)
         {
