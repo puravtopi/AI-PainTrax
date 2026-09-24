@@ -23,7 +23,7 @@
     <input id="DOE" name="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" required onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     DOA:
-    <input id="DOA" name="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" required onblur="fnvalidateDatefields()" />
+    <input id="DOA" name="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
     <div id="patientGrid"
          class="table-responsive border bg-white position-absolute shadow"
          style="width:500px; z-index:999; display:none; max-height:250px; overflow:auto;">
@@ -71,8 +71,8 @@
     <p>
         <select id="AccidentType" class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
     </p>
-    &nbsp;&nbsp;   
-    Location:    
+    &nbsp;&nbsp;
+    Location:
     <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" required class="form-select d-inline w-auto" style="width:200px !important">
     </select>
 </div>
@@ -177,7 +177,7 @@
             $("#patientGrid").hide();
             return;
         }
-      
+
         $.ajax({
             url: url,
             type: 'GET',
@@ -253,7 +253,7 @@
         $("#PatientName").val(patientName);
         $("#PatientIEId").val(patientIEId);
         $("#PatientId").val(patientId);
-        
+
         if(providerId!='' && providerId!=null)
             $("#ProviderId").val(providerId);
 
@@ -269,7 +269,7 @@
                 var age = calculateAge($("#DOB").val());
                 $('#Age').val(age);
          }
-   
+
         // console.log("InuryType:", $(this).data("injurytype"));
         // $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
         // console.log("Selected Patient Intake ID:", patientIntakeId);
@@ -279,7 +279,7 @@
         $('input[name="VASPecentage"]').trigger('change');
         // var injuryType = $(this).data("injurytype");
 
-    
+
 
         let url="@Url.Action("GetIntakeData", "FollowupForm")?id="+patientId;
 
@@ -332,7 +332,7 @@
 
         if (injuryType !== 'WC') {
             $('input[name="IsWorking"]').prop('checked', false);
-            $('#DisabilityPercentage').val('');         
+            $('#DisabilityPercentage').val('');
         }
     }
 
@@ -423,15 +423,18 @@
         }
 
         // DOS
+
         if (dos) {
             dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
             if (!dosDate) return;
         }
 
+        if (injuryType !== 'MM') {
         // DOA
         if (doa) {
             doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
             if (!doaDate) return;
+        }
         }
 
             // ---------- DOA vs DOS ----------

@@ -1115,11 +1115,19 @@ namespace PainTrax.Web.Controllers
                                 string assessment = defaultPage1.daignosis_desc == null ? "" : defaultPage1.daignosis_desc;
                                 assessment = assessment.Replace("#sex", model.Gender);
 
-                                var vital = "";
+                                string vital = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
 
                                 if (!string.IsNullOrEmpty(model.Height) && !string.IsNullOrEmpty(model.Weight))
                                 {
                                     vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.";
+                                }
+
+                                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
+                                {
+                                    peContent = this.GetPE(model);
+                                    dtrContent = this.GetDTR(model);
+                                    sensoryContent = this.GetSensory(model);
+                                    mmstContent = this.GetMMST(model);
                                 }
 
                                 var objPage1 = new tbl_ie_page1()
@@ -1134,7 +1142,7 @@ namespace PainTrax.Web.Controllers
                                     vital = string.IsNullOrEmpty(vital) ? defaultPage1.vital : vital,
                                     cc = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model),
                                     daignosis_desc = assessment,
-                                    pe = string.IsNullOrEmpty(this.GetPE(model)) ? defaultPage1.pe : this.GetPE(model),
+                                    pe = string.IsNullOrEmpty(peContent) ? defaultPage1.pe : peContent,
                                     //pe = defaultPage1.pe,
                                     family_history = defaultPage1.family_history,
                                     history = history,
@@ -1175,9 +1183,9 @@ namespace PainTrax.Web.Controllers
                                     {
                                         ie_id = ie,
                                         neurological_exam = defaultNE?.neurological_exam,
-                                        sensory = string.IsNullOrEmpty(this.GetSensory(model)) ? defaultNE?.sensory : this.GetSensory(model),
-                                        manual_muscle_strength_testing = string.IsNullOrEmpty(this.GetMMST(model)) ? defaultNE?.manual_muscle_strength_testing : this.GetMMST(model),
-                                        other_content = string.IsNullOrEmpty(this.GetDTR(model))? defaultNE?.other_content : this.GetDTR(model),
+                                        sensory = string.IsNullOrEmpty(sensoryContent) ? defaultNE?.sensory : sensoryContent,
+                                        manual_muscle_strength_testing = string.IsNullOrEmpty(mmstContent) ? defaultNE?.manual_muscle_strength_testing : mmstContent,
+                                        other_content = string.IsNullOrEmpty(dtrContent) ? defaultNE?.other_content : dtrContent,
                                         cmp_id = cmpid.Value,
                                         patient_id = patientId,
                                     };
