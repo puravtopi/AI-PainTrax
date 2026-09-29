@@ -90,7 +90,7 @@
             <tr>
                 <td>Forward Flexion</td>
                 <td><input id="NeckFFROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>50</td>
+                <td>60</td>
                 <td>Rotation</td>
                 <td><input id="NeckFFLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td><input id="NeckFFRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
@@ -99,11 +99,11 @@
             <tr>
                 <td>Extension</td>
                 <td><input id="NeckExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>60</td>
+                <td>50</td>
                 <td>Lateral Flexion</td>
                 <td><input id="NeckExtLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td><input id="NeckExtRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>45</td>
+                <td>50</td>
             </tr>
         </tbody>
     </table>
@@ -244,16 +244,16 @@
             <tr>
                 <td>Forward Flexion</td>
                 <td><input id="LBFFROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>60</td>
+                <td>90</td>
                 <td>Lateral Flexion</td>
                 <td><input id="LBFFLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td><input id="LBFFRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>25</td>
+                <td>30</td>
             </tr>
             <tr>
                 <td>Extension</td>
                 <td><input id="LBExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>25</td>
+                <td>30</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -264,6 +264,106 @@
 </div>
 <div id="rshPE" style="display:none">
     <h6 class="fw-bold">Right Shoulder (R/Sh)</h6>
+    <div class="select-group">
+        The Shoulder exam reveals tenderness upon palpation of the         
+        <input id="rshTenderness" class="form-control d-inline " style="width:100px" />
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="AC joint">
+            <span class="select-btn">AC joint</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="glenohumeral region">
+            <span class="select-btn">glenohumeral region</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="corticoid region">
+            <span class="select-btn">corticoid region</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="supraspintus tendon">
+            <span class="select-btn">supraspintus tendon</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="​scapular region">
+            <span class="select-btn">​​scapular region</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="deep labral region with muscle spasm present at">
+            <span class="select-btn">deep labral region with muscle spasm present at</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="deltoid muscle">
+            <span class="select-btn">deltoid muscle</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="trapezius muscle">
+            <span class="select-btn">trapezius muscle</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="ecchymosis">
+            <span class="select-btn">ecchymosis</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="edema">
+            <span class="select-btn">edema</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="severe limitation in range of motion.">
+            <span class="select-btn">severe limitation in range of motion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTests" value="The Neers Test">
+            <span class="select-btn"> The Neers Test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTests" value="Hawkins test">
+            <span class="select-btn"> Hawkins test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTests" value="Drop arm test">
+            <span class="select-btn"> Drop arm test</span>
+        </label>
+
+        There are palpable taut bands/trigger points with referral patterns as 
+        <label><input type="radio" name="rshpalpabletaut" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="rshpalpabletaut" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="rshpalpabletaut" value="bilateral">  <span class="select-btn">B</span></label>
+        
+        <label>
+            <input type="checkbox" class="chkMulti" name="rshpalpableOptions" value="deltoid">
+            <span class="select-btn">deltoid</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="rshpalpableOptions" value="supraspinatus">
+            <span class="select-btn">supraspinatus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="rshpalpableOptions" value="infraspinatus">
+            <span class="select-btn">infraspinatus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="rshpalpableOptions" value="teres minor">
+            <span class="select-btn">teres minor</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="rshpalpableOptions" value="​teres major">
+            <span class="select-btn">​teres major</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="rshpalpableOptions" value="pectoralis major">
+            <span class="select-btn">pectoralis major</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="rshpalpableOptions" value="biceps">
+            <span class="select-btn">biceps</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="rshpalpableOptions" value="triceps">
+            <span class="select-btn">triceps</span>
+        </label>
+       
+
+    </div>
     <table style="width:100%">
         <thead>
             <tr>
@@ -305,7 +405,71 @@
 </div>
 
 <div id="lshPE" style="display:none">
-    <h6 class="fw-bold">Left Shoulder (R/Sh)</h6>
+    <h6 class="fw-bold">Left Shoulder (L/Sh)</h6>
+    <div class="select-group">
+        The Shoulder exam reveals tenderness upon palpation of the
+        
+        <input id="lshTenderness" class="form-control d-inline " style="width:100px" />
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="AC joint">
+            <span class="select-btn">AC joint</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="glenohumeral region">
+            <span class="select-btn">glenohumeral region</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="corticoid region">
+            <span class="select-btn">corticoid region</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="supraspintus tendon">
+            <span class="select-btn">supraspintus tendon</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="​scapular region">
+            <span class="select-btn">​​scapular region</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="deep labral region with muscle spasm present at">
+            <span class="select-btn">deep labral region with muscle spasm present at</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="deltoid muscle">
+            <span class="select-btn">deltoid muscle</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="trapezius muscle">
+            <span class="select-btn">trapezius muscle</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="ecchymosis">
+            <span class="select-btn">ecchymosis</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="edema">
+            <span class="select-btn">edema</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="severe limitation in range of motion">
+            <span class="select-btn">severe limitation in range of motion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTests" value="The Neers Test">
+            <span class="select-btn"> The Neers Test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTests" value="Hawkins test">
+            <span class="select-btn"> Hawkins test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTests" value="Drop arm test">
+            <span class="select-btn"> Drop arm test</span>
+        </label>
+
+
+
+    </div>
     <table style="width:100%">
         <thead>
             <tr>
@@ -378,6 +542,76 @@
 
 <div id="rknPE" style="display:none">
     <h6 class="fw-bold">Right Knee </h6>
+    <div class="select-group">
+        The knee exam reveals tenderness upon palpation of the
+        
+        <input id="RknTenderness" class="form-control d-inline " style="width:100px" />
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value="medial">
+            <span class="select-btn">medial</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value="lateral">
+            <span class="select-btn">lateral</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value="superior">
+            <span class="select-btn">superior</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value="inferior">
+            <span class="select-btn">inferior</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value="​superomedial">
+            <span class="select-btn">​​superomedial</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value="superolateral">
+            <span class="select-btn">superolateral</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value="inferomedial">
+            <span class="select-btn">inferomedial</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value=" inferolateral">
+            <span class="select-btn"> inferolateral</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTendernessOptions" value="peripatellar">
+            <span class="select-btn">peripatellar.</span>
+        </label>
+       
+         <label>
+            <input type="checkbox" class="chkMulti" name="RknTests" value="McMurray test">
+            <span class="select-btn"> TMcMurray test</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RknTests" value="Lachmans test">
+            <span class="select-btn"> Lachmans test</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RknTests" value="Anterior drawer test">
+            <span class="select-btn"> Anterior drawer test</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RknTests" value="Posterior drawer test">
+            <span class="select-btn"> Posterior drawer test</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RknTests" value="Varus stress test">
+            <span class="select-btn"> Varus stress test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RknTests" value="Valgus stress test">
+            <span class="select-btn"> Valgus stress test</span>
+        </label>
+       
+
+
+
+    </div>
     <table style="width:100%">
         <thead>
             <tr>
@@ -405,7 +639,76 @@
 
 <div id="lknPE" style="display:none">
     <h6 class="fw-bold">Left Knee </h6>
+    <div class="select-group">
+        The knee exam reveals tenderness upon palpation of the
 
+        <input id="LknTenderness" class="form-control d-inline " style="width:100px" />
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value="medial">
+            <span class="select-btn">medial</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value="lateral">
+            <span class="select-btn">lateral</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value="superior">
+            <span class="select-btn">superior</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value="inferior">
+            <span class="select-btn">inferior</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value="​superomedial">
+            <span class="select-btn">​​superomedial</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value="superolateral">
+            <span class="select-btn">superolateral</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value="inferomedial">
+            <span class="select-btn">inferomedial</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value=" inferolateral">
+            <span class="select-btn"> inferolateral</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTendernessOptions" value="peripatellar">
+            <span class="select-btn">peripatellar.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTests" value="McMurray test">
+            <span class="select-btn"> TMcMurray test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTests" value="Lachmans test">
+            <span class="select-btn"> Lachmans test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTests" value="Anterior drawer test">
+            <span class="select-btn"> Anterior drawer test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTests" value="Posterior drawer test">
+            <span class="select-btn"> Posterior drawer test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTests" value="Varus stress test">
+            <span class="select-btn"> Varus stress test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LknTests" value="Valgus stress test">
+            <span class="select-btn"> Valgus stress test</span>
+        </label>
+
+
+
+
+    </div>
     <table style="width:100%">
         <thead>
             <tr>
@@ -433,7 +736,65 @@
 
 <div id="ranklePE" style="display:none">
     <h6 class="fw-bold">Right Ankle </h6>
-    <table style="width:100%">
+    <div class="select-group">
+        The ankle ROM is
+        <input id="RAnkTenderness" class="form-control d-inline " style="width:100px" />
+        <label><input type="radio" name="RAnkTendernessOptions" value="Mildly">  <span class="select-btn">Mildly</span></label>
+        <label><input type="radio" name="RAnkTendernessOptions" value="Moderately">  <span class="select-btn">Moderately</span></label>
+        <label><input type="radio" name="RAnkTendernessOptions" value="Severely">  <span class="select-btn">Severely</span></label>       
+        decreased with local tenderness upon palpation of the
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkTendernessOptions" value="medial malleolus">
+            <span class="select-btn">medial malleolus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkTendernessOptions" value="lateral malleolus">
+            <span class="select-btn">lateral malleolus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkTendernessOptions" value="Achilles tendon">
+            <span class="select-btn">Achilles tendon</span>
+        </label>
+        The ankle pain is worsened with
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkWorsened" value="plantar flexion">
+            <span class="select-btn"> plantar flexion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkWorsened" value="dorsiflexion">
+            <span class="select-btn"> dorsiflexion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkWorsened" value="eversion">
+            <span class="select-btn"> eversion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkWorsened" value="inversion">
+            <span class="select-btn"> inversion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkWorsened" value="extension">
+            <span class="select-btn"> extension</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkWorsened" value="ambulation">
+            <span class="select-btn"> ambulation</span>
+        </label>
+        There is 
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkother" value="edema">
+            <span class="select-btn"> edema</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RAnkother" value="ecchymosis">
+            <span class="select-btn"> ecchymosis</span>
+        </label>over the ankle.
+
+
+
+    </div>
+   @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -462,12 +823,67 @@
                 <td>20</td>
             </tr>
         </tbody>
-    </table>
+    </table> *@
 </div>
 
 <div id="lanklePE" style="display:none">
     <h6 class="fw-bold">Left Ankle </h6>
-    <table style="width:100%">
+    <div class="select-group">
+        The ankle ROM is
+
+        <input id="LAnkTenderness" class="form-control d-inline " style="width:100px" />mildly decreased with local tenderness upon palpation of the
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkTendernessOptions" value="medial malleolus">
+            <span class="select-btn">medial malleolus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkTendernessOptions" value="lateral malleolus">
+            <span class="select-btn">lateral malleolus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkTendernessOptions" value="Achilles tendon">
+            <span class="select-btn">Achilles tendon</span>
+        </label>
+        The ankle pain is worsened with
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkWorsened" value="plantar flexion">
+            <span class="select-btn"> plantar flexion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkWorsened" value="dorsiflexion">
+            <span class="select-btn"> dorsiflexion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkWorsened" value="eversion">
+            <span class="select-btn"> eversion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkWorsened" value="inversion">
+            <span class="select-btn"> inversion</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkWorsened" value="extension">
+            <span class="select-btn"> extension</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkWorsened" value="ambulation">
+            <span class="select-btn"> ambulation</span>
+        </label>
+        There is
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkWorsened" value="edema">
+            <span class="select-btn"> edema</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LAnkWorsened" value="ecchymosis">
+            <span class="select-btn"> ecchymosis</span>
+        </label>over the ankle.
+
+
+
+    </div>
+   @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -496,12 +912,25 @@
                 <td>20</td>
             </tr>
         </tbody>
-    </table>
+    </table> *@
 </div>
 
 <div id="relbowPE" style="display:none">
     <h6 class="fw-bold">Right Elbow </h6>
-    <table style="width:100%">
+    <div class="select-group">
+        There is tenderness upon palpation of the elbow. Range of motion is
+        <input id="RElbTenderness" class="form-control d-inline " style="width:100px" />
+
+        <label><input type="radio" name="RElbTendernessOptions" value="Mildly">  <span class="select-btn">Mildly</span></label>
+        <label><input type="radio" name="RElbTendernessOptions" value="Moderately">  <span class="select-btn">Moderately</span></label>
+        <label><input type="radio" name="RElbTendernessOptions" value="Severely">  <span class="select-btn">Severely</span></label>
+        decreased.       
+        <label>
+            <input type="checkbox" class="chkMulti" name="RElbTests" value="Tinel">
+            <span class="select-btn"> Tinel</span>
+        </label>  
+    </div>
+    @* <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -530,12 +959,25 @@
                 <td>20</td>
             </tr>
         </tbody>
-    </table>
+    </table> *@
 </div>
 
 <div id="lelbowPE" style="display:none">
     <h6 class="fw-bold">Left Elbow </h6>
-    <table style="width:100%">
+    <div class="select-group">
+        There is tenderness upon palpation of the elbow. Range of motion is
+        <input id="LElbTenderness" class="form-control d-inline " style="width:100px" />
+
+        <label><input type="radio" name="LElbTendernessOptions" value="Mildly">  <span class="select-btn">Mildly</span></label>
+        <label><input type="radio" name="LElbTendernessOptions" value="Moderately">  <span class="select-btn">Moderately</span></label>
+        <label><input type="radio" name="LElbTendernessOptions" value="Severely">  <span class="select-btn">Severely</span></label>
+        decreased.
+        <label>
+            <input type="checkbox" class="chkMulti" name="LElbTests" value="Tinel">
+            <span class="select-btn"> Tinel</span>
+        </label>
+    </div>
+   @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -564,11 +1006,43 @@
                 <td>20</td>
             </tr>
         </tbody>
-    </table>
+    </table> *@
 </div>
 
 <div id="rhipPE" style="display:none">
     <h6 class="fw-bold">Right Hip </h6>
+    <div class="select-group">
+        There is tenderness upon palpation of the
+        <input id="RHipTenderness" class="form-control d-inline " style="width:100px" />
+        <label>
+            <input type="checkbox" class="chkMulti" name="RHipTendernessOptions" value="Greater trochanter">
+            <span class="select-btn">Greater trochanter</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RHipTendernessOptions" value="posterior aspect of the greater trochanter">
+            <span class="select-btn">posterior aspect of the greater trochanter</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RHipTendernessOptions" value="iliotibial band">
+            <span class="select-btn">iliotibial band.</span>
+        </label>
+        
+        <label>
+            <input type="checkbox" class="chkMulti" name="RHipTests" value="Obers test">
+            <span class="select-btn"> Ober's test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RHipTests" value="Faber test">
+            <span class="select-btn"> Faber test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RHipTests" value="Trendelenburg test">
+            <span class="select-btn"> Trendelenburg test</span>
+        </label>
+
+        
+
+    </div>
     <table style="width:100%">
         <thead>
             <tr>
@@ -584,10 +1058,10 @@
             <tr>
                 <td>Flexion</td>
                 <td><input id="RHipFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>100</td>
+                <td>120</td>
                 <td>Adduction</td>
                 <td><input id="RHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>20</td>
+                <td>35</td>
             </tr>
             <tr>
                 <td>Extension</td>
@@ -595,15 +1069,15 @@
                 <td>30</td>
                 <td>Internal rotation</td>
                 <td><input id="RHipIRotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>40</td>
+                <td>45</td>
             </tr>
             <tr>
                 <td>Abduction</td>
                 <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>40</td>
+                <td>45</td>
                 <td>External rotation</td>
                 <td><input id="RHipERotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>50</td>
+                <td>45</td>
             </tr>
         </tbody>
     </table>
@@ -611,6 +1085,38 @@
 
 <div id="lhipPE" style="display:none">
     <h6 class="fw-bold">Left Hip </h6>
+    <div class="select-group">
+        There is tenderness upon palpation of the
+        <input id="LHipTenderness" class="form-control d-inline " style="width:100px" />
+        <label>
+            <input type="checkbox" class="chkMulti" name="LHipTendernessOptions" value="Greater trochanter">
+            <span class="select-btn">Greater trochanter</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LHipTendernessOptions" value="posterior aspect of the greater trochanter">
+            <span class="select-btn">posterior aspect of the greater trochanter</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LHipTendernessOptions" value="iliotibial band">
+            <span class="select-btn">iliotibial band.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LHipTests" value="Obers test">
+            <span class="select-btn"> Ober's test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LHipTests" value="Faber test">
+            <span class="select-btn"> Faber test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LHipTests" value="Trendelenburg test">
+            <span class="select-btn"> Trendelenburg test</span>
+        </label>
+
+
+
+    </div>
     <table style="width:100%">
         <thead>
             <tr>
@@ -625,27 +1131,27 @@
         <tbody>
             <tr>
                 <td>Flexion</td>
-                <td><input id="LHipFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>100</td>
+                <td><input id="RHipFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>120</td>
                 <td>Adduction</td>
-                <td><input id="LHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>20</td>
+                <td><input id="RHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>35</td>
             </tr>
             <tr>
                 <td>Extension</td>
-                <td><input id="LHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>30</td>
                 <td>Internal rotation</td>
-                <td><input id="LHipIRotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>40</td>
+                <td><input id="RHipIRotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>45</td>
             </tr>
             <tr>
                 <td>Abduction</td>
-                <td><input id="LHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>40</td>
+                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>45</td>
                 <td>External rotation</td>
-                <td><input id="LHipERotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>50</td>
+                <td><input id="RHipERotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>45</td>
             </tr>
         </tbody>
     </table>
@@ -653,7 +1159,56 @@
 
 <div id="rwristPE" style="display:none">
     <h6 class="fw-bold">Right Wrist </h6>
-    <table style="width:100%">
+    <div class="select-group">
+        The wrist exam reveals tenderness upon palpation of the
+        <input id="RWristTenderness" class="form-control d-inline " style="width:100px" />
+        
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristTendernessOptions" value="ulna">
+            <span class="select-btn">ulna</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristTendernessOptions" value="radius">
+            <span class="select-btn">radius</span>
+        </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RWristTendernessOptions" value="dorsum">
+            <span class="select-btn">dorsum</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristTendernessOptions" value="palmar of the wrist">
+            <span class="select-btn">palmar of the wrist.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristOther" value="Tinnels">
+            <span class="select-btn"> Tinnels</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristOther" value="Phalens">
+            <span class="select-btn"> Phalens</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristOther" value="Finkelsteins">
+            <span class="select-btn"> Finkelsteins</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristOther" value="Pain upon ulnar deviation">
+            <span class="select-btn"> Pain upon ulnar deviation</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristOther" value="Pain upon radial deviation">
+            <span class="select-btn"> Pain upon radial deviation</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RWristOther" value="Pain upon dorsiflexion">
+            <span class="select-btn"> Pain upon dorsiflexion.</span>
+        </label>
+
+
+
+    </div>
+   @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -682,12 +1237,61 @@
                 <td>20</td>
             </tr>
         </tbody>
-    </table>
+    </table> *@
 </div>
 
 <div id="lwristPE" style="display:none">
     <h6 class="fw-bold">Left Wrist </h6>
-    <table style="width:100%">
+    <div class="select-group">
+        The wrist exam reveals tenderness upon palpation of the
+        <input id="LWristTenderness" class="form-control d-inline " style="width:100px" />
+        
+        <label>
+            <input type="checkbox" class="chkMulti" name="lWristTendernessOptions" value="ulna">
+            <span class="select-btn">ulna</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lWristTendernessOptions" value="radius">
+            <span class="select-btn">radius</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lWristTendernessOptions" value="dorsum">
+            <span class="select-btn">dorsum</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lWristTendernessOptions" value="palmar of the wrist">
+            <span class="select-btn">palmar of the wrist.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LWristOther" value="Tinnels">
+            <span class="select-btn"> Tinnels</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LWristOther" value="Phalens">
+            <span class="select-btn"> Phalens</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LWristOther" value="Finkelsteins">
+            <span class="select-btn"> Finkelsteins</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LWristOther" value="Pain upon ulnar deviation">
+            <span class="select-btn"> Pain upon ulnar deviation</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LWristOther" value="Pain upon radial deviation">
+            <span class="select-btn"> Pain upon radial deviation</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LWristOther" value="Pain upon dorsiflexion">
+            <span class="select-btn"> Pain upon dorsiflexion.</span>
+        </label>
+
+
+
+    </div>
+   @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -716,7 +1320,7 @@
                 <td>20</td>
             </tr>
         </tbody>
-    </table>
+    </table> *@
 </div>
 
 <div>
