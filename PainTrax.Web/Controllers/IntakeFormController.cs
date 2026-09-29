@@ -1122,12 +1122,21 @@ namespace PainTrax.Web.Controllers
                                     vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.";
                                 }
 
-                                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
+                                var ccContent = "";
+
+                                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
+                                    HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
                                 {
                                     peContent = this.GetPE(model);
                                     dtrContent = this.GetDTR(model);
                                     sensoryContent = this.GetSensory(model);
                                     mmstContent = this.GetMMST(model);
+                                    ccContent = this.GetBHFCC(model);
+                                }
+                                else
+                                {
+                                    ccContent = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model);
+                                    //ccContent = this.GetBHFCC(model);
                                 }
 
                                 var objPage1 = new tbl_ie_page1()
@@ -1140,7 +1149,7 @@ namespace PainTrax.Web.Controllers
                                     assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : model.Diagnosis,
                                     ie_id = ie,
                                     vital = string.IsNullOrEmpty(vital) ? defaultPage1.vital : vital,
-                                    cc = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model),
+                                    cc = ccContent,
                                     daignosis_desc = assessment,
                                     pe = string.IsNullOrEmpty(peContent) ? defaultPage1.pe : peContent,
                                     //pe = defaultPage1.pe,
@@ -2170,6 +2179,73 @@ namespace PainTrax.Web.Controllers
             }
         }
 
+
+        private string GetBHFCC(AIIntakeFormModel model)
+        {
+            string pe = "";
+            if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + CCHelper.NeckCC(model);
+            }
+            if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.MidbackCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LowBackCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightShoulderCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftShoulderCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightKneeCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftKneeCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightAnkleCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftAnkleCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightElbowCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftElbowCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightHipCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftHipCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightWristCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftWristCC(model) + "</p>";
+            }
+            return pe.Replace(", and"," and");
+        }
+
         private string GetPE(AIIntakeFormModel model)
         {
             string pe = "";
@@ -2209,6 +2285,14 @@ namespace PainTrax.Web.Controllers
             if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
             {
                 pe = pe + "<br/>" + this.GetROM(model, "left ankle", "Ankle.html");
+            }
+            if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right elbow", "Elbow.html");
+            }
+            if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left elbow", "Elbow.html");
             }
             if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
             {
@@ -3657,7 +3741,8 @@ FINAL VALIDATION:
                                            .Replace("#RRotationROM", model.NeckFFRight)
                                            .Replace("#ExtensionROM", model.NeckExt)
                                            .Replace("#LLateralFlexionROM", model.NeckExtLeft)
-                                           .Replace("#RLateralFlexionROM", model.NeckExtRight);
+                                           .Replace("#RLateralFlexionROM", model.NeckExtRight)
+                                           .Replace("#SPTest", model.NeckSpurlingTest);
                     break;
                 case "midback":
                     htmlString = htmlString.Replace("#MbFFROM", model.MbFFROM)
@@ -3666,10 +3751,11 @@ FINAL VALIDATION:
                                            .Replace("#MbExt", model.MbExt);
                     break;
                 case "lowback":
-                    htmlString = htmlString.Replace("#LbFFROM", model.LbFFROM)
-                                           .Replace("#LbFFLeft", model.LbFFLeft)
-                                           .Replace("#LbFFRight", model.LbFFRight)
-                                           .Replace("#LbExt", model.LbExt);
+                    htmlString = htmlString.Replace("#LbFFROM", model.LBFFROM)
+                                           .Replace("#LbFFLeft", model.LBFFLeft)
+                                           .Replace("#LbFFRight", model.LBFFRight)
+                                           .Replace("#LbExt", model.LBExt)
+                                           .Replace("#SLRTest", model.LBSlrTest);
                     break;
                 case "left shoulder":
                     htmlString = htmlString.Replace("#AbductionROM", model.LSHAbductionROM)
@@ -3677,7 +3763,8 @@ FINAL VALIDATION:
                                            .Replace("#FlexionROM", model.LSHFlexionROM)
                                            .Replace("#InternalRotationROM", model.LSHIRROM)
                                            .Replace("#AdductionROM", model.LSHAdductionROM)
-                                           .Replace("#ExtensionROM", model.LSHExtOM);
+                                           .Replace("#ExtensionROM", model.LSHExtOM)
+                                           .Replace("#side", "LEFT");
                     break;
                 case "right shoulder":
                     htmlString = htmlString.Replace("#AbductionROM", model.RSHAbductionROM)
@@ -3685,7 +3772,8 @@ FINAL VALIDATION:
                                            .Replace("#FlexionROM", model.RSHFlexionROM)
                                            .Replace("#InternalRotationROM", model.RSHIRROM)
                                            .Replace("#AdductionROM", model.RSHAdductionROM)
-                                           .Replace("#ExtensionROM", model.RSHExtOM);
+                                           .Replace("#ExtensionROM", model.RSHExtOM)
+                                           .Replace("#side", "RIGHT");
                     break;
                 case "left knee":
                     htmlString = htmlString.Replace("#FlexionROM", model.LKNFlexionROM)
@@ -3693,7 +3781,8 @@ FINAL VALIDATION:
                                            .Replace("#FlexionNormal", model.LKNFlexionNormal)
                                            .Replace("#ExtensionNormal", model.LKNExtRNormal)
                                            .Replace("#FlexionTitle", model.LKNTitleROM)
-                                           .Replace("#ExtensionTitle", model.LKNExtTitleROM);
+                                           .Replace("#ExtensionTitle", model.LKNExtTitleROM)
+                                           .Replace("#side", "LEFT");
                     break;
                 case "right knee":
                     htmlString = htmlString.Replace("#FlexionROM", model.RKNFlexionROM)
@@ -3701,32 +3790,37 @@ FINAL VALIDATION:
                                           .Replace("#FlexionNormal", model.RKNFlexionNormal)
                                           .Replace("#ExtensionNormal", model.RKNExtRNormal)
                                           .Replace("#FlexionTitle", model.RKNTitleROM)
-                                          .Replace("#ExtensionTitle", model.RKNExtTitleROM);
+                                          .Replace("#ExtensionTitle", model.RKNExtTitleROM)
+                                          .Replace("#side", "RIGHT");
                     break;
                 case "left ankle":
                     htmlString = htmlString.Replace("#PlantarFlexionROM", model.LAnkleFlexionROM)
                                            .Replace("#InversionROM", model.LAnkleInversionROM)
                                            .Replace("#DorsiflexionROM", model.LAnkleDorsiflexionROM)
-                                           .Replace("#EversionROM", model.LAnkleEversionROM);
+                                           .Replace("#EversionROM", model.LAnkleEversionROM)
+                                           .Replace("#side", "LEFT");
 
                     break;
                 case "right ankle":
                     htmlString = htmlString.Replace("#PlantarFlexionROM", model.RAnkleFlexionROM)
                                            .Replace("#InversionROM", model.RAnkleInversionROM)
                                            .Replace("#DorsiflexionROM", model.RAnkleDorsiflexionROM)
-                                           .Replace("#EversionROM", model.RAnkleEversionROM);
+                                           .Replace("#EversionROM", model.RAnkleEversionROM)
+                                           .Replace("#side", "RIGHT");
                     break;
                 case "left elbow":
                     htmlString = htmlString.Replace("#FlexionROM", model.LElbowFlexionROM)
                                            .Replace("#ExtensionROM", model.LElbowExtensionROM)
                                            .Replace("#SupinationROM", model.LElbowSupinationROM)
-                                           .Replace("#PronationROM", model.LElbowPronationROM);
+                                           .Replace("#PronationROM", model.LElbowPronationROM)
+                                           .Replace("#side", "LEFT");
                     break;
                 case "right elbow":
                     htmlString = htmlString.Replace("#FlexionROM", model.RElbowFlexionROM)
                                            .Replace("#ExtensionROM", model.RElbowExtensionROM)
                                            .Replace("#SupinationROM", model.RElbowSupinationROM)
-                                           .Replace("#PronationROM", model.RElbowPronationROM);
+                                           .Replace("#PronationROM", model.RElbowPronationROM)
+                                           .Replace("#side", "RIGHT");
                     break;
                 case "left hip":
                     htmlString = htmlString.Replace("#FlexionROM", model.LHipFlexionROM)
@@ -3734,7 +3828,8 @@ FINAL VALIDATION:
                                            .Replace("#ExtensionROM", model.LHipExtensionROM)
                                            .Replace("#InternalRotationROM", model.LHipIRotationROM)
                                            .Replace("#AbductionROM", model.LHipAbductionROM)
-                                           .Replace("#ExternalRotationROM", model.LHipERotationROM);
+                                           .Replace("#ExternalRotationROM", model.LHipERotationROM)
+                                           .Replace("#side", "LEFT");
                     break;
                 case "right hip":
                     htmlString = htmlString.Replace("#FlexionROM", model.RHipFlexionROM)
@@ -3742,20 +3837,23 @@ FINAL VALIDATION:
                                            .Replace("#ExtensionROM", model.RHipExtensionROM)
                                            .Replace("#InternalRotationROM", model.RHipIRotationROM)
                                            .Replace("#AbductionROM", model.RHipAbductionROM)
-                                           .Replace("#ExternalRotationROM", model.RHipERotationROM);
+                                           .Replace("#ExternalRotationROM", model.RHipERotationROM)
+                                            .Replace("#side", "RIGHT");
                     break;
                 case "left wrist":
                     htmlString = htmlString.Replace("#FlexionROM", model.RWristFlexionROM)
                                            .Replace("#UlnarDeviationROM", model.RWristUDROM)
                                            .Replace("#ExtensionROM", model.RWristExtensionROM)
-                                           .Replace("#RadialDeviationROM", model.RWristRDROM);
+                                           .Replace("#RadialDeviationROM", model.RWristRDROM)
+                                           .Replace("#side", "LEFT");
 
                     break;
                 case "right wrist":
                     htmlString = htmlString.Replace("#FlexionROM", model.LWristFlexionROM)
                                            .Replace("#UlnarDeviationROM", model.LWristUDROM)
                                            .Replace("#ExtensionROM", model.LWristExtensionROM)
-                                           .Replace("#RadialDeviationROM", model.LWristRDROM);
+                                           .Replace("#RadialDeviationROM", model.LWristRDROM)
+                                             .Replace("#side", "RIGHT");
                     break;
                 default:
                     rom = "No ROM data available for this body part.";

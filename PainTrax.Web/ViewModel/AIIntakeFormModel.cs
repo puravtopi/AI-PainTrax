@@ -35,14 +35,10 @@
         public string LblDOA { get; set; }
         public string Alcohol { get; set; }
         public string Allergy { get; set; }
-        public string LKnPain { get; set; }
         public List<string> LKnType { get; set; }
-        public string LShPain { get; set; }
         public List<string> LShType { get; set; }
-        public string RKnPain { get; set; }
         public List<string> RKnType { get; set; }
         public List<string> RShInsp { get; set; }
-        public string RShPain { get; set; }
         public string RShReachOverhead { get; set; }
         public string RShReachBack { get; set; }
         public string RShSleepIssue { get; set; }
@@ -85,15 +81,12 @@
         public string WalkBlocks { get; set; }
         public string AllergyDrug { get; set; }
         public string ChiroRelief { get; set; }
-        public List<string> LKnSymptoms { get; set; }
         public List<string> LKnSymptomsPatient { get; set; }
         public List<string> RKnSymptomsPatient { get; set; }
-        public List<string> LShSymptoms { get; set; }
         public string LKnReachOverhead { get; set; }
         public string LKnReachBack { get; set; }
         public string LKnSleepIssue { get; set; }
         public List<string> PatientType { get; set; }
-        public List<string> RKnSymptoms { get; set; }
         public string RKnImproveOther { get; set; }
         public string LKnImproveOther { get; set; }
         public string RHipImproveOther { get; set; }
@@ -108,7 +101,6 @@
         public string RShInternal { get; set; }
         public List<string> RShRomLimit { get; set; }
         public List<string> RShStrength { get; set; }
-        public List<string> RShSymptoms { get; set; }
         public string AccidentType { get; set; }
         public string DominantHand { get; set; }
         public string txtDominantHand { get; set; }
@@ -179,22 +171,25 @@
         //public string Neckrotatinghead { get; set; }
         //public string NeckDiffgrippinghand { get; set; }
         //public string Necksustained { get; set; }
+
+        public List<string> NeckSymptoms { get; set; }
+        public string PainOption { get; set; }
+        public string NeckRadiatesOther { get; set; }
+        public string NeckAssociatedOther { get; set; }
+        public string NeckImprovesOther { get; set; }
+        public List<string> Axial { get; set; }
         public string NeckRadiatesTo { get; set; }
+        public string NeckAssociatedTo { get; set; }
         public List<string> NeckRadiates { get; set; }
         public List<string> NeckAssociated { get; set; }
         public List<string> NeckWorsens { get; set; }
         public List<string> NeckImproves { get; set; }
 
-        public string MidbackSection { get; set; }
-        public List<string> mdbackPain { get; set; }
-        //public string mdbackDiffsleeping { get; set; }
-        //public string mdbackDifflifting { get; set; }
-        //public string mdbackDiffbending { get; set; }
-        //public string mdbacksustained { get; set; }
-        public string MidbackRadiatesTo { get; set; }
-        public List<string> MidbackRadiates { get; set; }
-        public List<string> MidbackWorsens { get; set; }
-        public List<string> MidbackImproves { get; set; }
+        public string MbPain { get; set; }
+        public List<string> MbSymptoms { get; set; } = new List<string>();
+        public List<string> MbWorsens { get; set; } = new List<string>();
+        public List<string> MbImproves { get; set; } = new List<string>();
+        public string MbImprovesOther { get; set; }
 
         public string LowBackPain { get; set; }
         public List<string> lbackPain { get; set; }
@@ -202,11 +197,99 @@
         //public string lbackDifflifting { get; set; }
         //public string lbackDiffbending { get; set; }
         //public string lbacksustained { get; set; }
-        public string LowBackRadiatesTo { get; set; }
-        public List<string> LowBackRadiates { get; set; }
-        public List<string> LowBackAssociated { get; set; }
-        public List<string> LowBackWorsens { get; set; }
-        public List<string> LowBackImproves { get; set; }
+        // Pain score and descriptors
+        public string LBPain { get; set; }
+        public List<string> LBSymptoms { get; set; } = new List<string>();
+
+        // Pain classification & Axial triggers
+        public string LBPainOption { get; set; } // FACET PAIN, SI JOINT PAIN, RADICULAR PAIN
+        public List<string> LBAxial { get; set; } = new List<string>();
+
+        // Radiation
+        public string LBRadiatesTo { get; set; } // Left, Right, Bilateral
+        public List<string> LBRadiates { get; set; } = new List<string>();
+        public string LBRadiatesOther { get; set; }
+
+        // Associated symptoms
+        public List<string> LBAssociated { get; set; } = new List<string>();
+        public string LBAssociatedTo { get; set; } // Left, Right, Bilateral
+        public string LBAssociatedOther { get; set; }
+
+        // Aggravating and Relieving factors
+        public List<string> LBWorsens { get; set; } = new List<string>();
+        public List<string> LBImproves { get; set; } = new List<string>();
+        public string LBImprovesOther { get; set; }
+
+        public string LShPain { get; set; }
+        public List<string> LShSymptoms { get; set; } = new List<string>();
+        public List<string> LShWorsens { get; set; } = new List<string>();
+        public List<string> LSHImproves { get; set; } = new List<string>();
+        public string LSHImprovesOther { get; set; }
+
+        public string RShPain { get; set; }
+        public List<string> RShSymptoms { get; set; } = new List<string>();
+        public List<string> RShWorsens { get; set; } = new List<string>();
+        public List<string> RSHImproves { get; set; } = new List<string>();
+
+        //knee
+
+        public string RKnPain { get; set; }
+        public List<string> RKnSymptoms { get; set; } = new List<string>();
+        public List<string> RKnWorsens { get; set; } = new List<string>();
+        public List<string> RKNImproves { get; set; } = new List<string>();
+        public string RKNImprovesOther { get; set; }
+        public string RSHImprovesOther { get; set; }
+
+        public string LKnPain { get; set; }
+        public List<string> LKnSymptoms { get; set; } = new List<string>();
+        public List<string> LKnWorsens { get; set; } = new List<string>();
+        public List<string> LKNImproves { get; set; } = new List<string>();
+        public string LKNImprovesOther { get; set; }
+
+        //ANkle
+
+        public string RAnkPain { get; set; }
+        public List<string> RAnkSymptoms { get; set; } = new List<string>();
+        public List<string> RAnkPainSpecial { get; set; } = new List<string>();
+
+        public string LAnkPain { get; set; }
+        public List<string> LAnkSymptoms { get; set; } = new List<string>();
+        public List<string> LAnkPainSpecial { get; set; } = new List<string>();
+
+        //Elbow
+
+        public string RElPain { get; set; }
+        public List<string> RElSymptoms { get; set; } = new List<string>();
+        public List<string> RElWorsens { get; set; } = new List<string>();
+        public List<string> RElImproves { get; set; } = new List<string>();
+
+        public string LElPain { get; set; }
+        public List<string> LElSymptoms { get; set; } = new List<string>();
+        public List<string> LElWorsens { get; set; } = new List<string>();
+        public List<string> LElImproves { get; set; } = new List<string>();
+
+
+        //Hip
+
+        public string RHipPain { get; set; }
+        public List<string> RHipSymptoms { get; set; } = new List<string>();
+        public List<string> RHipWorsens { get; set; } = new List<string>();
+        public List<string> RHipImproves { get; set; } = new List<string>();
+
+        public string LHipPain { get; set; }
+        public List<string> LHipSymptoms { get; set; } = new List<string>();
+        public List<string> LHipWorsens { get; set; } = new List<string>();
+        public List<string> LHipImproves { get; set; } = new List<string>();
+
+        //wrist
+
+        public string RWristPain { get; set; }
+        public List<string> RWristSymptoms { get; set; } = new List<string>();
+        public List<string> RWristWorsens { get; set; } = new List<string>();
+
+        public string LWristPain { get; set; }
+        public List<string> LWristSymptoms { get; set; } = new List<string>();
+        public List<string> LWristWorsens { get; set; } = new List<string>();
 
         //public string GeneralNormal { get; set; }
         public string GeneralROS { get; set; }
@@ -437,14 +520,12 @@
         public List<string> LKndiff { get; set; }
         public string RKndiff { get; set; }
         public List<string> LKnDiffi { get; set; }
-        public string RHipPain { get; set; }
-        public List<string> RHipSymptoms { get; set; }
+       
         public List<string> RHipPainIn { get; set; }
         public string RHipSwelling { get; set; }
         public List<string> RHipPainWith { get; set; }
         public List<string> RHipImprove { get; set; }
-        public string LHipPain { get; set; }
-        public List<string> LHipSymptoms { get; set; }
+       
         public List<string> LHipPainIn { get; set; }
         public string LHipSwelling { get; set; }
         public List<string> LHipPainWith { get; set; }
@@ -597,7 +678,7 @@
         public string DrNote { get; set; }
         public string txtNeuro { get; set; }
         public string VisitType { get; set; }
-        public List<string> currentmedications { get; set; }       
+        public List<string> currentmedications { get; set; }
 
 
         //Left Knee and Right Knee ROM
@@ -689,12 +770,14 @@
         public string NeckExt { get; set; }
         public string NeckExtLeft { get; set; }
         public string NeckExtRight { get; set; }
+        public string NeckSpurlingTest { get; set; }
 
         // lowback ROM
-        public string LbFFROM { get; set; }
-        public string LbFFLeft { get; set; }
-        public string LbFFRight { get; set; }
-        public string LbExt { get; set; }
+        public string LBFFROM { get; set; }
+        public string LBFFLeft { get; set; }
+        public string LBFFRight { get; set; }
+        public string LBExt { get; set; }
+        public string LBSlrTest { get; set; }
         // Midback ROM
         public string MbFFROM { get; set; }
         public string MbFFLeft { get; set; }
