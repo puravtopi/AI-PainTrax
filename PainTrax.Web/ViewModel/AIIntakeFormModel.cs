@@ -581,7 +581,7 @@
         public string RHipSLR { get; set; }
         public List<string> RHipSLRType { get; set; }
         public string RHipTemplate { get; set; }
-        public List<string> RHipTenderness { get; set; }
+        public string RHipTenderness { get; set; }
         public string RHipAbduction { get; set; }
         public string RHipAdduction { get; set; }
         public string RHipFlexion { get; set; }
@@ -595,7 +595,7 @@
         public string LHipSLR { get; set; }
         public List<string> LHipSLRType { get; set; }
         public string LHipTemplate { get; set; }
-        public List<string> LHipTenderness { get; set; }
+        public string LHipTenderness { get; set; }
         public string LHipAbduction { get; set; }
         public string LHipAdduction { get; set; }
         public string LHipFlexion { get; set; }
