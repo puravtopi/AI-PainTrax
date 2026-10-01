@@ -55,7 +55,7 @@ namespace PainTrax.Web.Helper
                     ? modal.NeckRadiatesTo.Trim().ToLowerInvariant() + " "
                     : string.Empty;
 
-                var pluralizedAreas = radAreas.Select(a => PluralizeBodyPart(a.ToLowerInvariant()));
+                var pluralizedAreas = radAreas.Select(a => PluralizeBodyPart(a.ToLowerInvariant(),sidePrefix));
                 sentences.Add($"Neck pain radiates to {sidePrefix}{FormatList(pluralizedAreas)}.");
             }
 
@@ -77,16 +77,19 @@ namespace PainTrax.Web.Helper
                     .Distinct()
                     .ToList();
 
+
+                string sidePrefix = !string.IsNullOrWhiteSpace(modal.NeckAssociatedTo)
+                  ? modal.NeckAssociatedTo.Trim().ToLowerInvariant() + " "
+                  : string.Empty;
+
                 var bodyParts = assocSymptoms
                     .Where(s => !s.Equals("numbness", StringComparison.OrdinalIgnoreCase) &&
                                 !s.Equals("tingling", StringComparison.OrdinalIgnoreCase))
-                    .Select(s => PluralizeBodyPart(s.ToLowerInvariant()))
+                    .Select(s => PluralizeBodyPart(s.ToLowerInvariant(),sidePrefix))
                     .Distinct()
                     .ToList();
 
-                string sidePrefix = !string.IsNullOrWhiteSpace(modal.NeckAssociatedTo)
-                    ? modal.NeckAssociatedTo.Trim().ToLowerInvariant() + " "
-                    : string.Empty;
+              
 
                 if (sensations.Any() && bodyParts.Any())
                 {
@@ -213,19 +216,40 @@ namespace PainTrax.Web.Helper
             return $"{string.Join(", ", list.Take(list.Count - 1))}, and {list.Last()}";
         }
 
-        private static string PluralizeBodyPart(string part)
+        private static string PluralizeBodyPart(string part, string laterality = null)
         {
             if (string.IsNullOrWhiteSpace(part)) return part;
 
-            switch (part.ToLowerInvariant())
+            bool isBilateral = string.Equals(laterality?.Trim(), "bilateral", StringComparison.OrdinalIgnoreCase);
+
+            switch (part.Trim().TrimEnd('.').ToLowerInvariant())
             {
-                case "shoulder": return "shoulders";
-                case "arm": return "arms";
-                case "forearm": return "forearms";
-                case "hand": return "hands";
-                case "wrist": return "wrists";
-                case "finger": return "fingers";
-                default: return part; // preserves already-plural or custom entries like "fingers"
+                case "shoulder":
+                case "shoulders":
+                    return isBilateral ? "shoulders" : "shoulder";
+
+                case "arm":
+                case "arms":
+                    return isBilateral ? "arms" : "arm";
+
+                case "forearm":
+                case "forearms":
+                    return isBilateral ? "forearms" : "forearm";
+
+                case "hand":
+                case "hands":
+                    return isBilateral ? "hands" : "hand";
+
+                case "wrist":
+                case "wrists":
+                    return isBilateral ? "wrists" : "wrist";
+
+                case "finger":
+                case "fingers":
+                    return isBilateral ? "fingers" : "finger";
+
+                default:
+                    return part;
             }
         }
 
@@ -308,7 +332,7 @@ namespace PainTrax.Web.Helper
                     ? modal.LBRadiatesTo.Trim().ToLowerInvariant() + " "
                     : string.Empty;
 
-                var pluralizedAreas = radAreas.Select(a => PluralizeLowerBodyPart(a.ToLowerInvariant()));
+                var pluralizedAreas = radAreas.Select(a => PluralizeLowerBodyPart(a.ToLowerInvariant(),sidePrefix));
                 sentences.Add($"Lower back pain radiates to {sidePrefix}{FormatList(pluralizedAreas)}.");
             }
 
@@ -331,17 +355,19 @@ namespace PainTrax.Web.Helper
                     .Distinct()
                     .ToList();
 
+                string sidePrefix = !string.IsNullOrWhiteSpace(modal.LBAssociatedTo)
+                  ? modal.LBAssociatedTo.Trim().ToLowerInvariant() + " "
+                  : string.Empty;
+
                 var bodyParts = assocSymptoms
                     .Where(s => !s.Equals("numbness", StringComparison.OrdinalIgnoreCase) &&
                                 !s.Equals("tingling", StringComparison.OrdinalIgnoreCase) &&
                                 !s.Equals("forearm", StringComparison.OrdinalIgnoreCase))
-                    .Select(s => PluralizeLowerBodyPart(s.ToLowerInvariant()))
+                    .Select(s => PluralizeLowerBodyPart(s.ToLowerInvariant(), sidePrefix))
                     .Distinct()
                     .ToList();
 
-                string sidePrefix = !string.IsNullOrWhiteSpace(modal.LBAssociatedTo)
-                    ? modal.LBAssociatedTo.Trim().ToLowerInvariant() + " "
-                    : string.Empty;
+              
 
                 if (sensations.Any() && bodyParts.Any())
                 {
@@ -401,21 +427,39 @@ namespace PainTrax.Web.Helper
         /// <summary>
         /// Pluralizes lower body locations (e.g., hip -> hips, foot -> feet).
         /// </summary>
-        private static string PluralizeLowerBodyPart(string part)
+        private static string PluralizeLowerBodyPart(string part, string laterality = null)
         {
             if (string.IsNullOrWhiteSpace(part)) return part;
 
+            bool isBilateral = string.Equals(laterality?.Trim(), "bilateral", StringComparison.OrdinalIgnoreCase);
+
             switch (part.Trim().TrimEnd('.').ToLowerInvariant())
             {
-                case "hip": return "hip";
-                case "thigh": return "thigh";
-                case "knee": return "knee";
-                case "leg": return "leg";
-                case "ankle": return "ankle";
-                case "foot": return "feet";
+                case "hip":
+                    return isBilateral ? "Hips" : "Hip";
+
+                case "thigh":
+                    return isBilateral ? "Thighs" : "Thigh";
+
+                case "knee":
+                    return isBilateral ? "Knees" : "Knee";
+
+                case "leg":
+                    return isBilateral ? "Legs" : "Leg";
+
+                case "ankle":
+                    return isBilateral ? "Ankles" : "Ankle";
+
+                case "foot":
+                case "feet":
+                    return isBilateral ? "Feet" : "Foot";
+
                 case "toe":
-                case "toes": return "toes";
-                default: return part;
+                case "toes":
+                    return isBilateral ? "Toes" : "Toe";
+
+                default:
+                    return part;
             }
         }
 

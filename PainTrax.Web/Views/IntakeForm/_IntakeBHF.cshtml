@@ -658,7 +658,7 @@
             let selectedSections = [];
             let selectedPESections = [];
 
-            function fnShowPresentComplain(cntrl, divCC, divPE) {
+            function fnShowPresentComplain(cntrl, divCC, divPE,bodyPart) {
 
             if (!divCC) return;
 
@@ -674,6 +674,8 @@
                 }
 
             } else {
+
+                removeDaignosis(bodyPart);
 
                 // Remove when unchecked
                 selectedSections = selectedSections.filter(x => x !== divCC);
@@ -962,7 +964,10 @@
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
 
-        formData["ProviderId"] = $("#ProviderId").val();
+        var prov_id=$("#providerid").val();
+        if(prov_id=="0")
+             prov_id= $("#ProviderId").val();
+        formData["ProviderId"] = prov_id;
         formData["PatientIEId"] = $("#PatientIEId").val();
         //formData["PatientId"] = $("#PatientId").val();
         //formData["LocationId"] = $("#LocationId").val();
@@ -987,7 +992,7 @@
                     // If final submit
                         if (isSubmit) {
                             let locId= $("#LocationId").val() || 0;
-                            let provId=$("#ProviderId").val() || 0;
+                            let provId=prov_id || 0;
 
                             if(intake_type==="p")
                             {
@@ -1170,15 +1175,15 @@
 
                     var section = $(this).data('section');
                     var pe = $(this).data('pe');
-
-                    fnShowPresentComplain(this, section, pe);
+                    var value = $(this).val();
+                    fnShowPresentComplain(this, section, pe,value);
 
 
 
                    // $('input[name="Complaints"]:checked').each(function () {
                         //     selected.push($(this).val());
                         // });
-                        var value = $(this).val();
+                     
 
 
 

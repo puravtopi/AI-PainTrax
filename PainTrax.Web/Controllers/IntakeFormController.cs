@@ -1124,8 +1124,7 @@ namespace PainTrax.Web.Controllers
 
                                 var ccContent = "";
 
-                                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
-                                    HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
+                                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
                                 {
                                     peContent = this.GetPE(model);
                                     dtrContent = this.GetDTR(model);
