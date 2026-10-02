@@ -102,10 +102,10 @@
     <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:50px" />
 
     lbs,
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpO2:
+   @*  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SpO2:
     <input id="SpO" name="SpO" class="form-control d-inline" style="width:100px" />%,
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HR:
-    <input id="HR" name="HR" class="form-control d-inline" style="width:100px" />,
+    <input id="HR" name="HR" class="form-control d-inline" style="width:100px" />, *@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
     <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
 </p>
@@ -135,17 +135,34 @@
     % temporarily disabled
 </div>
 
+<div class="select-group">
+    <label><input type="radio" style="width:90%"class="chkMulti" name="shortgoal" value="Short term goals">  <span class="select-btn">Short term goals</span></label>
+    <div id="divgoals" style="display:none;width:90%">
+
+        <input id="shortterm" class="form-control d-inline" style="width:100%"  value="Decrease/eliminate pain; improve overall muscle strength 5/5; educate patient on Home Exercise Program (HEP); improve ROM by 10 degrees."/>
+    </div>
+</div>
+<div class="select-group">
+    <label><input type="radio" class="chkMulti" name="shortgoal" value="long term goals">  <span class="select-btn">long term goals</span></label>
+    
+    <div id="divgoalslongterm" style="display:none;width:90%">
+
+        <input id="longterm"  class="form-control d-inline" style="width:100%" value="Decrease/eliminate pain; prevent further complications; regain the highest functional level capable of the patient; perform the following Activities of Daily Living with minimal to no difficulty: Engaging in sports and recreational activities." class="form-control d-inline" style="min-width:90%;" />
+    </div>
+
+</div>
 <div id="divWC1" style="display:none;">
-    <p>
+   
         Occupation:
         <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
-       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i> *@
-        <br />
+
+</div>
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i> *@
+        @* <br />
         Job Description:
-        <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:95%;" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i> *@
-    </p>
-    <p>
+        <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:95%;" /> *@
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i> </p> *@
+    @* <p>
         Sit <input id="SitHr" class="form-control d-inline" style="width:80px" /> hr.
 
         Drive <input id="DriveHr" class="form-control d-inline" style="width:80px" /> hr.
@@ -187,8 +204,8 @@
 
         <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="10-20">  <span class="select-btn">10-20</span></label>
 
-        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="greater than 20"> <span class="select-btn">Greater than 20</span></label>
-    </div>
+        <label><input type="checkbox" class="chkMulti" name="LiftingWeight" value="greater than 20"> <span class="select-btn">Greater than 20</span></label> *@
+    
     @* <p>
                                                 If not working, stopped immediately after accident:
                                                 <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
@@ -198,7 +215,7 @@
                                                 <textarea id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
                                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
                                             </p> *@
-</div>
+
 
 <script>
     function fnCheckPatientNameOnly() {
@@ -381,4 +398,5 @@
             }
             return '';
         }
+            
 </script>

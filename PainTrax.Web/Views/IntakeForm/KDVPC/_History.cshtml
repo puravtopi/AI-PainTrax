@@ -412,15 +412,44 @@
         @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i> *@
     </span>
 </div>
-
 <!-- Social History -->
-<p style="display:none">
+<div class="select-group">
+    Marital status:
+    <label><input type="radio" class="chkMulti" name="Marital" value="Single"><span class="select-btn">Single</span></label>
+    <label><input type="radio" class="chkMulti" name="Marital" value="Married"><span class="select-btn">Married</span></label>
+   
+        <input id="married" class="form-control d-inline" style="width:150px" />
+    No. of children:
+    <input id="children" class="form-control d-inline" style="width:100px" />  
+</div>
+<div class="select-group">
+    Smoking:
+    <label><input type="radio" class="chkMulti" name="Smoke" value="Yes"><span class="select-btn">Yes</span></label>
+    <label><input type="radio" class="chkMulti" name="Smoke" value="No"><span class="select-btn">No</span></label>    
+    <span id="divSmoke" style="display:none">
+        <input id="PPD" class="form-control d-inline" style="width:150px" /> PPD.
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i> *@
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Alcohol:
+    <label><input type="radio" class="chkMulti" name="Alcohol" value="Yes"><span class="select-btn">Yes</span></label>
+    <label><input type="radio" class="chkMulti" name="Alcohol" value="No"><span class="select-btn">No</span></label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Drugs:
+    <label><input type="radio" class="chkMulti" name="OtherDrugs" value="Yes"><span class="select-btn">Yes</span></label>
+    <label><input type="radio" class="chkMulti" name="OtherDrugs" value="No"><span class="select-btn">No</span></label>
+    <span id="divDrugs" style="display:none">
+        <input id="OtherDrugsTxt" class="form-control d-inline w-25" placeholder="Other Drugs Name" style="width:60%" />
+    </span>
+</div>
+<!-- Social History -->
+@* <p style="display:none">
     Smoke:
     <label><input type="radio" name="Smoke" value="Yes"> Yes </label>
     <label><input type="radio" name="Smoke" value="No"> No </label>
     <span id="divSmoke" style="display:none">
         <input id="PPD" class="form-control d-inline" style="width:150px" /> PPD.
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i> *@
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i> 
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Alcohol:
@@ -436,9 +465,9 @@
     <label><input type="radio" name="OtherDrugs" value="No"> No </label>
     <span id="divDrugs" style="display:none">
         <input id="OtherDrugsTxt" class="form-control d-inline w-25" placeholder="Other Drugs Name" style="width:60%" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i> *@
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i> 
     </span>
-</p>
+</p> *@
 
 <!-- Therapy -->
 <div class="select-group">

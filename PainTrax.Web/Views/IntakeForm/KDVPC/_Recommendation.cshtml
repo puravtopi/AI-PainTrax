@@ -68,8 +68,28 @@
             
        
     </div>
-
     <div class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="cyclobenzaprine" /> <span class="select-btn">cyclobenzaprine</span></label>
+        <input id="cyclobenzaprine" name="cyclobenzaprine" value="10 mg oral tablet" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="Vimovo" /> <span class="select-btn">Vimovo</span></label>
+        <input id="Vimovo" name="Vimovo" value="500 mg-20 mg oral delayed release tablet" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="lidocaine" /> <span class="select-btn">lidocaine</span></label>
+        <input id="lidocaine" name="lidocaine" value="5% topical ointment" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="capsaicin" /> <span class="select-btn">capsaicin</span></label>
+        <input id="capsaicin" name="capsaicin" value="0.05% topical film" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="Dolobid" /> <span class="select-btn">Dolobid</span></label>
+        <input id="Dolobid" name="Dolobid" value="375 mg oral tablet" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="methyl" /> <span class="select-btn">methyl</span></label>
+        <input id="methyl" name="methyl" value="salicylate topical cream" class="form-control d-inline" style="width:150px" />
+        <input type="text"
+               id="PrescribedMedicationText"
+               class="form-control d-inline w-25" />
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PrescribedMedicationText')"></i> *@
+        prescribed.
+
+    </div>
+
+    @* <div class="select-group">
         <label><input type="checkbox" class="chkMulti" name="currentmedications" value="cyclobenzaprine 10 mg oral tablet" /> <span class="select-btn">cyclobenzaprine 10 mg oral tablet</span></label>
         <label><input type="checkbox" class="chkMulti" name="currentmedications" value="Vimovo 500 mg-20 mg oral delayed release tablet" /> <span class="select-btn">Vimovo 500 mg-20 mg oral delayed release tablet</span></label>
         <label><input type="checkbox" class="chkMulti" name="currentmedications" value="lidocaine 5% topical ointment" /> <span class="select-btn">lidocaine 5% topical ointment</span></label>
@@ -79,15 +99,16 @@
         <input type="text"
                id="PrescribedMedicationText"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PrescribedMedicationText')"></i> *@
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PrescribedMedicationText')"></i> 
         prescribed.
-    </div>
+    </div> *@
     <div class="select-group">
         Med supplies:
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="Bed board" /><span class="select-btn">Bed board</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="cervical collar" /><span class="select-btn">cervical collar</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="mattress" /><span class="select-btn">mattress</span></label>
-        <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="LSO lumbar cushion and knee support" /><span class="select-btn">LSO lumbar cushion and knee support</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="LSO lumbar cushion" /><span class="select-btn">LSO lumbar cushion</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="knee support" /><span class="select-btn">knee support</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="shoulder support" /><span class="select-btn">shoulder support</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="EMS unit" /><span class="select-btn">EMS unit</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="infrared heat lamp" /><span class="select-btn">infrared heat lamp</span></label>
@@ -100,6 +121,13 @@
             <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Refer to orthopedist" />
             <span class="select-btn">Refer to orthopedist.</span>
         </label>
+         <label>
+            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Spine surgeon" />
+            <span class="select-btn">Spine surgeon</span>
+        </label>
+        <input type="text"
+               id="orthopedistother"
+               class="form-control d-inline w-25" />
     </div>
 
     <div class="select-group">
@@ -109,9 +137,9 @@
         </label>
     </div>
 
-    <div class="select-group">
+    @* <div class="select-group">
         <label>
-            @*   <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule EMG" /> *@
+            @*   <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule EMG" /> 
             Schedule EMG
         </label>
 
@@ -128,7 +156,8 @@
         <input type="text"
                id="ScheduleEMGOther"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ScheduleEMGOther')"></i> *@
+        <input id="ScheduleEMG" name="ScheduleEMG" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" required onblur="fnvalidateDatefields()" />
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ScheduleEMGOther')"></i> 
     </div>
 
     <div class="select-group">
@@ -150,12 +179,12 @@
         <input type="text"
                id="ScheduleEMGOther"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ScheduleEMGOther')"></i> *@
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ScheduleEMGOther')"></i> 
     </div>
 
     <div class="select-group">
         <label>
-            @*   <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule Cervical Injection" /> *@
+            @*   <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Schedule Cervical Injection" /> 
             Schedule
         </label>
 
@@ -176,18 +205,18 @@
 
         @*   <label>
             <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CInjOther" /><span class="select-btn">CInjOther</span>
-        </label> *@
+        </label> 
 
         <input type="text"
                id="CervicalInjectionOther"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'CervicalInjectionOther')"></i> *@
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'CervicalInjectionOther')"></i> 
     </div>
 
     <div class="select-group">
         @*  <label>
                       Schedule
-        </label> *@
+        </label> 
 
         <label>
             <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LESI" />
@@ -216,17 +245,17 @@
 
        @*  <label>
             <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="ScheduleOther" /> <span class="select-btn">ScheduleOther</span>
-        </label> *@
+        </label> 
 
         <input type="text"
                id="LumbarInjectionOther"
                class="form-control d-inline w-25" />
-       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LumbarInjectionOther')"></i> *@
+       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LumbarInjectionOther')"></i> 
     </div>
 
     <div class="select-group">
         <label>
-            @*  <input type="checkbox" id="RequestMRI" name="TreatmentPlan" value="Request MRI" /> *@
+            @*  <input type="checkbox" id="RequestMRI" name="TreatmentPlan" value="Request MRI" /> 
             Request
         </label>
 
@@ -240,18 +269,18 @@
 
        @*  <label>
             <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="MRIOther" /><span class="select-btn">MRIOther</span>
-        </label> *@
+        </label> 
        
 
         <input type="text"
                id="MRIRequestOther"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MRIRequestOther')"></i> *@
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MRIRequestOther')"></i> 
     </div>
 
     <div class="select-group">
         <label>
-            @* <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Request CT" /> *@
+            @* <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Request CT" /> 
             Request
         </label>
 
@@ -261,17 +290,17 @@
 
        @*  <label>
             <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="CTOther" /><span class="select-btn">CTOther</span>
-        </label> *@
+        </label> 
 
         <input type="text"
                id="CTRequestOther"
                class="form-control d-inline w-25" />
-       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'CTRequestOther')"></i> *@
+       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'CTRequestOther')"></i> 
     </div>
 
     <div class="select-group">
         <label>
-            @*   <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Request XR" /> *@
+            @*   <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="Request XR" /> 
             Request
         </label>
 
@@ -281,12 +310,12 @@
 
        @*  <label>
             <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="XROther" /><span class="select-btn">XROther</span>
-        </label> *@
+        </label> 
 
         <input type="text"
                id="XRRequestOther"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'XRRequestOther')"></i> *@
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'XRRequestOther')"></i> 
     </div>
 
     <div class="select-group">
@@ -299,14 +328,13 @@
         <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="TS" /> <span class="select-btn">TS</span></label>
         <label><input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="LS" /> <span class="select-btn">LS</span></label>
 
-        @* <label>
-            <input type="checkbox" class="chkMulti" name="RECOMMENDATIONS" value="ETOther" /><span class="select-btn">ETOther</span>
-        </label> *@
+        
 
         <input type="text"
                id="TPIOther"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'TPIOther')"></i> *@
+        <input id="ExecutedTPI" name="ExecutedTPI" max="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" class="form-control d-inline w-auto" required onblur="fnvalidateDatefields()" />
+       
     </div>
 
     <div class="select-group">
@@ -327,8 +355,8 @@
         <input type="text"
                id="MedsOther"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i> *@
-    </div>
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i> 
+    </div> *@
 
     <div class="select-group">
         <input type="text"
@@ -371,4 +399,5 @@
            style="width:200px;" />
     @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'FollowUpOther')"></i> *@
 </div>
+
 

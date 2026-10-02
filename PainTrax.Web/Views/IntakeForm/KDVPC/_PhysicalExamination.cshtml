@@ -115,8 +115,12 @@
         <label><input type="radio" name="MBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="MBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
         <label><input type="radio" name="MBTendernessPosition" value="bilateral">  <span class="select-btn">B.</span></label>with muscle spasm present.
-
-        ROM is <input id="MROM" class="form-control d-inline " value="mildly" style="width:100px" /> decreased
+        ROM is <input id="MROM" class="form-control d-inline " style="width:100px" />
+        <label><input type="radio" name="midTendernessOptions" value="Mildly">  <span class="select-btn">Mildly</span></label>
+        <label><input type="radio" name="midTendernessOptions" value="Moderately">  <span class="select-btn">Moderately</span></label>
+        <label><input type="radio" name="midTendernessOptions" value="Severely">  <span class="select-btn">Severely</span></label>
+        decreased.
+       
        
         Trigger points with palpable taut bands were noted at
         <label><input type="radio" name="MBpalpabletaut" value="left">  <span class="select-btn">L</span></label>
@@ -216,10 +220,36 @@
     </div>
 
     <div class="select-group">
-        SLR Test:
-        <label><input type="radio" name="LBSlrTest" value="Positive" onclick="uncheckRadio(this)"> <span class="select-btn">+</span></label>
-        <label><input type="radio" name="LBSlrTest" value="Negative" onclick="uncheckRadio(this)"> <span class="select-btn">-</span></label>
-        Sacrol notch test:
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="SLR Test">
+            <span class="select-btn"> SLR Test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Sacral notch test">
+            <span class="select-btn"> Sacral notch test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Braggard's test">
+            <span class="select-btn"> Braggard's test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value=" Kernig's sign">
+            <span class="select-btn">  Kernig's sign</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Brudzinski's test">
+            <span class="select-btn"> Brudzinski's test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Sacroiliac compression">
+            <span class="select-btn"> Sacroiliac compression</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Ober's test causing pain at the SI joint">
+            <span class="select-btn"> Ober's test causing pain at the SI joint</span>
+        </label>
+
+        
         <input id="LBSlrTestOther" class="form-control d-inline " style="width:23%" placeholder="Other" />
         Trigger points with palpable taut bands were noted at
         <label><input type="radio" name="LBTriggerpoints" value="left">  <span class="select-btn">L</span></label>
@@ -254,10 +284,11 @@
                 <td>Extension</td>
                 <td><input id="LBExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>30</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>Rotation</td>
+                <td><input id="LBRotLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="LBRotRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                
+                <td>30</td>
             </tr>
         </tbody>
     </table>
@@ -280,7 +311,7 @@
             <span class="select-btn">corticoid region</span>
         </label>
         <label>
-            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="supraspintus tendon">
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="supraspinatus tendon">
             <span class="select-btn">supraspintus tendon</span>
         </label>
         <label>
@@ -297,8 +328,9 @@
         </label>
          <label>
             <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="trapezius muscle">
-            <span class="select-btn">trapezius muscle</span>
+            <span class="select-btn">trapezius muscle.</span>
         </label>
+        There is
          <label>
             <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="ecchymosis">
             <span class="select-btn">ecchymosis</span>
@@ -320,8 +352,16 @@
             <span class="select-btn"> Hawkins test</span>
         </label>
         <label>
+            <input type="checkbox" class="chkMulti" name="RshTests" value="Yergason test">
+            <span class="select-btn"> Yergason test</span>
+        </label>
+        <label>
             <input type="checkbox" class="chkMulti" name="RshTests" value="Drop arm test">
             <span class="select-btn"> Drop arm test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTests" value="Reverse beer can test">
+            <span class="select-btn"> Reverse beer can test</span>
         </label>
 
         There are palpable taut bands/trigger points with referral patterns as 
@@ -423,7 +463,7 @@
             <span class="select-btn">corticoid region</span>
         </label>
         <label>
-            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="supraspintus tendon">
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="supraspinatus tendon">
             <span class="select-btn">supraspintus tendon</span>
         </label>
         <label>
@@ -440,8 +480,9 @@
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="trapezius muscle">
-            <span class="select-btn">trapezius muscle</span>
+            <span class="select-btn">trapezius muscle.</span>
         </label>
+        There is
         <label>
             <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="ecchymosis">
             <span class="select-btn">ecchymosis</span>
@@ -463,8 +504,54 @@
             <span class="select-btn"> Hawkins test</span>
         </label>
         <label>
+            <input type="checkbox" class="chkMulti" name="LshTests" value="Yergason test">
+            <span class="select-btn"> Yergason test</span>
+        </label>
+        <label>
             <input type="checkbox" class="chkMulti" name="LshTests" value="Drop arm test">
             <span class="select-btn"> Drop arm test</span>
+        </label>
+            <label>
+                <input type="checkbox" class="chkMulti" name="LshTests" value="Reverse beer can test">
+            <span class="select-btn"> Reverse beer can test</span>
+        </label>
+       
+        There are palpable taut bands/trigger points with referral patterns as
+        <label><input type="radio" name="lshpalpabletaut" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="lshpalpabletaut" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="lshpalpabletaut" value="bilateral">  <span class="select-btn">B</span></label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="deltoid">
+            <span class="select-btn">deltoid</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="supraspinatus">
+            <span class="select-btn">supraspinatus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="infraspinatus">
+            <span class="select-btn">infraspinatus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="teres minor">
+            <span class="select-btn">teres minor</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="​teres major">
+            <span class="select-btn">​teres major</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="pectoralis major">
+            <span class="select-btn">pectoralis major</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="biceps">
+            <span class="select-btn">biceps</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="triceps">
+            <span class="select-btn">triceps</span>
         </label>
 
 
@@ -585,7 +672,7 @@
        
          <label>
             <input type="checkbox" class="chkMulti" name="RknTests" value="McMurray test">
-            <span class="select-btn"> TMcMurray test</span>
+            <span class="select-btn"> McMurray test</span>
         </label>
          <label>
             <input type="checkbox" class="chkMulti" name="RknTests" value="Lachmans test">
@@ -625,13 +712,21 @@
         </thead>
         <tbody>
             <tr>
+                <td>Flexion</td>
+                <td><input id="RKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>150</td>
+                <td>Extension</td>
+                <td><input id="RKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>0</td>
+            </tr>
+           @*  <tr>
                 <td><input id="RKNTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Flexion" /></td>
                 <td><input id="RKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td><input id="RKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150" /> </td>
                 <td><input id="RKNExtTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Extension" /></td>
                 <td><input id="RKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td><input id="RKNExtNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0" /></td>
-            </tr>
+            </tr> *@
 
         </tbody>
     </table>
@@ -682,7 +777,7 @@
 
         <label>
             <input type="checkbox" class="chkMulti" name="LknTests" value="McMurray test">
-            <span class="select-btn"> TMcMurray test</span>
+            <span class="select-btn"> McMurray test</span>
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="LknTests" value="Lachmans test">
@@ -722,13 +817,21 @@
         </thead>
         <tbody>
             <tr>
+                <td>Flexion</td>
+                <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>150</td>
+                <td>Extension</td>
+                <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>0</td>
+            </tr>
+            @* <tr>
                 <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Flexion" /></td>
                 <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150" /> </td>
                 <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Extension" /></td>
                 <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0" /></td>
-            </tr>
+            </tr> *@
 
         </tbody>
     </table>
@@ -830,8 +933,12 @@
     <h6 class="fw-bold">Left Ankle </h6>
     <div class="select-group">
         The ankle ROM is
-
-        <input id="LAnkTenderness" class="form-control d-inline " style="width:100px" />mildly decreased with local tenderness upon palpation of the
+        <input id="LAnkTenderness" class="form-control d-inline " style="width:100px" />
+        <label><input type="radio" name="LAnkTendernessOptions" value="Mildly">  <span class="select-btn">Mildly</span></label>
+        <label><input type="radio" name="LAnkTendernessOptions" value="Moderately">  <span class="select-btn">Moderately</span></label>
+        <label><input type="radio" name="LAnkTendernessOptions" value="Severely">  <span class="select-btn">Severely</span></label>
+        decreased with local tenderness upon palpation of the
+       
         <label>
             <input type="checkbox" class="chkMulti" name="LAnkTendernessOptions" value="medial malleolus">
             <span class="select-btn">medial malleolus</span>
@@ -927,7 +1034,7 @@
         decreased.       
         <label>
             <input type="checkbox" class="chkMulti" name="RElbTests" value="Tinel">
-            <span class="select-btn"> Tinel</span>
+            <span class="select-btn"> Tinel’s</span>
         </label>  
     </div>
     @* <table style="width:100%">
@@ -974,7 +1081,7 @@
         decreased.
         <label>
             <input type="checkbox" class="chkMulti" name="LElbTests" value="Tinel">
-            <span class="select-btn"> Tinel</span>
+            <span class="select-btn"> Tinel’s</span>
         </label>
     </div>
    @*  <table style="width:100%">
@@ -1059,26 +1166,28 @@
                 <td>Flexion</td>
                 <td><input id="RHipFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>120</td>
-                <td>Adduction</td>
-                <td><input id="RHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>35</td>
-            </tr>
-            <tr>
-                <td>Extension</td>
-                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>30</td>
                 <td>Internal rotation</td>
                 <td><input id="RHipIRotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>45</td>
+                @* <td>Adduction</td>
+                <td><input id="RHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>35</td> *@
             </tr>
             <tr>
-                <td>Abduction</td>
-                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>45</td>
+               @*  <td>Extension</td>
+                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>30</td> *@
+               
                 <td>External rotation</td>
                 <td><input id="RHipERotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>45</td>
             </tr>
+            @* <tr> 
+                @* <td>Abduction</td>
+                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>45</td> 
+                
+            </tr>*@
         </tbody>
     </table>
 </div>
@@ -1133,26 +1242,28 @@
                 <td>Flexion</td>
                 <td><input id="RHipFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>120</td>
-                <td>Adduction</td>
+               @*  <td>Adduction</td>
                 <td><input id="RHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>35</td>
-            </tr>
-            <tr>
-                <td>Extension</td>
-                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>30</td>
+                <td>35</td> *@
                 <td>Internal rotation</td>
                 <td><input id="RHipIRotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>45</td>
             </tr>
             <tr>
-                <td>Abduction</td>
-                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>45</td>
+               @*  <td>Extension</td>
+                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>30</td> *@
+                
                 <td>External rotation</td>
                 <td><input id="RHipERotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>45</td>
             </tr>
+           @*  <tr>
+                <td>Abduction</td>
+                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>45</td>
+                
+            </tr> *@
         </tbody>
     </table>
 </div>
@@ -1181,8 +1292,8 @@
         </label>
 
         <label>
-            <input type="checkbox" class="chkMulti" name="RWristOther" value="Tinnels">
-            <span class="select-btn"> Tinnels</span>
+            <input type="checkbox" class="chkMulti" name="RWristOther" value="Tinel’s">
+            <span class="select-btn"> Tinel’s</span>
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="RWristOther" value="Phalens">

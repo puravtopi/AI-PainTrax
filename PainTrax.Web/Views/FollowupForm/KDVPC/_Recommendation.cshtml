@@ -66,8 +66,27 @@
             <span class="select-btn">Recommend to continue current medications</span></label>
         
     </div>
-
     <div class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="cyclobenzaprine" /> <span class="select-btn">cyclobenzaprine</span></label>
+        <input id="cyclobenzaprine" name="cyclobenzaprine" value="10 mg oral tablet" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="Vimovo" /> <span class="select-btn">Vimovo</span></label>
+        <input id="Vimovo" name="Vimovo" value="500 mg-20 mg oral delayed release tablet" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="lidocaine" /> <span class="select-btn">lidocaine</span></label>
+        <input id="lidocaine" name="lidocaine" value="5% topical ointment" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="capsaicin" /> <span class="select-btn">capsaicin</span></label>
+        <input id="capsaicin" name="capsaicin" value="0.05% topical film" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="Dolobid" /> <span class="select-btn">Dolobid</span></label>
+        <input id="Dolobid" name="Dolobid" value="375 mg oral tablet" class="form-control d-inline" style="width:150px" />
+        <label><input type="checkbox" class="chkMulti" name="currentmedications" value="methyl" /> <span class="select-btn">methyl</span></label>
+        <input id="methyl" name="methyl" value="salicylate topical cream" class="form-control d-inline" style="width:150px" />
+        <input type="text"
+               id="PrescribedMedicationText"
+               class="form-control d-inline w-25" />
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PrescribedMedicationText')"></i> *@
+        prescribed.
+
+    </div>
+   @*  <div class="select-group">
         <label><input type="checkbox" class="chkMulti" name="currentmedications" value="cyclobenzaprine 10 mg oral tablet" /> <span class="select-btn">cyclobenzaprine 10 mg oral tablet</span></label>
         <label><input type="checkbox" class="chkMulti" name="currentmedications" value="Vimovo 500 mg-20 mg oral delayed release tablet" /> <span class="select-btn">Vimovo 500 mg-20 mg oral delayed release tablet</span></label>
         <label><input type="checkbox" class="chkMulti" name="currentmedications" value="lidocaine 5% topical ointment" /> <span class="select-btn">lidocaine 5% topical ointment</span></label>
@@ -77,15 +96,16 @@
         <input type="text"
                id="PrescribedMedicationText"
                class="form-control d-inline w-25" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PrescribedMedicationText')"></i> *@
-        prescribed.
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PrescribedMedicationText')"></i> 
+        prescribed. *@
     </div>
     <div class="select-group">
         Med supplies:
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="Bed board" /><span class="select-btn">Bed board</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="cervical collar" /><span class="select-btn">cervical collar</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="mattress" /><span class="select-btn">mattress</span></label>
-        <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="LSO lumbar cushion and knee support" /><span class="select-btn">LSO lumbar cushion and knee support</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="LSO lumbar cushion" /><span class="select-btn">LSO lumbar cushion</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="knee support" /><span class="select-btn">knee support</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="shoulder support" /><span class="select-btn">shoulder support</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="EMS unit" /><span class="select-btn">EMS unit</span></label>
         <label><input type="checkbox" class="chkMulti" name="Medsupplies" value="infrared heat lamp" /><span class="select-btn">infrared heat lamp</span></label>

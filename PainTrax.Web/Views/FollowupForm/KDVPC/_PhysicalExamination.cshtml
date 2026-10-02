@@ -294,10 +294,9 @@
                 <td>Extension</td>
                 <td><input id="LBExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>30</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>Rotation</td>
+                <td><input id="LBRot" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>30</td>
             </tr>
         </tbody>
     </table>
@@ -358,6 +357,10 @@
         <label>
             <input type="checkbox" class="chkMulti" name="RshTests" value="Hawkins test">
             <span class="select-btn"> Hawkins test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTests" value="Yergason test">
+            <span class="select-btn"> Yergason test</span>
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="RshTests" value="Drop arm test">
@@ -503,6 +506,10 @@
             <span class="select-btn"> Hawkins test</span>
         </label>
         <label>
+            <input type="checkbox" class="chkMulti" name="LshTests" value="Yergason test">
+            <span class="select-btn"> Yergason test</span>
+        </label>
+        <label>
             <input type="checkbox" class="chkMulti" name="LshTests" value="Drop arm test">
             <span class="select-btn"> Drop arm test</span>
         </label>
@@ -625,7 +632,7 @@
 
         <label>
             <input type="checkbox" class="chkMulti" name="RknTests" value="McMurray test">
-            <span class="select-btn"> TMcMurray test</span>
+            <span class="select-btn"> McMurray test</span>
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="RknTests" value="Lachmans test">
@@ -722,7 +729,7 @@
 
         <label>
             <input type="checkbox" class="chkMulti" name="LknTests" value="McMurray test">
-            <span class="select-btn"> TMcMurray test</span>
+            <span class="select-btn"> McMurray test</span>
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="LknTests" value="Lachmans test">
@@ -762,13 +769,21 @@
         </thead>
         <tbody>
             <tr>
+                <td>Flexion</td>
+                <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>150</td>
+                <td>Extension</td>
+                <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>0</td>
+            </tr>
+           @*  <tr>
                 <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Flexion" /></td>
                 <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Extension" /></td>
                 <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-            </tr>
+            </tr> *@
 
         </tbody>
     </table>

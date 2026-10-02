@@ -500,6 +500,25 @@
         "_IE_IntakeForm.pdf";
         downloadPDF(fileName);
     }
+        $('input[name="RECOMMENDATIONS"]').on('change', function () {
+
+        if ($(this).val() === "CS" ||
+            $(this).val() === "TS" ||
+            $(this).val() === "LS") {
+
+            if ($(this).is(':checked')) {
+                $("#ExecutedTPI").val($("#DOE").val());
+            } else {
+                // Check if any of CS, TS, LS is still checked
+                if (!$('input[name="RECOMMENDATIONS"][value="CS"]').is(':checked') &&
+                    !$('input[name="RECOMMENDATIONS"][value="TS"]').is(':checked') &&
+                    !$('input[name="RECOMMENDATIONS"][value="LS"]').is(':checked')) {
+
+                    $("#ExecutedTPI").val("");
+                }
+            }
+        }
+    });
 
     function fnshowPatientList() {
          $.ajax({
@@ -888,6 +907,8 @@
                     toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
                     toggleSection(data.PT === "Yes", "#divPT");
                     toggleSection(data.Chiro === "Yes", "#divChiro");
+                    toggleSection(data.shortgoal === "Short term goals", "#divgoals");
+                    toggleSection(data.shortgoal === "long term goals", "#divgoalslongterm");
 
                     if(data.PreInjury==="No")
                         $("#preInjuryDetailsBox").show();
@@ -1148,6 +1169,7 @@
                 // Load template and initialize preview
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
+                
                // loadTemplate();
                 if ('@ViewBag.FormData' != '') {
                    bindForm('@ViewBag.FormData');
@@ -1296,6 +1318,7 @@
         }
 
     });
+
 
                 $('#DOB').on('change', function () {
                     var dob = $(this).val(); // format: yyyy-mm-dd
