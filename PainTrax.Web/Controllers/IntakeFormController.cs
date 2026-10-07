@@ -731,7 +731,7 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index", "Visit");
         }
 
-        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId, int patientId = 0, string type = "")
+        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId, int patientId = 0, string type = "", int ie_id=0)
         {
             if (providerId == null)
             {
@@ -757,6 +757,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
             ViewBag.IntakeType = type;
+            ViewBag.IEId = ie_id;
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             tbl_locations objLoc = new tbl_locations()
@@ -857,6 +858,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.FormData = "";
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
+           
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             tbl_locations objLoc = new tbl_locations()
@@ -996,6 +998,7 @@ namespace PainTrax.Web.Controllers
 
             if (model != null)
             {
+              
                 InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
                 {
                     Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
@@ -1124,19 +1127,19 @@ namespace PainTrax.Web.Controllers
 
                                 var ccContent = "";
 
-                                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
-                                {
+                                //if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
+                                //{
                                     peContent = this.GetPE(model);
                                     dtrContent = this.GetDTR(model);
                                     sensoryContent = this.GetSensory(model);
                                     mmstContent = this.GetMMST(model);
                                     ccContent = this.GetBHFCC(model);
-                                }
-                                else
-                                {
-                                    ccContent = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model);
-                                    //ccContent = this.GetBHFCC(model);
-                                }
+                                //}
+                                //else
+                                //{
+                                //    ccContent = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model);
+                                //    //ccContent = this.GetBHFCC(model);
+                                //}
 
                                 var objPage1 = new tbl_ie_page1()
                                 {
@@ -1165,6 +1168,8 @@ namespace PainTrax.Web.Controllers
                                 };
 
                                 _ieService.InsertPage1(objPage1);
+
+                                model.PatientIEId = ie.ToString();
 
                                 var defaultPage2 = _defaultSettingService.GetOnePage2(cmpid.Value);
 
@@ -1366,7 +1371,7 @@ namespace PainTrax.Web.Controllers
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, patientid = model.PatientId, locid = model.LocationId, provid = model.ProviderId });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, patientid = model.PatientId, locid = model.LocationId, provid = model.ProviderId,ieid= model.PatientIEId });
         }
 
         [HttpPost]

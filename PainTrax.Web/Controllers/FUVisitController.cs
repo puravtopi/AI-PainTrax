@@ -2673,6 +2673,8 @@ namespace PainTrax.Web.Controllers
 
             }
 
+            body = body.Replace("#Carrier", patientData.primary_ins ?? "");
+
             //ADL printing
 
             var page2Data = _fuPage2services.GetOne(fuid);

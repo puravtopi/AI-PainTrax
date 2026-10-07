@@ -45,7 +45,20 @@
                             <i class="fa fa-download"></i>
                             Generate ZIP
                         </button>
+                        <br />
                     </div>
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                @Html.Raw(TempData["Error"])
+
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="alert">
+                                </button>
+                            </div>
+                        }
 
                 </div>
 

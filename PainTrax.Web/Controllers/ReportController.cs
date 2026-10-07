@@ -32,6 +32,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
@@ -2711,6 +2712,8 @@ namespace PainTrax.Web.Controllers
                 lstSurgoryCenterDashboardVM = Data
             };
 
+            
+
             string cnd = " and cmp_id=" + cmpid;
             var data = _surgeryCentreService.GetAll(cnd);
             var list = new List<SelectListItem>();
@@ -2739,12 +2742,14 @@ namespace PainTrax.Web.Controllers
 
             //var data = _servicesProSXDetails.GetPtsIEReport(query);
 
+          
             var objPOC = new SurgoryCenterDashboardVM
             {
                 fdate = fdate,
                 tdate = tdate,
                 lstSurgoryCenterDashboardVM = data
             };
+            
 
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
             return View(objPOC);
@@ -4094,6 +4099,827 @@ RETURN ONLY THIS JSON OBJECT:
 
         #endregion
 
+
+        #region File conversion from pdf to excel in any format.
+        // ── GET /ExcelAI ─────────────────────────────────────────────────────────
+        [HttpGet]
+        public IActionResult ExcelAI()
+        {
+            return View();
+        }
+
+        public class PdfExtractRequest
+        {
+            /// <summary>Base64 PDF. A "data:application/pdf;base64," prefix is OK.</summary>
+            public string? PdfBase64 { get; set; }
+
+            /// <summary>Optional fallback: base64 PNG page images (old behaviour).</summary>
+            public List<string>? Pages { get; set; }
+
+            /// <summary>Original file name (sent by ExcelAI.cshtml, used for logging/errors).</summary>
+            public string? FileName { get; set; }
+        }
+        // ── POST /ExcelAI/ExtractPdfPages ────────────────────────────────────────
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExtractExcelPdfPages([FromBody] PdfExtractRequest request)
+        {
+            bool hasPdf = !string.IsNullOrWhiteSpace(request?.PdfBase64);
+            bool hasPages = request?.Pages != null && request.Pages.Count > 0;
+
+            if (!hasPdf && !hasPages)
+                return BadRequest(new { error = "No PDF or page images provided." });
+
+            // ── Read API key securely from appsettings.json ──────────────────────
+            var config = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            var apiKey = config["Claude:ApiKey"];
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+                return StatusCode(500, new { error = "Claude API key is not configured on the server." });
+
+            const string model = "claude-opus-5-5";
+
+            // ⚠ Thinking tokens count against max_tokens. 1500 was too low:
+            //   the model used all of it thinking and never wrote the JSON.
+            const int maxTokens = 16000;
+
+            // ── PASTE YOUR EXISTING PROMPT HERE, UNCHANGED ───────────────────────
+            // Only suggested edit: in the first lines change
+            //   "The images are ALL pages of ONE surgical intake form"
+            // to
+            //   "The attached PDF contains ALL pages of ONE surgical intake form"
+            const string prompt = @"You are a medical data extraction assistant. This is a medical record: accuracy matters more than speed. Never guess.
+The images are ALL pages of ONE surgical intake form (SHOULDER or KNEE, Right or Left side).
+Read ALL pages together. Return ONE JSON object only: no array, no markdown, no backticks, no commentary.
+
+Every number you output must come from a line you actually inspected in THIS document.
+Examples in this prompt show FORMAT only. Never copy their numbers.
+
+CORE RULE FOR Page1Selection, CPTRows, ICD10Rows:
+  A row is output IF AND ONLY IF its line carries a pen mark.
+  - Never add a row that has no mark.
+  - Never drop a row that has a mark.
+  - There are NO automatic, default, or always-included rows.
+
+════════════════════════════════════════════════════════
+GLOBAL MARK DEFINITIONS (apply to every section)
+════════════════════════════════════════════════════════
+SELECTED = ANY deliberate pen stroke placed at the start of a line. The SHAPE does not matter. All of these count:
+  - X in any style: plain X, cursive x, slanted X, X with a long tail
+  - X whose top or bottom ends are joined so it looks like a bow-tie, hourglass, ""8"", ""X"" with a bar, or ""Ӽ""
+  - caret / lambda / tent shape: ^  Λ  λ  (often written above the blank of the first line on a page)
+  - check mark, tick, slash, short dash stroke drawn deliberately on the blank
+  - a mark that overlaps or touches the FIRST character of the printed code or label
+    (e.g. an X written on top of the ""2"" of ""29823"", or on the ""M"" of ""M75.01"", or on the ""S"" of ""S43.431A"")
+  Small, faint, partial, slanted, or oddly shaped marks still count. Size and darkness do NOT matter.
+  If you can see pen ink that is not printed text and not the underscore, it is a mark.
+
+NOT SELECTED = empty printed underscore, a single isolated dot, a speck, or scanner noise.
+  An underscore with NO ink on, above, or left of it is NOT SELECTED, even if neighbouring lines are marked.
+
+AMBIGUOUS = heavy filled blot, scribble, smudge, or a mark that could be a selection or a cross-out.
+  Ambiguous = R in the audits and IS INCLUDED in the output rows. Never drop an ambiguous mark.
+
+WHERE TO LOOK (check ALL THREE zones for EVERY line):
+  Zone A: on the underscore blank and in the LEFT margin before it.
+  Zone B: in the gap ABOVE the blank (between this line and the line above).
+  Zone C: on top of the first character of the printed code or label.
+
+MARK-TO-LINE RULE: The BLANK is the anchor. A mark belongs to the line whose blank or first character is
+directly BELOW or to the RIGHT of the mark.
+  - A mark in the gap between two lines belongs to the LOWER line.
+    Example: a mark in the gap between CPT (18) and (19) sitting over the (19) underscore -> 19.
+  - If the upper line ALREADY has its own mark on its blank or first character, a second mark in the gap
+    below it ALWAYS belongs to the lower line. Two marks = two lines. Never merge them.
+  - If a mark is truly 50/50 between two lines and the lower line has no other mark, pick the LOWER line as R.
+  - One mark selects exactly one line. One line can be selected by only one mark.
+
+HIGHLIGHT/STICKER: A yellow patient-label sticker may overlap the top rows of the ICD-10 table. Read the rows
+underneath it; marks under the highlight still count.
+
+Sub-options inside parentheses separated by ""/"" or "","" (anterior, superior / Medial/Lateral / Patella/Trochlea):
+  UNDERLINED or CIRCLED = included | STRUCK THROUGH = excluded | none marked = nothing added.
+Sub-options are included ONLY if a line is drawn directly under THAT word. Printed words are never underlined
+by default; if only some words are underlined, return only those words.
+Circled grade (1 2 3 4) = the grade number. Circle unclear or covering two numbers -> [review].
+
+HANDWRITING RULE: Handwritten text on the line of a SELECTED item is added in parentheses (where the section allows it).
+Correct only obvious spelling (""Losse body"" -> ""Loose body""). Illegible -> best reading + [review].
+Handwriting alone does NOT make an item selected. The blank must carry a mark.
+
+════════════════════════════════════════════════════════
+HEADER FIELDS
+════════════════════════════════════════════════════════
+1. Name (top-right label): ""LastName, FirstName MiddleInitial"". Before comma = LastName, after comma = FirstName. Never swap.
+   Output in Title Case, never ALL CAPS: ""COOPER, LORNA"" -> LastName=Cooper, FirstName=Lorna
+   ""Cruz Diaz, Escarli M"" -> LastName=Cruz Diaz, FirstName=Escarli M
+2. DOB  MM/DD/YYYY exactly as printed on the label (ignore the age in parentheses). Never ISO format.
+3. DOS  MM/DD/YYYY exactly as printed on the label. Never ISO format.
+4. MRN  digits only.
+5. Physician, exactly as printed.
+6. ReportTemplate (laterality — check BOTH pages before deciding)
+   The title line on page 1 AND page 2 reads:  Right / Left  KNEE  (or SHOULDER).
+   IMPORTANT: the printed word ""Right"" is on the LEFT side of the slash, and ""Left"" is on the
+   RIGHT side of the slash. A circle drawn on the left-hand side of the slash selects RIGHT.
+   Never decide by where the circle sits on the page. Decide by which WORD's letters are INSIDE the loop.
+   The loop may have a tail that crosses the slash or touches the other word; the tail does not count.
+
+   Step 1. Page 1: find the word whose letters are inside the loop -> Right or Left.
+   Step 2. Page 2: find the word whose letters are inside the loop -> Right or Left.
+   Step 3. Decide:
+     - Page 1 and page 2 AGREE -> use that side.
+     - They DISAGREE, or one page is unclear -> use the side indicated by BOTH of these:
+         a) Preoperative Dx starting with (R)/rt or (L)/lt
+         b) the marked ICD-10 lines that say ""right""/""rt"" or ""left""
+       Use the side that at least 2 of the 4 clues (page 1, page 2, Preop Dx, ICD lines) agree on.
+   Step 4. SHOULDER+RIGHT=""RSAS""  SHOULDER+LEFT=""LSAS""  KNEE+RIGHT=""RKAS""  KNEE+LEFT=""LKAS""
+
+════════════════════════════════════════════════════════
+7. Page1Selection + Page1Audit (page 1 findings list)
+════════════════════════════════════════════════════════
+Valid ranges ONLY:
+  SHOULDER: items 10 through 29 (20 items)
+  KNEE:     items 51 through 64 (14 items)
+Ignore every item number outside these ranges.
+
+WARNING: The FIRST TWO lines of the list sit directly under the ""Right / Left"" title and are the most often missed.
+  KNEE: item (51) MMT and item (52) LMT. SHOULDER: item (10) and item (11).
+  Their marks are often a caret/lambda (^ / λ) or an X written ABOVE the blank, close to the title line.
+  Such a mark belongs to the list item below it, NOT to the title. Inspect these two lines first, on their own.
+
+METHOD (follow exactly):
+  Step 1. Go through page 1 ONE LINE AT A TIME, top to bottom, from the first item to the last. Skip nothing.
+  Step 2. For each line, check Zone A, Zone B and Zone C. Apply the Global Mark Definitions and the Mark-to-Line Rule.
+  Step 3. Record every line in Page1Audit as  item:Y  or  item:N, comma-separated, no spaces.
+          Shoulder audit has exactly 20 entries. Knee audit has exactly 14 entries.
+          An ambiguous mark counts as Y here.
+  Step 4. COUNT CHECK: count the pen marks in the left margin of page 1's list (ignore the title circle,
+          the signature, grade circles and handwriting). The number of Y entries must EQUAL that count.
+          If not equal, re-inspect every line (especially the first two and any gap marks) before continuing.
+  Step 5. Page1Selection = every item marked Y in Page1Audit. Nothing more, nothing less.
+
+Page1Selection outputs ONLY the item number. Nothing else.
+  - NO labels, NO grades, NO percentages, NO locations, NO handwriting text
+  - NO colons, NO parentheses, NO brackets, NO ""Other:"" entries, NO [review] tags
+  - A circled grade, % value, or underlined option on a marked item does NOT change the output:
+    the item is written as its number alone (e.g. grade 4 on item 54 -> 54)
+  - A line with an EMPTY blank is N, even if it has printed or handwritten text
+    (e.g. a ""grade: 1 2 3 4 (60)"" line with no mark on its blank -> N)
+
+Format rules:
+  - Separate numbers with a comma and NO spaces
+  - Sort in ascending numeric order
+  - List each number only once
+  - Empty string """" if no items in the valid range are selected
+
+Format examples (NOT data):
+  Page1Audit:     ""51:Y,52:N,53:N,54:Y,...""
+  Page1Selection: ""12,15,20""
+
+8.  other: handwritten text on the ""Other:"" line. Empty if blank.
+9.  PreoperativeDx: handwritten text on ""Preoperative Dx:"". (R)/(L) -> Right/Left. Standard abbreviations:
+    ""med"" = medial, ""lat"" = lateral, ""Shldr/Sh ldr"" = Shoulder, ""RTC/RC"" = rotator cuff (keep RTC as written).
+    Never turn ""med"" into ""mild"".
+10. Assistant: handwritten text on ""Assistant:"".
+    If it reads ""none"", ""no"", ""NP"", ""N/A"", ""-"" or similar -> output """".
+    A handwritten ""None"" must never be read as a person's name.
+11. Anesthesia: the printed words General, IV Sedation, Nerve block are NOT selections by themselves.
+    Only the option with a circle, underline, or check drawn around/under it counts.
+    A loop that starts at handwriting on the Assistant line and wraps around an option still counts as circling that option.
+    If printed options (General, IV Sedation, Nerve block) exist, return ONLY the circled/marked one(s), joined by ""/"".
+    Otherwise the handwritten text. Empty if nothing.
+12. InstrumentationOther: handwritten text on ""Instrumentation/Other:"". Empty if blank.
+
+════════════════════════════════════════════════════════
+13-14. CPTRows and ICD10Rows (page 2 tables)
+════════════════════════════════════════════════════════
+WARNING: Page 2 has THREE separate numbered lists that reuse the same numbers
+(CPT table, ICD-10 table, and the procedure list below them). Never mix them.
+  CPT table    = upper LEFT, lines start with a 5-digit CPT code.
+  ICD-10 table = upper RIGHT, lines start with a letter code (M, S).
+  Procedure list = BELOW both tables, lines have NO code. Never output its numbers in CPTRows/ICD10Rows,
+                   and never let a procedure-list mark change CPTRows or ICD10Rows.
+
+NO CLIENT RULES: There are no always-included rows and no excluded rows.
+  - SHOULDER row 10 (29805) is included ONLY if its line is marked.
+  - SHOULDER row 24 (29807) is included if its line is marked, regardless of the SLAP lines in the procedure list.
+  - KNEE row 52 (29870) is included ONLY if its line is marked.
+  - KNEE row 51 (27570 MUA) is included if its line is marked.
+
+METHOD (follow exactly, separately for the CPT table and for the ICD-10 table):
+  Step 1. Go through the table ONE LINE AT A TIME, top to bottom, reading the printed CODE and DESCRIPTION.
+  Step 2. For each line check Zone A (blank + left margin), Zone B (gap above), Zone C (on the first character of the code).
+          Decide SELECTED / NOT SELECTED / AMBIGUOUS using the Global Mark Definitions and Mark-to-Line Rule.
+          Remember: bow-tie / hourglass / ""8""-shaped / ""Ӽ"" marks are X marks -> SELECTED.
+  Step 3. Find the row number for that line in the REFERENCE TABLE below by matching CODE + DESCRIPTION.
+          Do NOT count lines. Code 29999 and M24.10 appear several times; the DESCRIPTION (and right/left) decides the row.
+  Step 4. Record every line in CPTAudit / ICD10Audit as  row:Y, row:N, or row:R (R = ambiguous).
+  Step 5. COUNT CHECK: count the pen marks running down the left edge of that table.
+          The number of Y + R entries must EQUAL that count. If not, re-inspect, paying special attention to:
+            - a mark in the gap between two lines when the upper line already has its own mark
+            - marks drawn on top of the first digit/letter of the code
+            - unusually shaped marks in the middle of the table
+  Step 6. CPTRows = every Y and R row in CPTAudit. ICD10Rows = every Y and R row in ICD10Audit.
+          Comma-separated, ascending, no spaces, each number once.
+
+ICD lines with two numbers ""(R nn, L nn)"": these are easy to miss. Check them every time.
+  If marked -> use the R number if ReportTemplate is Right, the L number if Left.
+
+-------- SHOULDER CPT REFERENCE --------
+10 29805 Shoulder diagnostic          | 21 29999 Release of CA ligament
+11 29823 Major debridement            | 22 20610 Intraarticular injection
+12 29822 Minor debridement            | 23 29827 RC repair arthroscopically
+13 29820 Minor synovectomy            | 24 29807 Slap repair
+14 29821 Complete synovectomy         | 25 29806 Bankart repair, capsulorrhaphy
+15 29819 Loose body removal/fragments | 26 29828 Biceps tenodesis
+16 29999 Coblation arthroplasty glenoid | 27 23700 Manipulation shoulder under anesthesia
+17 29824 Distal claviculectomy        | 28 23405 Shoulder tenotomy
+18 29825 Lysis of adhesions           | 29 29999 Topaz microdebridement
+19 29999 Bursectomy                   | 30 29999 Chondroplasty (glenoid/humeral head)
+20 29826 Decompression, partial acromioplasty
+
+-------- SHOULDER ICD-10 REFERENCE --------
+10 M75.01 Adhesive capsulitis R        | 11 M75.02 Adhesive capsulitis L
+12 S46.101A Biceps tendon tear R       | 13 S46.102A Biceps tendon tear L
+14 M75.41 Impingement R                | 15 M75.42 Impingement L
+16 M24.811 Internal derangement R      | 17 M24.812 Internal derangement L
+18 M75.121 Complete rupture rot cuff R | 19 M75.122 Complete rupture rot cuff L
+20 S46.011A Partial RC tear R          | 21 S46.012A Partial RC tear L
+22 S43.431A Labrum tear R              | 23 S43.432A Labrum tear L
+24 M65.811 Synovitis R                 | 25 M65.812 Synovitis L
+26 M75.51 Bursitis R                   | 27 M75.52 Bursitis L
+28 (R) / 29 (L) M24.10 Glenoid chondral defect
+30 (R) / 31 (L) M75.81 Subacromial adhesions
+32 (R) / 33 (L) Chondromalacia (glenoid/humeral head)
+
+-------- KNEE CPT REFERENCE --------
+51 27570 MUA                          | 59 29880 PMM and PLM
+52 29870 Diagnostic arthroscopy       | 60 29881 PMM or PLM
+53 29873 SAK with lateral release     | 61 29882 MED or LAT meniscus repair
+54 29874 Removal of loose/foreign body| 62 29883 MED and LAT meniscus repair
+55 29875 Limited synovectomy (plica)  | 63 29888 ACL reconstruction
+56 29876 Synovectomy major            | 64 20610 Arthrocentesis
+57 29877 Debridement (chondroplasty)  | 65 29999 Coblation arthroplasty patella
+58 29879 Microfracture abrasion       | 66 29884 Lysis of adhesions
+Note: the 20610 (64) line is long and wraps; a mark sitting just below its text and on the 29999 underscore belongs to 65.
+
+-------- KNEE ICD-10 REFERENCE --------
+51 M22.40 Chondromalacia patella       | 58 M12.569 Traumatic arthropathy
+52 M23.40 Loose body in knee           | 59 M65.161 Synovitis R
+53 M23.90 Internal derangement         | 60 M65.162 Synovitis L
+54 S83.241A Medial meniscus tear R     | 61 M24.10 Chondral lesion R
+55 S83.242A Medial meniscus tear L     | 62 M24.10 Chondral lesion L
+56 S83.281A Lateral meniscus tear R    | 63 M93.261 Osteochondral lesion R
+57 S83.282A Lateral meniscus tear L    | 64 M93.262 Osteochondral lesion L
+
+If a printed code or description on the form does not match the reference table, use the number printed
+in parentheses on that line and add that row as R in the audit.
+
+════════════════════════════════════════════════════════
+15. Page2Selection (page 2 procedure list BELOW the CPT/ICD tables)
+════════════════════════════════════════════════════════
+SHOULDER: the ""Templates"" list, two columns, numbers (10)-(43). Read the entire LEFT column, then the RIGHT column.
+KNEE: the list from (51) to (67). Item (67) sits to the right of (56)/(57): place it right after (57).
+Output items in FORM ORDER (left column top to bottom, then right column). Do NOT sort numerically.
+Include ONLY SELECTED items (same mark definitions and zones as above; a heavy blot = [review]).
+Item number only, NO parentheses, extra value after a colon.
+  - Sub-options underlined/circled -> 56:Medial/Lateral. Struck-through sub-options are left out.
+    Mixed groups: 59:Medial/Lateral condyle/Patella
+  - Handwritten value (size, count, anchors) -> NN:value
+  - Nothing extra -> NN
+  - Ambiguous -> NN [review]
+Ignore signature and initials. Separate with "", "". Empty string if none.
+Format example (NOT data): ""53, 56:Medial, 67:Patella, 62""
+
+════════════════════════════════════════════════════════
+VERIFICATION PASS (before answering)
+════════════════════════════════════════════════════════
+1. Page1Audit has exactly 20 entries (shoulder) or 14 entries (knee); Page1Selection equals its Y items exactly.
+2. Every row in the CPT and ICD reference table for this form appears exactly once in its audit.
+3. CPTRows equals EXACTLY the Y and R rows in CPTAudit. ICD10Rows equals EXACTLY the Y and R rows in ICD10Audit.
+   No row is added or removed by any rule.
+4. Mark counts: Y count of Page1Audit = marks on page 1 list; Y+R count of CPTAudit = marks down the CPT table;
+   Y+R count of ICD10Audit = marks down the ICD table. Re-read any table whose counts differ.
+5. Re-check, for every table: the first two lines, every gap between lines, every mark on the first character of a code,
+   every oddly shaped mark (bow-tie, hourglass, 8, caret, lambda), and every ""(R nn, L nn)"" ICD line.
+6. No ICD code for the OPPOSITE side is Y unless the mark is unmistakable; otherwise make it R.
+7. ReportTemplate agrees with the majority of: page 1 circle, page 2 circle, Preop Dx side, ICD sides.
+8. Page1Selection/Page2Selection contain item numbers only (no labels), NO parentheses, and no item from the CPT/ICD tables.
+9. Every CPTRows number exists in the CPT REFERENCE for this form; every ICD10Rows number exists in the ICD REFERENCE.
+   A number that is not in the reference table came from the wrong list: remove it and re-read.
+10. Names are Title Case; DOB/DOS are MM/DD/YYYY; Assistant is """" if it means none.
+
+════════════════════════════════════════════════════════
+OUTPUT: return ONLY this JSON
+════════════════════════════════════════════════════════
+{
+  ""FirstName"": """",
+  ""LastName"": """",
+  ""DOB"": """",
+  ""DOS"": """",
+  ""MRN"": """",
+  ""Physician"": """",
+  ""ReportTemplate"": """",
+  ""Page1Audit"": """",
+  ""Page1Selection"": """",
+  ""other"": """",
+  ""PreoperativeDx"": """",
+  ""Assistant"": """",
+  ""Anesthesia"": """",
+  ""InstrumentationOther"": """",
+  ""CPTAudit"": """",
+  ""ICD10Audit"": """",
+  ""CPTRows"": """",
+  ""ICD10Rows"": """",
+  ""Page2Selection"": """"
+}";
+
+            // ── Build the content blocks ─────────────────────────────────────────
+            var contentBlocks = new List<object>();
+
+            if (hasPdf)
+            {
+                var pdfData = request!.PdfBase64!.Trim();
+
+                // Strip data-URL prefix if the browser sent one
+                var commaIdx = pdfData.IndexOf(',');
+                if (pdfData.StartsWith("data:", StringComparison.OrdinalIgnoreCase) && commaIdx > 0)
+                    pdfData = pdfData[(commaIdx + 1)..];
+
+                // Anthropic request limit is 32 MB total; base64 is ~4/3 of raw size
+                long approxBytes = (long)pdfData.Length * 3 / 4;
+                if (approxBytes > 30L * 1024 * 1024)
+                    return BadRequest(new { error = "PDF is too large (limit ~30 MB)." });
+
+                contentBlocks.Add(new
+                {
+                    type = "document",
+                    source = new
+                    {
+                        type = "base64",
+                        media_type = "application/pdf",
+                        data = pdfData
+                    }
+                });
+            }
+            else
+            {
+                foreach (var pageBase64 in request!.Pages!)
+                {
+                    contentBlocks.Add(new
+                    {
+                        type = "image",
+                        source = new
+                        {
+                            type = "base64",
+                            media_type = "image/png",
+                            data = pageBase64
+                        }
+                    });
+                }
+            }
+
+            // Document/images first, prompt last
+            contentBlocks.Add(new { type = "text", text = prompt });
+
+            var claudeRequest = new
+            {
+                model = model,
+                max_tokens = maxTokens,
+                messages = new[]
+                {
+            new { role = "user", content = contentBlocks }
+        }
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(claudeRequest);
+
+            // ── Call Anthropic API server-side ───────────────────────────────────
+            var httpClientFactory = HttpContext.RequestServices.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.Timeout = TimeSpan.FromMinutes(5); // larger budget = longer calls
+
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post,
+                "https://api.anthropic.com/v1/messages");
+
+            httpRequest.Headers.Add("x-api-key", apiKey);
+            httpRequest.Headers.Add("anthropic-version", "2023-06-01");
+            httpRequest.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage httpResponse;
+            try
+            {
+                httpResponse = await httpClient.SendAsync(httpRequest);
+            }
+            catch (TaskCanceledException)
+            {
+                return StatusCode(504, new { error = "Claude API request timed out." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(502, new { error = $"Could not reach Anthropic API: {ex.Message}" });
+            }
+
+            var responseBody = await httpResponse.Content.ReadAsStringAsync();
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                string claudeError;
+                try
+                {
+                    using var errDoc = JsonDocument.Parse(responseBody);
+                    claudeError = errDoc.RootElement
+                        .GetProperty("error")
+                        .GetProperty("message")
+                        .GetString() ?? responseBody;
+                }
+                catch
+                {
+                    claudeError = $"HTTP {(int)httpResponse.StatusCode}";
+                }
+
+                return StatusCode((int)httpResponse.StatusCode, new { error = claudeError });
+            }
+
+            // ── Parse the Claude response (text block + stop_reason + usage) ─────
+            string extractedText = string.Empty;
+            string stopReason = string.Empty;
+            int outputTokens = 0;
+
+            try
+            {
+                using var doc = JsonDocument.Parse(responseBody);
+                var root = doc.RootElement;
+
+                if (root.TryGetProperty("stop_reason", out var sr) && sr.ValueKind == JsonValueKind.String)
+                    stopReason = sr.GetString() ?? string.Empty;
+
+                if (root.TryGetProperty("usage", out var usage) &&
+                    usage.TryGetProperty("output_tokens", out var ot))
+                    outputTokens = ot.GetInt32();
+
+                // Collect ALL text blocks (skip thinking blocks)
+                var sb = new StringBuilder();
+                foreach (var block in root.GetProperty("content").EnumerateArray())
+                {
+                    if (block.GetProperty("type").GetString() == "text" &&
+                        block.TryGetProperty("text", out var t))
+                    {
+                        sb.Append(t.GetString());
+                    }
+                }
+                extractedText = sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = $"Failed to parse Claude response: {ex.Message}" });
+            }
+
+            // ── Handle stop_reason ───────────────────────────────────────────────
+            switch (stopReason)
+            {
+                case "end_turn":
+                case "stop_sequence":
+                    break; // normal completion
+
+                case "max_tokens":
+                    if (string.IsNullOrWhiteSpace(extractedText))
+                    {
+                        return StatusCode(502, new
+                        {
+                            error = $"Claude used all {outputTokens} output tokens (mostly thinking) " +
+                                    $"before writing any JSON. Increase max_tokens (currently {maxTokens}).",
+                            stopReason
+                        });
+                    }
+                    return StatusCode(502, new
+                    {
+                        error = $"Claude's response was cut off at max_tokens ({maxTokens}); JSON is incomplete.",
+                        stopReason,
+                        raw = extractedText[..Math.Min(500, extractedText.Length)]
+                    });
+
+                case "refusal":
+                    return StatusCode(422, new
+                    {
+                        error = "Claude declined to process this document.",
+                        stopReason
+                    });
+
+                default:
+                    // Unknown / future stop reasons: continue only if we got text
+                    if (string.IsNullOrWhiteSpace(extractedText))
+                        return StatusCode(502, new { error = $"No text returned (stop_reason: {stopReason}).", stopReason });
+                    break;
+            }
+
+            if (string.IsNullOrWhiteSpace(extractedText))
+                return StatusCode(502, new { error = "Claude returned no text.", stopReason });
+
+            // ── Extract the JSON object (handles fences or stray text) ───────────
+            var clean = extractedText.Trim();
+            int start = clean.IndexOf('{');
+            int end = clean.LastIndexOf('}');
+            if (start >= 0 && end > start)
+                clean = clean[start..(end + 1)];
+
+            try
+            {
+                using var resultDoc = JsonDocument.Parse(clean);
+                return Content(clean, "application/json");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    error = $"Claude returned invalid JSON: {ex.Message}",
+                    stopReason,
+                    raw = clean[..Math.Min(500, clean.Length)]
+                });
+            }
+        }
+
+        public class ExcelColumnMap
+        {
+            public string Header { get; set; } = "";
+            public string Field { get; set; } = "";
+            public string Default { get; set; } = "";
+        }
+
+        private static readonly List<ExcelColumnMap> DefaultExcelColumns = new()
+    {
+        new() { Header = "FirstName",      Field = "FirstName" },
+        new() { Header = "LastName",       Field = "LastName" },
+        new() { Header = "DOB",            Field = "DOB" },
+        new() { Header = "BM1(DOS)",       Field = "DOS" },
+        new() { Header = "MC",             Field = "" },
+        new() { Header = "BM2(Assistant)", Field = "Assistant" },
+        new() { Header = "BM3(Anest)",     Field = "Anesthesia" },
+        new() { Header = "BM4(MR#)",       Field = "MRN" },
+        new() { Header = "Report Temp.",   Field = "ReportTemplate" },
+        new() { Header = "LH",             Field = "LocationLH" },
+        new() { Header = "CPT",            Field = "CPTRows" },
+        new() { Header = "ICD10",          Field = "ICD10Rows" },
+        new() { Header = "Intra Op",       Field = "IntraOpRows" },
+        new() { Header = "OP Desc",        Field = "" },
+        new() { Header = "Print",          Field = "" },
+        new() { Header = "Type",           Field = "CaseType" },
+        new() { Header = "Tourniquet",     Field = "" },
+    };
+
+        private static readonly Dictionary<string, PropertyInfo> RowProps =
+            typeof(ExcelAIRowVM)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .ToDictionary(p => p.Name, p => p, StringComparer.OrdinalIgnoreCase);
+        // Reads the column layout from appsettings.json ("ExcelExport:Columns"),
+        // falling back to DefaultExcelColumns. Unknown Field names are rejected early.
+        private List<ExcelColumnMap> GetExcelColumnMap()
+        {
+            var config = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            var cols = config.GetSection("ExcelExport:Columns").Get<List<ExcelColumnMap>>();
+            if (cols == null || cols.Count == 0) cols = DefaultExcelColumns;
+
+            var bad = cols.Where(c => !string.IsNullOrWhiteSpace(c.Field) && !RowProps.ContainsKey(c.Field))
+                          .Select(c => c.Field).ToList();
+            if (bad.Count > 0)
+                throw new InvalidOperationException($"Unknown field(s) in ExcelExport:Columns: {string.Join(", ", bad)}");
+
+            return cols;
+        }
+
+        private static string GetCellValue(ExcelAIRowVM row, ExcelColumnMap col)
+        {
+            string value = "";
+            if (!string.IsNullOrWhiteSpace(col.Field) && RowProps.TryGetValue(col.Field, out var prop))
+                value = prop.GetValue(row) as string ?? "";
+
+            if (string.IsNullOrWhiteSpace(value)) value = col.Default ?? "";
+            return CleanForXml(value);
+        }
+
+        // Normalises line breaks and strips control chars that make Excel reject the file.
+        private static string CleanForXml(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            s = s.Replace("\r\n", "\n").Replace("\r", "\n");
+            return Regex.Replace(s, @"[\x00-\x08\x0B\x0C\x0E-\x1F]", "").Trim();
+        }
+
+        private static byte[] BuildExcelFromRows(List<ExcelAIRowVM> rows, List<ExcelColumnMap> columns)
+        {
+            const uint HeaderStyle = 1;
+            const uint BodyStyle = 2;
+
+            // Pre-compute cell values once (used for both widths and output)
+            var data = rows.Select(r => columns.Select(c => GetCellValue(r, c)).ToArray()).ToList();
+
+            using var ms = new MemoryStream();
+            using (var doc = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
+            {
+                var wbPart = doc.AddWorkbookPart();
+                wbPart.Workbook = new Workbook();
+
+                var stylesPart = wbPart.AddNewPart<WorkbookStylesPart>();
+                stylesPart.Stylesheet = BuildStylesheet();
+                stylesPart.Stylesheet.Save();
+
+                var wsPart = wbPart.AddNewPart<WorksheetPart>();
+
+                // Freeze header row
+                var sheetViews = new SheetViews(
+                    new SheetView(
+                        new Pane
+                        {
+                            VerticalSplit = 1D,
+                            TopLeftCell = "A2",
+                            ActivePane = PaneValues.BottomLeft,
+                            State = PaneStateValues.Frozen
+                        },
+                        new Selection { Pane = PaneValues.BottomLeft })
+                    { WorkbookViewId = 0U });
+
+                // Column widths based on longest line in header/data (10–60 chars)
+                var colsEl = new DocumentFormat.OpenXml.Spreadsheet.Columns();
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    int longest = columns[i].Header.Length;
+                    foreach (var r in data)
+                        foreach (var line in r[i].Split('\n'))
+                            longest = Math.Max(longest, line.Length);
+
+                    colsEl.Append(new DocumentFormat.OpenXml.Spreadsheet.Column
+                    {
+                        Min = (uint)(i + 1),
+                        Max = (uint)(i + 1),
+                        Width = Math.Clamp(longest + 2, 10, 60),
+                        CustomWidth = true
+                    });
+                }
+
+                var sheetData = new SheetData();
+
+                // Header row
+                var header = new DocumentFormat.OpenXml.Spreadsheet.Row { RowIndex = 1U };
+                for (int c = 0; c < columns.Count; c++)
+                    header.Append(MakeCell(ColLetter(c) + "1", columns[c].Header, HeaderStyle));
+                sheetData.Append(header);
+
+                // Data rows
+                for (int r = 0; r < data.Count; r++)
+                {
+                    uint rowIndex = (uint)(r + 2);
+                    var row = new DocumentFormat.OpenXml.Spreadsheet.Row { RowIndex = rowIndex };
+                    for (int c = 0; c < columns.Count; c++)
+                        row.Append(MakeCell(ColLetter(c) + rowIndex, data[r][c], BodyStyle));
+                    sheetData.Append(row);
+                }
+
+                var lastRef = ColLetter(columns.Count - 1) + (data.Count + 1);
+
+                // Element order matters: sheetViews → cols → sheetData → autoFilter
+                wsPart.Worksheet = new Worksheet(
+                    sheetViews,
+                    colsEl,
+                    sheetData,
+                    new AutoFilter { Reference = $"A1:{lastRef}" });
+                wsPart.Worksheet.Save();
+
+                var sheets = wbPart.Workbook.AppendChild(new Sheets());
+                sheets.Append(new Sheet
+                {
+                    Id = wbPart.GetIdOfPart(wsPart),
+                    SheetId = 1U,
+                    Name = "Surgical Cases"
+                });
+
+                wbPart.Workbook.Save();
+            }
+
+            return ms.ToArray();
+        }
+
+        // All values written as text so DOB/DOS/MRN keep their exact format (no date/number conversion).
+        private static DocumentFormat.OpenXml.Spreadsheet.Cell MakeCell(string reference, string value, uint styleIndex) =>
+            new DocumentFormat.OpenXml.Spreadsheet.Cell
+            {
+                CellReference = reference,
+                DataType = CellValues.InlineString,
+                StyleIndex = styleIndex,
+                InlineString = new InlineString(new DocumentFormat.OpenXml.Spreadsheet.Text(value ?? "") { Space = SpaceProcessingModeValues.Preserve })
+            };
+
+        private static string ColLetter(int index)
+        {
+            var s = "";
+            index++;
+            while (index > 0)
+            {
+                int m = (index - 1) % 26;
+                s = (char)('A' + m) + s;
+                index = (index - m - 1) / 26;
+            }
+            return s;
+        }
+
+        private static Stylesheet BuildStylesheet()
+        {
+            DocumentFormat.OpenXml.Spreadsheet.Border ThinBorder() => new DocumentFormat.OpenXml.Spreadsheet.Border(
+                new DocumentFormat.OpenXml.Spreadsheet.LeftBorder { Style = BorderStyleValues.Thin },
+                new DocumentFormat.OpenXml.Spreadsheet.RightBorder { Style = BorderStyleValues.Thin },
+                new DocumentFormat.OpenXml.Spreadsheet.TopBorder { Style = BorderStyleValues.Thin },
+                new DocumentFormat.OpenXml.Spreadsheet.BottomBorder { Style = BorderStyleValues.Thin },
+                new DiagonalBorder());
+
+            return new Stylesheet(
+                new DocumentFormat.OpenXml.Spreadsheet.Fonts(
+                    new Font(new DocumentFormat.OpenXml.Spreadsheet.FontSize { Val = 11 }, new FontName { Val = "Calibri" }),
+                    new Font(new DocumentFormat.OpenXml.Spreadsheet.Bold(), new DocumentFormat.OpenXml.Spreadsheet.FontSize { Val = 11 }, new FontName { Val = "Calibri" })
+                )
+                { Count = 2U },
+                new Fills(
+                    new Fill(new PatternFill { PatternType = PatternValues.None }),
+                    new Fill(new PatternFill { PatternType = PatternValues.Gray125 }),
+                    new Fill(new PatternFill(new ForegroundColor { Rgb = "FFD9E1F2" }) { PatternType = PatternValues.Solid })
+                )
+                { Count = 3U },
+                new Borders(
+                    new DocumentFormat.OpenXml.Spreadsheet.Border(),
+                    ThinBorder()
+                )
+                { Count = 2U },
+                new CellFormats(
+                    // 0 = default
+                    new CellFormat(),
+                    // 1 = header: bold, light-blue fill, border, wrap
+                    new CellFormat(new Alignment { WrapText = true, Vertical = DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Center })
+                    {
+                        FontId = 1U,
+                        FillId = 2U,
+                        BorderId = 1U,
+                        ApplyFont = true,
+                        ApplyFill = true,
+                        ApplyBorder = true,
+                        ApplyAlignment = true
+                    },
+                    // 2 = body: border, wrap (multi-line CPT/ICD10/IntraOp), top-aligned
+                    new CellFormat(new Alignment { WrapText = true, Vertical = DocumentFormat.OpenXml.Spreadsheet.VerticalAlignmentValues.Top })
+                    {
+                        FontId = 0U,
+                        FillId = 0U,
+                        BorderId = 1U,
+                        ApplyBorder = true,
+                        ApplyAlignment = true
+                    }
+                )
+                { Count = 3U });
+        }
+        // ── POST /ExcelAI/GenerateExcel ──────────────────────────────────────────
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult GenerateExcel(string parsedJson, string outputFilename)
+        {
+            if (string.IsNullOrWhiteSpace(parsedJson))
+            {
+                TempData["ExcelError"] = "No data received. Please upload and preview the file first.";
+                return RedirectToAction("ExcelAI");
+            }
+
+            try
+            {
+                var rows = JsonConvert.DeserializeObject<List<ExcelAIRowVM>>(parsedJson);
+
+                if (rows == null || rows.Count == 0)
+                {
+                    TempData["ExcelError"] = "The uploaded file contained no valid rows.";
+                    return RedirectToAction("ExcelAI");
+                }
+
+                var columns = GetExcelColumnMap();
+                var excelBytes = BuildExcelFromRows(rows, columns);
+                string name = DateTime.Now.ToString("MMddyy");
+                //var safeFilename = SanitizeFilename(
+                //    string.IsNullOrWhiteSpace(outputFilename)
+                //        ? "SurgicalCases_Output"
+                //        : outputFilename) + ".xlsx";
+
+                var safeFilename = SanitizeFilename(
+                   string.IsNullOrWhiteSpace(name)
+                       ? "POCReport"
+                       : name) + ".xlsx";
+
+                return File(
+                    excelBytes,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    safeFilename);
+            }
+            catch (Exception ex)
+            {
+                TempData["ExcelError"] = $"Excel generation failed: {ex.Message}";
+                return RedirectToAction("ExcelAI");
+            }
+        }
+        #endregion
+
     }
 }
 public class PdfExtractRequest
@@ -4101,7 +4927,31 @@ public class PdfExtractRequest
     public List<string> Pages { get; set; } = new(); // base64 PNG strings, one per page
     public string FileName { get; set; } = string.Empty;
 }
+/// <summary>One surgical case row — matches the editable preview table columns.</summary>
+public class ExcelAIRowVM
+{
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    public string DOB { get; set; } = "";
+    public string DOS { get; set; } = "";
+    public string MRN { get; set; } = "";
+    public string Assistant { get; set; } = "";
+    public string Anesthesia { get; set; } = "";
+    public string LocationLH { get; set; } = "";
+    public string CaseType { get; set; } = "";
+    public string ReportTemplate { get; set; } = "";
+    public string CPTRows { get; set; } = "";
+    public string ICD10Rows { get; set; } = "";
 
+    //[JsonProperty("Page1Selection")]
+    public string IntraOpRows { get; set; } = "";
+
+    [JsonProperty("Page1Selection")]
+    private string Page1Selection
+    {
+        set { if (!string.IsNullOrWhiteSpace(value)) IntraOpRows = value; }
+    }
+}
 public class ExtractedFormDataDto
 {
     public string FirstName { get; set; }

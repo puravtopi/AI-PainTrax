@@ -3,7 +3,6 @@ using MS.Services;
 using Optivem.Framework.Core.Domain;
 using PainTrax.Services;
 using PainTrax.Web.Helper;
-
 using System.Data;
 using System.IO.Compression;
 using System.Text;
@@ -88,7 +87,11 @@ namespace PainTrax.Web.Controllers
                                 tbl_patient.*,
                                 tbl_patient_ie.*,
                                 tbl_ie_page1.*,
+                                 tbl_users.fname AS pfname,
+                                 tbl_users.lname AS plname,
+                                 tbl_users.fullname,
                                 DATE_FORMAT(tbl_patient.dob, '%Y%m%d') AS birthtime,
+                                DATE_FORMAT(NOW(), '%Y%m%d%H%i%s-0400') AS doc_effective_time,
                                 CASE
                                     WHEN tbl_patient.gender = 1 THEN 'M'
                                     WHEN tbl_patient.gender = 2 THEN 'F'
@@ -99,14 +102,26 @@ namespace PainTrax.Web.Controllers
                                 ON tbl_patient.id = tbl_patient_ie.patient_id
                             LEFT JOIN tbl_ie_page1
                                 ON tbl_patient.id = tbl_ie_page1.patient_id
+                            LEFT JOIN tbl_users
+                                  ON tbl_patient_ie.provider_id = tbl_users.id
                             WHERE tbl_patient_ie.created_date
                             BETWEEN '{fromDate:yyyy-MM-dd}'
                             AND '{toDate:yyyy-MM-dd}' and tbl_patient.cmp_id=" + cmpid;
             DataTable dt = service.GetData(sql);
             
-            string template = Path.Combine(_environment.WebRootPath, "Templates/CCDA.xml");
-
+            //string template = Path.Combine(_environment.WebRootPath, "Templates/CCDA.xml");
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid.TrimEnd());
+            string template = Path.Combine(_environment.WebRootPath, downloadFolder + "/CCDA.xml");
             XMLZipHelper helper = new XMLZipHelper();
+            var sectionFallbacks = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "allergies", "No known allergies documented." },
+                { "medication", "No medications documented." },
+                { "pmh", "No history of past illness reported." },
+                { "psh", "No history of surgical procedures reported." },
+                { "family_history", "No significant family history reported." }
+            };
 
             //byte[] zip = helper.GenerateZip(dt, template);
             using (MemoryStream ms = new MemoryStream())
@@ -115,6 +130,14 @@ namespace PainTrax.Web.Controllers
                 {
                     foreach (DataRow row in dt.Rows)
                     {
+                        if (!System.IO.File.Exists(template))
+                        {
+                            TempData["Error"] =
+                                $"CCDA template file not found.<br> ";
+
+                            return RedirectToAction("GenerateXml", "CCDAXml");
+                        }
+
                         string content = System.IO.File.ReadAllText(template);
 
                         // Replace placeholders
@@ -122,6 +145,10 @@ namespace PainTrax.Web.Controllers
                         {
                             string placeholder = $"`{col.ColumnName}`";
                             string value = row[col]?.ToString() ?? "";
+                            if (sectionFallbacks.TryGetValue(col.ColumnName, out string defaultText))
+                            {
+                                value= string.IsNullOrWhiteSpace(value) ? defaultText : value;
+                            }
                             content = content.Replace(placeholder, value);
                         }
 
@@ -158,7 +185,11 @@ namespace PainTrax.Web.Controllers
             tbl_patient.*,
             tbl_patient_ie.*,
             tbl_ie_page1.*,
+             tbl_users.fname AS pfname,
+             tbl_users.lname AS plname,
+             tbl_users.fullname,
             DATE_FORMAT(tbl_patient.dob, '%Y%m%d') AS birthtime,
+            DATE_FORMAT(NOW(), '%Y%m%d%H%i%s-0400') AS doc_effective_time,
             CASE
                 WHEN tbl_patient.gender = 1 THEN 'M'
                 WHEN tbl_patient.gender = 2 THEN 'F'
@@ -169,6 +200,8 @@ namespace PainTrax.Web.Controllers
             ON tbl_patient.id = tbl_patient_ie.patient_id
         LEFT JOIN tbl_ie_page1
             ON tbl_patient.id = tbl_ie_page1.patient_id
+        LEFT JOIN tbl_users
+              ON tbl_patient_ie.provider_id = tbl_users.id
         WHERE tbl_patient_ie.patient_id = " + pId ;
 
             DataTable dt = service.GetData(sql);
@@ -176,9 +209,20 @@ namespace PainTrax.Web.Controllers
             if (dt.Rows.Count == 0)
                 return NotFound();
 
-            string template = Path.Combine(_environment.WebRootPath, "Templates/CCDA.xml");
-
+            // string template = Path.Combine(_environment.WebRootPath, "Templates/CCDA.xml");
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid.TrimEnd());
+            string template = Path.Combine(_environment.WebRootPath, downloadFolder + "/CCDA.xml");
             string content = System.IO.File.ReadAllText(template);
+            var sectionFallbacks = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "allergies", "No known allergies documented." },
+                { "medication", "No medications documented." },
+                { "pmh", "No history of past illness reported." },
+                { "psh", "No history of surgical procedures reported." },
+                { "family_history", "No significant family history reported." }
+            };
+
 
             DataRow row = dt.Rows[0];
 
@@ -186,6 +230,11 @@ namespace PainTrax.Web.Controllers
             {
                 string placeholder = $"`{col.ColumnName}`";
                 string value = row[col]?.ToString() ?? "";
+
+                if (sectionFallbacks.TryGetValue(col.ColumnName, out string defaultText))
+                {
+                    value = string.IsNullOrWhiteSpace(value) ? defaultText : value;
+                }
                 content = content.Replace(placeholder, value);
             }
 

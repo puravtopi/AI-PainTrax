@@ -1933,6 +1933,8 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
+                if (patientIEId == 0)
+                    patientIEId = 5889;
 
                 //var injurbodyparts = _pocService.GetInjuredParts(patientIEId);
                 var injurbodyparts = _pocService.GetInjuredPartsPOC(patientIEId);

@@ -1,0 +1,702 @@
+@*@model PainTrax.Web.ViewModel.ExcelAIVM*@
+
+<main id="main" class="main">
+    <style>
+        /* ── Table ── */
+        #tblPreview th, #tblPreview td {
+            white-space: nowrap !important;
+        }
+
+        /* ── Upload area ── */
+        #uploadSection {
+            margin-bottom: 20px;
+        }
+
+        #previewSection {
+            display: none;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+            .upload-area:hover, .upload-area.drag-over {
+                border-color: #0d6efd;
+                background-color: #f0f4ff;
+            }
+
+            .upload-area i {
+                font-size: 48px;
+                color: #aaa;
+            }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* ── Editable cells ── */
+        td.editable {
+            padding: 2px !important;
+            min-width: 90px;
+        }
+
+            td.editable input[type="text"],
+            td.editable input[type="date"],
+            td.editable select {
+                width: 100%;
+                min-width: 80px;
+                border: 1px solid transparent;
+                background: transparent;
+                padding: 3px 5px;
+                font-size: 13px;
+                border-radius: 4px;
+                transition: border-color 0.2s, background 0.2s;
+            }
+
+                td.editable input[type="text"]:focus,
+                td.editable input[type="date"]:focus,
+                td.editable select:focus {
+                    border-color: #0d6efd;
+                    background: #fff;
+                    outline: none;
+                    box-shadow: 0 0 0 2px rgba(13,110,253,.15);
+                }
+
+                td.editable input[type="text"]:hover,
+                td.editable input[type="date"]:hover,
+                td.editable select:hover {
+                    border-color: #adb5bd;
+                    background: #f8f9fa;
+                }
+
+        /* CPT / ICD-10 / Intra-Op column highlights */
+        th.cpt-col {
+            background-color: #0d6efd !important;
+            color: #fff;
+        }
+
+        th.icd-col {
+            background-color: #198754 !important;
+            color: #fff;
+        }
+
+        th.intra-col {
+            background-color: #6f42c1 !important;
+            color: #fff;
+        }
+
+        td.cpt-col input, td.icd-col input, td.intra-col input {
+            min-width: 130px;
+        }
+
+        /* Row index cell */
+        td.row-num {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            min-width: 30px;
+        }
+
+        /* ── PDF parsing progress ── */
+        #pdfParseProgress {
+            display: none;
+        }
+
+        .pdf-file-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e9f5ff;
+            border: 1px solid #b6d4fe;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            margin: 3px;
+        }
+
+            .pdf-file-chip .remove-chip {
+                cursor: pointer;
+                color: #dc3545;
+                font-weight: bold;
+                margin-left: 4px;
+            }
+    </style>
+
+    <div class="pagetitle">
+        <h1>Operative Report PDF Extractor</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Home</a></li>
+                <li class="breadcrumb-item active">Operative Report – PDF to Excel</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- ══════════════════════════════════════════════
+                             STEP 1 — Upload PDF Files
+                             ══════════════════════════════════════════════ -->
+                        <div id="uploadSection">
+                            <h5 class="card-title">Step 1 – Upload Surgical PDF Form(s)</h5>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-info-circle"></i>
+                                Upload one or multiple <strong>RSAS / LSAS / RKAS / LKAS</strong> surgical forms.
+                                Each PDF is processed as <strong>one row</strong> in the Excel output.
+                            </p>
+
+                            <div class="upload-area" id="dropZone">
+                                <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                <p class="mt-2 mb-0"><strong>Click to browse</strong> or drag &amp; drop PDF file(s) here</p>
+                                <p class="text-muted small">Supported format: .pdf — multiple files allowed</p>
+                            </div>
+                            <input type="file" id="pdfFile" accept=".pdf" multiple style="display:none" />
+
+                            <!-- Chip list of selected files -->
+                            <div id="fileChips" class="mt-2"></div>
+                            <div class="file-info mt-1" id="fileInfo"></div>
+
+                            <!-- Parse progress -->
+                            <div id="pdfParseProgress" class="mt-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="spinner-border spinner-border-sm text-primary"></div>
+                                    <span id="parseProgressText">Parsing PDFs…</span>
+                                </div>
+                                <div class="progress mt-2" style="height:6px;">
+                                    <div id="parseProgressBar"
+                                         class="progress-bar progress-bar-striped progress-bar-animated"
+                                         style="width:0%"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <button class="btn btn-primary" id="btnPreview" disabled onclick="previewPDFs()">
+                                    <i class="bi bi-eye"></i> Preview &amp; Extract Data
+                                </button>
+                                <button class="btn btn-secondary ms-2" onclick="resetAll()">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ══════════════════════════════════════════════
+                             STEP 2 — Preview, Edit & Generate Excel
+                             ══════════════════════════════════════════════ -->
+                        <div id="previewSection">
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                                <div>
+                                    <h5 class="card-title mb-0">
+                                        Step 2 – Review, Edit &amp; Generate Excel
+                                    </h5>
+                                    <small class="text-muted">
+                                        <i class="bi bi-pencil-square"></i>
+                                        All cells are editable — click any cell to modify before generating.
+                                        CPT, ICD-10 and Intra-Op columns contain row numbers used by the Hudson Pro CMSX macro.
+                                    </small>
+                                </div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-secondary align-self-center" id="rowCount">0 records</span>
+                                    <button class="btn btn-warning" onclick="resetAll()">
+                                        <i class="bi bi-upload"></i> Upload Different File
+                                    </button>
+                                    <button class="btn btn-success" id="btnGenerate" onclick="generateExcel()">
+                                        <i class="bi bi-file-earmark-excel"></i> Generate Excel
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Summary cards -->
+                            <div class="row mb-3">
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-primary mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Total Cases</span>
+                                                <strong id="summTotal">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-warning mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>MVA Cases</span>
+                                                <strong id="summMVA">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-success mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>WC Cases</span>
+                                                <strong id="summWC">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="card text-white bg-secondary mb-2">
+                                        <div class="card-body py-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Other Cases</span>
+                                                <strong id="summOther">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id="tblPreview"
+                                       class="table table-striped table-bordered dt-responsive nowrap"
+                                       width="100%" cellspacing="0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>FirstName</th>
+                                            <th>LastName</th>
+                                            <th>DOB</th>
+                                            <th>DOS</th>
+                                            <th>MRN</th>
+                                            <th>Physician</th>
+                                            <th>ReportTemplate</th>
+                                            <th>Page1Selection</th>
+                                            <th>other</th>
+                                            <th>PreoperativeDx</th>
+                                            <th>Assistant</th>
+                                            <th>Anesthesia</th>
+                                            <th>InstrumentationOther</th>
+                                            <th class="cpt-col">CPT</th>
+                                            <th class="icd-col">ICD10</th>
+                                            <th>Page2Selection</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblPreviewBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Status alert -->
+                        <div id="importStatus" class="mt-3" style="display:none;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Hidden form: posts edited JSON to ExcelAI/GenerateExcel → returns .xlsx file -->
+<form id="frmGenerate"
+      asp-action="GenerateExcel"
+      asp-controller="Report"
+      method="post"
+      style="display:none">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="parsedJson" id="hiddenParsedJson" />
+    <input type="hidden" name="outputFilename" id="hiddenOutputFilename" />
+</form>
+
+<!-- PDF.js (renders PDF pages to canvas images for Claude) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+    // ── Configure PDF.js worker ──────────────────────────────────────────────────
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    // ── Extraction endpoint (server proxies to Anthropic — key never hits browser) ─
+    const EXTRACT_ENDPOINT = '@Url.Action("ExtractExcelPdfPages", "Report")';
+
+    // ── Column definitions matching the Hudson Pro CMSX POCReport sheet ──────────
+    // ── Column definitions — exact match to Hudson Pro CMSX POCReport sheet ────────
+    // readonly:true  columns are always blank/fixed — shown for visibility but not editable
+    const COL_DEFS = [
+        { key: 'FirstName', label: 'FirstName', type: 'text' },
+        { key: 'LastName', label: 'LastName', type: 'text' },
+        { key: 'DOB', label: 'DOB', type: 'date' },
+        { key: 'DOS', label: 'DOS', type: 'date' },
+        { key: 'MRN', label: 'MRN', type: 'text' },
+        { key: 'Physician', label: 'Physician', type: 'text' },
+        { key: 'ReportTemplate', label: 'ReportTemplate', type: 'text' },
+        { key: 'Page1Selection', label: 'Page1Selection', type: 'text' },
+        { key: 'other', label: 'other', type: 'text' },
+        { key: 'PreoperativeDx', label: 'PreoperativeDx', type: 'text' },
+        
+        { key: 'Assistant', label: 'Assistant', type: 'text' },
+
+        { key: 'Anesthesia', label: 'Anesthesia', type: 'text' },
+        { key: 'InstrumentationOther', label: 'InstrumentationOther', type: 'text' },
+        { key: 'CPTRows', label: 'CPTRows', type: 'text' },
+        { key: 'ICD10Rows', label: 'ICD10Rows', type: 'text' },
+        { key: 'Page2Selection', label: 'Page2Selection', type: 'text' }
+    ];
+
+    let parsedRows = [];
+    let dataTable = null;
+    let selectedFiles = [];
+
+    // ── Helpers ──────────────────────────────────────────────────────────────────
+
+    /** Convert M/D/YYYY or MM/DD/YYYY → YYYY-MM-DD for <input type="date">. */
+    function toIsoDate(str) {
+        if (!str) return '';
+        str = str.trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+        const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+        return str;
+    }
+
+    // ── Drop zone & file input wiring ────────────────────────────────────────────
+    (function initFileHandlers() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('pdfFile');
+
+        dropZone.removeAttribute('onclick');
+
+        dropZone.addEventListener('click', function () {
+            fileInput.value = '';
+            fileInput.click();
+        });
+        dropZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+        dropZone.addEventListener('dragleave', function () {
+            dropZone.classList.remove('drag-over');
+        });
+        dropZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFilesSelected(Array.from(e.dataTransfer.files));
+        });
+        fileInput.addEventListener('change', function () {
+            if (this.files && this.files.length)
+                handleFilesSelected(Array.from(this.files));
+        });
+    })();
+
+    function handleFilesSelected(files) {
+        const pdfs = files.filter(f => f.type === 'application/pdf' || f.name.match(/\.pdf$/i));
+        if (!pdfs.length) { alert('Please upload valid PDF file(s).'); return; }
+
+        pdfs.forEach(function (f) {
+            if (!selectedFiles.find(x => x.name === f.name && x.size === f.size))
+                selectedFiles.push(f);
+        });
+
+        renderFileChips();
+        document.getElementById('btnPreview').disabled = selectedFiles.length === 0;
+        document.getElementById('fileInfo').innerHTML =
+            '<i class="bi bi-check-circle text-success"></i> <strong>' +
+            selectedFiles.length + '</strong> PDF file(s) ready.';
+    }
+
+    function renderFileChips() {
+        const container = document.getElementById('fileChips');
+        container.innerHTML = '';
+        selectedFiles.forEach(function (f, i) {
+            const chip = document.createElement('span');
+            chip.className = 'pdf-file-chip';
+            chip.innerHTML =
+                '<i class="bi bi-file-earmark-pdf text-danger"></i> ' + f.name +
+                '<span class="remove-chip" onclick="removeFile(' + i + ')">✕</span>';
+            container.appendChild(chip);
+        });
+    }
+
+    function removeFile(idx) {
+        selectedFiles.splice(idx, 1);
+        renderFileChips();
+        document.getElementById('btnPreview').disabled = selectedFiles.length === 0;
+        if (!selectedFiles.length)
+            document.getElementById('fileInfo').innerHTML = '';
+    }
+
+    // ── Render one PDF page → base64 PNG via canvas ──────────────────────────────
+    async function renderPageToBase64(pdfPage) {
+        const viewport = pdfPage.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await pdfPage.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        return canvas.toDataURL('image/png').split(',')[1];
+    }
+
+    // ── Read a PDF File → base64 string (no data: prefix) ─────────────────────────
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result).split(',')[1]);
+            reader.onerror = () => reject(new Error('Could not read file'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // ── POST the PDF to server → server calls Claude → returns JSON ──────────
+    async function extractPdfWithClaude(pdfBase64, fileName) {
+        try {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+
+            const response = await fetch(EXTRACT_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({ pdfBase64: pdfBase64, fileName: fileName })
+            });
+
+            if (!response.ok) {
+                const errBody = await response.json().catch(() => ({}));
+                let msg = errBody?.error || `Server error ${response.status}`;
+                if (errBody?.stopReason) msg += ` [stop_reason: ${errBody.stopReason}]`;
+                throw new Error(msg);
+            }
+
+            const obj = await response.json();
+            const result = {};
+
+            // Normalise: ensure every column key is present
+            COL_DEFS.forEach(d => {
+                result[d.key] = obj[d.key] !== undefined ? String(obj[d.key]) : '';
+            });
+
+            // Convert date fields to YYYY-MM-DD for <input type="date">
+            ['DOB', 'DOS'].forEach(k => {
+                if (result[k]) result[k] = toIsoDate(result[k]);
+            });
+
+            return result;
+
+        } catch (err) {
+            console.error(`Extraction failed for "${fileName}":`, err);
+            const empty = {};
+            COL_DEFS.forEach(d => { empty[d.key] = ''; });
+            empty['_error'] = err.message;
+            return empty;
+        }
+    }
+
+    // ── Preview: one server call per PDF → one row per file ─────────────────────
+    async function previewPDFs() {
+        if (!selectedFiles.length) return;
+
+        const progress = document.getElementById('pdfParseProgress');
+        const progressBar = document.getElementById('parseProgressBar');
+        const progressTxt = document.getElementById('parseProgressText');
+        const btnPreview = document.getElementById('btnPreview');
+
+        progress.style.display = 'block';
+        btnPreview.disabled = true;
+        parsedRows = [];
+
+        const total = selectedFiles.length;
+
+        for (let fi = 0; fi < selectedFiles.length; fi++) {
+            const file = selectedFiles[fi];
+            progressTxt.textContent = `Reading "${file.name}" (${fi + 1} of ${total})…`;
+            progressBar.style.width = Math.round((fi / total) * 100) + '%';
+
+            try {
+                // Read the whole PDF as base64 → one Claude request → one row
+                const pdfBase64 = await fileToBase64(file);
+
+                progressTxt.textContent =
+                    `Extracting data from "${file.name}"…`;
+                const row = await extractPdfWithClaude(pdfBase64, file.name);
+                parsedRows.push(row);
+
+            } catch (e) {
+                console.error('Error processing ' + file.name, e);
+                alert(`Could not process "${file.name}": ${e.message}`);
+            }
+
+            progressBar.style.width = Math.round(((fi + 1) / total) * 100) + '%';
+        }
+
+        progress.style.display = 'none';
+        btnPreview.disabled = false;
+
+        if (!parsedRows.length) {
+            alert('No data could be extracted.\n\nCheck your API key and browser console (F12) for details.');
+            return;
+        }
+
+        const errorRows = parsedRows.filter(r => r['_error']);
+        if (errorRows.length)
+            console.warn(`${errorRows.length} file(s) had extraction errors:`,
+                errorRows.map(r => r['_error']));
+
+        renderTable(parsedRows);
+    }
+
+    // ── Render editable DataTable ─────────────────────────────────────────────────
+    function renderTable(rows) {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+
+        const tbody = document.getElementById('tblPreviewBody');
+        tbody.innerHTML = '';
+
+        let mva = 0, wc = 0, other = 0;
+
+        rows.forEach((row, idx) => {
+            const ct = (row['CaseType'] || '').trim().toUpperCase();
+            if (ct === 'MVA') mva++;
+            else if (ct === 'WC') wc++;
+            else other++;
+
+            const tr = document.createElement('tr');
+            tr.dataset.rowIndex = idx;
+
+            // Row number
+            const tdNum = document.createElement('td');
+            tdNum.className = 'row-num';
+            tdNum.textContent = idx + 1;
+            tr.appendChild(tdNum);
+
+            COL_DEFS.forEach(def => {
+                const td = document.createElement('td');
+                td.className = 'editable' +
+                    (def.extra === 'cpt' ? ' cpt-col' :
+                        def.extra === 'icd' ? ' icd-col' :
+                            def.extra === 'intra' ? ' intra-col' : '');
+
+                // Pre-fill fixed/readonly columns with their known values
+                if (def.key === 'Print') row[def.key] = '';
+                if (def.key === 'MC') row[def.key] = '';
+                if (def.key === 'BM5Anest') row[def.key] = '';
+                if (def.key === 'OPDesc') row[def.key] = '';
+                if (def.key === 'Tourniquet') row[def.key] = '';
+
+                let input;
+                if (def.type === 'select') {
+                    input = document.createElement('select');
+                    input.className = 'form-select form-select-sm';
+                    (def.options || []).forEach(opt => {
+                        const o = document.createElement('option');
+                        o.value = opt; o.textContent = opt || '-- Select --';
+                        if (row[def.key] === opt) o.selected = true;
+                        input.appendChild(o);
+                    });
+                } else {
+                    input = document.createElement('input');
+                    input.type = def.type;
+                    input.value = row[def.key] || '';
+                    input.className = 'form-control form-control-sm';
+                }
+
+                // readonly columns — visible for review but not editable
+                if (def.readonly) {
+                    input.readOnly = true;
+                    input.disabled = true;
+                    input.style.background = '#f8f9fa';
+                    input.style.color = '#6c757d';
+                    input.style.cursor = 'default';
+                    input.title = 'This column is populated automatically';
+                } else {
+                    input.addEventListener('input', () => { parsedRows[idx][def.key] = input.value; });
+                    input.addEventListener('change', () => { parsedRows[idx][def.key] = input.value; });
+                }
+
+                td.appendChild(input);
+                tr.appendChild(td);
+            });
+
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('rowCount').textContent = rows.length + ' records';
+        document.getElementById('summTotal').textContent = rows.length;
+        document.getElementById('summMVA').textContent = mva;
+        document.getElementById('summWC').textContent = wc;
+        document.getElementById('summOther').textContent = other;
+
+        document.getElementById('uploadSection').style.display = 'none';
+        document.getElementById('previewSection').style.display = 'block';
+
+        dataTable = $('#tblPreview').DataTable({
+            paging: true, pageLength: 25, searching: true,
+            info: true, autoWidth: false, scrollX: true,
+            columnDefs: [{ targets: '_all', orderable: false }]
+        });
+    }
+
+    // ── Generate Excel ────────────────────────────────────────────────────────────
+    function generateExcel() {
+        if (!parsedRows.length) { alert('No data to export.'); return; }
+
+        if (!confirm(`Generate Excel for ${parsedRows.length} case(s)?\n\nThe file will download automatically.`))
+            return;
+
+        const btn = document.getElementById('btnGenerate');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generating…';
+
+        // Re-enable button after a short delay (file download is silent)
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-file-earmark-excel"></i> Generate Excel';
+        }, 4000);
+
+        document.getElementById('hiddenParsedJson').value = JSON.stringify(parsedRows);
+        document.getElementById('hiddenOutputFilename').value = 'SurgicalCases_' +
+            new Date().toISOString().slice(0, 10);
+
+        document.getElementById('frmGenerate').submit();
+    }
+
+    // ── Reset ─────────────────────────────────────────────────────────────────────
+    function resetAll() {
+        if (dataTable) { dataTable.destroy(); dataTable = null; }
+        document.getElementById('tblPreviewBody').innerHTML = '';
+        document.getElementById('fileChips').innerHTML = '';
+        document.getElementById('fileInfo').innerHTML = '';
+        document.getElementById('btnPreview').disabled = true;
+        document.getElementById('pdfFile').value = '';
+        document.getElementById('previewSection').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+        document.getElementById('importStatus').style.display = 'none';
+        selectedFiles = [];
+        parsedRows = [];
+    }
+
+    // ── TempData result banners ───────────────────────────────────────────────────
+    @if (TempData["ExcelSuccess"] != null)
+    {
+        <text>
+            document.getElementById('importStatus').innerHTML =
+        '<div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> @TempData["ExcelSuccess"]</div>';
+        document.getElementById('importStatus').style.display = 'block';
+        </text>
+    }
+    @if (TempData["ExcelError"] != null)
+    {
+        <text>
+            document.getElementById('importStatus').innerHTML =
+        '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @TempData["ExcelError"]</div>';
+        document.getElementById('importStatus').style.display = 'block';
+        </text>
+    }
+</script>

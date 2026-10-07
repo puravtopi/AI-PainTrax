@@ -66,7 +66,8 @@
                         <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
                         <input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
-                        <input type="hidden" id="hdIEId" name="hdIEId" />
+                        <input type="hidden" id="hdIEId" name="hdIEId" value="@ViewBag.IEId" />
+                        <input type="hidden" id="PatientIEId" name="PatientIEId" value="@ViewBag.IEId" />
                         <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
                         <input type="hidden" id="Diagnosis" name="Diagnosis" />
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
@@ -87,28 +88,28 @@
                                 }
                                 @* <button type="submit" class="btn btn-primary">Submit</button> *@
                                 <button type="button"
-                                class="btn btn-outline-primary"
-                                onclick="saveForm(true)">
+                                        class="btn btn-outline-primary"
+                                        onclick="saveForm(true)">
                                     Save
                                 </button>
                                 @if (ViewBag.IntakeType != "p")
                                 {
                                     <button type="button" id="btnSuperBill"
-                                    class="btn btn-outline-primary"
-                                    @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                    onclick="DownloadPdf('@ViewBag.Id')">
+                                            class="btn btn-outline-primary"
+                                            @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                            onclick="DownloadPdf('@ViewBag.Id')">
                                         Super Bill
                                     </button>
 
                                     <button type="button" class="btn btn-primary"
-                                    @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                    id="btnTranscribe">
+                                            @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                            id="btnTranscribe">
                                         Open Voice Recorder
                                     </button>
                                     <button type="button" id="btnSuperBill"
-                                    class="btn btn-outline-primary"
-                                    @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
-                                    onclick="DownloadPdf('@ViewBag.Id')">
+                                            class="btn btn-outline-primary"
+                                            @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                            onclick="DownloadPdf('@ViewBag.Id')">
                                         Super Bill
                                     </button>
                                 }
@@ -262,6 +263,22 @@
                                 </div>
                                 @if (ViewBag.IntakeType != "p")
                                 {
+                                    @if (ViewBag.IEId > 0)
+                                    {
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingPOC">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePOC" aria-expanded="false" aria-controls="collapseADL">
+                                                    POC
+                                                </button>
+                                            </h2>
+                                            <div id="collapsePOC" class="accordion-collapse collapse" aria-labelledby="headingADL" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <div id="divPOC">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingNote">
                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNote" aria-expanded="false" aria-controls="collapseNote">
@@ -544,7 +561,7 @@
             $("#BMI").val(bmi);
     }
 
-              function safeParse(json) {
+    function safeParse(json) {
         if (typeof json !== "string") return json;
 
         try {
@@ -586,7 +603,8 @@
             throw e;
         }
     }
-            function startVoice(icon, ctrl) {
+            
+    function startVoice(icon, ctrl) {
 
             var input = $('#' + ctrl);
 
@@ -641,8 +659,7 @@
             };
         }
 
-
-            function convertPunctuation(text) {
+    function convertPunctuation(text) {
                 return text
                     .replace(/\bfull stop\b/gi, ".")
                     .replace(/\bstop\b/gi, ".")
@@ -655,10 +672,11 @@
                     .replace(/\bnew line\b/gi, "\n")
                     .replace(/\bnext line\b/gi, "\n");
             }
+            
             let selectedSections = [];
             let selectedPESections = [];
 
-            function fnShowPresentComplain(cntrl, divCC, divPE,bodyPart) {
+    function fnShowPresentComplain(cntrl, divCC, divPE,bodyPart) {
 
             if (!divCC) return;
 
@@ -689,7 +707,7 @@
             renderSectionsInOrder();
         }
 
-        function renderSectionsInOrder() {
+    function renderSectionsInOrder() {
 
             let ccContainer = $("#presentComplaintContainer");   // create this div
             let peContainer = $("#physicalExamContainer");       // create this div
@@ -713,7 +731,7 @@
         }
 
             // CLOSE (❌)
-            $("#closePreview").click(function () {
+    $("#closePreview").click(function () {
 
                 $("#previewSection").hide();
 
@@ -727,7 +745,7 @@
             });
 
             // OPEN AGAIN
-            $("#openPreview").click(function () {
+          $("#openPreview").click(function () {
 
                 $("#previewSection").show();
 
@@ -785,9 +803,9 @@
 
             function updatePreview() {
 
-                var values = {};
+               var values = {};
 
-                $('#patientForm').find('input, select, textarea').each(function () {
+               $('#patientForm').find('input, select, textarea').each(function () {
                     var key = $(this).attr('name') || $(this).attr('id');
                     var cls = $(this).attr('class');
                     if (!key) return;
@@ -874,22 +892,7 @@
                     html = html.replace(regex, data[key]);
                 });
 
-                    toggleSection(data.IsSMH === "Yes", "#divIsSMH");
-                    toggleSection(data.Meds === "Yes", "#divMeds");
-                    toggleSection(data.IsPMH === "Yes", "#divIsPMH");
-                    toggleSection(data.IsHospitalTest === "Yes", "#divHospitalTest");
-                    toggleSection(data.IsHospitalMedication === "Yes", "#divHospitalMedication");
-                    toggleSection(data.IsAccidentPast === "Yes", "#divIsAccidentPast");
-                    toggleSection(data.SameDay === "No", "#divSameDay");
-                    toggleSection(data.DirectImpact === "Yes", "#divBodyImpact");
-                    toggleSection(data.LoseConsciousness === "Yes", "#divLoseConsciousness");
-                    // toggleSection(data.HeadInjury === "Yes", "#divHeadache");
-                    toggleSection(data.Hospital === "Yes", "#divHospital");
-                    toggleSection(data.Allergy === "Yes", "#divAllergy");
-                    toggleSection(data.Smoke === "Yes", "#divSmoke");
-                    toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
-                    toggleSection(data.PT === "Yes", "#divPT");
-                    toggleSection(data.Chiro === "Yes", "#divChiro");
+                   fnToggle(data);
 
                     if(data.PreInjury==="No")
                         $("#preInjuryDetailsBox").show();
@@ -934,6 +937,25 @@
                     }
 
                     $('#previewText').html(html);
+            }
+
+            function fnToggle(data){
+                    toggleSection(data.IsSMH === "Yes", "#divIsSMH");
+                    toggleSection(data.Meds === "Yes", "#divMeds");
+                    toggleSection(data.IsPMH === "Yes", "#divIsPMH");
+                    toggleSection(data.IsHospitalTest === "Yes", "#divHospitalTest");
+                    toggleSection(data.IsHospitalMedication === "Yes", "#divHospitalMedication");
+                    toggleSection(data.IsAccidentPast === "Yes", "#divIsAccidentPast");
+                    toggleSection(data.SameDay === "No", "#divSameDay");
+                    toggleSection(data.DirectImpact === "Yes", "#divBodyImpact");
+                    toggleSection(data.LoseConsciousness === "Yes", "#divLoseConsciousness");
+                    // toggleSection(data.HeadInjury === "Yes", "#divHeadache");
+                    toggleSection(data.Hospital === "Yes", "#divHospital");
+                    toggleSection(data.Allergy === "Yes", "#divAllergy");
+                    toggleSection(data.Smoke === "Yes", "#divSmoke");
+                    toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
+                    toggleSection(data.PT === "Yes", "#divPT");
+                    toggleSection(data.Chiro === "Yes", "#divChiro");
             }
 
                 function saveForm(isSubmit) {
@@ -1014,7 +1036,8 @@
                                             '&locid=' + locId +
                                             '&providerId=' + provId +
                                             '&patientId=' + response.patientid +
-                                            '&type=' + intake_type;
+                                            '&type=' + intake_type+
+                                            '&ie_id=' + response.ieid;
                                     }
                                 });
 
@@ -1024,7 +1047,8 @@
                                 '?id=' + response.id +
                                 '&locid=' + locId+
                                 '&providerId=' + provId +
-                                '&patientId=' + response.patientid;
+                                '&patientId=' + response.patientid+
+                                '&type=A&ie_id=' + response.ieid;
                             }
                             $('#pdfLoader').hide();
 
@@ -1183,7 +1207,7 @@
                    // $('input[name="Complaints"]:checked').each(function () {
                         //     selected.push($(this).val());
                         // });
-                     
+
 
 
 
@@ -1378,15 +1402,55 @@
 
                $("#hdId").val('@ViewBag.Id');
                $("#PatientId").val('@ViewBag.PatientId');
-
+               $("#hdIEId").val('@ViewBag.IEId');
+               $("#PatientIEId").val('@ViewBag.IEId');
+               fnShowPOC();
 
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
                     //updatePreview();
                     $('#pdfLoader').hide();
+
+
+
+                    var values = {};
+
+               $('#patientForm').find('input, select, textarea').each(function () {
+                    var key = $(this).attr('name') || $(this).attr('id');
+                    var cls = $(this).attr('class');
+                    if (!key) return;
+
+                    var type = $(this).attr('type');
+
+                    if (type === 'radio') {
+                        if ($(this).is(':checked')) {
+                            values[key] = $(this).val();
+                        }
+                    }
+                    else if (type === 'checkbox') {
+
+                        // 🔹 Special handling for Complaints (multi-checkbox)
+                        if (cls === "chkMulti") {
+                            if (!values[key]) values[key] = [];
+                            if ($(this).is(':checked')) {
+                                values[key].push($(this).val());
+                            }
+                        }
+                        else {
+                            // normal checkbox (true/false)
+                            values[key] = $(this).is(':checked');
+                        }
+                    }
+                    else {
+                        values[key] = $(this).val() || "";
+                    }
+                });
+
+
+                    fnToggle(values);
                 }, 1000);
 
-
+                 
             }
 
             function formatDate(inputDate) {
@@ -1838,6 +1902,25 @@
     {
          window.location.href= '@Url.Action("Create", "FollowupForm")?locid=' + $("#LocationId").val();
     }
+
+
+    function fnShowPOC() {
+        url = '@Url.Action("GetPOC", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPOC").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
     function DownloadPdf(id) {
         $('#pdfLoader').show();
      var downloadurl = '@Url.Action("GeneratePdfBHF", "IntakeForm")';
