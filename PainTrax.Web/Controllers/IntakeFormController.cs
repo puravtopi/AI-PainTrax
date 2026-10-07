@@ -1340,6 +1340,7 @@ namespace PainTrax.Web.Controllers
                         doe = string.IsNullOrEmpty(model.DOE) ? null : Convert.ToDateTime(model.DOE),
                         compensation = InjuryType,
                         intakeid = initialIntakeAI.Id,
+                        location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
                         provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
                     };
                     _ieService.UpdateFromIntake(objIE);

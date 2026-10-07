@@ -911,7 +911,7 @@
                     toggleSection(data.Alcohol === "Yes", "#divAlcohol");
                     
                     
-                    toggleSection(data.shortandlonggoal === "Goals", "#divgoals");
+                    // toggleSection(data.shortandlonggoal === "Goals", "#divgoals");
                     // toggleSection(data.shortgoal === "Short term goals", "#divgoals");
                     // toggleSection(data.shortgoal === "long term goals", "#divgoalslongterm");
                     toggleSection(data.Airbags === "Yes", "#divAirbags");
@@ -925,7 +925,7 @@
 
                    $(".mmClass").show();
                    if (data.InjuryType === "WC") {
-                        $("#divWC").show();
+                        // $("#divWC").show();
                         $("#divWC1").show();
                         $("#divNF").hide();
                         $("#divPI").hide();
@@ -937,14 +937,14 @@
                         // Keep MVA, remove WC
                         html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
                         html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
-                        $("#divWC").hide();
+                        // $("#divWC").hide();
                         $("#divWC1").hide();
                         $("#divNF").show();
 
                     }
                     else if (data.InjuryType === "MM") {
                         $("#divMMcase").show();
-                       $("#divWC").hide();
+                       // $("#divWC").hide();
                         $("#divWC1").hide();
                         $(".mmClass").hide();
                             if (data.Complaints) {
@@ -1190,7 +1190,7 @@
 
 
                 // Set Goals based on Injury Type
-    setGoalsByInjuryType();
+    //setGoalsByInjuryType();
     //             var injuryType = $('input[name="InjuryType"]:checked').val();
 
     // if (injuryType === "WC") {
@@ -1317,7 +1317,8 @@
 
 
                     $(document).on('change', 'input[name="InjuryType"]', function () {
-        setGoalsByInjuryType();
+        //setGoalsByInjuryType();
+        $("#divMMcase").show();
     });
         $(document).on('change', 'input[name="NeckRadiates"]', function () {
 
@@ -1375,44 +1376,44 @@
                 $('body').append(form);
                 form.submit();
             }
-                function setGoalsByInjuryType() {
+    //             function setGoalsByInjuryType() {
 
-        var injuryType = $('input[name="InjuryType"]:checked').val();
+    //     var injuryType = $('input[name="InjuryType"]:checked').val();
 
-        var radio = $('input[name="shortandlonggoal"][value="Goals"]')[0];
+    //     var radio = $('input[name="shortandlonggoal"][value="Goals"]')[0];
 
-        if (!radio) return;
+    //     if (!radio) return;
 
-        if (injuryType === "WC") {
+    //     if (injuryType === "WC") {
 
-            // WC -> checked
-            radio.checked = true;
-            radio.dataset.wasChecked = "true";
+    //         // WC -> checked
+    //         radio.checked = true;
+    //         radio.dataset.wasChecked = "true";
 
-            // Show
-            $('#divgoals').show();
-            $("#divWC").show();
+    //         // Show
+    //         $('#divgoals').show();
+    //         $("#divWC").show();
 
-        } else {
+    //     } else {
 
-            // Other injury types -> unchecked
-            radio.checked = false;
-            radio.dataset.wasChecked = "false";
+    //         // Other injury types -> unchecked
+    //         radio.checked = false;
+    //         radio.dataset.wasChecked = "false";
 
-            // Still show the div
-            $('#divgoals').hide();
-            $("#divWC").show();
-             $("#divMMcase").show();
+    //         // Still show the div
+    //         $('#divgoals').hide();
+    //         $("#divWC").show();
+    //          $("#divMMcase").show();
                       
-    //                         if (data.Complaints) {
-    //         var complaints = data.Complaints.join(",");
+    // //                         if (data.Complaints) {
+    // //         var complaints = data.Complaints.join(",");
 
-    // $("#hdComplaints").val(complaints);
-    // $("#MMDescription").val(data.Complaints.join(", "));
-    // }
+    // // $("#hdComplaints").val(complaints);
+    // // $("#MMDescription").val(data.Complaints.join(", "));
+    // // }
 
-                    }
-        }
+    //                 }
+    //     }
     
             function bindForm(val) {
                 // var cleaned = val
