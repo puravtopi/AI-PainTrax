@@ -1094,9 +1094,25 @@ namespace PainTrax.Web.Controllers
 
                             var ie = _ieService.Insert(objIE);
 
+                            string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
+                            var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
+                            if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
+                            {
+                                peContent = this.GetPE(model);
+                                dtrContent = this.GetDTR(model);
+                                sensoryContent = this.GetSensory(model);
+                                mmstContent = this.GetMMST(model);
+                                ccContent = this.GetBHFCC(model);
+                            }
+                            else
+                            {
+                                ccContent = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model);
+                                //ccContent = this.GetBHFCC(model);
+                            }
+
                             if (ie > 0)
                             {
-                                var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
+                              
                                 string history = "";
                                 if (defaultPage1 != null)
                                 {
@@ -1118,28 +1134,14 @@ namespace PainTrax.Web.Controllers
                                 string assessment = defaultPage1.daignosis_desc == null ? "" : defaultPage1.daignosis_desc;
                                 assessment = assessment.Replace("#sex", model.Gender);
 
-                                string vital = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
+                                string vital = "";
 
                                 if (!string.IsNullOrEmpty(model.Height) && !string.IsNullOrEmpty(model.Weight))
                                 {
                                     vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.";
                                 }
 
-                                var ccContent = "";
-
-                                //if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
-                                //{
-                                    peContent = this.GetPE(model);
-                                    dtrContent = this.GetDTR(model);
-                                    sensoryContent = this.GetSensory(model);
-                                    mmstContent = this.GetMMST(model);
-                                    ccContent = this.GetBHFCC(model);
-                                //}
-                                //else
-                                //{
-                                //    ccContent = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model);
-                                //    //ccContent = this.GetBHFCC(model);
-                                //}
+                               
 
                                 var objPage1 = new tbl_ie_page1()
                                 {
