@@ -1,6 +1,11 @@
 ﻿<!-- Chief Complaint -->
 
+<div id="divMMcase" style="display:none;">
+    The patient presents with complaints of pain in the
+    <input type="text" id="MMDescription" name="MMDescription" class="form-control d-inline w-auto" />
+    @* <textarea id="MMDescription" name="MMDescription" class="form-control d-inline" style="width:95%"></textarea> *@
 
+</div>
 <div id="divNF" style="display:none;">
     <!-- Paragraph Description -->
     <div class="select-group">
@@ -59,7 +64,7 @@
 
 
 </div>
-<div class="accident-impact-section mmClass">
+<div class="accident-impact-section">
 
     <div class="select-group ">
         <strong>At the time of the accident, did you have direct impact on any body part?</strong>
@@ -95,11 +100,11 @@
             <input type="radio" class="chkMulti" name="HeadInjury" value="No">
             <span class="select-btn">No</span>
         </label>
-
+        <label><input type="checkbox" class="chkMulti" name="Headache" value="Headache"> <span class="select-btn">Headache</span> </label>
 
         &nbsp;&nbsp;&nbsp;
         <p id="divHeadache" style="display:none">
-            <label><input type="checkbox" class="chkMulti" name="Headache" value="Headache"> <span class="select-btn">Headache</span> </label>
+           @*  <label><input type="checkbox" class="chkMulti" name="Headache" value="Headache"> <span class="select-btn">Headache</span> </label> *@
 
             Headaches are           
             <label><input type="checkbox" class="chkMulti" name="Headachesare" value="Frontal"> <span class="select-btn">Frontal</span> </label>
@@ -107,6 +112,39 @@
             <label><input type="checkbox" class="chkMulti" name="Headachesare" value="Temporal"> <span class="select-btn">Temporal</span></label>
             <label><input type="checkbox" class="chkMulti" name="Headachesare" value="Occipital">  <span class="select-btn">Occipital</span></label>
             <label><input type="checkbox" class="chkMulti" name="Headachesare" value="Global">  <span class="select-btn">Global</span></label>
+            <input type="text" id="txtheadache" name="txtheadache" class="form-control d-inline w-auto" />
+        </p>
+    </div>
+    <div class="select-group">
+        The airbags did deploy
+        <label>
+            <input type="radio" class="chkMulti" name="Airbags" value="Yes">
+            <span class="select-btn">Yes</span>
+        </label>
+
+        <label>
+            <input type="radio" class="chkMulti" name="Airbags" value="No">
+            <span class="select-btn">No</span>
+        </label>
+        <p id="divAirbags" style="display:none">
+           
+            <input id="txtAirbags" name="txtAirbags" class="form-control d-inline" style="width:250px" />
+        </p>
+    </div>
+    <div class="select-group">
+        The patient had whiplash
+        <label>
+            <input type="radio" class="chkMulti" name="whiplash" value="Yes">
+            <span class="select-btn">Yes</span>
+        </label>
+
+        <label>
+            <input type="radio" class="chkMulti" name="whiplash" value="No">
+            <span class="select-btn">No</span>
+        </label>
+        <p id="divwhiplash" style="display:none">
+
+            <input id="txtwhiplash" name="txtwhiplash" class="form-control d-inline" style="width:250px" />
         </p>
     </div>
     <div class="select-group ">
@@ -135,7 +173,7 @@
     </div>
 
 </div>
-<div class="select-group mmClass">
+<div class="select-group">
     EMS arrived:
     <label>
         <input type="radio" class="chkMulti" name="EMS" value="Yes">
@@ -148,7 +186,7 @@
     </label>
 
 </div>
-<div class="select-group mmClass">
+<div class="select-group">
     Went to hospital?
     <label>
         <input type="radio" class="chkMulti" name="Hospital" value="Yes">
@@ -196,7 +234,7 @@
         </label>
         <input id="TransportOther" name="TransportOther" class="form-control d-inline w-50" />
 
-        <div class="select-group mmClass">
+        <div class="select-group">
             Did you go on the same day?
             <label>
                 <input type="radio" class="chkMulti" name="SameDay" value="Yes">
@@ -212,7 +250,7 @@
                 <input id="DaysLater" name="DaysLater" class="form-control d-inline w-25" />
             </p>
         </div>
-        <div class="select-group mmClass">
+        <div class="select-group">
             In the hospital, Did they do any tests?
             <label>
                 <input type="radio" class="chkMulti" name="IsHospitalTest" value="Yes">
@@ -242,7 +280,7 @@
                 <input type="text" id="HospitalTestOther" name="HospitalTestOther" class="form-control d-inline w-auto" />
             </p>
         </div>
-        <div class="select-group mmClass">
+        <div class="select-group">
             Were you prescribed any medication?
             <label>
                 <input type="radio" class="chkMulti" name="IsHospitalMedication" value="Yes">
@@ -260,7 +298,7 @@
         </div>
     </div>
 </div>
-<div class="select-group mmClass">
+<div class="select-group">
     Have you been involved in an accident in the past?
     <label>
         <input type="radio" class="chkMulti" name="IsAccidentPast" value="Yes">
@@ -434,6 +472,10 @@
     Alcohol:
     <label><input type="radio" class="chkMulti" name="Alcohol" value="Yes"><span class="select-btn">Yes</span></label>
     <label><input type="radio" class="chkMulti" name="Alcohol" value="No"><span class="select-btn">No</span></label>
+    <span id="divAlcohol" style="display:none">
+        <input id="txtAlcohol" class="form-control d-inline" style="width:150px" /> PPD.
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i> *@
+    </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Drugs:
     <label><input type="radio" class="chkMulti" name="OtherDrugs" value="Yes"><span class="select-btn">Yes</span></label>
