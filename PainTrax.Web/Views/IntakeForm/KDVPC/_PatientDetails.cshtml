@@ -139,9 +139,10 @@
 
     % temporarily disabled
 </div>
-@* <br />
+<br />
 <div id="divWC" style="display:none;" class="select-group">
-    <label><input type="radio" style="width:90%" class="chkMulti" name="shortandlonggoal" value="Goals" onclick="uncheckRadiopatient(this)">  <span class="select-btn">Goals</span></label>
+    <label><input type="checkbox" class="chkMulti" name="shortandlonggoal" value="Goals"> <span class="select-btn">Goals</span></label>
+   @*  <label><input type="radio" style="width:90%" class="chkMulti" name="shortandlonggoal" value="Goals" onclick="uncheckRadiopatient(this)">  <span class="select-btn">Goals</span></label> *@
     <div id="divgoals" style="display:none;width:90%">
         <textarea id="OtherGoals" name="OtherGoals" class="form-control d-inline" style="width:95%;height:150px;">
         Short term goals: Decrease/eliminate pain; improve overall muscle strength 5/5; educate patient on Home Exercise Program (HEP); improve ROM by 10 degrees.        
@@ -150,25 +151,10 @@
         </textarea>
         
     </div>
-</div> *@
-
-
-@* <div class="select-group">
-    <label><input type="radio" style="width:90%"class="chkMulti" name="shortgoal" value="Short term goals">  <span class="select-btn">Short term goals</span></label>
-    <div id="divgoals" style="display:none;width:90%">
-
-        <input id="shortterm" class="form-control d-inline" style="width:100%"  value="Decrease/eliminate pain; improve overall muscle strength 5/5; educate patient on Home Exercise Program (HEP); improve ROM by 10 degrees."/>
-    </div>
 </div>
-<div class="select-group">
-    <label><input type="radio" class="chkMulti" name="shortgoal" value="long term goals">  <span class="select-btn">long term goals</span></label>
-    
-    <div id="divgoalslongterm" style="display:none;width:90%">
 
-        <input id="longterm"  class="form-control d-inline" style="width:100%" value="Decrease/eliminate pain; prevent further complications; regain the highest functional level capable of the patient; perform the following Activities of Daily Living with minimal to no difficulty: Engaging in sports and recreational activities." class="form-control d-inline" style="min-width:90%;" />
-    </div>
 
-</div> *@
+
 <div id="divWC1" style="display:none;">
    
         Occupation:
@@ -417,70 +403,7 @@
             return '';
         }
        
-    // // // function uncheckRadio(radio) {
-    // // //     if (radio.dataset.wasChecked === "true") {
-    // // //         radio.checked = false;
-
-    // // //         radio.dataset.wasChecked = "false";
-    // // //         $('#divgoals').show();
-    // // //     } else {
-    // // //         document.querySelectorAll(`input[name="${radio.name}"]`)
-    // // //             .forEach(r => r.dataset.wasChecked = "false");
-
-    // // //         radio.dataset.wasChecked = "true";
-    // // //         $('#divgoals').show();
-    // // //     }
-    // // // }
-    //     function uncheckRadiopatient(radio) {
-    //          if (radio.dataset.wasChecked === "true") {
-
-    //     // Uncheck
-    //     radio.checked = false;
-    //     radio.dataset.wasChecked = "false";
-
-    //     // Hide only when user manually unchecks
-    //     $('#divgoals').hide();
-
-    // } else {
-
-    //     // Check
-    //     document.querySelectorAll(`input[name="${radio.name}"]`)
-    //         .forEach(function (r) {
-    //             r.dataset.wasChecked = "false";
-    //         });
-
-    //     radio.checked = true;
-    //     radio.dataset.wasChecked = "true";
-
-    //     // Show
-    //     $('#divgoals').show();
-    // }
-
-        // if (radio.dataset.wasChecked === "true") {
-
-        //     // Uncheck
-        //     radio.checked = false;
-        //     radio.dataset.wasChecked = "false";
-
-        //     // Hide goals
-        //     $('#divgoals').hide();
-
-        // } else {
-
-        //     // Uncheck other radios
-        //     document.querySelectorAll(`input[name="${radio.name}"]`)
-        //         .forEach(r => {
-        //             r.dataset.wasChecked = "false";
-        //         });
-
-        //     // Check this radio
-        //     radio.checked = true;
-        //     radio.dataset.wasChecked = "true";
-
-        //     // Show goals
-        //     $('#divgoals').show();
-        // }
-    }
+    
 
             
 </script>

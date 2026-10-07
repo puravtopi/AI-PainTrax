@@ -484,7 +484,8 @@
                var LEBodyPart = '@ViewBag.LEBodyPart';
 
             var docTemplate = null;
-            var formData = null;
+            // var formData = null;
+            var formData = {};
             // Path to your saved template file (relative to this HTML file).
             // (The DOCX is stored alongside this page.)
             var templateUrlDocx = '@ViewBag.TemplateDOCURL';
@@ -807,7 +808,7 @@
 
                 $('#patientForm').find('input, select, textarea').each(function () {
                     var key = $(this).attr('name') || $(this).attr('id');
-                    var cls = $(this).attr('class');
+                    // var cls = $(this).attr('class');
                     if (!key) return;
 
                     var type = $(this).attr('type');
@@ -817,26 +818,44 @@
                             values[key] = $(this).val();
                         }
                     }
-                    else if (type === 'checkbox') {
+                        else if (type === 'checkbox') {
 
-                        // 🔹 Special handling for Complaints (multi-checkbox)
-                        if (cls === "chkMulti") {
-                            if (!values[key]) values[key] = [];
-                            if ($(this).is(':checked')) {
-                                values[key].push($(this).val());
-                            }
-                        }
-                        else {
-                            // normal checkbox (true/false)
-                            values[key] = $(this).is(':checked');
-                        }
-                    }
+        if ($(this).hasClass("chkMulti")) {
+
+            if (!Array.isArray(values[key])) {
+                values[key] = [];
+            }
+
+            if ($(this).is(':checked')) {
+                values[key].push($(this).val());
+            }
+
+        } else {
+
+            values[key] = $(this).is(':checked');
+        }
+    }
+                    // else if (type === 'checkbox') {
+
+                    //     // 🔹 Special handling for Complaints (multi-checkbox)
+                    //     if (cls === "chkMulti") {
+                    //         if (!values[key]) values[key] = [];
+                    //         if ($(this).is(':checked')) {
+                    //             values[key].push($(this).val());
+                    //         }
+                    //     }
+                    //     else {
+                    //         // normal checkbox (true/false)
+                    //         values[key] = $(this).is(':checked');
+                    //     }
+                    // }
                     else {
                         values[key] = $(this).val() || "";
                     }
                 });
 
                values["Id"]= $("#hdId").val();
+               values["LocationId"]
 
                 var today = new Date();
 
@@ -925,7 +944,7 @@
 
                    $(".mmClass").show();
                    if (data.InjuryType === "WC") {
-                        // $("#divWC").show();
+                        $("#divWC").show();
                         $("#divWC1").show();
                         $("#divNF").hide();
                         $("#divPI").hide();
@@ -937,14 +956,14 @@
                         // Keep MVA, remove WC
                         html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
                         html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
-                        // $("#divWC").hide();
+                        $("#divWC").hide();
                         $("#divWC1").hide();
                         $("#divNF").show();
 
                     }
                     else if (data.InjuryType === "MM") {
                         $("#divMMcase").show();
-                       // $("#divWC").hide();
+                       $("#divWC").hide();
                         $("#divWC1").hide();
                         $(".mmClass").hide();
                             if (data.Complaints) {
@@ -969,28 +988,33 @@
             }
 
                 function saveForm(isSubmit) {
+     
 
                 const intake_type = @Json.Serialize(ViewBag.IntakeType);
 
-                        var valid=formValidation();
+    var valid = formValidation();
 
-                        if(!valid)
-            return false;
+    if (!valid)
+        return false;
 
+    $('#pdfLoader').show();
 
-        $('#pdfLoader').show();
-         try{
-        // Assign form values
+    try {
 
-          // 2. Automatically loop through ALL textareas and add them to formData
-    $('textarea').each(function() {
+        if (!formData || typeof formData !== "object") {
+            formData = {};
+        }
+         // Collect all current form values
+    updatePreview();
+
+    // Your existing textarea code
+    $('textarea').each(function () {
         var id = $(this).attr('id') || $(this).attr('name');
+
         if (id) {
             formData[id] = $(this).val();
         }
     });
-
-
         formData["Diagnosis"] = $("#divDiagnosis").html();
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
@@ -998,8 +1022,7 @@
 
         formData["ProviderId"] = $("#ProviderId").val();
         formData["PatientIEId"] = $("#PatientIEId").val();
-        //formData["PatientId"] = $("#PatientId").val();
-        //formData["LocationId"] = $("#LocationId").val();
+       
 
         // URLs
         var url = '@Url.Action("SaveForm", "IntakeForm")';
@@ -1040,7 +1063,9 @@
                                         window.location.href =
                                             '@Url.Action("AIInitialIntake", "IntakeForm")' +
                                             '?id=' + response.id +
-                                            '&locid=' + locId +
+                                            //'&locid=' + locId +
+                                            '&locid=' + response.locid +
+                                            
                                             '&providerId=' + provId +
                                             '&patientId=' + response.patientid +
                                             '&type=' + intake_type;
@@ -1187,27 +1212,25 @@
                 if ('@ViewBag.FormData' != '') {
                    bindForm('@ViewBag.FormData');
                 }
+                 var injuryType = $('input[name="InjuryType"]:checked').val();
 
+    if (injuryType === "WC") {
+    $("#divWC").show();
+        // Check Goals radio
+        $('input[name="shortandlonggoal"][value="Goals"]')
+            .prop('checked', true);
 
-                // Set Goals based on Injury Type
-    //setGoalsByInjuryType();
-    //             var injuryType = $('input[name="InjuryType"]:checked').val();
+        // Show Goals div
+        $('#divgoals').show();
 
-    // if (injuryType === "WC") {
-    //     $("#divWC").show();
-    //     // Check Goals radio
-    //     $('input[name="shortandlonggoal"][value="Goals"]')
-    //         .prop('checked', true);
+    }
+    else {
 
-    //     // Show Goals div
-    //     $('#divgoals').show();
-         
-    // }
-    // else {
+        // Hide Goals div
+        $("#divWC").show();
+        $('#divgoals').hide();
+    }
 
-    //     // Hide Goals div
-    //     $('#divgoals').hide();
-    // }
                 $('#patientForm').on('submit', function (e) {
 
                     if(!checkValidation())
@@ -1315,10 +1338,60 @@
                          $("#MMDescription").val(result);
                 });
 
+    //              var injuryType = $('input[name="InjuryType"]:checked').val();
+
+    // if (injuryType === "WC") {
+
+    //     // Currently Working
+    //     if (!$('input[name="IsWorking"]:checked').length) {
+    //         alert("Please select Work Status.");
+    //         $('input[name="IsWorking"]').first().focus();
+    //         return false;
+    //     }
 
                     $(document).on('change', 'input[name="InjuryType"]', function () {
-        //setGoalsByInjuryType();
+                         var injuryType = $('input[name="InjuryType"]:checked').val();
+                         if (injuryType === "WC") {
+        $("#divWC").show();
+        // Check Goals radio
+        $('input[name="shortandlonggoal"][value="Goals"]')
+            .prop('checked', true);
+
+        // Show Goals div
+        $('#divgoals').show();
+
+    }
+    else {
+
+        // Hide Goals div
+        $("#divWC").show();
+        $('input[name="shortandlonggoal"][value="Goals"]')
+            .prop('checked', false);
+        $('#divgoals').hide();
+    } 
         $("#divMMcase").show();
+    });
+    //     $(document).on("change", 'input[name="shortandlonggoal"]', function () {
+
+    //     if ($(this).is(":checked")) {
+    //         $("#divgoals").show();
+    //     } else {
+    //         $("#divgoals").hide();
+    //     }
+
+    // });
+        $(document).on("change", 'input[name="shortandlonggoal"]', function () {
+
+        // Always show divWC
+        $("#divWC").show();
+
+        // Show/hide divgoals based on checkbox
+        if ($(this).is(":checked")) {
+            $("#divgoals").show();
+        } else {
+            $("#divgoals").hide();
+        }
+
     });
         $(document).on('change', 'input[name="NeckRadiates"]', function () {
 
@@ -1376,44 +1449,7 @@
                 $('body').append(form);
                 form.submit();
             }
-    //             function setGoalsByInjuryType() {
-
-    //     var injuryType = $('input[name="InjuryType"]:checked').val();
-
-    //     var radio = $('input[name="shortandlonggoal"][value="Goals"]')[0];
-
-    //     if (!radio) return;
-
-    //     if (injuryType === "WC") {
-
-    //         // WC -> checked
-    //         radio.checked = true;
-    //         radio.dataset.wasChecked = "true";
-
-    //         // Show
-    //         $('#divgoals').show();
-    //         $("#divWC").show();
-
-    //     } else {
-
-    //         // Other injury types -> unchecked
-    //         radio.checked = false;
-    //         radio.dataset.wasChecked = "false";
-
-    //         // Still show the div
-    //         $('#divgoals').hide();
-    //         $("#divWC").show();
-    //          $("#divMMcase").show();
-                      
-    // //                         if (data.Complaints) {
-    // //         var complaints = data.Complaints.join(",");
-
-    // // $("#hdComplaints").val(complaints);
-    // // $("#MMDescription").val(data.Complaints.join(", "));
-    // // }
-
-    //                 }
-    //     }
+    
     
             function bindForm(val) {
                 // var cleaned = val
@@ -1425,7 +1461,7 @@
                 //
                 var decoded = decodeHtml(val);
                 var data = safeParse(decoded);
-                var data = safeParse(val);
+                // var data = safeParse(val);
 
 
                $('#patientForm').find('input, select, textarea').each(function () {
