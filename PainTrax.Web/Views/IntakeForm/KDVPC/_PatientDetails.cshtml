@@ -45,6 +45,10 @@
 
     DOA:
     <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" required class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
+
+
+    <select id="AccidentType" name="AccidentType" class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
+
 </p>
 <div class="select-group">
     <strong>Case Type:</strong>
@@ -71,10 +75,11 @@
         <input type="radio" name="InjuryType" value="LIEN">
         <span class="select-btn">LIEN</span>
     </label>
-    <p>
-        <select id="AccidentType"  class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
-    </p>
+    
 </div>
+
+    
+
 <div class="select-group">
     <b> Chief complaint:</b>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" />  <span class="select-btn">Neck</span></label>
@@ -134,7 +139,7 @@
 
     % temporarily disabled
 </div>
-<br />
+@* <br />
 <div id="divWC" style="display:none;" class="select-group">
     <label><input type="radio" style="width:90%" class="chkMulti" name="shortandlonggoal" value="Goals" onclick="uncheckRadiopatient(this)">  <span class="select-btn">Goals</span></label>
     <div id="divgoals" style="display:none;width:90%">
@@ -145,7 +150,7 @@
         </textarea>
         
     </div>
-</div>
+</div> *@
 
 
 @* <div class="select-group">
@@ -426,30 +431,30 @@
     // // //         $('#divgoals').show();
     // // //     }
     // // // }
-        function uncheckRadiopatient(radio) {
-             if (radio.dataset.wasChecked === "true") {
+    //     function uncheckRadiopatient(radio) {
+    //          if (radio.dataset.wasChecked === "true") {
 
-        // Uncheck
-        radio.checked = false;
-        radio.dataset.wasChecked = "false";
+    //     // Uncheck
+    //     radio.checked = false;
+    //     radio.dataset.wasChecked = "false";
 
-        // Hide only when user manually unchecks
-        $('#divgoals').hide();
+    //     // Hide only when user manually unchecks
+    //     $('#divgoals').hide();
 
-    } else {
+    // } else {
 
-        // Check
-        document.querySelectorAll(`input[name="${radio.name}"]`)
-            .forEach(function (r) {
-                r.dataset.wasChecked = "false";
-            });
+    //     // Check
+    //     document.querySelectorAll(`input[name="${radio.name}"]`)
+    //         .forEach(function (r) {
+    //             r.dataset.wasChecked = "false";
+    //         });
 
-        radio.checked = true;
-        radio.dataset.wasChecked = "true";
+    //     radio.checked = true;
+    //     radio.dataset.wasChecked = "true";
 
-        // Show
-        $('#divgoals').show();
-    }
+    //     // Show
+    //     $('#divgoals').show();
+    // }
 
         // if (radio.dataset.wasChecked === "true") {
 
