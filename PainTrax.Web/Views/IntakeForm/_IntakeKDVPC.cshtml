@@ -72,6 +72,7 @@
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
                         <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
                         <input type="hidden" id="TreatmentDelimitDesc" name="TreatmentDelimitDesc" />
+                        <input type="hidden" id="hdComplaints" name="Complaints" />
                         <h4 class="text-center mb-4 fw-bold">
                             @(ViewBag.IntakeType?.ToString() != "p" ? "Initial Intake" : "Patient Details Form")
                         </h4>
@@ -907,8 +908,14 @@
                     toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
                     toggleSection(data.PT === "Yes", "#divPT");
                     toggleSection(data.Chiro === "Yes", "#divChiro");
-                    toggleSection(data.shortgoal === "Short term goals", "#divgoals");
-                    toggleSection(data.shortgoal === "long term goals", "#divgoalslongterm");
+                    toggleSection(data.Alcohol === "Yes", "#divAlcohol");
+                    
+                    
+                    toggleSection(data.shortandlonggoal === "Goals", "#divgoals");
+                    // toggleSection(data.shortgoal === "Short term goals", "#divgoals");
+                    // toggleSection(data.shortgoal === "long term goals", "#divgoalslongterm");
+                    toggleSection(data.Airbags === "Yes", "#divAirbags");
+                    toggleSection(data.whiplash === "Yes", "#divwhiplash");
 
                     if(data.PreInjury==="No")
                         $("#preInjuryDetailsBox").show();
@@ -936,10 +943,16 @@
 
                     }
                     else if (data.InjuryType === "MM") {
-                        // $("#divNF").hide();
-                        // $("#divMM").hide();
-                        // $("#divWC1").hide();
+                        $("#divMMcase").show();
+                       $("#divWC").hide();
+                        $("#divWC1").hide();
                         $(".mmClass").hide();
+                            if (data.Complaints) {
+            var complaints = data.Complaints.join(",");
+
+    $("#hdComplaints").val(complaints);
+    $("#MMDescription").val(data.Complaints.join(", "));
+    }
 
                     }
                                        else {
@@ -1175,6 +1188,26 @@
                    bindForm('@ViewBag.FormData');
                 }
 
+
+                // Set Goals based on Injury Type
+    setGoalsByInjuryType();
+    //             var injuryType = $('input[name="InjuryType"]:checked').val();
+
+    // if (injuryType === "WC") {
+    //     $("#divWC").show();
+    //     // Check Goals radio
+    //     $('input[name="shortandlonggoal"][value="Goals"]')
+    //         .prop('checked', true);
+
+    //     // Show Goals div
+    //     $('#divgoals').show();
+         
+    // }
+    // else {
+
+    //     // Hide Goals div
+    //     $('#divgoals').hide();
+    // }
                 $('#patientForm').on('submit', function (e) {
 
                     if(!checkValidation())
@@ -1277,11 +1310,15 @@
                         var result = selected.join(', ');
 
                         console.log(result);
-
+                        var result = selected.join(', ');
                         $('#BodyPart').val(result);
+                         $("#MMDescription").val(result);
                 });
 
 
+                    $(document).on('change', 'input[name="InjuryType"]', function () {
+        setGoalsByInjuryType();
+    });
         $(document).on('change', 'input[name="NeckRadiates"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
@@ -1338,7 +1375,45 @@
                 $('body').append(form);
                 form.submit();
             }
+                function setGoalsByInjuryType() {
 
+        var injuryType = $('input[name="InjuryType"]:checked').val();
+
+        var radio = $('input[name="shortandlonggoal"][value="Goals"]')[0];
+
+        if (!radio) return;
+
+        if (injuryType === "WC") {
+
+            // WC -> checked
+            radio.checked = true;
+            radio.dataset.wasChecked = "true";
+
+            // Show
+            $('#divgoals').show();
+            $("#divWC").show();
+
+        } else {
+
+            // Other injury types -> unchecked
+            radio.checked = false;
+            radio.dataset.wasChecked = "false";
+
+            // Still show the div
+            $('#divgoals').hide();
+            $("#divWC").show();
+             $("#divMMcase").show();
+                      
+    //                         if (data.Complaints) {
+    //         var complaints = data.Complaints.join(",");
+
+    // $("#hdComplaints").val(complaints);
+    // $("#MMDescription").val(data.Complaints.join(", "));
+    // }
+
+                    }
+        }
+    
             function bindForm(val) {
                 // var cleaned = val
                 //     .replace(/&quot;/g, '"')   // decode HTML quotes
