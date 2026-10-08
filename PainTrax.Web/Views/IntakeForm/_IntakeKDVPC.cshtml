@@ -920,7 +920,7 @@
                     toggleSection(data.SameDay === "No", "#divSameDay");
                     toggleSection(data.DirectImpact === "Yes", "#divBodyImpact");
                     toggleSection(data.LoseConsciousness === "Yes", "#divLoseConsciousness");
-                    toggleSection(data.HeadInjury === "Yes", "#divHeadache");
+                    // toggleSection(data.HeadInjury === "Yes", "#divHeadache");
                     toggleSection(data.Hospital === "Yes", "#divHospital");
                     toggleSection(data.Allergy === "Yes", "#divAllergy");
                     toggleSection(data.Smoke === "Yes", "#divSmoke");
@@ -942,12 +942,14 @@
                         $("#preInjuryDetailsBox").hide();
 
 
-                   $(".mmClass").show();
+                   // $(".mmClass").show();
                    if (data.InjuryType === "WC") {
-                        $("#divWC").show();
+                        // $("#divWC").show();
                         $("#divWC1").show();
                         $("#divNF").hide();
                         $("#divPI").hide();
+                         $("#divMMcase").hide();
+                         $("#divAccident").show();
                         html = html.replace('[WC_START]', '').replace('[WC_END]', '');
                         html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
                     }
@@ -956,16 +958,18 @@
                         // Keep MVA, remove WC
                         html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
                         html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
-                        $("#divWC").hide();
+                        // $("#divWC").hide();
                         $("#divWC1").hide();
                         $("#divNF").show();
+                         $("#divMMcase").hide();
+                         $("#divAccident").show();
 
                     }
                     else if (data.InjuryType === "MM") {
                         $("#divMMcase").show();
-                       $("#divWC").hide();
+                       // $("#divWC").hide();
                         $("#divWC1").hide();
-                        $(".mmClass").hide();
+                        $("#divAccident").hide();
                             if (data.Complaints) {
             var complaints = data.Complaints.join(",");
 
@@ -1224,6 +1228,10 @@
         $('#divgoals').show();
 
     }
+    else if (injuryType === "MM")
+    {
+        $("#divMMcase").show();
+    }
     else {
 
         // Hide Goals div
@@ -1351,26 +1359,26 @@
 
                     $(document).on('change', 'input[name="InjuryType"]', function () {
                          var injuryType = $('input[name="InjuryType"]:checked').val();
-                         if (injuryType === "WC") {
-        $("#divWC").show();
-        // Check Goals radio
-        $('input[name="shortandlonggoal"][value="Goals"]')
-            .prop('checked', true);
+                          if (injuryType === "WC") {
+                        $("#divWC").show();
+                        // Check Goals radio
+                       $('input[name="shortandlonggoal"][value="Goals"]')
+                        .prop('checked', true);
 
-        // Show Goals div
-        $('#divgoals').show();
+                      // Show Goals div
+                        $('#divgoals').show();
 
-    }
+                    }
     else {
 
-        // Hide Goals div
-        $("#divWC").show();
+                       // Hide Goals div
+                        $("#divWC").show();
         $('input[name="shortandlonggoal"][value="Goals"]')
-            .prop('checked', false);
-        $('#divgoals').hide();
-    } 
-        $("#divMMcase").show();
-    });
+                         .prop('checked', false);
+                        $('#divgoals').hide();
+                    }
+                        // $("#divMMcase").show();
+                     });
     //     $(document).on("change", 'input[name="shortandlonggoal"]', function () {
 
     //     if ($(this).is(":checked")) {
@@ -1399,6 +1407,19 @@
         if ($('input[name="NeckRadiates"]:checked').length === 0) {
             // Clear the Left/Right/Bilateral radio buttons
             $('input[name="NeckRadiatesTo"]').prop('checked', false);
+        }
+
+    });
+        $(document).on("change", 'input[name="Headache"]', function () {
+
+        if ($(this).is(":checked")) {
+            $("#divHeadache").show();
+        } else {
+            $("#divHeadache").hide();
+
+            // Optional: clear the selections inside divHeadache
+            $("#divHeadache input[type='checkbox']").prop("checked", false);
+            $("#txtheadache").val("");
         }
 
     });
