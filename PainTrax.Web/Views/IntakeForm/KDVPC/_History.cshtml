@@ -2,7 +2,7 @@
 
 <div id="divMMcase" style="display:none;">
     The patient presents with complaints of pain in the
-    <input type="text" id="MMDescription" name="MMDescription" class="form-control d-inline w-auto" />
+    <input type="text" id="MMDescription" name="MMDescription" class="form-control d-inline" style="width:50%;" />
     @* <textarea id="MMDescription" name="MMDescription" class="form-control d-inline" style="width:95%"></textarea> *@
 
 </div>
@@ -46,10 +46,10 @@
 </div> *@
 <p>
     Please describe
-    <textarea id="NFDescription" name="MMDescription" class="form-control d-inline" style="width:95%"></textarea>
+    <textarea id="NFDescription" name="NFDescription" class="form-control d-inline" style="width:95%"></textarea>
     <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NFDescription')"></i>
 </p>
-<div id="divWC" style="display:none;">
+<div id="divW" style="display:none;">
     <!-- Paragraph Description -->
     <div class="select-group">
         The patient states
@@ -64,7 +64,7 @@
 
 
 </div>
-<div class="accident-impact-section" mmClass>
+<div id="divAccident" style="display:none;">
 
     <div class="select-group" mmClass>
         <strong>At the time of the accident, did you have direct impact on any body part?</strong>
@@ -172,7 +172,7 @@
         </p>
     </div>
 
-</div>
+
 <div class="select-group" mmClass>
     EMS arrived:
     <label>
@@ -186,7 +186,7 @@
     </label>
 
 </div>
-<div class="select-group">
+<div class="select-group" mmClass>
     Went to hospital?
     <label>
         <input type="radio" class="chkMulti" name="Hospital" value="Yes">
@@ -297,6 +297,7 @@
             </p>
         </div>
     </div>
+</div>
 </div>
 <div class="select-group">
     Have you been involved in an accident in the past?
