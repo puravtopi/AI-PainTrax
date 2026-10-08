@@ -66,7 +66,8 @@
                         <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
                         <input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
-                        <input type="hidden" id="hdIEId" name="hdIEId" />
+                        <input type="hidden" id="hdIEId" name="hdIEId" value="@ViewBag.IEId" />
+                        <input type="hidden" id="PatientIEId" name="PatientIEId" value="@ViewBag.IEId" />
                         <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
                         <input type="hidden" id="Diagnosis" name="Diagnosis" />
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
@@ -263,6 +264,22 @@
                                 </div>
                                 @if (ViewBag.IntakeType != "p")
                                 {
+                                    @if (ViewBag.IEId > 0)
+                                    {
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingPOC">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePOC" aria-expanded="false" aria-controls="collapseADL">
+                                                    POC
+                                                </button>
+                                            </h2>
+                                            <div id="collapsePOC" class="accordion-collapse collapse" aria-labelledby="headingADL" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <div id="divPOC">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingNote">
                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNote" aria-expanded="false" aria-controls="collapseNote">
@@ -1068,7 +1085,8 @@
                                             
                                             '&providerId=' + provId +
                                             '&patientId=' + response.patientid +
-                                            '&type=' + intake_type;
+                                            '&type=' + intake_type+
+                                            '&ie_id=' + response.ieid;
                                     }
                                 });
 
@@ -1078,7 +1096,8 @@
                                 '?id=' + response.id +
                                 '&locid=' + locId+
                                 '&providerId=' + provId +
-                                '&patientId=' + response.patientid;
+                                '&patientId=' + response.patientid+
+                                '&type=A&ie_id=' + response.ieid;
                             }
                             $('#pdfLoader').hide();
 
@@ -1506,8 +1525,9 @@
 
                $("#hdId").val('@ViewBag.Id');
                $("#PatientId").val('@ViewBag.PatientId');
-
-
+               $("#hdIEId").val('@ViewBag.IEId');
+               $("#PatientIEId").val('@ViewBag.IEId');
+               fnShowPOC();
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
                     //updatePreview();
@@ -2008,6 +2028,23 @@
                  });
 
          }
+
+          function fnShowPOC() {
+        url = '@Url.Action("GetPOC", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPOC").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
 </script>
 
 <!-- html2pdf library -->
