@@ -191,7 +191,8 @@ public class PatientIEService : ParentService
 		doe=@doe,
 		doa=@doa,
         provider_id=@provider_id,
-	    compensation=@compensation
+	    compensation=@compensation,
+        location_id=@location_id
 			where intakeid=@intakeid", conn);
         cm.Parameters.AddWithValue("@intakeid", data.intakeid);
        
@@ -199,7 +200,8 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@doa", data.doa);
         cm.Parameters.AddWithValue("@provider_id", data.provider_id);
         cm.Parameters.AddWithValue("@compensation", data.compensation);
-      
+        cm.Parameters.AddWithValue("@location_id", data.location_id);
+
         Execute(cm);
     }
     public void UpdateFromIntakeFU(tbl_patient_ie data)
