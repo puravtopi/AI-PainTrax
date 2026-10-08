@@ -461,13 +461,30 @@ poc_assesment=@poc_assesment
     {
         MySqlCommand cm = new MySqlCommand(@"update tbl_ie_page1 set
 		
-        bodypart=@bodypart
+        bodypart=@bodypart,cc=@cc,pe=@pe
         where ie_id=(SELECT ie.id FROM tbl_patient_ie ie WHERE ie.IntakeId=@id )
 				 ;select 1;", conn);
         
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@bodypart", data.bodypart);
+        cm.Parameters.AddWithValue("@cc", data.cc);
+        cm.Parameters.AddWithValue("@pe", data.pe);
         
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+
+    public int UpdateNEIntake(tbl_ie_ne data)
+    {
+    
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("CALL sp_SaveIntakeNEData(@p_ie_id,@p_sensory,@p_manual_muscle_strength_testing,@p_other_content) ", conn);
+
+
+        cm.Parameters.AddWithValue("@p_sensory", data.sensory);
+        cm.Parameters.AddWithValue("@p_other_content", data.other_content);
+        cm.Parameters.AddWithValue("@p_manual_muscle_strength_testing", data.manual_muscle_strength_testing);
+        cm.Parameters.AddWithValue("@p_ie_id", data.ie_id);
         var result = ExecuteScalar(cm);
         return result;
     }

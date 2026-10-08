@@ -1043,6 +1043,23 @@ namespace PainTrax.Web.Controllers
                     InjuryType = model.InjuryType;
 
 
+
+                string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
+                var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
+                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
+                {
+                    peContent = this.GetPE(model);
+                    dtrContent = this.GetDTR(model);
+                    sensoryContent = this.GetSensory(model);
+                    mmstContent = this.GetMMST(model);
+                    ccContent = this.GetBHFCC(model);
+                }
+                else
+                {
+                    ccContent = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model);
+                    //ccContent = this.GetBHFCC(model);
+                }
+
                 if (initialIntakeAI.Id == 0)
                 {
                     if (result != "0")
@@ -1094,21 +1111,7 @@ namespace PainTrax.Web.Controllers
 
                             var ie = _ieService.Insert(objIE);
 
-                            string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
-                            var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
-                            if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
-                            {
-                                peContent = this.GetPE(model);
-                                dtrContent = this.GetDTR(model);
-                                sensoryContent = this.GetSensory(model);
-                                mmstContent = this.GetMMST(model);
-                                ccContent = this.GetBHFCC(model);
-                            }
-                            else
-                            {
-                                ccContent = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model);
-                                //ccContent = this.GetBHFCC(model);
-                            }
+                           
 
                             if (ie > 0)
                             {
@@ -1344,6 +1347,7 @@ namespace PainTrax.Web.Controllers
                         intakeid = initialIntakeAI.Id,
                         location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
                         provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
+                        
                     };
                     _ieService.UpdateFromIntake(objIE);
                     patientId = string.IsNullOrEmpty(model.PatientId) ? 0 : Convert.ToInt32(model.PatientId);
@@ -1353,11 +1357,27 @@ namespace PainTrax.Web.Controllers
                     {
 
                         bodypart = string.Join(",", model.Complaints),
-                        id = initialIntakeAI.Id
+                        id = initialIntakeAI.Id,
+                        cc= ccContent,
+                        pe= peContent
 
                     };
 
                     _ieService.UpdatePage1Intake(objPage1);
+
+
+                    var objNE = new tbl_ie_ne()
+                    {
+
+                       sensory= sensoryContent,
+                       manual_muscle_strength_testing= mmstContent,
+                       other_content= dtrContent,
+                       ie_id= string.IsNullOrEmpty(model.PatientIEId)?0: Convert.ToInt32(model.PatientIEId)
+
+                    };
+
+                    _ieService.UpdateNEIntake(objNE);
+
                     var objpatient = new tbl_patient()
                     {
                         dob = string.IsNullOrEmpty(model.DOB) ? null : Convert.ToDateTime(model.DOB),
