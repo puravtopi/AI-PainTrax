@@ -672,6 +672,7 @@
                     .replace(/\bnew line\b/gi, "\n")
                     .replace(/\bnext line\b/gi, "\n");
             }
+
             
             let selectedSections = [];
             let selectedPESections = [];
@@ -1193,7 +1194,9 @@
                     saveForm(true);
 
                 });
-
+                $("#OtherBodyPart").on("input", function () {
+                    $(".otherDiv").toggle($(this).val().trim() !== "");
+                });
                 var selected = [];
                 $(document).on('change', 'input[name="Complaints"]', function () {
 
@@ -1202,8 +1205,7 @@
                     var value = $(this).val();
                     fnShowPresentComplain(this, section, pe,value);
 
-
-
+                   
                    // $('input[name="Complaints"]:checked').each(function () {
                         //     selected.push($(this).val());
                         // });
@@ -1448,6 +1450,7 @@
 
 
                     fnToggle(values);
+                     $(".otherDiv").toggle($("#OtherBodyPart").val().trim() !== "");
                 }, 1000);
 
                  
