@@ -696,6 +696,11 @@
             let selectedSections = [];
             let selectedPESections = [];
 
+            // function fnToggelOtherContent(cntrl) {
+            //       if ($(cntrl).is(":checked")) {
+            //       }
+            // }
+
             function fnShowPresentComplain(cntrl, divCC, divPE) {
 
             if (!divCC) return;
@@ -1267,7 +1272,9 @@
                     saveForm(true);
 
                 });
-
+                $("#OtherBodyPart").on("input", function () {
+                    $(".otherDiv").toggle($(this).val().trim() !== "");
+                });
                 var selected = [];
                 $(document).on('change', 'input[name="Complaints"]', function () {
 
@@ -1276,7 +1283,8 @@
 
                     fnShowPresentComplain(this, section, pe);
 
-
+                    
+                    
 
                    // $('input[name="Complaints"]:checked').each(function () {
                         //     selected.push($(this).val());
@@ -1552,6 +1560,7 @@
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
                     //updatePreview();
+                    $(".otherDiv").toggle($("#OtherBodyPart").val().trim() !== "");
                     $('#pdfLoader').hide();
                 }, 1000);
 

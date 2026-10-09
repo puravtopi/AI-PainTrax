@@ -173,7 +173,7 @@
 
 
     </div>
-    
+
 </div>
 @* <div id="lbPE" style="display:none">
     <h6 class="fw-bold">Low back</h6>
@@ -252,16 +252,16 @@
         <label><input type="radio" name="LBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="LBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
         <label><input type="radio" name="LBTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>with muscle spasm present.
-       
+
     </div>
-    
+
     <div class="select-group">
         SLR Test:
         <label><input type="radio" name="LBSlrTest" value="Positive" onclick="uncheckRadio(this)"> <span class="select-btn">+</span></label>
         <label><input type="radio" name="LBSlrTest" value="Negative" onclick="uncheckRadio(this)"> <span class="select-btn">-</span></label>
         Sacrol notch test:
         <input id="LBSlrTestOther" class="form-control d-inline " style="width:23%" placeholder="Other" />
-        Trigger points with palpable taut bands were noted at 
+        Trigger points with palpable taut bands were noted at
         <label><input type="radio" name="LBTriggerpoints" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="LBTriggerpoints" value="right">  <span class="select-btn">R</span></label>
         <label><input type="radio" name="LBTriggerpoints" value="bilateral">  <span class="select-btn">B</span></label>paraspinal levels
@@ -451,7 +451,7 @@
     <h6 class="fw-bold">Left Shoulder</h6>
     <div class="select-group">
         The Shoulder exam reveals tenderness upon palpation of the
-       
+
         <input id="lshTenderness" class="form-control d-inline " style="width:100px" />
         <label>
             <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="AC joint">
@@ -776,7 +776,7 @@
                 <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>0</td>
             </tr>
-           @*  <tr>
+            @*  <tr>
                 <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Flexion" /></td>
                 <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
@@ -849,7 +849,7 @@
 
 
     </div>
-   @*  <table style="width:100%">
+    @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -1032,7 +1032,7 @@
             <span class="select-btn"> Tinel</span>
         </label>
     </div>
-   @*  <table style="width:100%">
+    @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -1217,7 +1217,7 @@
     <div class="select-group">
         The wrist exam reveals tenderness upon palpation of the
         <input id="RWristTenderness" class="form-control d-inline " style="width:100px" />
-       
+
         <label>
             <input type="checkbox" class="chkMulti" name="RWristTendernessOptions" value="ulna">
             <span class="select-btn">ulna</span>
@@ -1263,7 +1263,7 @@
 
 
     </div>
-   @*  <table style="width:100%">
+    @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -1300,7 +1300,7 @@
     <div class="select-group">
         The wrist exam reveals tenderness upon palpation of the
         <input id="LWristTenderness" class="form-control d-inline " style="width:100px" />
-       
+
         <label>
             <input type="checkbox" class="chkMulti" name="lWristTendernessOptions" value="ulna">
             <span class="select-btn">ulna</span>
@@ -1378,7 +1378,7 @@
     </table> *@
 </div>
 
-<div>
+<div class="otherDiv" style="display:none">
     <h6 class="fw-bold">Other body parts:</h6>
 
     <table style="width:100%">
@@ -1404,26 +1404,27 @@
 
         </tbody>
     </table>
-    <br>
-
-    <div class="select-group">
-        <strong>GAIT:</strong>
-
-        <label><input type="radio" class="chkMulti" name="GAIT" value="Normal" checked> <span class="select-btn">Normal</span></label>
-
-        <label><input type="radio" class="chkMulti" name="GAIT" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
-        <label><input type="radio" class="chkMulti" name="GAIT" value="Altered"> <span class="select-btn">Altered</span></label>
-
-        <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Ambulates with a cane"> <span class="select-btn">Ambulates with a cane</span></label>
-
-        <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Other"> <span class="select-btn">Other</span></label>
-
-        <input id="GAITOther" class="form-control d-inline w-25" style="min-width:37%" placeholder="Specify other" />
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOther')"></i> *@
-    </div>
 </div>
+<br>
+
+<div class="select-group">
+    <strong>GAIT:</strong>
+
+    <label><input type="radio" class="chkMulti" name="GAIT" value="Normal" checked> <span class="select-btn">Normal</span></label>
+
+    <label><input type="radio" class="chkMulti" name="GAIT" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
+    <label><input type="radio" class="chkMulti" name="GAIT" value="Altered"> <span class="select-btn">Altered</span></label>
+
+    <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Ambulates with a cane"> <span class="select-btn">Ambulates with a cane</span></label>
+
+    <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Other"> <span class="select-btn">Other</span></label>
+
+    <input id="GAITOther" class="form-control d-inline w-25" style="min-width:37%" placeholder="Specify other" />
+    @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOther')"></i> *@
+</div>
+
 <script>
-        
+
     function uncheckRadio(radio) {
         if (radio.dataset.wasChecked === "true") {
             radio.checked = false;
