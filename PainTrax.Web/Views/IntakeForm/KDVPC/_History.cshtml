@@ -92,12 +92,12 @@
 
 
         <label>
-            <input type="radio" class="chkMulti" name="HeadInjury" value="Yes">
+            <input type="radio" class="chkMulti" name="HeadInjury" value="Yes" onclick="uncheckRadio(this)">
             <span class="select-btn">Yes</span>
         </label>
 
         <label>
-            <input type="radio" class="chkMulti" name="HeadInjury" value="No">
+            <input type="radio" class="chkMulti" name="HeadInjury" value="No" onclick="uncheckRadio(this)">
             <span class="select-btn">No</span>
         </label>
         <label><input type="checkbox" class="chkMulti" name="Headache" value="Headache"> <span class="select-btn">Headache</span> </label>
@@ -764,3 +764,16 @@
         </label>
     </div> *@
 </div>
+<script>
+    function uncheckRadio(radio) {
+        if (radio.dataset.wasChecked === "true") {
+            radio.checked = false;
+            radio.dataset.wasChecked = "false";
+        } else {
+            document.querySelectorAll(`input[name="${radio.name}"]`)
+                .forEach(r => r.dataset.wasChecked = "false");
+
+            radio.dataset.wasChecked = "true";
+        }
+    }
+</script>
