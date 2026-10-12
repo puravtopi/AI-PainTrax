@@ -102,13 +102,26 @@
 
     % temporarily disabled
 </div>
-<div class="select-group">
+<br />
+<div id="divWC" style="display:none;" class="select-group">
+    <label><input type="checkbox" class="chkMulti" name="shortandlonggoal" value="Goals"> <span class="select-btn">Goals</span></label>
+    @*  <label><input type="radio" style="width:90%" class="chkMulti" name="shortandlonggoal" value="Goals" onclick="uncheckRadiopatient(this)">  <span class="select-btn">Goals</span></label> *@
+    <div id="divgoals" style="display:none;width:90%">
+        <textarea id="OtherGoals" name="OtherGoals" class="form-control d-inline" style="width:95%;height:150px;">
+        Short term goals: Decrease/eliminate pain; improve overall muscle strength 5/5; educate patient on Home Exercise Program (HEP); improve ROM by 10 degrees.        
+        Long term goals: Decrease/eliminate pain; prevent further complications; regain the highest functional level capable of the patient; perform the following Activities of Daily Living with minimal to no difficulty: Engaging in sports and recreational activities.
+
+        </textarea>
+
+    </div>
+</div>
+@* <div class="select-group">
     <label><input type="checkbox" class="chkMulti" name="goals" value="Short term goals">  <span class="select-btn">Short term goals</span></label>
 
     <label><input type="checkbox" class="chkMulti" name="goals" value="long term goals">  <span class="select-btn">long term goals</span></label>
    
-</div>
-<div id="divWC12" style="display:none;">
+</div> *@
+<div id="divWC1" style="display:none;">
     <p>
         Occupation:
         <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" /> 
