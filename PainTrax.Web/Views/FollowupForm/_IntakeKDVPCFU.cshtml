@@ -441,7 +441,8 @@
 
 <script>
                 var docTemplate = null;
-                var formData = null;
+                // var formData = null;
+                 var formData = {};
                 // Path to your saved template file (relative to this HTML file).
                 // (The DOCX is stored alongside this page.)
                 var templateUrlDocx = '@ViewBag.TemplateDOCURL';
@@ -744,148 +745,333 @@
                         return values[key] || "";
                     });
                 }
+                            function updatePreview() {
 
-                function updatePreview() {
+                var values = {};
 
-                    var values = {};
+                $('#patientForm').find('input, select, textarea').each(function () {
+                    var key = $(this).attr('name') || $(this).attr('id');
+                    // var cls = $(this).attr('class');
+                    if (!key) return;
 
-                    $('#patientForm').find('input, select, textarea').each(function () {
-                        var key = $(this).attr('name') || $(this).attr('id');
-                        var cls = $(this).attr('class');
-                        if (!key) return;
+                    var type = $(this).attr('type');
 
-                        var type = $(this).attr('type');
-
-                        if (type === 'radio') {
-                            if ($(this).is(':checked')) {
-                                values[key] = $(this).val();
-                            }
+                    if (type === 'radio') {
+                        if ($(this).is(':checked')) {
+                            values[key] = $(this).val();
                         }
+                    }
                         else if (type === 'checkbox') {
 
-                            // 🔹 Special handling for Complaints (multi-checkbox)
-                            if (cls === "chkMulti") {
-                                if (!values[key]) values[key] = [];
-                                if ($(this).is(':checked')) {
-                                    values[key].push($(this).val());
-                                }
-                            }
-                            else {
-                                // normal checkbox (true/false)
-                                values[key] = $(this).is(':checked');
-                            }
-                        }
-                        else {
-                            values[key] = $(this).val() || "";
-                        }
-                    });
+        if ($(this).hasClass("chkMulti")) {
 
-                   values["Id"]= $("#hdId").val();
+            if (!Array.isArray(values[key])) {
+                values[key] = [];
+            }
 
-                    var today = new Date();
+            if ($(this).is(':checked')) {
+                values[key].push($(this).val());
+            }
 
-                    var options = {
-                        month: 'short',
-                        day: '2-digit',
-                        year: 'numeric'
-                    };
+        } else {
 
-                    // var formattedDate = today.toLocaleDateString('en-US', options);
+            values[key] = $(this).is(':checked');
+        }
+    }
+                    // else if (type === 'checkbox') {
 
-                    // values["DOE"] = formattedDate.replace(',', '');
-
-                     if ($("#DOE").val() != '')
-                        values["DOE"] = formatDate($("#DOE").val());
-
-                    if ($("#DOB").val() != '')
-                        values["DOB"] = formatDate($("#DOB").val());
-
-                    if ($("#DOA").val() != '') {
-                        $("#lblDOA").val($("#DOA").val());
-                        values["DOA"] = formatDate($("#DOA").val());
+                    //     // 🔹 Special handling for Complaints (multi-checkbox)
+                    //     if (cls === "chkMulti") {
+                    //         if (!values[key]) values[key] = [];
+                    //         if ($(this).is(':checked')) {
+                    //             values[key].push($(this).val());
+                    //         }
+                    //     }
+                    //     else {
+                    //         // normal checkbox (true/false)
+                    //         values[key] = $(this).is(':checked');
+                    //     }
+                    // }
+                    else {
+                        values[key] = $(this).val() || "";
                     }
-
-                    formData = values;
-
-                    var template = docTemplate ||
-                        "Patient {{PatientName}} ({{Gender}}), dominant hand {{DominantHand}},\n" +
-                        "reports that on {{DOA}}, while working as {{JobTitle}},\n" +
-                        "they sustained an injury when {{Incident}}.\n\n" +
-                        "The incident occurred {{IncidentTypes}} and involved {{BodyPart}}.\n" +
-                        "Since the incident, symptoms have been persistent and\n" +
-                        "interfere with daily activities.";
-
-                    var output = applyTemplate(template, values);
-                    $("#previewText").html(output);
-
-                    processTemplate(values)
-                }
-
-                // Trigger on all inputs
-                $(document).on("keyup change","#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option",function () {
-            updatePreview();
                 });
 
-                function processTemplate(data) {
-                    let html = $('#previewText').html();
+               values["Id"]= $("#hdId").val();
+               values["LocationId"]
 
-                    // Replace placeholders
-                    Object.keys(data).forEach(key => {
-                        let regex = new RegExp('{{' + key + '}}', 'g');
-                        html = html.replace(regex, data[key]);
-                    });
+                var today = new Date();
 
-                        toggleSection(data.Hospital === "Yes", "#divHospital");
-                        toggleSection(data.Allergy === "Yes", "#divAllergy");
-                        toggleSection(data.Smoke === "Yes", "#divSmoke");
-                        toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
-                        toggleSection(data.PT === "Yes", "#divPT");
-                        toggleSection(data.Chiro === "Yes", "#divChiro");
+                var options = {
+                    month: 'short',
+                    day: '2-digit',
+                    year: 'numeric'
+                };
 
-                        if(data.PreInjury==="No")
-                            $("#preInjuryDetailsBox").show();
-                        else
-                            $("#preInjuryDetailsBox").hide();
+                // var formattedDate = today.toLocaleDateString('en-US', options);
 
+                // values["DOE"] = formattedDate.replace(',', '');
 
-                       $(".mmClass").show();
-                       if (data.InjuryType === "WC") {
-                            $("#divWC").show();
-                            $("#divWC1").show();
-                            $("#divNF").hide();
-                            $("#divPI").hide();
-                            html = html.replace('[WC_START]', '').replace('[WC_END]', '');
-                            html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
-                        }
-                        else if (data.InjuryType === "NF" || data.InjuryType === "PI" ||
-                        data.InjuryType === "LIEN") {
-                            // Keep MVA, remove WC
-                            html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
-                            html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
-                            $("#divWC").hide();
-                            $("#divWC1").hide();
-                            $("#divNF").show();
+                 if ($("#DOE").val() != '')
+                    values["DOE"] = formatDate($("#DOE").val());
 
-                        }
-                        else if (data.InjuryType === "MM") {
-                            // $("#divNF").hide();
-                            // $("#divMM").hide();
-                            // $("#divWC1").hide();
-                            $(".mmClass").hide();
+                if ($("#DOB").val() != '')
+                    values["DOB"] = formatDate($("#DOB").val());
 
-                        }
-                                           else {
-                            // Remove both
-                            html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
-                            html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
-                            $("#divNF").hide();
-                            $("#divMM").hide();
-                            $("#divWC1").hide();
-
-                        }
-
-                        $('#previewText').html(html);
+                if ($("#DOA").val() != '') {
+                    $("#lblDOA").val($("#DOA").val());
+                    values["DOA"] = formatDate($("#DOA").val());
                 }
+
+                formData = values;
+
+                var template = docTemplate ||
+                    "Patient {{PatientName}} ({{Gender}}), dominant hand {{DominantHand}},\n" +
+                    "reports that on {{DOA}}, while working as {{JobTitle}},\n" +
+                    "they sustained an injury when {{Incident}}.\n\n" +
+                    "The incident occurred {{IncidentTypes}} and involved {{BodyPart}}.\n" +
+                    "Since the incident, symptoms have been persistent and\n" +
+                    "interfere with daily activities.";
+
+                var output = applyTemplate(template, values);
+                $("#previewText").html(output);
+
+                processTemplate(values)
+            }
+
+            // Trigger on all inputs
+                $(document).on("keyup change","#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option",function () {
+                     updatePreview();
+                }
+    );
+            //     function updatePreview() {
+
+            //         var values = {};
+
+            //         $('#patientForm').find('input, select, textarea').each(function () {
+            //             var key = $(this).attr('name') || $(this).attr('id');
+            //             var cls = $(this).attr('class');
+            //             if (!key) return;
+
+            //             var type = $(this).attr('type');
+
+            //             if (type === 'radio') {
+            //                 if ($(this).is(':checked')) {
+            //                     values[key] = $(this).val();
+            //                 }
+            //             }
+            //             else if (type === 'checkbox') {
+
+            //                 // 🔹 Special handling for Complaints (multi-checkbox)
+            //                 if (cls === "chkMulti") {
+            //                     if (!values[key]) values[key] = [];
+            //                     if ($(this).is(':checked')) {
+            //                         values[key].push($(this).val());
+            //                     }
+            //                 }
+            //                 else {
+            //                     // normal checkbox (true/false)
+            //                     values[key] = $(this).is(':checked');
+            //                 }
+            //             }
+            //             else {
+            //                 values[key] = $(this).val() || "";
+            //             }
+            //         });
+
+            //        values["Id"]= $("#hdId").val();
+
+            //         var today = new Date();
+
+            //         var options = {
+            //             month: 'short',
+            //             day: '2-digit',
+            //             year: 'numeric'
+            //         };
+
+            //         // var formattedDate = today.toLocaleDateString('en-US', options);
+
+            //         // values["DOE"] = formattedDate.replace(',', '');
+
+            //          if ($("#DOE").val() != '')
+            //             values["DOE"] = formatDate($("#DOE").val());
+
+            //         if ($("#DOB").val() != '')
+            //             values["DOB"] = formatDate($("#DOB").val());
+
+            //         if ($("#DOA").val() != '') {
+            //             $("#lblDOA").val($("#DOA").val());
+            //             values["DOA"] = formatDate($("#DOA").val());
+            //         }
+
+            //         formData = values;
+
+            //         var template = docTemplate ||
+            //             "Patient {{PatientName}} ({{Gender}}), dominant hand {{DominantHand}},\n" +
+            //             "reports that on {{DOA}}, while working as {{JobTitle}},\n" +
+            //             "they sustained an injury when {{Incident}}.\n\n" +
+            //             "The incident occurred {{IncidentTypes}} and involved {{BodyPart}}.\n" +
+            //             "Since the incident, symptoms have been persistent and\n" +
+            //             "interfere with daily activities.";
+
+            //         var output = applyTemplate(template, values);
+            //         $("#previewText").html(output);
+
+            //         processTemplate(values)
+            //     }
+
+            //     // Trigger on all inputs
+            //     $(document).on("keyup change","#patientForm input, #patientForm select, #patientForm textarea, .incident-type-option",function () {
+            // updatePreview();
+            //     });
+                  function processTemplate(data) {
+                let html = $('#previewText').html();
+
+                // Replace placeholders
+                Object.keys(data).forEach(key => {
+                    let regex = new RegExp('{{' + key + '}}', 'g');
+                    html = html.replace(regex, data[key]);
+                });
+
+                    toggleSection(data.IsSMH === "Yes", "#divIsSMH");
+                    toggleSection(data.Meds === "Yes", "#divMeds");
+                    toggleSection(data.IsPMH === "Yes", "#divIsPMH");
+                    toggleSection(data.IsHospitalTest === "Yes", "#divHospitalTest");
+                    toggleSection(data.IsHospitalMedication === "Yes", "#divHospitalMedication");
+                    toggleSection(data.IsAccidentPast === "Yes", "#divIsAccidentPast");
+                    toggleSection(data.SameDay === "No", "#divSameDay");
+                    toggleSection(data.DirectImpact === "Yes", "#divBodyImpact");
+                    toggleSection(data.LoseConsciousness === "Yes", "#divLoseConsciousness");
+                    // toggleSection(data.HeadInjury === "Yes", "#divHeadache");
+                    toggleSection(data.Hospital === "Yes", "#divHospital");
+                    toggleSection(data.Allergy === "Yes", "#divAllergy");
+                    toggleSection(data.Smoke === "Yes", "#divSmoke");
+                    toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
+                    toggleSection(data.PT === "Yes", "#divPT");
+                    toggleSection(data.Chiro === "Yes", "#divChiro");
+                    toggleSection(data.Alcohol === "Yes", "#divAlcohol");
+
+
+                    // toggleSection(data.shortandlonggoal === "Goals", "#divgoals");
+                    // toggleSection(data.shortgoal === "Short term goals", "#divgoals");
+                    // toggleSection(data.shortgoal === "long term goals", "#divgoalslongterm");
+                    toggleSection(data.Airbags === "Yes", "#divAirbags");
+                    toggleSection(data.whiplash === "Yes", "#divwhiplash");
+
+                    if(data.PreInjury==="No")
+                        $("#preInjuryDetailsBox").show();
+                    else
+                        $("#preInjuryDetailsBox").hide();
+
+
+                   // $(".mmClass").show();
+                   if (data.InjuryType === "WC") {
+                        // $("#divWC").show();
+                        $("#divWC1").show();
+                        $("#divNF").hide();
+                        $("#divPI").hide();
+                         $("#divMMcase").hide();
+                         $("#divAccident").show();
+                        html = html.replace('[WC_START]', '').replace('[WC_END]', '');
+                        html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+                    }
+                    else if (data.InjuryType === "NF" || data.InjuryType === "PI" ||
+                    data.InjuryType === "LIEN") {
+                        // Keep MVA, remove WC
+                        html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
+                        html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+                        // $("#divWC").hide();
+                        $("#divWC1").hide();
+                        $("#divNF").show();
+                         $("#divMMcase").hide();
+                         $("#divAccident").show();
+
+                    }
+                    else if (data.InjuryType === "MM") {
+                        $("#divMMcase").show();
+                       // $("#divWC").hide();
+                        $("#divWC1").hide();
+                        $("#divAccident").hide();
+                            if (data.Complaints) {
+            var complaints = data.Complaints.join(",");
+
+    $("#hdComplaints").val(complaints);
+    $("#MMDescription").val(data.Complaints.join(", "));
+    }
+
+                    }
+                                       else {
+                        // Remove both
+                        html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+                        html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+                        $("#divNF").hide();
+                        $("#divMM").hide();
+                        $("#divWC1").hide();
+
+                    }
+
+                    $('#previewText').html(html);
+            }
+                // function processTemplate(data) {
+                //     let html = $('#previewText').html();
+
+                //     // Replace placeholders
+                //     Object.keys(data).forEach(key => {
+                //         let regex = new RegExp('{{' + key + '}}', 'g');
+                //         html = html.replace(regex, data[key]);
+                //     });
+
+                //         toggleSection(data.Hospital === "Yes", "#divHospital");
+                //         toggleSection(data.Allergy === "Yes", "#divAllergy");
+                //         toggleSection(data.Smoke === "Yes", "#divSmoke");
+                //         toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
+                //         toggleSection(data.PT === "Yes", "#divPT");
+                //         toggleSection(data.Chiro === "Yes", "#divChiro");
+
+                //         if(data.PreInjury==="No")
+                //             $("#preInjuryDetailsBox").show();
+                //         else
+                //             $("#preInjuryDetailsBox").hide();
+
+
+                //        $(".mmClass").show();
+                //        if (data.InjuryType === "WC") {
+                //             $("#divWC").show();
+                //             $("#divWC1").show();
+                //             $("#divNF").hide();
+                //             $("#divPI").hide();
+                //             html = html.replace('[WC_START]', '').replace('[WC_END]', '');
+                //             html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+                //         }
+                //         else if (data.InjuryType === "NF" || data.InjuryType === "PI" ||
+                //         data.InjuryType === "LIEN") {
+                //             // Keep MVA, remove WC
+                //             html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
+                //             html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+                //             $("#divWC").hide();
+                //             $("#divWC1").hide();
+                //             $("#divNF").show();
+
+                //         }
+                //         else if (data.InjuryType === "MM") {
+                //             // $("#divNF").hide();
+                //             // $("#divMM").hide();
+                //             // $("#divWC1").hide();
+                //             $(".mmClass").hide();
+
+                //         }
+                //                            else {
+                //             // Remove both
+                //             html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+                //             html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+                //             $("#divNF").hide();
+                //             $("#divMM").hide();
+                //             $("#divWC1").hide();
+
+                //         }
+
+                //         $('#previewText').html(html);
+                // }
 
              function saveForm(isSubmit) {
 
@@ -898,6 +1084,20 @@
         $('#pdfLoader').show();
 
         try {
+             if (!formData || typeof formData !== "object") {
+            formData = {};
+        }
+         // Collect all current form values
+    updatePreview();
+
+    // Your existing textarea code
+    $('textarea').each(function () {
+        var id = $(this).attr('id') || $(this).attr('name');
+
+        if (id) {
+            formData[id] = $(this).val();
+        }
+    });
 
             // Assign form values
             formData["Diagnosis"] = $("#divDiagnosis").html();
@@ -1170,6 +1370,42 @@
 
                             $('#BodyPart').val(result);
                     });
+                    $(document).on('change', 'input[name="InjuryType"]', function () {
+                         var injuryType = $('input[name="InjuryType"]:checked').val();
+                          if (injuryType === "WC") {
+                        $("#divWC").show();
+                        // Check Goals radio
+                       $('input[name="shortandlonggoal"][value="Goals"]')
+                        .prop('checked', true);
+
+                      // Show Goals div
+                        $('#divgoals').show();
+
+                    }
+    else {
+
+                       // Hide Goals div
+                        $("#divWC").show();
+        $('input[name="shortandlonggoal"][value="Goals"]')
+                         .prop('checked', false);
+                        $('#divgoals').hide();
+                    }
+                        // $("#divMMcase").show();
+                     });
+
+                     $(document).on("change", 'input[name="shortandlonggoal"]', function () {
+
+        // Always show divWC
+        $("#divWC").show();
+
+        // Show/hide divgoals based on checkbox
+        if ($(this).is(":checked")) {
+            $("#divgoals").show();
+        } else {
+            $("#divgoals").hide();
+        }
+
+    });
                      $(document).on('change', 'input[name="NeckRadiates"]', function () {
 
         // Check if any NeckRadiates checkbox is checked

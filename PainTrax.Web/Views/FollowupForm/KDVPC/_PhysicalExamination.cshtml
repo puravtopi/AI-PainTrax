@@ -1,6 +1,6 @@
 ﻿<div id="neckPE" style="display:none">
     <h6 class="fw-bold">Neck</h6>
-    @* <div class="select-group">
+    @*  <div class="select-group">
         Patient has pain and tenderness over the   @* <input id="NeckTenderness" class="form-control d-inline " style="width:100px" /> 
         <label><input type="radio" name="NeckTendernessPosition" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="NeckTendernessPosition" value="right">  <span class="select-btn">R</span></label>
@@ -22,17 +22,14 @@
             <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="C6/7">
             <span class="select-btn">C6/7</span>
         </label>
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i> facet joints. Facet loading maneuvers are positive.
+         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NeckTenderness')"></i>  facet joints. Facet loading maneuvers are positive.
         Spurling’s Test:
         <label><input type="radio" name="NeckSpurlingTest" value="Positive" onclick="uncheckRadio(this)">  <span class="select-btn">+</span></label>
         <label><input type="radio" name="NeckSpurlingTest" value="Negative" onclick="uncheckRadio(this)">  <span class="select-btn">-</span></label>
 
-    </div>
-    <div class="select-group">
-        <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
     </div> *@
     <div class="select-group">
-        The cervical spine exam reveals tenderness upon palpation at  <input id="NeckTenderness" class="form-control d-inline " value="C2-C7" style="width:100px" />
+        The cervical spine exam reveals tenderness upon palpation at <input id="NeckTenderness" class="form-control d-inline " value="C2-C7" style="width:100px" />
         <label><input type="radio" name="NeckTendernessPosition" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="NeckTendernessPosition" value="right">  <span class="select-btn">R</span></label>
         <label><input type="radio" name="NeckTendernessPosition" value="bilateral">  <span class="select-btn">B.</span></label>
@@ -74,6 +71,9 @@
         </label>
 
     </div>
+    @*  <div class="select-group">
+        <input id="NeckSpurlingTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
+    </div> *@
     <table style="width:100%">
         <thead>
             <tr>
@@ -108,9 +108,40 @@
         </tbody>
     </table>
 </div>
-@* <div id="mbPE" style="display:none">
+<div id="mbPE" style="display:none">
     <h6 class="fw-bold">Mid back</h6>
-    <table style="width:100%">
+    <div class="select-group">
+        The thoracic spine exam reveals tenderness upon palpation at <input id="MbTenderness" class="form-control d-inline " value="T1-T12" style="width:100px" />
+        <label><input type="radio" name="MBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="MBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="MBTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>with muscle spasm present.
+        ROM is <input id="MROM" class="form-control d-inline " style="width:100px" />
+        <label><input type="radio" name="midTendernessOptions" value="Mildly">  <span class="select-btn">Mildly</span></label>
+        <label><input type="radio" name="midTendernessOptions" value="Moderately">  <span class="select-btn">Moderately</span></label>
+        <label><input type="radio" name="midTendernessOptions" value="Severely">  <span class="select-btn">Severely</span></label>
+        decreased.
+
+
+        Trigger points with palpable taut bands were noted at
+        <label><input type="radio" name="MBpalpabletaut" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="MBpalpabletaut" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="MBpalpabletaut" value="bilateral">  <span class="select-btn">B.</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="rhomboids">
+            <span class="select-btn">rhomboids</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="trapezius">
+            <span class="select-btn">trapezius</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="☐​serratus posterior superior">
+            <span class="select-btn">serratus posterior superior</span>
+        </label>
+
+
+    </div>
+    @* <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -142,42 +173,11 @@
                 <td></td>
             </tr>
         </tbody>
-    </table>
-</div> *@
-<div id="mbPE" style="display:none">
-    <h6 class="fw-bold">Mid back</h6>
-    <div class="select-group">
-        The thoracic spine exam reveals tenderness upon palpation at <input id="MbTenderness" class="form-control d-inline " value="T1-T12" style="width:100px" />
-        <label><input type="radio" name="MBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
-        <label><input type="radio" name="MBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
-        <label><input type="radio" name="MBTendernessPosition" value="bilateral">  <span class="select-btn">B.</span></label>with muscle spasm present.
-
-        ROM is <input id="MROM" class="form-control d-inline " value="mildly" style="width:100px" /> decreased
-
-        Trigger points with palpable taut bands were noted at
-        <label><input type="radio" name="MBpalpabletaut" value="left">  <span class="select-btn">L</span></label>
-        <label><input type="radio" name="MBpalpabletaut" value="right">  <span class="select-btn">R</span></label>
-        <label><input type="radio" name="MBpalpabletaut" value="bilateral">  <span class="select-btn">B.</span></label>
-        <label>
-            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="rhomboids">
-            <span class="select-btn">rhomboids</span>
-        </label>
-        <label>
-            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="trapezius">
-            <span class="select-btn">trapezius</span>
-        </label>
-        <label>
-            <input type="checkbox" class="chkMulti" name="MBTendernessOptions" value="☐​serratus posterior superior">
-            <span class="select-btn">serratus posterior superior</span>
-        </label>
-
-
-    </div>
-
+    </table> *@
 </div>
-@* <div id="lbPE" style="display:none">
+<div id="lbPE" style="display:none">
     <h6 class="fw-bold">Low back</h6>
-    <div class="select-group">
+    @* <div class="select-group">
         Patient has pain and tenderness over the
         <label><input type="radio" name="LBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="LBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
@@ -210,45 +210,9 @@
         <label><input type="radio" name="LBSlrTest" value="Positive" onclick="uncheckRadio(this)"> <span class="select-btn">+</span></label>
         <label><input type="radio" name="LBSlrTest" value="Negative" onclick="uncheckRadio(this)"> <span class="select-btn">-</span></label>
         <input id="LBSlrTestOther" class="form-control d-inline " style="width:80%" placeholder="Other" />
-    </div>
-    <table style="width:100%">
-        <thead>
-            <tr>
-                <td></td>
-                <td>ROM</td>
-                <td>Normal</td>
-                <td></td>
-                <td>Left</td>
-                <td>Right</td>
-                <td>Normal</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Forward Flexion</td>
-                <td><input id="LBFFROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>60</td>
-                <td>Lateral Flexion</td>
-                <td><input id="LBFFLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td><input id="LBFFRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>25</td>
-            </tr>
-            <tr>
-                <td>Extension</td>
-                <td><input id="LBExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>25</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-</div> *@
-<div id="lbPE" style="display:none">
-    <h6 class="fw-bold">Low back</h6>
+    </div> *@
     <div class="select-group">
-        The lumbar spine exam reveals tenderness upon palpation at <input id="LBTendernessExam" class="form-control d-inline " value="L1-S1" style="width:100px" />levels
+        The lumbar spine exam reveals tenderness upon palpation at <input id="LBTenderness" class="form-control d-inline" value="L1-S1" style="width:100px" /> levels
         <label><input type="radio" name="LBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="LBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
         <label><input type="radio" name="LBTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>with muscle spasm present.
@@ -256,17 +220,64 @@
     </div>
 
     <div class="select-group">
-        SLR Test:
-        <label><input type="radio" name="LBSlrTest" value="Positive" onclick="uncheckRadio(this)"> <span class="select-btn">+</span></label>
-        <label><input type="radio" name="LBSlrTest" value="Negative" onclick="uncheckRadio(this)"> <span class="select-btn">-</span></label>
-        Sacrol notch test:
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="SLR Test">
+            <span class="select-btn"> SLR Test</span>
+        </label>
+        <label><input type="radio" name="LBSLRTest" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBSLRTest" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBSLRTest" value="bilateral">  <span class="select-btn">B</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Sacral notch test">
+            <span class="select-btn"> Sacral notch test</span>
+        </label>
+        <label><input type="radio" name="LBSacralTest" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBSacralTest" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBSacralTest" value="bilateral">  <span class="select-btn">B</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Braggard's test">
+            <span class="select-btn"> Braggard's test</span>
+        </label>
+        <label><input type="radio" name="LBBraggardTest" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBBraggardTest" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBBraggardTest" value="bilateral">  <span class="select-btn">B</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value=" Kernig's sign">
+            <span class="select-btn">  Kernig's sign</span>
+        </label>
+        <label><input type="radio" name="LBKernigTest" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBKernigTest" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBKernigTest" value="bilateral">  <span class="select-btn">B</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Brudzinski's test">
+            <span class="select-btn"> Brudzinski's test</span>
+        </label>
+        <label><input type="radio" name="LBBrudzinskiTest" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBBrudzinskiTest" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBBrudzinskiTest" value="bilateral">  <span class="select-btn">B</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Sacroiliac compression">
+            <span class="select-btn"> Sacroiliac compression</span>
+        </label>
+        <label><input type="radio" name="LBSacroiliacTest" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBSacroiliacTest" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBSacroiliacTest" value="bilateral">  <span class="select-btn">B</span></label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LowbackTests" value="Ober's test causing pain at the SI joint">
+            <span class="select-btn"> Ober's test causing pain at the SI joint</span>
+        </label>
+        <label><input type="radio" name="LBOberTest" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBOberTest" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBOberTest" value="bilateral">  <span class="select-btn">B</span></label>
+
+
         <input id="LBSlrTestOther" class="form-control d-inline " style="width:23%" placeholder="Other" />
         Trigger points with palpable taut bands were noted at
         <label><input type="radio" name="LBTriggerpoints" value="left">  <span class="select-btn">L</span></label>
         <label><input type="radio" name="LBTriggerpoints" value="right">  <span class="select-btn">R</span></label>
         <label><input type="radio" name="LBTriggerpoints" value="bilateral">  <span class="select-btn">B</span></label>paraspinal levels
         <input id="LBTrigger" class="form-control d-inline " value="L3-S1" style="width:100px" />
-        with referral patterns laterally to the region in a fan-like pattern.
+        with referral patterns laterally to the region in a fan-like pattern.There is blanching noted at the sites of the trigger points.
     </div>
     <table style="width:100%">
         <thead>
@@ -295,14 +306,16 @@
                 <td><input id="LBExt" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>30</td>
                 <td>Rotation</td>
-                <td><input id="LBRot" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="LBRotLeft" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="LBRotRight" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+
                 <td>30</td>
             </tr>
         </tbody>
     </table>
 </div>
 <div id="rshPE" style="display:none">
-    <h6 class="fw-bold">Right Shoulder</h6>
+    <h6 class="fw-bold">Right Shoulder (R/Sh)</h6>
     <div class="select-group">
         The Shoulder exam reveals tenderness upon palpation of the
         <input id="rshTenderness" class="form-control d-inline " style="width:100px" />
@@ -319,7 +332,7 @@
             <span class="select-btn">corticoid region</span>
         </label>
         <label>
-            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="supraspintus tendon">
+            <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="supraspinatus tendon">
             <span class="select-btn">supraspintus tendon</span>
         </label>
         <label>
@@ -336,8 +349,9 @@
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="trapezius muscle">
-            <span class="select-btn">trapezius muscle</span>
+            <span class="select-btn">trapezius muscle.</span>
         </label>
+        There is
         <label>
             <input type="checkbox" class="chkMulti" name="RshTendernessOptions" value="ecchymosis">
             <span class="select-btn">ecchymosis</span>
@@ -365,6 +379,10 @@
         <label>
             <input type="checkbox" class="chkMulti" name="RshTests" value="Drop arm test">
             <span class="select-btn"> Drop arm test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RshTests" value="Reverse beer can test">
+            <span class="select-btn"> Reverse beer can test</span>
         </label>
 
         There are palpable taut bands/trigger points with referral patterns as
@@ -448,7 +466,7 @@
 </div>
 
 <div id="lshPE" style="display:none">
-    <h6 class="fw-bold">Left Shoulder</h6>
+    <h6 class="fw-bold">Left Shoulder (L/Sh)</h6>
     <div class="select-group">
         The Shoulder exam reveals tenderness upon palpation of the
 
@@ -466,7 +484,7 @@
             <span class="select-btn">corticoid region</span>
         </label>
         <label>
-            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="supraspintus tendon">
+            <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="supraspinatus tendon">
             <span class="select-btn">supraspintus tendon</span>
         </label>
         <label>
@@ -483,8 +501,9 @@
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="trapezius muscle">
-            <span class="select-btn">trapezius muscle</span>
+            <span class="select-btn">trapezius muscle.</span>
         </label>
+        There is
         <label>
             <input type="checkbox" class="chkMulti" name="LshTendernessOptions" value="ecchymosis">
             <span class="select-btn">ecchymosis</span>
@@ -512,6 +531,48 @@
         <label>
             <input type="checkbox" class="chkMulti" name="LshTests" value="Drop arm test">
             <span class="select-btn"> Drop arm test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LshTests" value="Reverse beer can test">
+            <span class="select-btn"> Reverse beer can test</span>
+        </label>
+
+        There are palpable taut bands/trigger points with referral patterns as
+        <label><input type="radio" name="lshpalpabletaut" value="left">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="lshpalpabletaut" value="right">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="lshpalpabletaut" value="bilateral">  <span class="select-btn">B</span></label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="deltoid">
+            <span class="select-btn">deltoid</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="supraspinatus">
+            <span class="select-btn">supraspinatus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="infraspinatus">
+            <span class="select-btn">infraspinatus</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="teres minor">
+            <span class="select-btn">teres minor</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="​teres major">
+            <span class="select-btn">​teres major</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="pectoralis major">
+            <span class="select-btn">pectoralis major</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="biceps">
+            <span class="select-btn">biceps</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="lshpalpableOptions" value="triceps">
+            <span class="select-btn">triceps</span>
         </label>
 
 
@@ -588,7 +649,7 @@
 </div>
 
 <div id="rknPE" style="display:none">
-    <h6 class="fw-bold">Right Knee</h6>
+    <h6 class="fw-bold">Right Knee </h6>
     <div class="select-group">
         The knee exam reveals tenderness upon palpation of the
 
@@ -676,16 +737,24 @@
                 <td><input id="RKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>150</td>
                 <td>Extension</td>
-                <td><input id="RKNExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="RKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>0</td>
             </tr>
+            @*  <tr>
+                <td><input id="RKNTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Flexion" /></td>
+                <td><input id="RKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="RKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150" /> </td>
+                <td><input id="RKNExtTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Extension" /></td>
+                <td><input id="RKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="RKNExtNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0" /></td>
+            </tr> *@
 
         </tbody>
     </table>
 </div>
 
 <div id="lknPE" style="display:none">
-    <h6 class="fw-bold">Left Knee</h6>
+    <h6 class="fw-bold">Left Knee </h6>
     <div class="select-group">
         The knee exam reveals tenderness upon palpation of the
 
@@ -776,13 +845,13 @@
                 <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>0</td>
             </tr>
-            @*  <tr>
-                <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Flexion" /></td>
+            @* <tr>
+                <td><input id="LKNTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Flexion" /></td>
                 <td><input id="LKNFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="3" style="width:100px" value="Extension" /></td>
+                <td><input id="LKNFlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="150" /> </td>
+                <td><input id="LKNExtTitleROM" class="form-control d-inline " maxlength="20" style="width:100px" value="Extension" /></td>
                 <td><input id="LKNExtROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="LKNExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" value="0" /></td>
             </tr> *@
 
         </tbody>
@@ -885,8 +954,12 @@
     <h6 class="fw-bold">Left Ankle </h6>
     <div class="select-group">
         The ankle ROM is
+        <input id="LAnkTenderness" class="form-control d-inline " style="width:100px" />
+        <label><input type="radio" name="LAnkTendernessOptions" value="Mildly">  <span class="select-btn">Mildly</span></label>
+        <label><input type="radio" name="LAnkTendernessOptions" value="Moderately">  <span class="select-btn">Moderately</span></label>
+        <label><input type="radio" name="LAnkTendernessOptions" value="Severely">  <span class="select-btn">Severely</span></label>
+        decreased with local tenderness upon palpation of the
 
-        <input id="LAnkTenderness" class="form-control d-inline " style="width:100px" />mildly decreased with local tenderness upon palpation of the
         <label>
             <input type="checkbox" class="chkMulti" name="LAnkTendernessOptions" value="medial malleolus">
             <span class="select-btn">medial malleolus</span>
@@ -938,7 +1011,7 @@
 
 
     </div>
-    @* <table style="width:100%">
+    @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -963,7 +1036,7 @@
                 <td><input id="LAnkleDorsiflexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>40</td>
                 <td>Eversion</td>
-                <td><input id="RLnkleEversionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="LAnkleEversionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>20</td>
             </tr>
         </tbody>
@@ -982,7 +1055,7 @@
         decreased.
         <label>
             <input type="checkbox" class="chkMulti" name="RElbTests" value="Tinel">
-            <span class="select-btn"> Tinel</span>
+            <span class="select-btn"> Tinel’s</span>
         </label>
     </div>
     @* <table style="width:100%">
@@ -1029,7 +1102,7 @@
         decreased.
         <label>
             <input type="checkbox" class="chkMulti" name="LElbTests" value="Tinel">
-            <span class="select-btn"> Tinel</span>
+            <span class="select-btn"> Tinel’s</span>
         </label>
     </div>
     @*  <table style="width:100%">
@@ -1114,26 +1187,28 @@
                 <td>Flexion</td>
                 <td><input id="RHipFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>120</td>
-                <td>Adduction</td>
-                <td><input id="RHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>35</td>
-            </tr>
-            <tr>
-                <td>Extension</td>
-                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>30</td>
                 <td>Internal rotation</td>
                 <td><input id="RHipIRotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>45</td>
+                @* <td>Adduction</td>
+                <td><input id="RHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td>35</td> *@
             </tr>
             <tr>
-                <td>Abduction</td>
-                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>45</td>
+                @*  <td>Extension</td>
+                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>30</td> *@
+
                 <td>External rotation</td>
                 <td><input id="RHipERotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>45</td>
             </tr>
+            @* <tr> 
+                @* <td>Abduction</td>
+                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>45</td> 
+
+            </tr>*@
         </tbody>
     </table>
 </div>
@@ -1188,26 +1263,28 @@
                 <td>Flexion</td>
                 <td><input id="RHipFlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
                 <td>120</td>
-                <td>Adduction</td>
+                @*  <td>Adduction</td>
                 <td><input id="RHipAdductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
-                <td>35</td>
-            </tr>
-            <tr>
-                <td>Extension</td>
-                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>30</td>
+                <td>35</td> *@
                 <td>Internal rotation</td>
                 <td><input id="RHipIRotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>45</td>
             </tr>
             <tr>
-                <td>Abduction</td>
-                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
-                <td>45</td>
+                @*  <td>Extension</td>
+                <td><input id="RHipExtensionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>30</td> *@
+
                 <td>External rotation</td>
                 <td><input id="RHipERotationROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
                 <td>45</td>
             </tr>
+            @*  <tr>
+                <td>Abduction</td>
+                <td><input id="RHipAbductionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td>45</td>
+
+            </tr> *@
         </tbody>
     </table>
 </div>
@@ -1236,8 +1313,8 @@
         </label>
 
         <label>
-            <input type="checkbox" class="chkMulti" name="RWristOther" value="Tinnels">
-            <span class="select-btn"> Tinnels</span>
+            <input type="checkbox" class="chkMulti" name="RWristOther" value="Tinel’s">
+            <span class="select-btn"> Tinel’s</span>
         </label>
         <label>
             <input type="checkbox" class="chkMulti" name="RWristOther" value="Phalens">
@@ -1346,7 +1423,7 @@
 
 
     </div>
-    @* <table style="width:100%">
+    @*  <table style="width:100%">
         <thead>
             <tr>
                 <td></td>
@@ -1405,15 +1482,14 @@
         </tbody>
     </table>
 </div>
-<br>
 
 <div class="select-group">
     <strong>GAIT:</strong>
 
-    <label><input type="radio" class="chkMulti" name="GAIT" value="Normal" checked> <span class="select-btn">Normal</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Normal" checked> <span class="select-btn">Normal</span></label>
 
-    <label><input type="radio" class="chkMulti" name="GAIT" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
-    <label><input type="radio" class="chkMulti" name="GAIT" value="Altered"> <span class="select-btn">Altered</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Altered"> <span class="select-btn">Altered</span></label>
 
     <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Ambulates with a cane"> <span class="select-btn">Ambulates with a cane</span></label>
 
@@ -1424,7 +1500,6 @@
 </div>
 
 <script>
-
     function uncheckRadio(radio) {
         if (radio.dataset.wasChecked === "true") {
             radio.checked = false;
