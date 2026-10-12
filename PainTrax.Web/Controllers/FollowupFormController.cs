@@ -66,7 +66,8 @@ namespace PainTrax.Web.Controllers
         {
             return View();
         }
-        public IActionResult Create(int? locId, int? id, int? providerId, int patientId = 0, string fType = "FU")
+        public IActionResult Create(int? locId, int? id, int? providerId, int patientId = 0, string fType = "FU",
+            int ie_id = 0, int fu_id = 0)
         {
             if (providerId == null)
             {
@@ -88,6 +89,9 @@ namespace PainTrax.Web.Controllers
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
             ViewBag.ProviderId = providerId;
+            ViewBag.IEId = ie_id;
+            ViewBag.FUId = fu_id;
+
             ViewBag.Type = (fType == "TelFU" || fType == "Tele FU") ? "Tele FU" : "FU";
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
@@ -394,6 +398,7 @@ namespace PainTrax.Web.Controllers
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
 
             var result = "0";
+            int ieId = 0, newFU = 0;
             if (model != null)
             {
 
@@ -418,6 +423,9 @@ namespace PainTrax.Web.Controllers
                     TreatmentIds = model.TreatmentIds,
                     TreatmentDelimitDesc = model.TreatmentDelimitDesc
                 };
+
+                ieId = initialIntakeAI.PatientIEId.Value;
+
                 if (initialIntakeAI.Id == 0)
                 {
                     var data = _ieService.CheckFUDOS(initialIntakeAI.PatientIEId.Value, initialIntakeAI.DOE);
@@ -479,7 +487,7 @@ namespace PainTrax.Web.Controllers
                             objFU.procedure_performed = fuData.procedure_performed;
                         }
                     }
-                    var newFU = _fuservices.Insert(objFU);
+                    newFU = _fuservices.Insert(objFU);
 
                     if (newFU > 0)
                     {
@@ -623,7 +631,7 @@ namespace PainTrax.Web.Controllers
                         provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
                     };
                     var fuData = _ieService.GetLastFU(objIE.id.Value, "FU");
-
+                    ieId = objIE.id.Value;
 
 
                     if (fuData != null)
@@ -632,12 +640,13 @@ namespace PainTrax.Web.Controllers
                     _ieService.UpdateFromIntakeFU(objIE);
                     _ieService.UpdateCompensationFU(objIE);
                     _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), lFUId);
+                    newFU = lFUId;
                 }
                 patientId = string.IsNullOrEmpty(model.PatientId) ? 0 : Convert.ToInt32(model.PatientId);
                 _ieService.UpdateHandeness(Handeness, patientId);
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId, patientid = model.PatientId });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId, patientid = model.PatientId, ie_id = ieId, fu_id = newFU });
         }
 
         private string GetCC(AIIntakeFormModel model)

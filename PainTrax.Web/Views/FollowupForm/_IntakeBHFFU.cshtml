@@ -59,7 +59,10 @@
                         <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
                         <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
-                        <input type="hidden" id="hdIEId" name="hdIEId" />
+                        <input type="hidden" id="hdIEId" name="hdIEId" value="@ViewBag.IEId" />
+                        <input type="hidden" id="hdFUId" name="hdFUId" value="@ViewBag.FUId" />
+                        <input type="hidden" id="PatientIEId" name="PatientIEId" value="@ViewBag.IEId" />
+                        <input type="hidden" id="PatientFuID" name="PatientFuID" value="@ViewBag.FUId" />
                         <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
                         <input type="hidden" id="Diagnosis" name="Diagnosis" />
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
@@ -241,6 +244,22 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if (ViewBag.IEId > 0)
+                                {
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingPOC">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePOC" aria-expanded="false" aria-controls="collapseADL">
+                                                POC
+                                            </button>
+                                        </h2>
+                                        <div id="collapsePOC" class="accordion-collapse collapse" aria-labelledby="headingADL" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <div id="divPOC">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingNote">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNote" aria-expanded="false" aria-controls="collapseNote">
@@ -926,7 +945,9 @@
                                 '?id=' + response.id +
                                 '&providerId='+ provId +
                                 '&patientId='+ response.patientid +
-                                '&locid=' + response.locid;
+                                '&locid=' + response.locid+
+                                '&fType=FU&ie_id='+ response.ie_id+
+                                '&fu_id='+ response.fu_id;
 
                             $('#pdfLoader').hide();
                         }
@@ -1292,7 +1313,11 @@
 
 
                    $("#hdId").val('@ViewBag.Id');
-
+                   $("#hdIEId").val('@ViewBag.IEId');
+                   $("#PatientIEId").val('@ViewBag.IEId');
+                   $("#hdFUId").val('@ViewBag.FUId');
+                   $("#PatientFuId").val('@ViewBag.FUId');
+                   fnShowPOC();
 
                     setTimeout(function () {
                         $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
@@ -1946,7 +1971,22 @@
     function toggleSection(condition, selector) {
         $(selector).toggle(condition);
     }
+    function fnShowPOC() {
+        url = '@Url.Action("GetPOC", "FUVisit")?patientIEId=' + $("#hdIEId").val()+'&patientFUId='+ $("#hdFUId").val();
 
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPOC").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
 
 </script>
 
