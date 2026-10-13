@@ -75,6 +75,23 @@
         <input type="radio" name="InjuryType" value="LIEN">
         <span class="select-btn">LIEN</span>
     </label>
+
+    <label><input type="checkbox" class="chkMulti" name="TranslatorUsed" value="Translator"> <span class="select-btn">Translator</span></label>
+        @*  <label><input type="radio" style="width:90%" class="chkMulti" name="shortandlonggoal" value="Goals" onclick="uncheckRadiopatient(this)">  <span class="select-btn">Goals</span></label> *@
+    <div id="divTranslator" style="display:none;">
+        Language
+        <label>
+            <input type="radio" class="chkMulti" name="TransLang" value="Spanish" onclick="uncheckRadio(this)">
+            <span class="select-btn">Spanish</span>
+        </label>
+
+        <label>
+            <input type="radio" class="chkMulti" name="TransLang" value="Chinese" onclick="uncheckRadio(this)">
+            <span class="select-btn">Chinese</span>
+        </label>
+        <input type="text" id="OtherLanguage" name="OtherLanguage" class="form-control d-inline w-auto" placeholder="other" />
+        </div>
+   
     
 </div>
 
@@ -97,6 +114,10 @@
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" />  <span class="select-btn">L/Hip</span></label>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Wrist" data-section="rwristSection" data-pe="rwristPE" /> <span class="select-btn">R/Wrist</span></label>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Wrist" data-section="lwristSection" data-pe="lwristPE" />  <span class="select-btn">L/Wrist</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Hand" data-section="rhandSection" data-pe="rhandPE" /> <span class="select-btn">R/Hand</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hand" data-section="lhandSection" data-pe="lhandPE" />  <span class="select-btn">L/Hand</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Foot" data-section="rfootSection" data-pe="rfootPE" /> <span class="select-btn">R/Foot</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Foot" data-section="lfootSection" data-pe="lfootPE" />  <span class="select-btn">L/Foot</span></label>
     <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
 </div>
 <p>
@@ -402,6 +423,18 @@
             }
             return '';
         }
+       
+    function uncheckRadio(radio) {
+        if (radio.dataset.wasChecked === "true") {
+            radio.checked = false;
+            radio.dataset.wasChecked = "false";
+        } else {
+            document.querySelectorAll(`input[name="${radio.name}"]`)
+                .forEach(r => r.dataset.wasChecked = "false");
+
+            radio.dataset.wasChecked = "true";
+        }
+    }
        
     
 

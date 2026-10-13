@@ -313,8 +313,21 @@
     <p id="divIsAccidentPast" style="display:none">
         If yes, when?
         <input type="text" id="AccidentPast" name="AccidentPast" class="form-control d-inline w-auto" />
+        &nbsp;&nbsp;&nbsp;
+        Type of accident
+        <label>
+            <input type="radio" class="chkMulti" name="TypeAcci" value="Work Accident" onclick="uncheckRadio(this)">
+            <span class="select-btn">Work Accident</span>
+        </label>
+
+        <label>
+            <input type="radio" class="chkMulti" name="TypeAcci" value="No Fault" onclick="uncheckRadio(this)">
+            <span class="select-btn">No Fault</span>
+        </label>
+        &nbsp;&nbsp;&nbsp;
         Body parts injured in that accident
         <input type="text" id="AccidentBodyPart" name="AccidentBodyPart" class="form-control d-inline w-auto" />
+        <br />
         Did you completely recover?
         <label>
             <input type="radio" class="chkMulti" name="IsAccidentRecover" value="Yes">
@@ -325,6 +338,8 @@
             <input type="radio" class="chkMulti" name="IsAccidentRecover" value="No">
             <span class="select-btn">No</span>
         </label>
+        <textarea id="AccidentPastDescription" name="AccidentPastDescription" class="form-control d-inline" style="width:95%"></textarea>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentPastDescription')"></i>
     </p>
 </div>
 
@@ -429,7 +444,7 @@
 
 <!-- Allergies -->
 <div class="select-group">
-    Drug Allergies:
+    Allergies:
     <label>
         <input type="radio" class="chkMulti" name="Allergy" value="Yes">
         <span class="select-btn">Yes</span>
@@ -440,16 +455,30 @@
     </label>
 
 
-    <span id="divAllergy" style="display:none">
-        @*  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        Drug:
-                                                        <input id="AllergyDrug" class="form-control d-inline w-25" />
-                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyDrug')"></i> *@
+    <span id="divAllergy" style="display:none">       
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         What Allergy:
-        <input id="AllergyReaction" class="form-control d-inline" style="width:250px" />
-        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i> *@
+        <input id="AllergyReaction" class="form-control d-inline" style="width:250px" />    
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Reactions:
+        <input id="txtReaction" class="form-control d-inline" style="width:250px" />
     </span>
+   @*  Reactions:
+    <label>
+        <input type="radio" class="chkMulti" name="Reaction" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+    <label>
+        <input type="radio" class="chkMulti" name="Reaction" value="No">
+        <span class="select-btn">No</span>
+    </label>
+
+
+    <span id="divReaction" style="display:none">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       
+        <input id="txtReaction" class="form-control d-inline" style="width:250px" />
+    </span> *@
 </div>
 <!-- Social History -->
 <div class="select-group">

@@ -945,6 +945,7 @@
                     // toggleSection(data.HeadInjury === "Yes", "#divHeadache");
                     toggleSection(data.Hospital === "Yes", "#divHospital");
                     toggleSection(data.Allergy === "Yes", "#divAllergy");
+                     // toggleSection(data.Reaction === "Yes", "#divReaction");
                     toggleSection(data.Smoke === "Yes", "#divSmoke");
                     toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
                     toggleSection(data.PT === "Yes", "#divPT");
@@ -1283,6 +1284,11 @@
         $("#divWC").show();
         $('#divgoals').hide();
     }
+     if ($('input[name="TranslatorUsed"]').is(":checked")) {
+        $("#divTranslator").show();
+    } else {
+        $("#divTranslator").hide();
+    }
 
                 $('#patientForm').on('submit', function (e) {
 
@@ -1446,6 +1452,16 @@
             $("#divgoals").show();
         } else {
             $("#divgoals").hide();
+        }
+
+    });
+    $(document).on("change", 'input[name="TranslatorUsed"]', function () {      
+
+       
+        if ($(this).is(":checked")) {
+            $("#divTranslator").show();
+        } else {
+            $("#divTranslator").hide();
         }
 
     });
