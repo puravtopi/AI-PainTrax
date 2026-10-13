@@ -1072,13 +1072,18 @@
                             let locId = $("#LocationId").val() || 0;
                             let provId = prov_id || 0;
 
+                            const openPanel = document.querySelector('#accordionExample .accordion-collapse.show');
+                            const activeAccordionId = openPanel ? openPanel.id : 'collapseOne';
+
+
                             // Automatically redirect to a blank 'Create' page
                              window.location.href =
                                 '@Url.Action("Create", "FollowupForm")' +
                                 '?id=' + response.id +
                                 '&providerId='+ provId +
                                 '&patientId='+ response.patientid +
-                                '&locid=' +locId;
+                                '&locid=' +locId+
+                                '#' + activeAccordionId;
         
                             $('#pdfLoader').hide();
                         }
@@ -1198,6 +1203,22 @@
                 //         }
                 // });
             $(document).ready(function () {
+                 const hash = window.location.hash; // e.g., "#collapseTwo"
+
+                if (hash && $(hash).length && $(hash).hasClass('accordion-collapse')) {
+                    if (hash !== '#collapseOne') {
+                        $('#collapseOne').collapse('hide');
+                    }
+                    $(hash).collapse('show');
+                }
+
+
+                $('#accordionExample').on('hide.bs.collapse', function (e) {
+                    // e.target gives the element that is closing
+                    const closingSectionId = e.target.id;
+                    saveForm(true);
+                });
+
                 // Load template and initialize preview
                 var today = new Date().toISOString().split('T')[0];
                 $('#DOE').val(today);
