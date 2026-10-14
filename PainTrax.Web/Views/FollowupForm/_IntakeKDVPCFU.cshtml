@@ -1282,6 +1282,29 @@
                         bindForm('@ViewBag.FormData');
                         // clearWorkStatusIfRequired();
                     }
+
+                     if ($('input[name="PostLESI"]').is(':checked')) {
+        $("#divPostLESILPDALENDIS").show();
+    } else {
+        $("#divPostLESILPDALENDIS").hide();
+    }
+
+    if ($('input[name="PostCESI"]').is(':checked')) {
+        $("#divPostCESICPDACEDA").show();
+    } else {
+        $("#divPostCESICPDACEDA").hide();
+    }
+    if ($('input[name="NormalLESI"]').is(':checked')) {
+        $("#divNormalLESILPDALENDIS").show();
+    } else {
+        $("#divNormalLESILPDALENDIS").hide();
+    }
+
+    if ($('input[name="NormalCESI"]').is(':checked')) {
+        $("#divNormalCESICPDACEDA").show();
+    } else {
+        $("#divNormalCESICPDACEDA").hide();
+    }
                      function clearWorkStatusIfRequired() {
 
         var injuryType = $('input[name="InjuryType"]:checked').val();
@@ -1425,6 +1448,21 @@
         }
 
     });
+    $(document).on("change", 'input[name="PostLESI"]', function () {
+         $("#divPostLESILPDALENDIS").toggle(this.checked);
+     });
+
+     $(document).on("change", 'input[name="PostCESI"]', function () {
+         $("#divPostCESICPDACEDA").toggle(this.checked);
+     });
+     $(document).on("change", 'input[name="NormalLESI"]', function () {
+        $("#divNormalLESILPDALENDIS").toggle(this.checked);
+    });
+
+    $(document).on("change", 'input[name="NormalCESI"]', function () {
+        $("#divNormalCESICPDACEDA").toggle(this.checked);
+    });
+   
                      $(document).on('change', 'input[name="NeckRadiates"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
