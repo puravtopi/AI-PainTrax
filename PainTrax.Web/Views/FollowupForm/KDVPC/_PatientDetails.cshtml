@@ -77,7 +77,23 @@
     </select>
 </div>
 
+<div class="select-group">
+    <label><input type="checkbox" class="chkMulti" name="TranslatorUsed" value="Translator"> <span class="select-btn">Translator</span></label>
+    
+    <div id="divTranslator" style="display:none;">
+        Language
+        <label>
+            <input type="radio" class="chkMulti" name="TransLang" value="Spanish" onclick="uncheckRadio(this)">
+            <span class="select-btn">Spanish</span>
+        </label>
 
+        <label>
+            <input type="radio" class="chkMulti" name="TransLang" value="Chinese" onclick="uncheckRadio(this)">
+            <span class="select-btn">Chinese</span>
+        </label>
+        <input type="text" id="OtherLanguage" name="OtherLanguage" class="form-control d-inline w-auto" placeholder="other" />
+    </div>
+</div>
 <!-- Work -->
 <div class="select-group">
 
@@ -102,6 +118,7 @@
 
     % temporarily disabled
 </div>
+
 <br />
 <div id="divWC" style="display:none;" class="select-group">
     <label><input type="checkbox" class="chkMulti" name="shortandlonggoal" value="Goals"> <span class="select-btn">Goals</span></label>

@@ -85,21 +85,13 @@
         </div>
         <br />
     <div class="select-group">
-        <p><label><input type="checkbox" class="chkMulti" name="PostFUCheck" value="Patient denies any post-op complications, including fevers, chills, nausea or vomiting" />  <span class="select-btn"> Patient denies any post-op complications, including fevers, chills, nausea or vomiting.</span></label></p>
+        <p><label><input type="checkbox" class="chkMulti" name="Postopcomplications" value="Patient denies any post-op complications, including fevers, chills, nausea or vomiting" />  <span class="select-btn"> Patient denies any post-op complications, including fevers, chills, nausea or vomiting.</span></label></p>
     </div>
-    <div class="select-group">
+   @*  <div class="select-group">
         <p><label><input type="checkbox" class="chkMulti" name="PostFUCheck" value="The patient is seen for a follow-up" />  <span class="select-btn"> The patient is seen for a follow-up.</span></label></p>
-    </div>
+    </div> *@
+    
     <div class="select-group">
-        <p><label><input type="checkbox" class="chkMulti" name="PostFUCheck" value="Range of motion and pain scales were performed" />  <span class="select-btn"> Range of motion and pain scales were performed.</span></label></p>
-    </div>
-    <div class="select-group">
-        <p><label><input type="checkbox" class="chkMulti" name="PostFUCheck" value="The patient will continue physical therapy" />  <span class="select-btn">  The patient will continue physical therapy.</span></label></p>
-    </div>
-    <div class="select-group">
-        <p><label><input type="checkbox" class="chkMulti" name="PostFUCheck" value="The patient will be seen in 4 weeks" />  <span class="select-btn">  The patient will be seen in 4 weeks.</span></label></p>
-    </div>
-       @*  <p>
             During that
             <input type="text" id="During" name="During" class="form-control d-inline" style="width:150px" />
             period patient reported:  
@@ -108,40 +100,19 @@
             <span id="divRadicularPecentage" style="display:none">
                 <input type="text" id="RadicularSys" name="RadicularSys" class="form-control d-inline" style="width:70px" />%
             </span>
-            
-        </p> *@
-        <div id="divPostLESI" class="select-group">
-            <label><input type="checkbox" class="chkMulti" name="PostLESI" value="LESI/LPDA/LENDIS"> <span class="select-btn">LESI/LPDA/LENDIS</span></label>
 
-        <div id="divPostLESILPDALENDIS" style="display:none;width:90%">
-                <textarea id="txtPostLESILPDALENDIS" name="txtPostLESILPDALENDIS" class="form-control d-inline" style="width:95%;height:150px;">
-        The patient reported that lumbar pain is making activities of daily living  difficult, specifically with dressing the lower body, laying flat, bending, lifting, household chores, sitting or standing for more than 5-10 minutes, and sleeping through the night. 
-
-        </textarea>
-
-            </div>
-        </div>
-        <div id="divPostCESI" class="select-group">
-            <label><input type="checkbox" class="chkMulti" name="PostCESI" value="CESI/CPDA/CEDA"> <span class="select-btn">CESI/CPDA/CEDA</span></label>
-
-        <div id="divPostCESICPDACEDA" style="display:none;width:90%">
-                <textarea id="txtPostCESICPDACEDA" name="txtPostCESICPDACEDA" class="form-control d-inline" style="width:95%;height:150px;">
-        The patient reported cervical pain is making activities of daily living  difficult such as dressing upper body, driving, household chores, lying flat, and staying asleep through the night
-
-        </textarea>
-
-            </div>
-        </div>
     </div>
+        
+   
 
-    @* <div class="select-group">
+    <div class="select-group">
         
         <label><input type="checkbox" class="chkMulti" name="VASpainscores" value="VAS pain scores had improved" />  <span class="select-btn">VAS pain scores had improved</span></label>
         <label><input type="checkbox" class="chkMulti" name="VASPecentage" value="by greater than" />  <span class="select-btn">by greater than</span></label>
         <span id="divVASPecentage" style="display:none">
             <input type="text" id="txtVASPecentage" name="txtVASPecentage" class="form-control d-inline" style="width:70px" />%
         </span>
-       @*  <label><input type="checkbox" class="chkMulti" name="PostInjection" value="VAS pain scores had improved by greater than 50%." />  <span class="select-btn"> VAS pain scores had improved by greater than 50%.</span></label> 
+    @*  <label><input type="checkbox" class="chkMulti" name="PostInjection" value="VAS pain scores had improved by greater than 50%." />  <span class="select-btn"> VAS pain scores had improved by greater than 50%.</span></label> *@
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="There was functional improvement in ROM." />  <span class="select-btn">  There was functional improvement in ROM.</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Patient required less use of assistive devices." />  <span class="select-btn">  Patient required less use of assistive devices.</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Patient reported better sleep pattern." />  <span class="select-btn">  Patient reported better sleep pattern.</span></label>
@@ -149,25 +120,58 @@
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Patient reported improvements in Activities of Daily Living (ADL)." />  <span class="select-btn"> Patient reported improvements in Activities of Daily Living (ADL).</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Patient reported increased tolerance to walking, standing, and sitting." />  <span class="select-btn">Patient reported increased tolerance to walking, standing, and sitting.</span></label>
 
-    </div> *@
-    @* <div class="select-group">
+    </div>
+    <div class="select-group">
         <span>Patient symptoms:</span>
         <label><input type="radio" name="InjectionSymptomsBaseline" value="have" /> <span class="select-btn">have</span></label>
         <label><input type="radio" name="InjectionSymptomsBaseline" value="have not" /> <span class="select-btn">have not</span></label>
         <span>returned to baseline.</span>
-    </div> *@
-    @* <div class="select-group">
+    </div> 
+    <div class="select-group">
         Patient is doing
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="PT" />  <span class="select-btn">PT</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Chiro" />  <span class="select-btn">Chiro</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Acupuncture" />  <span class="select-btn">Acupuncture </span></label>
-        <input type="text" id="PatientDoing" name="PatientDoing" class="form-control d-inline" style="width:70px" /> x a week.
+    @*<input type="text" id="PatientDoing" name="PatientDoing" class="form-control d-inline" style="width:70px" /> x a week.*@
+    </div>
+   
+        <div class="select-group">
+            <p><label><input type="checkbox" class="chkMulti" name="PostFUCheck" value="Range of motion and pain scales were performed" />  <span class="select-btn"> Range of motion and pain scales were performed.</span></label></p>
+        </div>
+        <div class="select-group">
+            <p><label><input type="checkbox" class="chkMulti" name="PostFUCheck" value="The patient will continue physical therapy" />  <span class="select-btn">  The patient will continue physical therapy.</span></label></p>
+        </div>
+        <div class="select-group">
+            <p><label><input type="checkbox" class="chkMulti" name="PostFUCheck" value="The patient will be seen in 4 weeks" />  <span class="select-btn">  The patient will be seen in 4 weeks.</span></label></p>
+        </div>
+   
+    <div id="divPostCESI" class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="PostCESI" value="CESI/CPDA/CEDA"> <span class="select-btn">CESI/CPDA/CEDA</span></label>
+
+        <div id="divPostCESICPDACEDA" style="display:none;width:90%">
+            <textarea id="txtPostCESICPDACEDA" name="txtPostCESICPDACEDA" class="form-control d-inline" style="width:95%;height:150px;">
+        The patient reported cervical pain is making activities of daily living  difficult such as dressing upper body, driving, household chores, lying flat, and staying asleep through the night
+
+        </textarea>
+
+        </div>
+    </div>
+    <div id="divPostLESI" class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="PostLESI" value="LESI/LPDA/LENDIS"> <span class="select-btn">LESI/LPDA/LENDIS</span></label>
+
+        <div id="divPostLESILPDALENDIS" style="display:none;width:90%">
+            <textarea id="txtPostLESILPDALENDIS" name="txtPostLESILPDALENDIS" class="form-control d-inline" style="width:95%;height:150px;">
+        The patient reported that lumbar pain is making activities of daily living  difficult, specifically with dressing the lower body, laying flat, bending, lifting, household chores, sitting or standing for more than 5-10 minutes, and sleeping through the night. 
+
+        </textarea>
+
+        </div>
     </div>
     <p>
         <textarea id="PostInjectionOther" name="PostInjectionOther" class="form-control d-inline" style="width:95%"></textarea>
         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PostInjectionOther')"></i>
-    </p> *@
-
+    </p>
+</div>
 <div id="divNormalFU" style="display:none">
     <div class="select-group">
         <b> Normal FU :</b>
@@ -222,21 +226,7 @@
         <p><label><input type="checkbox" class="chkMulti" name="NormalFUCheck" value="The patient will be seen in 4 weeks" />  <span class="select-btn">  The patient will be seen in 4 weeks.</span></label></p>
     </div>
 
-    <p>
-        <textarea id="NormalFUOther" name="NormalFUOther" class="form-control d-inline" style="width:95%"></textarea>
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NormalFUOther')"></i>
-    </p>
-    <div id="divNormalLESI" class="select-group">
-        <label><input type="checkbox" class="chkMulti" name="NormalLESI" value="LESI/LPDA/LENDIS"> <span class="select-btn">LESI/LPDA/LENDIS</span></label>
-
-        <div id="divNormalLESILPDALENDIS" style="display:none;width:90%">
-            <textarea id="txtNormalLESILPDALENDIS" name="txtNormalLESILPDALENDIS" class="form-control d-inline" style="width:95%;height:150px;">
-        The patient reported that lumbar pain is making activities of daily living  difficult, specifically with dressing the lower body, laying flat, bending, lifting, household chores, sitting or standing for more than 5-10 minutes, and sleeping through the night. 
-
-        </textarea>
-
-        </div>
-    </div>
+    
     <div id="divNormalCESI" class="select-group">
         <label><input type="checkbox" class="chkMulti" name="NormalCESI" value="CESI/CPDA/CEDA"> <span class="select-btn">CESI/CPDA/CEDA</span></label>
 
@@ -248,6 +238,22 @@
 
         </div>
     </div>
+    <div id="divNormalLESI" class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="NormalLESI" value="LESI/LPDA/LENDIS"> <span class="select-btn">LESI/LPDA/LENDIS</span></label>
+
+        <div id="divNormalLESILPDALENDIS" style="display:none;width:90%">
+            <textarea id="txtNormalLESILPDALENDIS" name="txtNormalLESILPDALENDIS" class="form-control d-inline" style="width:95%;height:150px;">
+        The patient reported that lumbar pain is making activities of daily living  difficult, specifically with dressing the lower body, laying flat, bending, lifting, household chores, sitting or standing for more than 5-10 minutes, and sleeping through the night. 
+
+        </textarea>
+
+        </div>
+    </div>
+    <p>
+        <textarea id="NormalFUOther" name="NormalFUOther" class="form-control d-inline" style="width:95%"></textarea>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NormalFUOther')"></i>
+    </p>
+    
 </div>
 
 @* <div class="select-group">

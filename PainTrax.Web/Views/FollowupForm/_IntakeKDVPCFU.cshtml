@@ -1318,6 +1318,11 @@
     // $(document).on('change', 'input[name="InjuryType"]', function () {
     //     clearWorkStatusIfRequired();
     // });
+    if ($('input[name="TranslatorUsed"]').is(":checked")) {
+        $("#divTranslator").show();
+    } else {
+        $("#divTranslator").hide();
+    }
                     $('#patientForm').on('submit', function (e) {
 
                         if(!checkValidation())
@@ -1463,6 +1468,16 @@
         $("#divNormalCESICPDACEDA").toggle(this.checked);
     });
    
+    $(document).on("change", 'input[name="TranslatorUsed"]', function () {
+
+
+        if ($(this).is(":checked")) {
+            $("#divTranslator").show();
+        } else {
+            $("#divTranslator").hide();
+        }
+
+    });
                      $(document).on('change', 'input[name="NeckRadiates"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
