@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml;
+﻿using AngleSharp.Html.Parser;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using HtmlToOpenXml;
@@ -845,7 +846,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeKDVPC");
+            else return PartialView("_IntakeBHF");
             //return View();
         }
 
@@ -1046,7 +1047,8 @@ namespace PainTrax.Web.Controllers
 
                 string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
                 var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
-                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc")
+                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
+                    HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc" )
                 {
                     peContent = this.GetPE(model);
                     dtrContent = this.GetDTR(model);
@@ -2353,7 +2355,75 @@ namespace PainTrax.Web.Controllers
             // 2. Read the entire file content into a string asynchronously
             string htmlString = System.IO.File.ReadAllText(filePath);
 
-            htmlString = htmlString.Replace("#TricepsLeft", string.IsNullOrEmpty(model.TricepsLeft) ? "2+" : model.TricepsLeft)
+            // 2. Parse HTML
+            var parser = new HtmlParser();
+            var document =  parser.ParseDocument(htmlString);
+
+            string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+
+            string className = "";
+
+            bool isUEPresent = model.Complaints.Any(value =>
+            {
+                string sBody = value.Replace("Left", "")
+                                    .Replace("Right", "")
+                                    .Trim();
+
+                // In C#, you can do a case-insensitive check directly without calling ToLower()
+                return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (!isUEPresent)
+            {
+                // 3. Select all elements matching the class and remove them
+                className = "upper"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+            }
+
+            bool isLEPresent = model.Complaints.Any(value =>
+            {
+                string sBody = value.Replace("Left", "")
+                                    .Replace("Right", "")
+                                    .Trim();
+
+                // In C#, you can do a case-insensitive check directly without calling ToLower()
+                return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (!isLEPresent)
+            {
+                // 3. Select all elements matching the class and remove them
+                className = "lower"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+            }
+
+            if (!isUEPresent && !isLEPresent)
+            {  // 3. Select all elements matching the class and remove them
+                className = "hidAll"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+
+            }
+
+            // 4. Output the result
+            string modifiedHtml = document.Body.InnerHtml; // or document.DocumentElement.OuterHtml
+
+            modifiedHtml = modifiedHtml.Replace("#TricepsLeft", string.IsNullOrEmpty(model.TricepsLeft) ? "2+" : model.TricepsLeft)
                                           .Replace("#TricepsRight", string.IsNullOrEmpty(model.TricepsRight) ? "2+" : model.TricepsRight)
                                           .Replace("#BicepsLeft", string.IsNullOrEmpty(model.BicepsLeft) ? "2+" : model.BicepsLeft)
                                           .Replace("#BicepsRight", string.IsNullOrEmpty(model.BicepsRight) ? "2+" : model.BicepsRight)
@@ -2363,7 +2433,7 @@ namespace PainTrax.Web.Controllers
                                           .Replace("#KneeRERight", string.IsNullOrEmpty(model.KneeRERight) ? "2+" : model.KneeRERight)
                                           .Replace("#AnkleRELeft", string.IsNullOrEmpty(model.AnkleRELeft) ? "2+" : model.AnkleRELeft)
                                           .Replace("#AnkleRERight", string.IsNullOrEmpty(model.AnkleRERight) ? "2+" : model.AnkleRERight);
-            return htmlString;
+            return modifiedHtml;
 
         }
 
@@ -2379,7 +2449,75 @@ namespace PainTrax.Web.Controllers
             // 2. Read the entire file content into a string asynchronously
             string htmlString = System.IO.File.ReadAllText(filePath);
 
-            htmlString = htmlString.Replace("#UpperShoulderLeft", string.IsNullOrEmpty(model.UpperShoulderLeft) ? "Normal" : model.UpperShoulderLeft)
+            // 2. Parse HTML
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(htmlString);
+
+            string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+
+            string className = "";
+
+            bool isUEPresent = model.Complaints.Any(value =>
+            {
+                string sBody = value.Replace("Left", "")
+                                    .Replace("Right", "")
+                                    .Trim();
+
+                // In C#, you can do a case-insensitive check directly without calling ToLower()
+                return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (!isUEPresent)
+            {
+                // 3. Select all elements matching the class and remove them
+                className = "upper"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+            }
+
+            bool isLEPresent = model.Complaints.Any(value =>
+            {
+                string sBody = value.Replace("Left", "")
+                                    .Replace("Right", "")
+                                    .Trim();
+
+                // In C#, you can do a case-insensitive check directly without calling ToLower()
+                return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (!isLEPresent)
+            {
+                // 3. Select all elements matching the class and remove them
+                className = "lower"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+            }
+
+            if (!isUEPresent && !isLEPresent)
+            {  // 3. Select all elements matching the class and remove them
+                className = "hidAll"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+
+            }
+
+            // 4. Output the result
+            string modifiedHtml = document.Body.InnerHtml;
+
+            modifiedHtml = modifiedHtml.Replace("#UpperShoulderLeft", string.IsNullOrEmpty(model.UpperShoulderLeft) ? "Normal" : model.UpperShoulderLeft)
                                           .Replace("#UpperShoulderRight", string.IsNullOrEmpty(model.UpperShoulderRight) ? "Normal" : model.UpperShoulderRight)
                                           .Replace("#LateralArmLeft", string.IsNullOrEmpty(model.LateralArmLeft) ? "Normal" : model.LateralArmLeft)
                                           .Replace("#LateralArmRight", string.IsNullOrEmpty(model.LateralArmRight) ? "Normal" : model.LateralArmRight)
@@ -2403,7 +2541,7 @@ namespace PainTrax.Web.Controllers
                                           .Replace("#FootLateralRight", string.IsNullOrEmpty(model.FootLateralRight) ? "Normal" : model.FootLateralRight)
                                           .Replace("#LumbarLeft", string.IsNullOrEmpty(model.LumbarLeft) ? "Normal" : model.LumbarLeft)
                                           .Replace("#LumbarRight", string.IsNullOrEmpty(model.LumbarRight) ? "Normal" : model.LumbarRight);
-            return htmlString;
+            return modifiedHtml;
 
         }
 
@@ -2419,7 +2557,75 @@ namespace PainTrax.Web.Controllers
             // 2. Read the entire file content into a string asynchronously
             string htmlString = System.IO.File.ReadAllText(filePath);
 
-            htmlString = htmlString.Replace("#ShoulderAbductionLeft", string.IsNullOrEmpty(model.ShoulderAbductionLeft) ? "5" : model.ShoulderAbductionLeft)
+            // 2. Parse HTML
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(htmlString);
+
+            string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+
+            string className = "";
+
+            bool isUEPresent = model.Complaints.Any(value =>
+            {
+                string sBody = value.Replace("Left", "")
+                                    .Replace("Right", "")
+                                    .Trim();
+
+                // In C#, you can do a case-insensitive check directly without calling ToLower()
+                return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (!isUEPresent)
+            {
+                // 3. Select all elements matching the class and remove them
+                className = "upper"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+            }
+
+            bool isLEPresent = model.Complaints.Any(value =>
+            {
+                string sBody = value.Replace("Left", "")
+                                    .Replace("Right", "")
+                                    .Trim();
+
+                // In C#, you can do a case-insensitive check directly without calling ToLower()
+                return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (!isLEPresent)
+            {
+                // 3. Select all elements matching the class and remove them
+                className = "lower"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+            }
+
+            if (!isUEPresent && !isLEPresent)
+            {  // 3. Select all elements matching the class and remove them
+                className = "hidAll"; // Target class
+                var elements = document.QuerySelectorAll($".{className}");
+
+                foreach (var element in elements)
+                {
+                    element.Remove(); // Completely removes the element
+                }
+
+            }
+
+            // 4. Output the result
+            string modifiedHtml = document.Body.InnerHtml;
+
+            modifiedHtml = modifiedHtml.Replace("#ShoulderAbductionLeft", string.IsNullOrEmpty(model.ShoulderAbductionLeft) ? "5" : model.ShoulderAbductionLeft)
                                           .Replace("#ShoulderAbductionRight", string.IsNullOrEmpty(model.ShoulderAbductionRight) ? "5" : model.ShoulderAbductionRight)
                                           .Replace("#ShoulderFlexionLeft", string.IsNullOrEmpty(model.ShoulderFlexionLeft) ? "5" : model.ShoulderFlexionLeft)
                                           .Replace("#ShoulderFlexionRight", string.IsNullOrEmpty(model.ShoulderFlexionRight) ? "5" : model.ShoulderFlexionRight)
@@ -2453,7 +2659,7 @@ namespace PainTrax.Web.Controllers
                                           .Replace("#AnklePlantarRight", string.IsNullOrEmpty(model.AnklePlantarRight) ? "5" : model.AnklePlantarRight)
                                           .Replace("#EHLLeft", string.IsNullOrEmpty(model.EHLLeft) ? "5" : model.EHLLeft)
                                           .Replace("#EHLRight", string.IsNullOrEmpty(model.EHLRight) ? "5" : model.EHLRight);
-            return htmlString;
+            return modifiedHtml;
 
         }
 
