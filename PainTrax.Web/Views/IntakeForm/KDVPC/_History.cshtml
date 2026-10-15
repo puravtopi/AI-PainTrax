@@ -342,7 +342,56 @@
         <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentPastDescription')"></i>
     </p>
 </div>
+<div class="select-group">
+    Any metal in the body?
 
+    <label>
+        <input type="radio" class="chkMulti" name="IsMetal" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+
+    <label>
+        <input type="radio" class="chkMulti" name="IsMetal" value="No">
+        <span class="select-btn">No</span>
+    </label>
+    <p id="divIsMetal" style="display:none">
+        <input id="txtMetal" placeholder="None or details" class="form-control d-inline" style="width:250px" />
+
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i> *@
+    </p>
+</div>
+<div class="select-group">
+    Pregnancy
+
+    <label>
+        <input type="radio" class="chkMulti" name="IsPregnancy" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+
+    <label>
+        <input type="radio" class="chkMulti" name="IsPregnancy" value="No">
+        <span class="select-btn">No</span>
+    </label>
+    <p id="divIsPregnancy" style="display:none">
+        <input id="txtIsPregnancy" placeholder="None or details" class="form-control d-inline" style="width:250px" />weeks.   
+        
+    </p>
+    &nbsp;&nbsp;&nbsp;
+    Breastfeeding
+
+    <label>
+        <input type="radio" class="chkMulti" name="IsBreastfeeding" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+
+    <label>
+        <input type="radio" class="chkMulti" name="IsBreastfeeding" value="No">
+        <span class="select-btn">No</span>
+    </label>
+    <p id="divIsBreastfeeding" style="display:none">
+        <input id="txtIsBreastfeeding" placeholder="None or details" class="form-control d-inline" style="width:250px" />
+    </p>
+</div>
 <!-- PMH -->
 <div class="select-group">
     Any Medical conditions?:
@@ -435,11 +484,23 @@
         <input type="radio" class="chkMulti" name="Meds" value="No">
         <span class="select-btn">No</span>
     </label>
-    <p id="divMeds" style="display:none">
-        <input id="MedsOther" class="form-control d-inline" style="width:250px" />
+  <p id="divMeds" style="display:none">
+        <input id="MedsOther" class="form-control d-inline" style="width:250px" />    
+        Blood thinners
 
-        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i> *@
+        <label>
+            <input type="radio" class="chkMulti" name="Bloodthinners" value="Yes">
+            <span class="select-btn">Yes</span>
+        </label>
+
+        <label>
+            <input type="radio" class="chkMulti" name="Bloodthinners" value="No">
+            <span class="select-btn">No</span>
+        </label>
+    <p id="divBloodthinners" style="display:none">
+        <input id="BloodthinnersOther" class="form-control d-inline" style="width:250px" />
     </p>
+ </p>
 </div>
 
 <!-- Allergies -->
