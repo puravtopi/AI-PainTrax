@@ -932,36 +932,8 @@
                     let regex = new RegExp('{{' + key + '}}', 'g');
                     html = html.replace(regex, data[key]);
                 });
-
-                    toggleSection(data.IsSMH === "Yes", "#divIsSMH");
-                    toggleSection(data.Meds === "Yes", "#divMeds");
-                    toggleSection(data.IsPMH === "Yes", "#divIsPMH");
-                    toggleSection(data.IsHospitalTest === "Yes", "#divHospitalTest");
-                    toggleSection(data.IsHospitalMedication === "Yes", "#divHospitalMedication");
-                    toggleSection(data.IsAccidentPast === "Yes", "#divIsAccidentPast");
-                    toggleSection(data.SameDay === "No", "#divSameDay");
-                    toggleSection(data.DirectImpact === "Yes", "#divBodyImpact");
-                    toggleSection(data.LoseConsciousness === "Yes", "#divLoseConsciousness");
-                    // toggleSection(data.HeadInjury === "Yes", "#divHeadache");
-                    toggleSection(data.Hospital === "Yes", "#divHospital");
-                    toggleSection(data.Allergy === "Yes", "#divAllergy");
-                     // toggleSection(data.Reaction === "Yes", "#divReaction");
-                    toggleSection(data.Smoke === "Yes", "#divSmoke");
-                    toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
-                    toggleSection(data.PT === "Yes", "#divPT");
-                    toggleSection(data.Chiro === "Yes", "#divChiro");
-                    toggleSection(data.Alcohol === "Yes", "#divAlcohol");
-                    toggleSection(data.IsMetal === "Yes", "#divIsMetal");
-                     toggleSection(data.IsPregnancy === "Yes", "#divIsPregnancy");
-                      toggleSection(data.IsBreastfeeding === "Yes", "#divIsBreastfeeding");
-                       toggleSection(data.Bloodthinners === "Yes", "#divBloodthinners");
+                 fnToggle(data);
                     
-                    
-                    // toggleSection(data.shortandlonggoal === "Goals", "#divgoals");
-                    // toggleSection(data.shortgoal === "Short term goals", "#divgoals");
-                    // toggleSection(data.shortgoal === "long term goals", "#divgoalslongterm");
-                    toggleSection(data.Airbags === "Yes", "#divAirbags");
-                    toggleSection(data.whiplash === "Yes", "#divwhiplash");
 
                     if(data.PreInjury==="No")
                         $("#preInjuryDetailsBox").show();
@@ -1017,7 +989,31 @@
 
                     $('#previewText').html(html);
             }
+            function fnToggle(data){
+                toggleSection(data.IsSMH === "Yes", "#divIsSMH");
+                    toggleSection(data.Meds === "Yes", "#divMeds");
+                    toggleSection(data.IsPMH === "Yes", "#divIsPMH");
+                    toggleSection(data.IsHospitalTest === "Yes", "#divHospitalTest");
+                    toggleSection(data.IsHospitalMedication === "Yes", "#divHospitalMedication");
+                    toggleSection(data.IsAccidentPast === "Yes", "#divIsAccidentPast");
+                    toggleSection(data.SameDay === "No", "#divSameDay");
+                    toggleSection(data.DirectImpact === "Yes", "#divBodyImpact");
+                    toggleSection(data.LoseConsciousness === "Yes", "#divLoseConsciousness");                    
+                    toggleSection(data.Hospital === "Yes", "#divHospital");
+                    toggleSection(data.Allergy === "Yes", "#divAllergy");                     
+                    toggleSection(data.Smoke === "Yes", "#divSmoke");
+                    toggleSection(data.OtherDrugs === "Yes", "#divDrugs");
+                    toggleSection(data.PT === "Yes", "#divPT");
+                    toggleSection(data.Chiro === "Yes", "#divChiro");
+                    toggleSection(data.Alcohol === "Yes", "#divAlcohol");
+                    toggleSection(data.IsMetal === "Yes", "#divIsMetal");
+                     toggleSection(data.IsPregnancy === "Yes", "#divIsPregnancy");
+                      toggleSection(data.IsBreastfeeding === "Yes", "#divIsBreastfeeding");
+                       toggleSection(data.Bloodthinners === "Yes", "#divBloodthinners");                   
+                    toggleSection(data.Airbags === "Yes", "#divAirbags");
+                    toggleSection(data.whiplash === "Yes", "#divwhiplash");
 
+            }
                 function saveForm(isSubmit) {
      
 
@@ -1600,9 +1596,48 @@
                fnShowPOC();
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
-                    //updatePreview();
-                    $(".otherDiv").toggle($("#OtherBodyPart").val().trim() !== "");
+                    
+                    
                     $('#pdfLoader').hide();
+                      var values = {};
+
+                $('#patientForm').find('input, select, textarea').each(function () {
+                    var key = $(this).attr('name') || $(this).attr('id');
+                    // var cls = $(this).attr('class');
+                    if (!key) return;
+
+                    var type = $(this).attr('type');
+
+                    if (type === 'radio') {
+                        if ($(this).is(':checked')) {
+                            values[key] = $(this).val();
+                        }
+                    }
+                        else if (type === 'checkbox') {
+
+        if ($(this).hasClass("chkMulti")) {
+
+            if (!Array.isArray(values[key])) {
+                values[key] = [];
+            }
+
+            if ($(this).is(':checked')) {
+                values[key].push($(this).val());
+            }
+
+        } else {
+
+            values[key] = $(this).is(':checked');
+        }
+    }
+                   
+                    else {
+                        values[key] = $(this).val() || "";
+                    }
+                });
+                 fnToggle(values);
+                     $(".otherDiv").toggle($("#OtherBodyPart").val().trim() !== "");
+                    
                 }, 1000);
 
 
