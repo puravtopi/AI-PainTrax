@@ -732,7 +732,7 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index", "Visit");
         }
 
-        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId, int patientId = 0, string type = "", int ie_id=0)
+        public IActionResult AIInitialIntake(int? locId, int? id, int? providerId, int patientId = 0, string type = "", int ie_id = 0)
         {
             if (providerId == null)
             {
@@ -859,7 +859,7 @@ namespace PainTrax.Web.Controllers
             ViewBag.FormData = "";
             ViewBag.Id = "0";
             ViewBag.LocId = locId;
-           
+
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             tbl_locations objLoc = new tbl_locations()
@@ -999,7 +999,7 @@ namespace PainTrax.Web.Controllers
 
             if (model != null)
             {
-              
+
                 InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
                 {
                     Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
@@ -1048,7 +1048,7 @@ namespace PainTrax.Web.Controllers
                 string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
                 var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
                 if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
-                    HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc" )
+                    HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
                 {
                     peContent = this.GetPE(model);
                     dtrContent = this.GetDTR(model);
@@ -1113,11 +1113,11 @@ namespace PainTrax.Web.Controllers
 
                             var ie = _ieService.Insert(objIE);
 
-                           
+
 
                             if (ie > 0)
                             {
-                              
+
                                 string history = "";
                                 if (defaultPage1 != null)
                                 {
@@ -1146,7 +1146,7 @@ namespace PainTrax.Web.Controllers
                                     vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.";
                                 }
 
-                               
+
 
                                 var objPage1 = new tbl_ie_page1()
                                 {
@@ -1349,7 +1349,7 @@ namespace PainTrax.Web.Controllers
                         intakeid = initialIntakeAI.Id,
                         location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
                         provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
-                        
+
                     };
                     _ieService.UpdateFromIntake(objIE);
                     patientId = string.IsNullOrEmpty(model.PatientId) ? 0 : Convert.ToInt32(model.PatientId);
@@ -1360,8 +1360,8 @@ namespace PainTrax.Web.Controllers
 
                         bodypart = string.Join(",", model.Complaints),
                         id = initialIntakeAI.Id,
-                        cc= ccContent,
-                        pe= peContent
+                        cc = ccContent,
+                        pe = peContent
 
                     };
 
@@ -1371,10 +1371,10 @@ namespace PainTrax.Web.Controllers
                     var objNE = new tbl_ie_ne()
                     {
 
-                       sensory= sensoryContent,
-                       manual_muscle_strength_testing= mmstContent,
-                       other_content= dtrContent,
-                       ie_id= string.IsNullOrEmpty(model.PatientIEId)?0: Convert.ToInt32(model.PatientIEId)
+                        sensory = sensoryContent,
+                        manual_muscle_strength_testing = mmstContent,
+                        other_content = dtrContent,
+                        ie_id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId)
 
                     };
 
@@ -1396,7 +1396,7 @@ namespace PainTrax.Web.Controllers
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, patientid = model.PatientId, locid = model.LocationId, provid = model.ProviderId,ieid= model.PatientIEId });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, patientid = model.PatientId, locid = model.LocationId, provid = model.ProviderId, ieid = model.PatientIEId });
         }
 
         [HttpPost]
@@ -2272,7 +2272,7 @@ namespace PainTrax.Web.Controllers
             {
                 pe = pe + "<br/><p>" + CCHelper.LeftWristCC(model) + "</p>";
             }
-            return pe.Replace(", and"," and");
+            return pe.Replace(", and", " and");
         }
 
         private string GetPE(AIIntakeFormModel model)
@@ -2345,95 +2345,104 @@ namespace PainTrax.Web.Controllers
 
         private string GetDTR(AIIntakeFormModel model)
         {
-
-            var templateDir = Path.Combine(Environment.WebRootPath, "templates");
-
-            //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
-            var filePath = templateDir + "/BHF/DTR.html";
-
-
-            // 2. Read the entire file content into a string asynchronously
-            string htmlString = System.IO.File.ReadAllText(filePath);
-
-            // 2. Parse HTML
-            var parser = new HtmlParser();
-            var document =  parser.ParseDocument(htmlString);
-
-            string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
-            string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
-
-            string className = "";
-
-            bool isUEPresent = model.Complaints.Any(value =>
+            try
             {
-                string sBody = value.Replace("Left", "")
-                                    .Replace("Right", "")
-                                    .Trim();
 
-                // In C#, you can do a case-insensitive check directly without calling ToLower()
-                return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            });
+                var templateDir = Path.Combine(Environment.WebRootPath, "templates");
 
-            if (!isUEPresent)
-            {
-                // 3. Select all elements matching the class and remove them
-                className = "upper"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
+                //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
+                var filePath = templateDir + "/BHF/DTR.html";
 
-                foreach (var element in elements)
+
+                // 2. Read the entire file content into a string asynchronously
+                string htmlString = System.IO.File.ReadAllText(filePath);
+
+                // 2. Parse HTML
+                /*var parser = new HtmlParser();
+                var document = parser.ParseDocument(htmlString);
+
+                string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+                string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+
+                string className = "";
+
+                bool isUEPresent = model.Complaints.Any(value =>
                 {
-                    element.Remove(); // Completely removes the element
-                }
-            }
+                    string sBody = value.Replace("Left", "")
+                                        .Replace("Right", "")
+                                        .Trim();
 
-            bool isLEPresent = model.Complaints.Any(value =>
-            {
-                string sBody = value.Replace("Left", "")
-                                    .Replace("Right", "")
-                                    .Trim();
+                    // In C#, you can do a case-insensitive check directly without calling ToLower()
+                    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+                });
 
-                // In C#, you can do a case-insensitive check directly without calling ToLower()
-                return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            });
-
-            if (!isLEPresent)
-            {
-                // 3. Select all elements matching the class and remove them
-                className = "lower"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
-
-                foreach (var element in elements)
+                if (!isUEPresent)
                 {
-                    element.Remove(); // Completely removes the element
-                }
-            }
+                    // 3. Select all elements matching the class and remove them
+                    className = "upper"; // Target class
+                    var elements = document.QuerySelectorAll($".{className}");
 
-            if (!isUEPresent && !isLEPresent)
-            {  // 3. Select all elements matching the class and remove them
-                className = "hidAll"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
-
-                foreach (var element in elements)
-                {
-                    element.Remove(); // Completely removes the element
+                    foreach (var element in elements)
+                    {
+                        element.Remove(); // Completely removes the element
+                    }
                 }
 
+                bool isLEPresent = model.Complaints.Any(value =>
+                {
+                    string sBody = value.Replace("Left", "")
+                                        .Replace("Right", "")
+                                        .Trim();
+
+                    // In C#, you can do a case-insensitive check directly without calling ToLower()
+                    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+                });
+
+                if (!isLEPresent)
+                {
+                    // 3. Select all elements matching the class and remove them
+                    className = "lower"; // Target class
+                    var elements = document.QuerySelectorAll($".{className}");
+
+                    foreach (var element in elements)
+                    {
+                        element.Remove(); // Completely removes the element
+                    }
+                }
+
+                if (!isUEPresent && !isLEPresent)
+                {  // 3. Select all elements matching the class and remove them
+                    className = "hidAll"; // Target class
+                    var elements = document.QuerySelectorAll($".{className}");
+
+                    foreach (var element in elements)
+                    {
+                        element.Remove(); // Completely removes the element
+                    }
+
+                }*/
+
+                // 4. Output the result
+                //string modifiedHtml = document.Body.InnerHtml; // or document.DocumentElement.OuterHtml
+                string modifiedHtml = htmlString; // or document.DocumentElement.OuterHtml
+
+                modifiedHtml = modifiedHtml.Replace("#TricepsLeft", string.IsNullOrEmpty(model.TricepsLeft) ? "2+" : model.TricepsLeft)
+                                              .Replace("#TricepsRight", string.IsNullOrEmpty(model.TricepsRight) ? "2+" : model.TricepsRight)
+                                              .Replace("#BicepsLeft", string.IsNullOrEmpty(model.BicepsLeft) ? "2+" : model.BicepsLeft)
+                                              .Replace("#BicepsRight", string.IsNullOrEmpty(model.BicepsRight) ? "2+" : model.BicepsRight)
+                                              .Replace("#BrachioradialisLeft", string.IsNullOrEmpty(model.BrachioradialisLeft) ? "2+" : model.BrachioradialisLeft)
+                                              .Replace("#BrachioradialisRight", string.IsNullOrEmpty(model.BrachioradialisRight) ? "2+" : model.BrachioradialisRight)
+                                              .Replace("#KneeRELeft", string.IsNullOrEmpty(model.KneeRELeft) ? "2+" : model.KneeRELeft)
+                                              .Replace("#KneeRERight", string.IsNullOrEmpty(model.KneeRERight) ? "2+" : model.KneeRERight)
+                                              .Replace("#AnkleRELeft", string.IsNullOrEmpty(model.AnkleRELeft) ? "2+" : model.AnkleRELeft)
+                                              .Replace("#AnkleRERight", string.IsNullOrEmpty(model.AnkleRERight) ? "2+" : model.AnkleRERight);
+                return modifiedHtml;
             }
-
-            // 4. Output the result
-            string modifiedHtml = document.Body.InnerHtml; // or document.DocumentElement.OuterHtml
-
-            modifiedHtml = modifiedHtml.Replace("#TricepsLeft", string.IsNullOrEmpty(model.TricepsLeft) ? "2+" : model.TricepsLeft)
-                                          .Replace("#TricepsRight", string.IsNullOrEmpty(model.TricepsRight) ? "2+" : model.TricepsRight)
-                                          .Replace("#BicepsLeft", string.IsNullOrEmpty(model.BicepsLeft) ? "2+" : model.BicepsLeft)
-                                          .Replace("#BicepsRight", string.IsNullOrEmpty(model.BicepsRight) ? "2+" : model.BicepsRight)
-                                          .Replace("#BrachioradialisLeft", string.IsNullOrEmpty(model.BrachioradialisLeft) ? "2+" : model.BrachioradialisLeft)
-                                          .Replace("#BrachioradialisRight", string.IsNullOrEmpty(model.BrachioradialisRight) ? "2+" : model.BrachioradialisRight)
-                                          .Replace("#KneeRELeft", string.IsNullOrEmpty(model.KneeRELeft) ? "2+" : model.KneeRELeft)
-                                          .Replace("#KneeRERight", string.IsNullOrEmpty(model.KneeRERight) ? "2+" : model.KneeRERight)
-                                          .Replace("#AnkleRELeft", string.IsNullOrEmpty(model.AnkleRELeft) ? "2+" : model.AnkleRELeft)
-                                          .Replace("#AnkleRERight", string.IsNullOrEmpty(model.AnkleRERight) ? "2+" : model.AnkleRERight);
-            return modifiedHtml;
+            catch (Exception ex)
+            {
+                this.SaveLog(ex, "");
+                return "";
+            }
 
         }
 
@@ -2450,74 +2459,74 @@ namespace PainTrax.Web.Controllers
             string htmlString = System.IO.File.ReadAllText(filePath);
 
             // 2. Parse HTML
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(htmlString);
+            //var parser = new HtmlParser();
+            //var document = parser.ParseDocument(htmlString);
 
-            string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
-            string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+            //string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            //string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
 
-            string className = "";
+            //string className = "";
 
-            bool isUEPresent = model.Complaints.Any(value =>
-            {
-                string sBody = value.Replace("Left", "")
-                                    .Replace("Right", "")
-                                    .Trim();
+            //bool isUEPresent = model.Complaints.Any(value =>
+            //{
+            //    string sBody = value.Replace("Left", "")
+            //                        .Replace("Right", "")
+            //                        .Trim();
 
-                // In C#, you can do a case-insensitive check directly without calling ToLower()
-                return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            });
+            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
+            //    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            //});
 
-            if (!isUEPresent)
-            {
-                // 3. Select all elements matching the class and remove them
-                className = "upper"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
+            //if (!isUEPresent)
+            //{
+            //    // 3. Select all elements matching the class and remove them
+            //    className = "upper"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
 
-                foreach (var element in elements)
-                {
-                    element.Remove(); // Completely removes the element
-                }
-            }
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+            //}
 
-            bool isLEPresent = model.Complaints.Any(value =>
-            {
-                string sBody = value.Replace("Left", "")
-                                    .Replace("Right", "")
-                                    .Trim();
+            //bool isLEPresent = model.Complaints.Any(value =>
+            //{
+            //    string sBody = value.Replace("Left", "")
+            //                        .Replace("Right", "")
+            //                        .Trim();
 
-                // In C#, you can do a case-insensitive check directly without calling ToLower()
-                return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            });
+            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
+            //    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            //});
 
-            if (!isLEPresent)
-            {
-                // 3. Select all elements matching the class and remove them
-                className = "lower"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
+            //if (!isLEPresent)
+            //{
+            //    // 3. Select all elements matching the class and remove them
+            //    className = "lower"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
 
-                foreach (var element in elements)
-                {
-                    element.Remove(); // Completely removes the element
-                }
-            }
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+            //}
 
-            if (!isUEPresent && !isLEPresent)
-            {  // 3. Select all elements matching the class and remove them
-                className = "hidAll"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
+            //if (!isUEPresent && !isLEPresent)
+            //{  // 3. Select all elements matching the class and remove them
+            //    className = "hidAll"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
 
-                foreach (var element in elements)
-                {
-                    element.Remove(); // Completely removes the element
-                }
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
 
-            }
+            //}
 
-            // 4. Output the result
-            string modifiedHtml = document.Body.InnerHtml;
+            //// 4. Output the result
+            //string modifiedHtml = document.Body.InnerHtml;
 
-            modifiedHtml = modifiedHtml.Replace("#UpperShoulderLeft", string.IsNullOrEmpty(model.UpperShoulderLeft) ? "Normal" : model.UpperShoulderLeft)
+            htmlString = htmlString.Replace("#UpperShoulderLeft", string.IsNullOrEmpty(model.UpperShoulderLeft) ? "Normal" : model.UpperShoulderLeft)
                                           .Replace("#UpperShoulderRight", string.IsNullOrEmpty(model.UpperShoulderRight) ? "Normal" : model.UpperShoulderRight)
                                           .Replace("#LateralArmLeft", string.IsNullOrEmpty(model.LateralArmLeft) ? "Normal" : model.LateralArmLeft)
                                           .Replace("#LateralArmRight", string.IsNullOrEmpty(model.LateralArmRight) ? "Normal" : model.LateralArmRight)
@@ -2541,7 +2550,7 @@ namespace PainTrax.Web.Controllers
                                           .Replace("#FootLateralRight", string.IsNullOrEmpty(model.FootLateralRight) ? "Normal" : model.FootLateralRight)
                                           .Replace("#LumbarLeft", string.IsNullOrEmpty(model.LumbarLeft) ? "Normal" : model.LumbarLeft)
                                           .Replace("#LumbarRight", string.IsNullOrEmpty(model.LumbarRight) ? "Normal" : model.LumbarRight);
-            return modifiedHtml;
+            return htmlString;
 
         }
 
@@ -2557,75 +2566,75 @@ namespace PainTrax.Web.Controllers
             // 2. Read the entire file content into a string asynchronously
             string htmlString = System.IO.File.ReadAllText(filePath);
 
-            // 2. Parse HTML
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(htmlString);
+            //// 2. Parse HTML
+            //var parser = new HtmlParser();
+            //var document = parser.ParseDocument(htmlString);
 
-            string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
-            string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+            //string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            //string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
 
-            string className = "";
+            //string className = "";
 
-            bool isUEPresent = model.Complaints.Any(value =>
-            {
-                string sBody = value.Replace("Left", "")
-                                    .Replace("Right", "")
-                                    .Trim();
+            //bool isUEPresent = model.Complaints.Any(value =>
+            //{
+            //    string sBody = value.Replace("Left", "")
+            //                        .Replace("Right", "")
+            //                        .Trim();
 
-                // In C#, you can do a case-insensitive check directly without calling ToLower()
-                return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            });
+            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
+            //    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            //});
 
-            if (!isUEPresent)
-            {
-                // 3. Select all elements matching the class and remove them
-                className = "upper"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
+            //if (!isUEPresent)
+            //{
+            //    // 3. Select all elements matching the class and remove them
+            //    className = "upper"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
 
-                foreach (var element in elements)
-                {
-                    element.Remove(); // Completely removes the element
-                }
-            }
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+            //}
 
-            bool isLEPresent = model.Complaints.Any(value =>
-            {
-                string sBody = value.Replace("Left", "")
-                                    .Replace("Right", "")
-                                    .Trim();
+            //bool isLEPresent = model.Complaints.Any(value =>
+            //{
+            //    string sBody = value.Replace("Left", "")
+            //                        .Replace("Right", "")
+            //                        .Trim();
 
-                // In C#, you can do a case-insensitive check directly without calling ToLower()
-                return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            });
+            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
+            //    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            //});
 
-            if (!isLEPresent)
-            {
-                // 3. Select all elements matching the class and remove them
-                className = "lower"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
+            //if (!isLEPresent)
+            //{
+            //    // 3. Select all elements matching the class and remove them
+            //    className = "lower"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
 
-                foreach (var element in elements)
-                {
-                    element.Remove(); // Completely removes the element
-                }
-            }
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+            //}
 
-            if (!isUEPresent && !isLEPresent)
-            {  // 3. Select all elements matching the class and remove them
-                className = "hidAll"; // Target class
-                var elements = document.QuerySelectorAll($".{className}");
+            //if (!isUEPresent && !isLEPresent)
+            //{  // 3. Select all elements matching the class and remove them
+            //    className = "hidAll"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
 
-                foreach (var element in elements)
-                {
-                    element.Remove(); // Completely removes the element
-                }
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
 
-            }
+            //}
 
-            // 4. Output the result
-            string modifiedHtml = document.Body.InnerHtml;
+            //// 4. Output the result
+            //string modifiedHtml = document.Body.InnerHtml;
 
-            modifiedHtml = modifiedHtml.Replace("#ShoulderAbductionLeft", string.IsNullOrEmpty(model.ShoulderAbductionLeft) ? "5" : model.ShoulderAbductionLeft)
+            htmlString = htmlString.Replace("#ShoulderAbductionLeft", string.IsNullOrEmpty(model.ShoulderAbductionLeft) ? "5" : model.ShoulderAbductionLeft)
                                           .Replace("#ShoulderAbductionRight", string.IsNullOrEmpty(model.ShoulderAbductionRight) ? "5" : model.ShoulderAbductionRight)
                                           .Replace("#ShoulderFlexionLeft", string.IsNullOrEmpty(model.ShoulderFlexionLeft) ? "5" : model.ShoulderFlexionLeft)
                                           .Replace("#ShoulderFlexionRight", string.IsNullOrEmpty(model.ShoulderFlexionRight) ? "5" : model.ShoulderFlexionRight)
@@ -2659,7 +2668,7 @@ namespace PainTrax.Web.Controllers
                                           .Replace("#AnklePlantarRight", string.IsNullOrEmpty(model.AnklePlantarRight) ? "5" : model.AnklePlantarRight)
                                           .Replace("#EHLLeft", string.IsNullOrEmpty(model.EHLLeft) ? "5" : model.EHLLeft)
                                           .Replace("#EHLRight", string.IsNullOrEmpty(model.EHLRight) ? "5" : model.EHLRight);
-            return modifiedHtml;
+            return htmlString;
 
         }
 
@@ -3588,193 +3597,39 @@ Transcript:
             {
                 ChatClient client = new(model: "gpt-4o", apiKey: _apiKey);
 
-                // This is the "Magic" Prompt
+
                 //                string systemPrompt = @"You are a professional medical scribe.
 
-                //Your task is to convert the provided medical transcript into a structured clinical report in JSON format.
+                //Your task is to convert the provided medical transcript into a structured clinical report in valid JSON format, even if the transcript is very brief or has minimal content.
 
-                //STRICT SOURCE RULES:
+                //GUIDELINES:
+                //1. Extract and summarize all available information accurately from the transcript.
+                //2. If a section was not explicitly detailed in the transcript, generate an appropriate, standard clinical placeholder based on the context (e.g., 'Pending clinician evaluation and examination' for Plan or Assessment) rather than returning an empty string or failing.
+                //3. Always return valid, parseable JSON with the exact keys specified below.
+                //4. Each value MUST be a single string (using \n for line breaks where needed), not nested objects or arrays.
 
-                //1. Use ONLY information explicitly stated in the provided transcript.
-                //2. DO NOT invent, assume, infer, predict, or add any medical information that is not explicitly present in the transcript.
-                //3. DO NOT use information from the examples below as patient information.
-                //4. If a symptom, body part, diagnosis, treatment, medication, pain score, or clinical detail is NOT mentioned in the transcript, DO NOT generate it.
-                //5. Never assume that a patient has symptoms in a body region simply because that region appears in the formatting example.
-                //6. Do not add normal/negative findings unless they are explicitly stated in the transcript.
-                //7. If information required for a section is not present in the transcript, return an empty string ("""") for that section.
-                //8. For anatomical regions, include ONLY the regions explicitly mentioned in the transcript as having a complaint or relevant clinical finding.
-                //9. Do not create additional body regions based on the presence of another body region.
-                //10. Preserve uncertainty from the transcript. Do not convert uncertain statements into confirmed facts.
+                //REQUIRED JSON KEYS:
+                //- ""History"": Chronological background, accident/injury mechanism, EMS/hospitalization details, and relevant past medical/accident history mentioned.
+                //- ""ChiefComplaint"": Primary complaints and affected anatomical regions formatted with UPPERCASE headers (e.g., NECK:, BILATERAL SHOULDERS:).
+                //- ""Subjective"": Current symptoms, mechanism of injury, and patient-reported pain/functional complaints.
+                //- ""Assessment"": Clinical impression/mechanism-based assessment derived from the reported trauma and symptomatic areas (or 'Pending physical exam and diagnostic evaluation').
+                //- ""Plan"": Recommended next steps, workup, referrals, or 'Follow-up examination and diagnostic workup pending clinician orders.'
 
-                //OUTPUT REQUIREMENTS:
-                //Return ONLY valid JSON.
+                //OUTPUT FORMAT:
+                //Return ONLY the raw JSON object. Do not include markdown code fences (```json), commentary, or explanations.";
 
-                //Each value must be a single string (formatted paragraph), NOT a nested object or array.
 
-                //Required keys:
+                var templateDir = Path.Combine(Environment.WebRootPath, "Prompts");
 
-                //* History
-                //* ChiefComplaint
-                //* Subjective
-                //* Assessment
-                //* Plan
+                //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
+                var filePath = templateDir + "/BHF/IEReport.txt";
 
-                //CHIEF COMPLAINT RULES:
-                //The ""ChiefComplaint"" value must contain ONLY complaints and clinical details explicitly supported by the transcript.
 
-                //If one or more anatomical regions are mentioned, organize the content using UPPERCASE anatomical headers, such as:
+                // 2. Read the entire file content into a string asynchronously
+                string systemPrompt = System.IO.File.ReadAllText(filePath);
 
-                //CERVICAL SPINE:
-                //LUMBAR SPINE:
-                //THORACIC SPINE:
-                //RIGHT SHOULDER:
-                //LEFT KNEE:
 
-                //Only include an anatomical header if that anatomical region is explicitly associated with a complaint or relevant finding in the transcript.
 
-                //For each included anatomical region, describe only the information that is explicitly available in the transcript, such as:
-
-                //1. Primary complaint and location.
-                //2. Radiation and associated neurological symptoms.
-                //3. Functional limitations or aggravating factors.
-                //4. Response to prior therapies.
-                //5. Pain score.
-
-                //IMPORTANT:
-
-                //* Do NOT fill missing details.
-                //* Do NOT assume radiation.
-                //* Do NOT assume numbness or tingling.
-                //* Do NOT assume spasms.
-                //* Do NOT assume functional limitations.
-                //* Do NOT assume aggravating factors.
-                //* Do NOT assume prior treatment response.
-                //* Do NOT assume a pain score.
-                //* If a particular detail is not mentioned, simply leave that detail out.
-                //* If an anatomical region is not mentioned as a complaint in the transcript, DO NOT include that region.
-
-                //EXAMPLE OF CORRECT BEHAVIOR:
-
-                //If the transcript says:
-                //""The patient reports low back pain radiating to the right buttock. Pain is 7/10.""
-
-                //Then ChiefComplaint should contain only:
-
-                //""LUMBAR SPINE: The patient reports low back pain radiating to the right buttock. Pain score is 7/10.""
-
-                //DO NOT generate cervical spine, thoracic spine, shoulder, or other complaints because they were not mentioned.
-
-                //If the transcript says only:
-                //""The patient reports neck pain.""
-
-                //Then ChiefComplaint should be:
-
-                //""CERVICAL SPINE: The patient reports neck pain.""
-
-                //Do NOT add radiation, numbness, tingling, stiffness, functional limitations, aggravating factors, treatment response, or a pain score unless they are explicitly present in the transcript.
-
-                //HISTORY:
-                //Include only historical information explicitly stated in the transcript.
-
-                //SUBJECTIVE:
-                //Include only symptoms, patient-reported information, and subjective complaints explicitly stated in the transcript.
-
-                //ASSESSMENT:
-                //Include only diagnoses, clinical impressions, or assessments explicitly stated or clearly documented by the clinician in the transcript.
-                //Do not create a diagnosis based only on symptoms.
-
-                //PLAN:
-                //Include only treatments, medications, referrals, investigations, follow-up instructions, or other plans explicitly stated in the transcript.
-
-                //FINAL VALIDATION BEFORE RESPONDING:
-                //Before generating the JSON, verify:
-
-                //* Every piece of information in the JSON can be directly supported by the transcript.
-                //* No anatomical region was added unless supported by the transcript.
-                //* No symptom was invented.
-                //* No diagnosis was inferred.
-                //* No pain score was invented.
-                //* No treatment was invented.
-                //* No example content was copied into the patient's report.
-                //* Missing information is represented by an empty string or omitted from the relevant narrative, rather than being fabricated.
-
-                //Return ONLY valid JSON.
-                //";
-
-                string systemPrompt = @"You are a professional medical scribe.
-
-Your task is to convert the provided medical transcript into a structured clinical report in JSON format.
-
-STRICT SOURCE RULES:
-1. Use ONLY information explicitly stated in the provided transcript.
-2. DO NOT invent, assume, infer, predict, or add any medical information that is not explicitly present in the transcript.
-3. DO NOT use information from formatting examples as patient information.
-4. If a symptom, body part, diagnosis, treatment, medication, pain score, or clinical detail is NOT mentioned in the transcript, DO NOT generate it.
-5. Do not add normal/negative findings unless they are explicitly stated in the transcript.
-6. If information required for a section is not present in the transcript, return an empty string ("""") for that section.
-7. For anatomical regions, include ONLY the regions explicitly mentioned in the transcript.
-8. Preserve uncertainty from the transcript. Do not convert uncertain statements into confirmed facts.
-
-OUTPUT REQUIREMENTS:
-Return ONLY valid JSON.
-Each value must be a single string (formatted text/paragraphs), NOT a nested object or array.
-
-Required keys:
-* History
-* ChiefComplaint
-* Subjective
-* Assessment
-* Plan
-
-SECTION GUIDELINES:
-
-1. HISTORY (History of Present Illness / Incident & Medical History):
-Include the chronological background and context of the current condition explicitly mentioned in the transcript. This includes:
-- Date of injury/onset or accident/incident details (e.g., motor vehicle collision, work injury, traffic stop rear-end collision).
-- Mechanism of injury or how the condition started.
-- Prior treatments tried and their effectiveness (e.g., physical therapy frequency and response, prior injections, home remedies).
-- Aggravating and relieving factors (e.g., pain improves with rest/medication, worsens with movement).
-- Any past medical, surgical, or medication history if explicitly spoken in the transcript.
-*Note: If the transcript describes an accident, date of incident, or previous treatments, this MUST be documented here.*
-
-2. CHIEF COMPLAINT:
-A concise summary of the primary reason(s) for the visit and affected body part(s).
-If anatomical regions are mentioned, format with UPPERCASE headers:
-CERVICAL SPINE:
-LUMBAR SPINE:
-THORACIC SPINE:
-RIGHT SHOULDER:
-LEFT KNEE:
-
-State the primary symptom and location for each mentioned region. Do not duplicate the extensive history/accident narrative here; keep this focused on the primary complaint and pain rating (e.g., ""LUMBAR SPINE: Severe constant sharp low back pain. Pain score is 9/10."").
-
-3. SUBJECTIVE:
-Current active symptoms, quality of pain (sharp, dull, aching), radiation, numbness, tingling, and sleep disturbances as reported by the patient during the visit.
-
-4. ASSESSMENT:
-Diagnoses, diagnostic findings, or clinical impressions explicitly stated by the clinician during the visit. Do not invent a diagnosis if the clinician did not state one.
-
-5. PLAN:
-Treatments, medications prescribed/recommended (e.g., steroid/cortisone injections, pain medications), follow-up timelines, referrals, or precautions explicitly discussed by the clinician.
-
-EXAMPLE OF CORRECT EXTRACTION:
-If transcript states:
-""I was at a traffic stop and got rear-ended on 08/01/2026. I have been doing physical therapy 3 times a week with no relief. My low back hurts, pain is 9/10, sharp, goes down my legs. Sleep is difficult. Doctor recommends cortisone injection.""
-
-Expected JSON output:
-{
-  ""History"": ""The patient reports being involved in a motor vehicle collision at a traffic stop where their vehicle was rear-ended on 08/01/2026. The patient has been attending physical therapy three times per week, which has not been helpful to date. Resting and pain medications provide some relief."",
-  ""ChiefComplaint"": ""LUMBAR SPINE: Low back pain. Pain score is 9/10."",
-  ""Subjective"": ""The patient reports constant, sharp low back pain rated at 9/10 with associated numbness and tingling radiating down the back. The patient reports having trouble sleeping at night due to pain."",
-  ""Assessment"": ""L4 nerve root involvement / lumbar radiculopathy consistent with numbness and tingling down the back."",
-  ""Plan"": ""Recommended course of cortisone/steroid nerve injections (series of injections lasting 1 to 3 months). Prescribed nighttime pain medication to assist with sleep.""
-}
-
-FINAL VALIDATION:
-- Ensure the 'History' field contains all injury background, accident history, dates, and prior therapies mentioned.
-- Do not fabricate or extrapolate unstated facts.
-- Return ONLY valid JSON with no markdown wrapping outside the JSON object.
-";
 
                 ChatCompletion completion = await client.CompleteChatAsync(new List<ChatMessage>
     {
@@ -3788,7 +3643,9 @@ FINAL VALIDATION:
                 jsonResponse = jsonResponse.Replace("```json", "").Replace("```", "").Trim();
 
 
+                var dataNew = JsonSerializer.Deserialize<DetailedClinicalReport>(jsonResponse);
                 var data = JsonSerializer.Deserialize<ClinicalReport>(jsonResponse);
+
 
                 transribeData = new tbl_transcribe
                 {

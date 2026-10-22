@@ -44,7 +44,7 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" required class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
+    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date"  class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
 
 
     <select id="AccidentType" name="AccidentType" class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
@@ -362,13 +362,13 @@
         }
 
         // DOA
-        if (doa) {
-            doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
-            if (!doaDate) return;
-        }
+        // if (doa) {
+        //     doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+        //     if (!doaDate) return;
+        // }
 
             // ---------- DOA vs DOS ----------
-                if (dosDate && doaDate && doaDate > dosDate) {
+       if (dosDate && doaDate && doaDate > dosDate) {
             alert("DOA cannot be greater than DOS");
 
             $('#DOA').val('').focus();

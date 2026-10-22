@@ -44,7 +44,7 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" required class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
+    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date"  class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
 </p>
 <div class="select-group">
     <strong>Case Type:</strong>
@@ -320,10 +320,10 @@
         }
 
         // DOA
-        if (doa) {
-            doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
-            if (!doaDate) return;
-        }
+        // if (doa) {
+        //     doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+        //     if (!doaDate) return;
+        // }
 
             // ---------- DOA vs DOS ----------
                 if (dosDate && doaDate && doaDate > dosDate) {
