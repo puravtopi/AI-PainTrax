@@ -1487,6 +1487,34 @@
         }
 
     });
+    // $(document).on("change", 'input[name="checkMRI"]', function () {
+
+    //     if ($(this).is(":checked")) {
+    //         $("#divMRI").show();
+    //     } else {
+    //         $("#divMRI").hide();
+
+    //         // Optional: clear the selections inside divHeadache
+    //         $("#divMRI input[type='checkbox']").prop("checked", false);
+    //         $("#txtspine").val("");
+    //          $("#txtreviewed").val("");
+    //     }
+
+    // });
+    // $(document).on("change", 'input[name="checkCT"]', function () {
+
+    //     if ($(this).is(":checked")) {
+    //         $("#divMRI").show();
+    //     } else {
+    //         $("#divMRI").hide();
+
+    //         // Optional: clear the selections inside divHeadache
+    //         $("#divMRI input[type='checkbox']").prop("checked", false);
+    //         $("#txtspine").val("");
+    //          $("#txtreviewed").val("");
+    //     }
+
+    // });
     $(document).on('change', 'input[name="NeckAssociated"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
@@ -1629,6 +1657,7 @@
                         $('input[name="RadicularPecentage"]:checked').trigger('change');
                         $('input[name="VASPecentage"]:checked').trigger('change');
                         $('input[name="InjuryType"]:checked').trigger('change');
+                        $('input[name="MRICT"]:checked').trigger('change');
                         if($("#hdId").val()=="0"){
 
                                 $('#divRecommendation')
