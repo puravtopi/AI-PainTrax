@@ -1062,6 +1062,28 @@ namespace PainTrax.Web.Controllers
                     //ccContent = this.GetBHFCC(model);
                 }
 
+                string assessment = defaultPage1.daignosis_desc == null ? "" : defaultPage1.daignosis_desc;
+                assessment = assessment.Replace("#sex", model.Gender);
+
+
+                string vital = "", pmh = "", psh = "", med = "", allergy = "", working = "", dd = "";
+
+                if (!string.IsNullOrEmpty(model.Height) && !string.IsNullOrEmpty(model.Weight))
+                {
+                    vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.";
+                }
+                if (!string.IsNullOrEmpty(model.Heightft) && !string.IsNullOrEmpty(model.Weight))
+                {
+                    vital = "H: " + model.Heightft + "’" + model.Heightinch + ", W: " + model.Weight + " lbs, SpO2: " + model.SpO + ", HR: " + model.HR + ", BMI: " + model.BMI + ".";
+                }
+
+                pmh = HistoryHelper.GeneratePmh(model.IsPMH, model.PMH, model.PMHOther);
+                psh = HistoryHelper.GeneratePsh(model.IsSMH, model.PSH);
+                med = HistoryHelper.GenerateMeds(model.Meds, model.MedsOther);
+                allergy = HistoryHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
+                working = model.IsWorking;
+                dd = string.IsNullOrEmpty(model.DisabilityPercentage) ? "" : model.DisabilityPercentage + "% Working";
+
                 if (initialIntakeAI.Id == 0)
                 {
                     if (result != "0")
@@ -1114,7 +1136,6 @@ namespace PainTrax.Web.Controllers
                             var ie = _ieService.Insert(objIE);
 
 
-
                             if (ie > 0)
                             {
 
@@ -1136,25 +1157,17 @@ namespace PainTrax.Web.Controllers
                                     history = history.Replace("#gender", Common.GetMrMrsFromSex(model.Gender == "male" ? "1" : "2"));
 
                                 }
-                                string assessment = defaultPage1.daignosis_desc == null ? "" : defaultPage1.daignosis_desc;
-                                assessment = assessment.Replace("#sex", model.Gender);
 
-                                string vital = "";
-
-                                if (!string.IsNullOrEmpty(model.Height) && !string.IsNullOrEmpty(model.Weight))
-                                {
-                                    vital = "The patient’s height is " + model.Height + ", weight is " + model.Weight + " pounds, and BMI is _____.";
-                                }
 
 
 
                                 var objPage1 = new tbl_ie_page1()
                                 {
-                                    pmh = string.IsNullOrEmpty(string.Join(", ", model.PMH)) ? defaultPage1.pmh : string.Join(", ", model.PMH),
-                                    dd = defaultPage1.dd,
-                                    psh = string.IsNullOrEmpty(string.Join(", ", model.PSH)) ? defaultPage1.psh : string.Join(", ", model.PSH),
+                                    pmh = string.IsNullOrEmpty(pmh) ? defaultPage1.pmh : pmh,
+                                    dd = string.IsNullOrEmpty(dd) ? defaultPage1.dd : dd,
+                                    psh = string.IsNullOrEmpty(psh) ? defaultPage1.psh : psh,
                                     bodypart = string.Join(",", model.Complaints),
-                                    allergies = defaultPage1.allergies,
+                                    allergies = allergy,
                                     assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : model.Diagnosis,
                                     ie_id = ie,
                                     vital = string.IsNullOrEmpty(vital) ? defaultPage1.vital : vital,
@@ -1164,15 +1177,17 @@ namespace PainTrax.Web.Controllers
                                     //pe = defaultPage1.pe,
                                     family_history = defaultPage1.family_history,
                                     history = history,
-                                    medication = defaultPage1.medication,
+                                    medication = med,
                                     note = defaultPage1.note,
                                     occupation = defaultPage1.occupation,
                                     plan = defaultPage1.plan,
                                     rom = defaultPage1.rom,
                                     social_history = defaultPage1.social_history,
-                                    work_status = defaultPage1.work_status,
+                                    work_status = string.IsNullOrEmpty(working) ? defaultPage1.work_status : working,
 
-                                };
+
+                                }
+                            ;
 
                                 _ieService.InsertPage1(objPage1);
 
@@ -1359,10 +1374,17 @@ namespace PainTrax.Web.Controllers
                     {
 
                         bodypart = string.Join(",", model.Complaints),
-                        id = initialIntakeAI.Id,
+                        id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId),
                         cc = ccContent,
-                        pe = peContent
-
+                        pe = peContent,
+                        assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<br/>" + model.Diagnosis,
+                        vital = vital,
+                        pmh = pmh,
+                        psh = psh,
+                        medication = med,
+                        allergies = allergy,
+                        work_status = working,
+                        dd = dd
                     };
 
                     _ieService.UpdatePage1Intake(objPage1);
@@ -1396,7 +1418,16 @@ namespace PainTrax.Web.Controllers
 
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, patientid = model.PatientId, locid = model.LocationId, provid = model.ProviderId, ieid = model.PatientIEId });
+            return Json(new
+            {
+                success = true,
+                message = "Intake form summited successfully.",
+                id = result,
+                patientid = model.PatientId,
+                locid = model.LocationId,
+                provid = model.ProviderId,
+                ieid = model.PatientIEId
+            });
         }
 
         [HttpPost]
@@ -3407,8 +3438,8 @@ namespace PainTrax.Web.Controllers
             byte[] templateBytes = null;
 
             var json = string.IsNullOrEmpty(data.FormData)
-       ? null
-       : data.FormData;
+        ? null
+        : data.FormData;
 
             var model = new AIIntakeFormModel();
 
@@ -3652,13 +3683,41 @@ Transcript:
                     length = request.length,
                     intake_id = request.intake_id,
                     content = request.Transcript,
-                    history = data.History,
+                    history = dataNew.History,
                     cc = data.ChiefComplaint,
                     subjective = data.Subjective,
                     assessment = data.Assessment,
                     plan = data.Plan,
                     cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId) ?? 0,
-                    file_path = request.file_path
+                    file_path = request.file_path,
+                    ActivitiesOfDailyLiving = dataNew.ActivitiesOfDailyLiving,
+                    Allergies = dataNew.Allergies,
+                    CareRestrictions = dataNew.CareRestrictions,
+                    Causation = dataNew.Causation,
+                    CoordinationExamination = dataNew.CoordinationExamination,
+                    Diagnoses = dataNew.Diagnoses,
+                    DiagnosticStudies = dataNew.DiagnosticStudies,
+                    FollowUp = dataNew.FollowUp,
+                    Gait = dataNew.Gait,
+                    Goals = dataNew.Goals,
+                    Medications = dataNew.Medications,
+                    MotorExamination = dataNew.MotorExamination,
+                    MusculoskeletalExamination = dataNew.MusculoskeletalExamination,
+                    NeurologicalExamination = dataNew.NeurologicalExamination,
+                    PastMedicalHistory = dataNew.PastMedicalHistory,
+                    PastSurgicalHistory = dataNew.PastSurgicalHistory,
+                    Occupation = dataNew.Occupation,
+                    PatientInformation = dataNew.PatientInformation,
+                    Precautions = dataNew.Precautions,
+                    ProceduresPerformed = dataNew.ProceduresPerformed,
+                    RangeOfMotion = dataNew.RangeOfMotion,
+                    Recommendations = dataNew.Recommendations,
+                    ReflexExamination = dataNew.ReflexExamination,
+                    ReviewOfSystems = dataNew.ReviewOfSystems,
+                    SensoryExamination = dataNew.SensoryExamination,
+                    SocialHistory = dataNew.SocialHistory,
+                    VitalSigns = dataNew.VitalSigns,
+                    WorkAndAdministrativeDetails = dataNew.WorkAndAdministrativeDetails
                 };
 
                 _transcribeService.Insert(transribeData);

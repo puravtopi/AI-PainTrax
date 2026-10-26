@@ -169,7 +169,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeIMNPFHPCFU");
+            else return PartialView("_IntakeBHFFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -426,6 +426,23 @@ namespace PainTrax.Web.Controllers
 
                 ieId = initialIntakeAI.PatientIEId.Value;
 
+
+
+                string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
+               
+                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
+                    HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
+                {
+                    peContent = this.GetPE(model);
+                    dtrContent = this.GetDTR(model);
+                    sensoryContent = this.GetSensory(model);
+                    mmstContent = this.GetMMST(model);
+                    ccContent = this.GetBHFCC(model);
+                }
+                
+
+
+
                 if (initialIntakeAI.Id == 0)
                 {
                     var data = _ieService.CheckFUDOS(initialIntakeAI.PatientIEId.Value, initialIntakeAI.DOE);
@@ -646,7 +663,7 @@ namespace PainTrax.Web.Controllers
                 _ieService.UpdateHandeness(Handeness, patientId);
                 //return RedirectToAction("Index", "Visit");
             }
-            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId, patientid = model.PatientId, ie_id = ieId, fu_id = newFU });
+            return Json(new { success = true, message = "Intake form summited successfully.", id = result, locid = model.LocationId, provid = model.ProviderId, patientid = model.PatientId, ie_id = ieId, fu_id = newFU,fu_type= model.VisitType });
         }
 
         private string GetCC(AIIntakeFormModel model)
@@ -1134,6 +1151,615 @@ namespace PainTrax.Web.Controllers
 
             return File(pdfBytes, "application/pdf", $"{dt.Rows[0]["lname"]}_{dt.Rows[0]["fname"]}_Consent Form_{DateTime.Parse(dt.Rows[0]["doe"].ToString()).ToString("MMddyyyy")}.pdf");
         }
+
+        #region AI Content
+        private string GetBHFCC(AIIntakeFormModel model)
+        {
+            string pe = "";
+            if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + CCHelper.NeckCC(model);
+            }
+            if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.MidbackCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LowBackCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightShoulderCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftShoulderCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightKneeCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftKneeCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightAnkleCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftAnkleCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightElbowCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftElbowCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightHipCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftHipCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.RightWristCC(model) + "</p>";
+            }
+            if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/><p>" + CCHelper.LeftWristCC(model) + "</p>";
+            }
+            return pe.Replace(", and", " and");
+        }
+
+        private string GetPE(AIIntakeFormModel model)
+        {
+            string pe = "";
+
+            if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "neck", "Neck.html");
+            }
+            if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "midback", "Midback.html");
+            }
+            if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "lowback", "Lowback.html");
+            }
+            if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right shoulder", "Shoulder.html");
+            }
+            if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left shoulder", "Shoulder.html");
+            }
+            if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right knee", "Knee.html");
+            }
+            if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left knee", "Knee.html");
+            }
+            if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right ankle", "Ankle.html");
+            }
+            if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left ankle", "Ankle.html");
+            }
+            if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right elbow", "Elbow.html");
+            }
+            if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left elbow", "Elbow.html");
+            }
+            if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right hip", "Hip.html");
+            }
+            if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left hip", "Hip.html");
+            }
+            if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "right wrist", "Wrist.html");
+            }
+            if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
+            {
+                pe = pe + "<br/>" + this.GetROM(model, "left wrist", "Wrist.html");
+            }
+
+            return pe;
+        }
+
+        private string GetDTR(AIIntakeFormModel model)
+        {
+            try
+            {
+
+                var templateDir = Path.Combine(Environment.WebRootPath, "templates");
+
+                //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
+                var filePath = templateDir + "/BHF/DTR.html";
+
+
+                // 2. Read the entire file content into a string asynchronously
+                string htmlString = System.IO.File.ReadAllText(filePath);
+
+                // 2. Parse HTML
+                /*var parser = new HtmlParser();
+                var document = parser.ParseDocument(htmlString);
+
+                string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+                string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+
+                string className = "";
+
+                bool isUEPresent = model.Complaints.Any(value =>
+                {
+                    string sBody = value.Replace("Left", "")
+                                        .Replace("Right", "")
+                                        .Trim();
+
+                    // In C#, you can do a case-insensitive check directly without calling ToLower()
+                    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+                });
+
+                if (!isUEPresent)
+                {
+                    // 3. Select all elements matching the class and remove them
+                    className = "upper"; // Target class
+                    var elements = document.QuerySelectorAll($".{className}");
+
+                    foreach (var element in elements)
+                    {
+                        element.Remove(); // Completely removes the element
+                    }
+                }
+
+                bool isLEPresent = model.Complaints.Any(value =>
+                {
+                    string sBody = value.Replace("Left", "")
+                                        .Replace("Right", "")
+                                        .Trim();
+
+                    // In C#, you can do a case-insensitive check directly without calling ToLower()
+                    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+                });
+
+                if (!isLEPresent)
+                {
+                    // 3. Select all elements matching the class and remove them
+                    className = "lower"; // Target class
+                    var elements = document.QuerySelectorAll($".{className}");
+
+                    foreach (var element in elements)
+                    {
+                        element.Remove(); // Completely removes the element
+                    }
+                }
+
+                if (!isUEPresent && !isLEPresent)
+                {  // 3. Select all elements matching the class and remove them
+                    className = "hidAll"; // Target class
+                    var elements = document.QuerySelectorAll($".{className}");
+
+                    foreach (var element in elements)
+                    {
+                        element.Remove(); // Completely removes the element
+                    }
+
+                }*/
+
+                // 4. Output the result
+                //string modifiedHtml = document.Body.InnerHtml; // or document.DocumentElement.OuterHtml
+                string modifiedHtml = htmlString; // or document.DocumentElement.OuterHtml
+
+                modifiedHtml = modifiedHtml.Replace("#TricepsLeft", string.IsNullOrEmpty(model.TricepsLeft) ? "2+" : model.TricepsLeft)
+                                              .Replace("#TricepsRight", string.IsNullOrEmpty(model.TricepsRight) ? "2+" : model.TricepsRight)
+                                              .Replace("#BicepsLeft", string.IsNullOrEmpty(model.BicepsLeft) ? "2+" : model.BicepsLeft)
+                                              .Replace("#BicepsRight", string.IsNullOrEmpty(model.BicepsRight) ? "2+" : model.BicepsRight)
+                                              .Replace("#BrachioradialisLeft", string.IsNullOrEmpty(model.BrachioradialisLeft) ? "2+" : model.BrachioradialisLeft)
+                                              .Replace("#BrachioradialisRight", string.IsNullOrEmpty(model.BrachioradialisRight) ? "2+" : model.BrachioradialisRight)
+                                              .Replace("#KneeRELeft", string.IsNullOrEmpty(model.KneeRELeft) ? "2+" : model.KneeRELeft)
+                                              .Replace("#KneeRERight", string.IsNullOrEmpty(model.KneeRERight) ? "2+" : model.KneeRERight)
+                                              .Replace("#AnkleRELeft", string.IsNullOrEmpty(model.AnkleRELeft) ? "2+" : model.AnkleRELeft)
+                                              .Replace("#AnkleRERight", string.IsNullOrEmpty(model.AnkleRERight) ? "2+" : model.AnkleRERight);
+                return modifiedHtml;
+            }
+            catch (Exception ex)
+            {
+               // this.SaveLog(ex, "");
+                return "";
+            }
+
+        }
+
+        private string GetSensory(AIIntakeFormModel model)
+        {
+
+            var templateDir = Path.Combine(Environment.WebRootPath, "templates");
+
+            //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
+            var filePath = templateDir + "/BHF/Sensory.html";
+
+
+            // 2. Read the entire file content into a string asynchronously
+            string htmlString = System.IO.File.ReadAllText(filePath);
+
+            // 2. Parse HTML
+            //var parser = new HtmlParser();
+            //var document = parser.ParseDocument(htmlString);
+
+            //string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            //string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+
+            //string className = "";
+
+            //bool isUEPresent = model.Complaints.Any(value =>
+            //{
+            //    string sBody = value.Replace("Left", "")
+            //                        .Replace("Right", "")
+            //                        .Trim();
+
+            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
+            //    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            //});
+
+            //if (!isUEPresent)
+            //{
+            //    // 3. Select all elements matching the class and remove them
+            //    className = "upper"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
+
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+            //}
+
+            //bool isLEPresent = model.Complaints.Any(value =>
+            //{
+            //    string sBody = value.Replace("Left", "")
+            //                        .Replace("Right", "")
+            //                        .Trim();
+
+            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
+            //    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            //});
+
+            //if (!isLEPresent)
+            //{
+            //    // 3. Select all elements matching the class and remove them
+            //    className = "lower"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
+
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+            //}
+
+            //if (!isUEPresent && !isLEPresent)
+            //{  // 3. Select all elements matching the class and remove them
+            //    className = "hidAll"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
+
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+
+            //}
+
+            //// 4. Output the result
+            //string modifiedHtml = document.Body.InnerHtml;
+
+            htmlString = htmlString.Replace("#UpperShoulderLeft", string.IsNullOrEmpty(model.UpperShoulderLeft) ? "Normal" : model.UpperShoulderLeft)
+                                          .Replace("#UpperShoulderRight", string.IsNullOrEmpty(model.UpperShoulderRight) ? "Normal" : model.UpperShoulderRight)
+                                          .Replace("#LateralArmLeft", string.IsNullOrEmpty(model.LateralArmLeft) ? "Normal" : model.LateralArmLeft)
+                                          .Replace("#LateralArmRight", string.IsNullOrEmpty(model.LateralArmRight) ? "Normal" : model.LateralArmRight)
+                                          .Replace("#ForearmC6Left", string.IsNullOrEmpty(model.ForearmC6Left) ? "Normal" : model.ForearmC6Left)
+                                          .Replace("#ForearmC6Right", string.IsNullOrEmpty(model.ForearmC6Right) ? "Normal" : model.ForearmC6Right)
+                                          .Replace("#MiddleFingerLeft", string.IsNullOrEmpty(model.MiddleFingerLeft) ? "Normal" : model.MiddleFingerLeft)
+                                          .Replace("#MiddleFingerRight", string.IsNullOrEmpty(model.MiddleFingerRight) ? "Normal" : model.MiddleFingerRight)
+                                          .Replace("#ForearmC8Left", string.IsNullOrEmpty(model.ForearmC8Left) ? "Normal" : model.ForearmC8Left)
+                                          .Replace("#ForearmC8Right", string.IsNullOrEmpty(model.ForearmC8Right) ? "Normal" : model.ForearmC8Right)
+                                          .Replace("#MedialArmLeft", string.IsNullOrEmpty(model.MedialArmLeft) ? "Normal" : model.MedialArmLeft)
+                                          .Replace("#MedialArmRight", string.IsNullOrEmpty(model.MedialArmRight) ? "Normal" : model.MedialArmRight)
+                                          .Replace("#CervicalLeft", string.IsNullOrEmpty(model.CervicalLeft) ? "Normal" : model.CervicalLeft)
+                                          .Replace("#CervicalRight", string.IsNullOrEmpty(model.CervicalRight) ? "Normal" : model.CervicalRight)
+                                          .Replace("#ThighLeft", string.IsNullOrEmpty(model.ThighLeft) ? "Normal" : model.ThighLeft)
+                                          .Replace("#ThighRight", string.IsNullOrEmpty(model.ThighRight) ? "Normal" : model.ThighRight)
+                                          .Replace("#FootMedialLeft", string.IsNullOrEmpty(model.FootMedialLeft) ? "Normal" : model.FootMedialLeft)
+                                          .Replace("#FootMedialRight", string.IsNullOrEmpty(model.FootMedialRight) ? "Normal" : model.FootMedialRight)
+                                          .Replace("#FootDorsumLeft", string.IsNullOrEmpty(model.FootDorsumLeft) ? "Normal" : model.FootDorsumLeft)
+                                          .Replace("#FootDorsumRight", string.IsNullOrEmpty(model.FootDorsumRight) ? "Normal" : model.FootDorsumRight)
+                                          .Replace("#FootLateralLeft", string.IsNullOrEmpty(model.FootLateralLeft) ? "Normal" : model.FootLateralLeft)
+                                          .Replace("#FootLateralRight", string.IsNullOrEmpty(model.FootLateralRight) ? "Normal" : model.FootLateralRight)
+                                          .Replace("#LumbarLeft", string.IsNullOrEmpty(model.LumbarLeft) ? "Normal" : model.LumbarLeft)
+                                          .Replace("#LumbarRight", string.IsNullOrEmpty(model.LumbarRight) ? "Normal" : model.LumbarRight);
+            return htmlString;
+
+        }
+
+        private string GetMMST(AIIntakeFormModel model)
+        {
+
+            var templateDir = Path.Combine(Environment.WebRootPath, "templates");
+
+            //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
+            var filePath = templateDir + "/BHF/MMST.html";
+
+
+            // 2. Read the entire file content into a string asynchronously
+            string htmlString = System.IO.File.ReadAllText(filePath);
+
+            //// 2. Parse HTML
+            //var parser = new HtmlParser();
+            //var document = parser.ParseDocument(htmlString);
+
+            //string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
+            //string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
+
+            //string className = "";
+
+            //bool isUEPresent = model.Complaints.Any(value =>
+            //{
+            //    string sBody = value.Replace("Left", "")
+            //                        .Replace("Right", "")
+            //                        .Trim();
+
+            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
+            //    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            //});
+
+            //if (!isUEPresent)
+            //{
+            //    // 3. Select all elements matching the class and remove them
+            //    className = "upper"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
+
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+            //}
+
+            //bool isLEPresent = model.Complaints.Any(value =>
+            //{
+            //    string sBody = value.Replace("Left", "")
+            //                        .Replace("Right", "")
+            //                        .Trim();
+
+            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
+            //    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
+            //});
+
+            //if (!isLEPresent)
+            //{
+            //    // 3. Select all elements matching the class and remove them
+            //    className = "lower"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
+
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+            //}
+
+            //if (!isUEPresent && !isLEPresent)
+            //{  // 3. Select all elements matching the class and remove them
+            //    className = "hidAll"; // Target class
+            //    var elements = document.QuerySelectorAll($".{className}");
+
+            //    foreach (var element in elements)
+            //    {
+            //        element.Remove(); // Completely removes the element
+            //    }
+
+            //}
+
+            //// 4. Output the result
+            //string modifiedHtml = document.Body.InnerHtml;
+
+            htmlString = htmlString.Replace("#ShoulderAbductionLeft", string.IsNullOrEmpty(model.ShoulderAbductionLeft) ? "5" : model.ShoulderAbductionLeft)
+                                          .Replace("#ShoulderAbductionRight", string.IsNullOrEmpty(model.ShoulderAbductionRight) ? "5" : model.ShoulderAbductionRight)
+                                          .Replace("#ShoulderFlexionLeft", string.IsNullOrEmpty(model.ShoulderFlexionLeft) ? "5" : model.ShoulderFlexionLeft)
+                                          .Replace("#ShoulderFlexionRight", string.IsNullOrEmpty(model.ShoulderFlexionRight) ? "5" : model.ShoulderFlexionRight)
+                                          .Replace("#ElbowExtensionLeft", string.IsNullOrEmpty(model.ElbowExtensionLeft) ? "5" : model.ElbowExtensionLeft)
+                                          .Replace("#ElbowExtensionRight", string.IsNullOrEmpty(model.ElbowExtensionRight) ? "5" : model.ElbowExtensionRight)
+                                          .Replace("#ElbowFlexionLeft", string.IsNullOrEmpty(model.ElbowFlexionLeft) ? "5" : model.ElbowFlexionLeft)
+                                          .Replace("#ElbowFlexionRight", string.IsNullOrEmpty(model.ElbowFlexionRight) ? "5" : model.ElbowFlexionRight)
+                                          .Replace("#ElbowSupinationLeft", string.IsNullOrEmpty(model.ElbowSupinationLeft) ? "5" : model.ElbowSupinationLeft)
+                                          .Replace("#ElbowSupinationRight", string.IsNullOrEmpty(model.ElbowSupinationRight) ? "5" : model.ElbowSupinationRight)
+                                          .Replace("#ElbowPronationLeft", string.IsNullOrEmpty(model.ElbowPronationLeft) ? "5" : model.ElbowPronationLeft)
+                                          .Replace("#ElbowPronationRight", string.IsNullOrEmpty(model.ElbowPronationRight) ? "5" : model.ElbowPronationRight)
+                                          .Replace("#WristFlexionLeft", string.IsNullOrEmpty(model.WristFlexionLeft) ? "5" : model.WristFlexionLeft)
+                                          .Replace("#WristFlexionRight", string.IsNullOrEmpty(model.WristFlexionRight) ? "5" : model.WristFlexionRight)
+                                          .Replace("#WristExtensionLeft", string.IsNullOrEmpty(model.WristExtensionLeft) ? "5" : model.WristExtensionLeft)
+                                          .Replace("#WristExtensionRight", string.IsNullOrEmpty(model.WristExtensionRight) ? "5" : model.WristExtensionRight)
+                                          .Replace("#GripLeft", string.IsNullOrEmpty(model.GripLeft) ? "5" : model.GripLeft)
+                                          .Replace("#GripRight", string.IsNullOrEmpty(model.GripRight) ? "5" : model.GripRight)
+                                          .Replace("#FingerAbductionLeft", string.IsNullOrEmpty(model.FingerAbductionLeft) ? "5" : model.FingerAbductionLeft)
+                                          .Replace("#FingerAbductionRight", string.IsNullOrEmpty(model.FingerAbductionRight) ? "5" : model.FingerAbductionRight)
+                                          .Replace("#HipFlexionLeft", string.IsNullOrEmpty(model.HipFlexionLeft) ? "5" : model.HipFlexionLeft)
+                                          .Replace("#HipFlexionRight", string.IsNullOrEmpty(model.HipFlexionRight) ? "5" : model.HipFlexionRight)
+                                          .Replace("#HipAbductionLeft", string.IsNullOrEmpty(model.HipAbductionLeft) ? "5" : model.HipAbductionLeft)
+                                          .Replace("#HipAbductionRight", string.IsNullOrEmpty(model.HipAbductionRight) ? "5" : model.HipAbductionRight)
+                                          .Replace("#KneeExtensionLeft", string.IsNullOrEmpty(model.KneeExtensionLeft) ? "5" : model.KneeExtensionLeft)
+                                          .Replace("#KneeExtensionRight", string.IsNullOrEmpty(model.KneeExtensionRight) ? "5" : model.KneeExtensionRight)
+                                          .Replace("#KneeFlexionLeft", string.IsNullOrEmpty(model.KneeFlexionLeft) ? "5" : model.KneeFlexionLeft)
+                                          .Replace("#KneeFlexionRight", string.IsNullOrEmpty(model.KneeFlexionRight) ? "5" : model.KneeFlexionRight)
+                                          .Replace("#AnkleDorsiLeft", string.IsNullOrEmpty(model.AnkleDorsiLeft) ? "5" : model.AnkleDorsiLeft)
+                                          .Replace("#AnkleDorsiRight", string.IsNullOrEmpty(model.AnkleDorsiRight) ? "5" : model.AnkleDorsiRight)
+                                          .Replace("#AnklePlantarLeft", string.IsNullOrEmpty(model.AnklePlantarLeft) ? "5" : model.AnklePlantarLeft)
+                                          .Replace("#AnklePlantarRight", string.IsNullOrEmpty(model.AnklePlantarRight) ? "5" : model.AnklePlantarRight)
+                                          .Replace("#EHLLeft", string.IsNullOrEmpty(model.EHLLeft) ? "5" : model.EHLLeft)
+                                          .Replace("#EHLRight", string.IsNullOrEmpty(model.EHLRight) ? "5" : model.EHLRight);
+            return htmlString;
+
+        }
+
+        public string GetROM(AIIntakeFormModel model, string bodyPart, string fileName)
+        {
+            string rom = "";
+
+            var templateDir = Path.Combine(Environment.WebRootPath, "templates");
+
+            //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
+            var filePath = templateDir + "/BHF/" + fileName;
+
+
+            // 2. Read the entire file content into a string asynchronously
+            string htmlString = System.IO.File.ReadAllText(filePath);
+
+
+            switch (bodyPart.ToLower())
+            {
+                case "neck":
+                    htmlString = htmlString.Replace("#ForwardFlexionROM", model.NeckFFROM)
+                                           .Replace("#LRotationROM", model.NeckFFLeft)
+                                           .Replace("#RRotationROM", model.NeckFFRight)
+                                           .Replace("#ExtensionROM", model.NeckExt)
+                                           .Replace("#LLateralFlexionROM", model.NeckExtLeft)
+                                           .Replace("#RLateralFlexionROM", model.NeckExtRight)
+                                           .Replace("#SPTest", model.NeckSpurlingTest);
+                    break;
+                case "midback":
+                    htmlString = htmlString.Replace("#MbFFROM", model.MbFFROM)
+                                           .Replace("#MbFFLeft", model.MbFFLeft)
+                                           .Replace("#MbFFRight", model.MbFFRight)
+                                           .Replace("#MbExt", model.MbExt);
+                    break;
+                case "lowback":
+                    htmlString = htmlString.Replace("#LbFFROM", model.LBFFROM)
+                                           .Replace("#LbFFLeft", model.LBFFLeft)
+                                           .Replace("#LbFFRight", model.LBFFRight)
+                                           .Replace("#LbExt", model.LBExt)
+                                           .Replace("#SLRTest", model.LBSlrTest);
+                    break;
+                case "left shoulder":
+                    htmlString = htmlString.Replace("#AbductionROM", model.LSHAbductionROM)
+                                           .Replace("#ExternalRotationROM", model.LSHERROM)
+                                           .Replace("#FlexionROM", model.LSHFlexionROM)
+                                           .Replace("#InternalRotationROM", model.LSHIRROM)
+                                           .Replace("#AdductionROM", model.LSHAdductionROM)
+                                           .Replace("#ExtensionROM", model.LSHExtOM)
+                                           .Replace("#side", "LEFT");
+                    break;
+                case "right shoulder":
+                    htmlString = htmlString.Replace("#AbductionROM", model.RSHAbductionROM)
+                                           .Replace("#ExternalRotationROM", model.RSHERROM)
+                                           .Replace("#FlexionROM", model.RSHFlexionROM)
+                                           .Replace("#InternalRotationROM", model.RSHIRROM)
+                                           .Replace("#AdductionROM", model.RSHAdductionROM)
+                                           .Replace("#ExtensionROM", model.RSHExtOM)
+                                           .Replace("#side", "RIGHT");
+                    break;
+                case "left knee":
+                    htmlString = htmlString.Replace("#FlexionROM", model.LKNFlexionROM)
+                                           .Replace("#ExtensionROM", model.LKNExtROM)
+                                           .Replace("#FlexionNormal", model.LKNFlexionNormal)
+                                           .Replace("#ExtensionNormal", model.LKNExtRNormal)
+                                           .Replace("#FlexionTitle", model.LKNTitleROM)
+                                           .Replace("#ExtensionTitle", model.LKNExtTitleROM)
+                                           .Replace("#side", "LEFT");
+                    break;
+                case "right knee":
+                    htmlString = htmlString.Replace("#FlexionROM", model.RKNFlexionROM)
+                                          .Replace("#ExtensionROM", model.RKNExtROM)
+                                          .Replace("#FlexionNormal", model.RKNFlexionNormal)
+                                          .Replace("#ExtensionNormal", model.RKNExtRNormal)
+                                          .Replace("#FlexionTitle", model.RKNTitleROM)
+                                          .Replace("#ExtensionTitle", model.RKNExtTitleROM)
+                                          .Replace("#side", "RIGHT");
+                    break;
+                case "left ankle":
+                    htmlString = htmlString.Replace("#PlantarFlexionROM", model.LAnkleFlexionROM)
+                                           .Replace("#InversionROM", model.LAnkleInversionROM)
+                                           .Replace("#DorsiflexionROM", model.LAnkleDorsiflexionROM)
+                                           .Replace("#EversionROM", model.LAnkleEversionROM)
+                                           .Replace("#side", "LEFT");
+
+                    break;
+                case "right ankle":
+                    htmlString = htmlString.Replace("#PlantarFlexionROM", model.RAnkleFlexionROM)
+                                           .Replace("#InversionROM", model.RAnkleInversionROM)
+                                           .Replace("#DorsiflexionROM", model.RAnkleDorsiflexionROM)
+                                           .Replace("#EversionROM", model.RAnkleEversionROM)
+                                           .Replace("#side", "RIGHT");
+                    break;
+                case "left elbow":
+                    htmlString = htmlString.Replace("#FlexionROM", model.LElbowFlexionROM)
+                                           .Replace("#ExtensionROM", model.LElbowExtensionROM)
+                                           .Replace("#SupinationROM", model.LElbowSupinationROM)
+                                           .Replace("#PronationROM", model.LElbowPronationROM)
+                                           .Replace("#side", "LEFT");
+                    break;
+                case "right elbow":
+                    htmlString = htmlString.Replace("#FlexionROM", model.RElbowFlexionROM)
+                                           .Replace("#ExtensionROM", model.RElbowExtensionROM)
+                                           .Replace("#SupinationROM", model.RElbowSupinationROM)
+                                           .Replace("#PronationROM", model.RElbowPronationROM)
+                                           .Replace("#side", "RIGHT");
+                    break;
+                case "left hip":
+                    htmlString = htmlString.Replace("#FlexionROM", model.LHipFlexionROM)
+                                           .Replace("#AdductionROM", model.LHipExtensionROM)
+                                           .Replace("#ExtensionROM", model.LHipExtensionROM)
+                                           .Replace("#InternalRotationROM", model.LHipIRotationROM)
+                                           .Replace("#AbductionROM", model.LHipAbductionROM)
+                                           .Replace("#ExternalRotationROM", model.LHipERotationROM)
+                                           .Replace("#side", "LEFT");
+                    break;
+                case "right hip":
+                    htmlString = htmlString.Replace("#FlexionROM", model.RHipFlexionROM)
+                                           .Replace("#AdductionROM", model.RHipExtensionROM)
+                                           .Replace("#ExtensionROM", model.RHipExtensionROM)
+                                           .Replace("#InternalRotationROM", model.RHipIRotationROM)
+                                           .Replace("#AbductionROM", model.RHipAbductionROM)
+                                           .Replace("#ExternalRotationROM", model.RHipERotationROM)
+                                            .Replace("#side", "RIGHT");
+                    break;
+                case "left wrist":
+                    htmlString = htmlString.Replace("#FlexionROM", model.RWristFlexionROM)
+                                           .Replace("#UlnarDeviationROM", model.RWristUDROM)
+                                           .Replace("#ExtensionROM", model.RWristExtensionROM)
+                                           .Replace("#RadialDeviationROM", model.RWristRDROM)
+                                           .Replace("#side", "LEFT");
+
+                    break;
+                case "right wrist":
+                    htmlString = htmlString.Replace("#FlexionROM", model.LWristFlexionROM)
+                                           .Replace("#UlnarDeviationROM", model.LWristUDROM)
+                                           .Replace("#ExtensionROM", model.LWristExtensionROM)
+                                           .Replace("#RadialDeviationROM", model.LWristRDROM)
+                                             .Replace("#side", "RIGHT");
+                    break;
+                default:
+                    rom = "No ROM data available for this body part.";
+                    break;
+            }
+            return htmlString;
+        }
+        #endregion
+
 
     }
 }

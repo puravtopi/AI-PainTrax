@@ -632,6 +632,90 @@
     </table>
 </div>
 
+<div class="other1Div" style="display:none">
+    <h6 class="fw-bold h1Title1">Other 1 body parts:</h6>
+
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input id="Other1FlexionTitle" class="form-control d-inline " style="width:150px" value="Flexion" /></td>
+                <td><input id="Other1FlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="Other1FlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="Other1ExtTitle" class="form-control d-inline " style="width:150px" value="Extension" /></td>
+                <td><input id="Other1ExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="Other1ExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<br />
+<div class="other2Div" style="display:none">
+    <h6 class="fw-bold h1Title2">Other 2 body parts:</h6>
+
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input id="Other2FlexionTitle" class="form-control d-inline " style="width:150px" value="Flexion" /></td>
+                <td><input id="Other2FlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="Other2FlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="Other2ExtTitle" class="form-control d-inline " style="width:150px" value="Extension" /></td>
+                <td><input id="Other2ExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="Other2ExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<br />
+<div class="other3Div" style="display:none">
+    <h6 class="fw-bold h1Title3">Other 3 body parts:</h6>
+
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+                <td></td>
+                <td>ROM</td>
+                <td>Normal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input id="Other3FlexionTitle" class="form-control d-inline " style="width:150px" value="Flexion" /></td>
+                <td><input id="Other3FlexionROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="Other3FlexionNormal" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                <td><input id="Other3ExtTitle" class="form-control d-inline " style="width:150px" value="Extension" /></td>
+                <td><input id="Other3ExtRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                <td><input id="Other3ExtRNormal" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<br />
 <div class="otherDiv" style="display:none">
     <h6 class="fw-bold">Other body parts:</h6>
 
@@ -659,14 +743,16 @@
         </tbody>
     </table>
 </div>
+<br>
+
 
 <div class="select-group">
     <strong>GAIT:</strong>
 
-    <label><input type="radio" class="chkMulti" name="GAIT" value="Normal" checked> <span class="select-btn">Normal</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Normal" checked> <span class="select-btn">Normal</span></label>
 
-    <label><input type="radio" class="chkMulti" name="GAIT" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
-    <label><input type="radio" class="chkMulti" name="GAIT" value="Altered"> <span class="select-btn">Altered</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Altered"> <span class="select-btn">Altered</span></label>
 
     <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Ambulates with a cane"> <span class="select-btn">Ambulates with a cane</span></label>
 
@@ -677,7 +763,6 @@
 </div>
 
 <script>
-
     function uncheckRadio(radio) {
         if (radio.dataset.wasChecked === "true") {
             radio.checked = false;

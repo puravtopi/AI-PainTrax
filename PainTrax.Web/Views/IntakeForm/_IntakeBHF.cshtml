@@ -603,7 +603,7 @@
             throw e;
         }
     }
-            
+
     function startVoice(icon, ctrl) {
 
             var input = $('#' + ctrl);
@@ -673,7 +673,7 @@
                     .replace(/\bnext line\b/gi, "\n");
             }
 
-            
+
             let selectedSections = [];
             let selectedPESections = [];
 
@@ -1218,7 +1218,45 @@
                 $("#OtherBodyPart").on("input", function () {
                     $(".otherDiv").toggle($(this).val().trim() !== "");
                 });
+
                 var selected = [];
+                $("#OtherBodyPart1").on("input", function () {
+                    debugger
+                    $(".other1Div").toggle($(this).val().trim() !== "");
+                    if($(this).val().trim() !== "")
+                    {
+                        $(".h1Title1").text($(this).val())
+                    }
+                    else
+                    {
+                        $(".h1Title1").text("Other 1")
+                    }
+                });
+
+                $("#OtherBodyPart2").on("input", function () {
+                    $(".other2Div").toggle($(this).val().trim() !== "");
+                    if($(this).val().trim() !== "")
+                    {
+                        $(".h1Title2").text($(this).val())
+                    }
+                    else
+                    {
+                        $(".h1Title2").text("Other 2")
+                    }
+                });
+
+                $("#OtherBodyPart3").on("input", function () {
+                    $(".other3Div").toggle($(this).val().trim() !== "");
+                    if($(this).val().trim() !== "")
+                    {
+                        $(".h1Title3").text($(this).val())
+                    }
+                    else
+                    {
+                        $(".h1Title3").text("Other 3")
+                    }
+                });
+
                 $(document).on('change', 'input[name="Complaints"]', function () {
 
                     var section = $(this).data('section');
@@ -1226,14 +1264,14 @@
                     var value = $(this).val();
                     fnShowPresentComplain(this, section, pe,value);
 
-                   
+
                    // $('input[name="Complaints"]:checked').each(function () {
                         //     selected.push($(this).val());
                         // });
 
 
 
-
+                    if ($(this).data('btype') !== 'other') {
                        if ($(this).is(':checked')) {
                             // Add in click order
                             selected.push(value);
@@ -1243,8 +1281,9 @@
                                 return item !== value;
                             });
                         }
+                    }
 
-                        if(selected.length>0){
+                        if(selected.length>0 || $(this).data('btype') == 'other'){
 
                             //if (selected.includes("Neck"))
 
@@ -1323,6 +1362,22 @@
         }
 
     });
+
+     $(document).on('change','input[data-btype="other"]', function () {
+
+        // Use .nextAll(...).first() to safely find the input even if there are whitespace/elements in between
+        var $textBox = $(this).closest('label').nextAll('input[type="text"]').first();
+
+        if (this.checked) {
+            $textBox.removeClass('d-none').addClass('d-inline');
+        } else {
+            $textBox.removeClass('d-inline').addClass('d-none').val('')
+            .trigger('input')
+            .trigger('change');
+        }
+    });
+
+
     $(document).on('change', 'input[name="NeckAssociated"]', function () {
 
         // Check if any NeckRadiates checkbox is checked
@@ -1472,9 +1527,20 @@
 
                     fnToggle(values);
                      $(".otherDiv").toggle($("#OtherBodyPart").val().trim() !== "");
+                     $(".other1Div").toggle($("#OtherBodyPart1").val().trim() !== "");
+                     if($("#OtherBodyPart1").val().trim() !== "")
+                        $(".h1Title1").text($("#OtherBodyPart1").val().trim())
+
+                     $(".other2Div").toggle($("#OtherBodyPart2").val().trim() !== "");
+                     if($("#OtherBodyPart2").val().trim() !== "")
+                        $(".h1Title2").text($("#OtherBodyPart2").val().trim())
+
+                     $(".other3Div").toggle($("#OtherBodyPart3").val().trim() !== "");
+                     if($("#OtherBodyPart3").val().trim() !== "")
+                        $(".h1Title3").text($("#OtherBodyPart3").val().trim())
                 }, 1000);
 
-                 
+
             }
 
             function formatDate(inputDate) {

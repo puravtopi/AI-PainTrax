@@ -26,7 +26,7 @@
     </select>
     &nbsp;&nbsp;
     DOS
-    <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" required class="form-control d-inline w-auto"  onblur="fnvalidateDatefields()" />
+    <input id="DOE" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOE" type="date" required class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
     &nbsp;&nbsp;
     Location: &nbsp;&nbsp;
     <select id="LocationId" required name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:200px !important">
@@ -37,14 +37,14 @@
 <p>
     DOB:
     <input id="DOB" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOB" type="date" class="form-control d-inline w-auto" min="1900-01-01" onblur="fnvalidateDatefields()"
-            required onchange="fnCheckPatientNameOnly()" />
+           required onchange="fnCheckPatientNameOnly()" />
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     Age:
     <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
     DOA:
-    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date"  class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
+    <input id="DOA" max="@DateTime.Now.ToString("yyyy-MM-dd")" name="DOA" type="date" class="form-control d-inline w-auto" onblur="fnvalidateDatefields()" />
 </p>
 <div class="select-group">
     <strong>Case Type:</strong>
@@ -72,7 +72,7 @@
         <span class="select-btn">LIEN</span>
     </label>
     <p>
-        <select id="AccidentType"  class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
+        <select id="AccidentType" class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
     </p>
 </div>
 <div class="select-group">
@@ -92,6 +92,12 @@
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" />  <span class="select-btn">L/Hip</span></label>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Wrist" data-section="rwristSection" data-pe="rwristPE" /> <span class="select-btn">R/Wrist</span></label>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Wrist" data-section="lwristSection" data-pe="lwristPE" />  <span class="select-btn">L/Wrist</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 1" data-section="o1Section" data-pe="o1PE"  data-btype="other"/>  <span class="select-btn">Other 1</span></label>
+    <input type="text" id="OtherBodyPart1" name="OtherBodyPart1" class="form-control d-inline w-auto d-none" placeholder="other 1" />
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 2" data-section="o2Section" data-pe="o2PE" data-btype="other"/>  <span class="select-btn">Other 2</span></label>
+    <input type="text" id="OtherBodyPart2" name="OtherBodyPart2" class="form-control d-inline w-auto d-none" placeholder="other 2" />
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 3" data-section="o3Section" data-pe="o3PE" data-btype="other"/>  <span class="select-btn">Other 3</span></label>
+    <input type="text" id="OtherBodyPart3" name="OtherBodyPart3" class="form-control d-inline w-auto d-none" placeholder="other 3" /> 
     <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
 </div>
 <p>
@@ -139,7 +145,7 @@
     <p>
         Occupation:
         <input id="Occupation" name="Occupation" class="form-control d-inline w-auto" style="min-width:90%;" />
-       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i> *@
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Occupation')"></i> *@
         <br />
         Job Description:
         <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:95%;" />
@@ -381,4 +387,19 @@
             }
             return '';
         }
+
+    //      $(document).ready(function () {
+    //     $('.otherBody').on('change', function () {
+    //         var $textBox = $(this).closest('label').next('input[type="text"]');
+
+    //         if (this.checked) {
+    //             $textBox.removeClass('d-none');
+    //         } else {
+    //             $textBox.addClass('d-none').val('');
+    //         }
+    //     });
+
+    //     // Trigger on load
+    //     $('.otherBody').trigger('change');
+    // });
 </script>

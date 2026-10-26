@@ -12,8 +12,10 @@
         public string DOB { get; set; }
         public string DOE { get; set; }
         public string EMS { get; set; }
+        public string IsPMH { get; set; }
         public List<string> PMH { get; set; }
         public string PPD { get; set; }
+        public string IsSMH { get; set; }
         public string PSH { get; set; }
         public string Sit { get; set; }
         public string Meds { get; set; }
@@ -32,6 +34,9 @@
         public string SitMin { get; set; }
         public List<string> Unable { get; set; }
         public string Weight { get; set; }
+        public string SpO { get; set; }
+        public string HR { get; set; }
+        public string BMI { get; set; }
         public string LblDOA { get; set; }
         public string Alcohol { get; set; }
         public string Allergy { get; set; }
@@ -59,6 +64,7 @@
         public string StandMin { get; set; }
         public string ChiroFreq { get; set; }
         public string IsWorking { get; set; }
+        public string DisabilityPercentage { get; set; }
         public string Mechanism { get; set; }
         public string MedsOther { get; set; }
         public string PreInjury { get; set; }

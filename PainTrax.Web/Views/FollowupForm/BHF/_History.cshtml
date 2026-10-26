@@ -16,6 +16,12 @@
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lfipSection" data-pe="lhipPE" />  <span class="select-btn">L/Hip</span></label>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Wrist" data-section="rwristSection" data-pe="rwristPE" /> <span class="select-btn">R/Wrist</span></label>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Wrist" data-section="lwristSection" data-pe="lwristPE" />  <span class="select-btn">L/Wrist</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 1" data-section="o1Section" data-pe="o1PE" data-btype="other" />  <span class="select-btn">Other 1</span></label>
+    <input type="text" id="OtherBodyPart1" name="OtherBodyPart1" class="form-control d-inline w-auto d-none" placeholder="other 1" />
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 2" data-section="o2Section" data-pe="o2PE" data-btype="other" />  <span class="select-btn">Other 2</span></label>
+    <input type="text" id="OtherBodyPart2" name="OtherBodyPart2" class="form-control d-inline w-auto d-none" placeholder="other 2" />
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 3" data-section="o3Section" data-pe="o3PE" data-btype="other" />  <span class="select-btn">Other 3</span></label>
+    <input type="text" id="OtherBodyPart3" name="OtherBodyPart3" class="form-control d-inline w-auto d-none" placeholder="other 3" />
     <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
 </div>
 
@@ -83,23 +89,23 @@
         <p>
             During that
             <input type="text" id="During" name="During" class="form-control d-inline" style="width:150px" />
-            period patient reported:  
+            period patient reported:
             <label><input type="checkbox" class="chkMulti" name="Radicularsymptoms" value="Radicular symptoms had improved" />  <span class="select-btn">Radicular symptoms had improved</span></label>
             <label><input type="checkbox" class="chkMulti" name="RadicularPecentage" value="by greater than" />  <span class="select-btn">by greater than</span></label>
             <span id="divRadicularPecentage" style="display:none">
                 <input type="text" id="RadicularSys" name="RadicularSys" class="form-control d-inline" style="width:70px" />%
             </span>
-            
+
         </p>
     </div>
     <div class="select-group">
-        
+
         <label><input type="checkbox" class="chkMulti" name="VASpainscores" value="VAS pain scores had improved" />  <span class="select-btn">VAS pain scores had improved</span></label>
         <label><input type="checkbox" class="chkMulti" name="VASPecentage" value="by greater than" />  <span class="select-btn">by greater than</span></label>
         <span id="divVASPecentage" style="display:none">
             <input type="text" id="txtVASPecentage" name="txtVASPecentage" class="form-control d-inline" style="width:70px" />%
         </span>
-       @*  <label><input type="checkbox" class="chkMulti" name="PostInjection" value="VAS pain scores had improved by greater than 50%." />  <span class="select-btn"> VAS pain scores had improved by greater than 50%.</span></label> *@
+        @*  <label><input type="checkbox" class="chkMulti" name="PostInjection" value="VAS pain scores had improved by greater than 50%." />  <span class="select-btn"> VAS pain scores had improved by greater than 50%.</span></label> *@
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="There was functional improvement in ROM." />  <span class="select-btn">  There was functional improvement in ROM.</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Patient required less use of assistive devices." />  <span class="select-btn">  Patient required less use of assistive devices.</span></label>
         <label><input type="checkbox" class="chkMulti" name="PostInjection" value="Patient reported better sleep pattern." />  <span class="select-btn">  Patient reported better sleep pattern.</span></label>
@@ -194,7 +200,7 @@
 </div>
 
 <script>
-        
+
         $('input[name="FUType"]').on('change', function() {
         if ($(this).val() === 'Post injection FU') {
             $('#divInjectionFU').show();
@@ -219,7 +225,21 @@
             $('#divVASPecentage').hide();
         }
     });
-        
 
-    
+    // $(document).ready(function () {
+    //     $('.otherBody').on('change', function () {
+    //         var $textBox = $(this).closest('label').next('input[type="text"]');
+
+    //         if (this.checked) {
+    //             $textBox.removeClass('d-none');
+    //         } else {
+    //             $textBox.addClass('d-none').val('');
+    //         }
+    //     });
+
+    //     // Trigger on load
+    //     $('.otherBody').trigger('change');
+    // });
+
+
 </script>

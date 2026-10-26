@@ -461,16 +461,21 @@ poc_assesment=@poc_assesment
 
     public int UpdatePage1Intake(tbl_ie_page1 data)
     {
-        MySqlCommand cm = new MySqlCommand(@"update tbl_ie_page1 set
-		
-        bodypart=@bodypart,cc=@cc,pe=@pe
-        where ie_id=(SELECT ie.id FROM tbl_patient_ie ie WHERE ie.IntakeId=@id )
-				 ;select 1;", conn);
-        
-        cm.Parameters.AddWithValue("@id", data.id);
-        cm.Parameters.AddWithValue("@bodypart", data.bodypart);
-        cm.Parameters.AddWithValue("@cc", data.cc);
-        cm.Parameters.AddWithValue("@pe", data.pe);
+        MySqlCommand cm = new MySqlCommand("CALL sp_SaveIntakePage1Data(@p_ie_id,@p_bodypart,@p_cc,@p_pe,@p_assessment,@p_vital,@p_pmh,@p_psh,@p_medication,@p_allergies,@p_work_status,@p_dd) ", conn);
+
+
+        cm.Parameters.AddWithValue("@p_ie_id", data.id);
+        cm.Parameters.AddWithValue("@p_bodypart", data.bodypart);
+        cm.Parameters.AddWithValue("@p_cc", data.cc);
+        cm.Parameters.AddWithValue("@p_pe", data.pe);
+        cm.Parameters.AddWithValue("@p_assessment", data.assessment);
+        cm.Parameters.AddWithValue("@p_vital", data.vital);
+        cm.Parameters.AddWithValue("@p_pmh", data.pmh);
+        cm.Parameters.AddWithValue("@p_psh", data.psh);
+        cm.Parameters.AddWithValue("@p_medication", data.medication);
+        cm.Parameters.AddWithValue("@p_allergies", data.allergies);
+        cm.Parameters.AddWithValue("@p_work_status", data.work_status);
+        cm.Parameters.AddWithValue("@p_dd", data.dd);
         
         var result = ExecuteScalar(cm);
         return result;

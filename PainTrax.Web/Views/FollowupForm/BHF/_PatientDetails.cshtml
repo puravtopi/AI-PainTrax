@@ -429,16 +429,16 @@
             if (!dosDate) return;
         }
 
-        if (injuryType !== 'MM') {
-        // DOA
-        if (doa) {
-            doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
-            if (!doaDate) return;
-        }
-        }
+        // if (injuryType !== 'MM') {
+        // // DOA
+        // if (doa) {
+        //     doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+        //     if (!doaDate) return;
+        // }
+        // }
 
             // ---------- DOA vs DOS ----------
-                if (dosDate && doaDate && doaDate > dosDate) {
+        if (dosDate && doaDate && doaDate > dosDate) {
             alert("DOA cannot be greater than DOS");
 
             $('#DOA').val('').focus();
