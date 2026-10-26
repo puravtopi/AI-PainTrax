@@ -216,6 +216,17 @@
     <div class="select-group">
         <p><label><input type="checkbox" class="chkMulti" name="NormalFUCheck" value="The patient is seen for a follow-up" />  <span class="select-btn"> The patient is seen for a follow-up.</span></label></p>
     </div>
+  <div class="select-group">
+    <label><input type="checkbox" class="chkMulti" name="MRICT" value="MRI"> <span class="select-btn">MRI</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="MRICT" value="CT"> <span class="select-btn">CT</span> </label>
+    &nbsp;&nbsp;&nbsp;
+    <p id="divMRI" style="display:none">       
+
+        of the
+            <input type="text" id="txtspine" name="txtspine" class="form-control d-inline" style="width:150px;" /> spine
+            <input type="text" id="txtreviewed" name="txtreviewed" class="form-control d-inline" style="width:150px;" /> reviewed       
+    </p>
+   </div>
     <div class="select-group">
         <p><label><input type="checkbox" class="chkMulti" name="NormalFUCheck" value="Range of motion and pain scales were performed" />  <span class="select-btn"> Range of motion and pain scales were performed.</span></label></p>
     </div>
@@ -299,9 +310,19 @@
             $('#divVASPecentage').show();
         } else {
             $('#divVASPecentage').hide();
+
         }
     });
-        
+          $(document).on("change", 'input[name="MRICT"]', function () {
+        if ($('input[name="MRICT"]:checked').length > 0) {
+            $("#divMRI").show();
+        } else {
+            $("#divMRI").hide();
+            $("#divMRI input[type='checkbox']").prop("checked", false);
+             $("#txtspine").val("");
+             $("#txtreviewed").val("");
+        }
+    });
 
-    
+
 </script>

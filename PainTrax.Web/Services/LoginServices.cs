@@ -18,7 +18,7 @@ namespace PainTrax.Web.Services
             try
             {
                 DataTable dt = new DataTable();
-                MySqlCommand cm = new MySqlCommand("select * from vm_cm_user where uname=@uname and client_code=@client_code ", conn);
+                MySqlCommand cm = new MySqlCommand("select * from vm_cm_user where uname=@uname and client_code=@client_code and isactive=1 ", conn);
 
                 cm.Parameters.AddWithValue("@uname", data.UserName);
                 cm.Parameters.AddWithValue("@client_code", data.ClientCode);
