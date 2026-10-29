@@ -461,7 +461,7 @@ poc_assesment=@poc_assesment
 
     public int UpdatePage1Intake(tbl_ie_page1 data)
     {
-        MySqlCommand cm = new MySqlCommand("CALL sp_SaveIntakePage1Data(@p_ie_id,@p_bodypart,@p_cc,@p_pe,@p_assessment,@p_vital,@p_pmh,@p_psh,@p_medication,@p_allergies,@p_work_status,@p_dd) ", conn);
+        MySqlCommand cm = new MySqlCommand("CALL sp_SaveIntakePage1Data(@p_ie_id,@p_bodypart,@p_cc,@p_pe,@p_assessment,@p_vital,@p_pmh,@p_psh,@p_medication,@p_allergies,@p_work_status,@p_dd,@p_history,@p_occupation) ", conn);
 
 
         cm.Parameters.AddWithValue("@p_ie_id", data.id);
@@ -476,7 +476,22 @@ poc_assesment=@poc_assesment
         cm.Parameters.AddWithValue("@p_allergies", data.allergies);
         cm.Parameters.AddWithValue("@p_work_status", data.work_status);
         cm.Parameters.AddWithValue("@p_dd", data.dd);
+        cm.Parameters.AddWithValue("@p_history", data.history);
+        cm.Parameters.AddWithValue("@p_occupation", data.occupation);
         
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+
+    public int UpdatePage3Intake(int id,string gait)
+    {
+        MySqlCommand cm = new MySqlCommand("CALL sp_SavePage3Data(@p_ie_id,@p_gait) ", conn);
+
+
+        cm.Parameters.AddWithValue("@p_ie_id", id);
+        cm.Parameters.AddWithValue("@p_gait", gait);
+       
+
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -522,6 +537,32 @@ poc_assesment=@poc_assesment
         return result;
     }
 
+    public int UpdatePage2Intake(tbl_ie_page2 obj)
+    {
+        MySqlCommand cm = new MySqlCommand("CALL sp_SavePage2IntakeData(@p_ie_id,@p_ros,@p_adl) ", conn);
+
+
+        cm.Parameters.AddWithValue("@p_ie_id", obj.ie_id);
+        cm.Parameters.AddWithValue("@p_ros", obj.ros);
+        cm.Parameters.AddWithValue("@p_adl", obj.aod);
+
+
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+    public int UpdateOtherPageIntake(tbl_ie_other obj)
+    {
+        MySqlCommand cm = new MySqlCommand("CALL sp_SaveOtherPageIntakeData(@p_ie_id,@p_note,@p_followup_duration,@p_followup_date) ", conn);
+
+
+        cm.Parameters.AddWithValue("@p_ie_id", obj.ie_id);
+        cm.Parameters.AddWithValue("@p_note", obj.note3);
+        cm.Parameters.AddWithValue("@p_followup_duration", obj.followup_duration);
+        cm.Parameters.AddWithValue("@p_followup_date", obj.followup_date);
+
+        var result = ExecuteScalar(cm);
+        return result;
+    }
 
     #endregion
 

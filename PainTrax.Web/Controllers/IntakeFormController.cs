@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
+using NuGet.Configuration;
 using OpenAI.Audio;
 using OpenAI.Chat;
 using PainTrax.Services;
@@ -962,12 +963,6 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult SaveForm([FromBody] object formData)
         {
-            //var options = new JsonSerializerOptions
-            //{
-            //    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            //    WriteIndented = true // Optional: for readability
-            //};
-
             var json = System.Text.Json.JsonSerializer.Serialize(formData);
             json = json.Replace("\\u0027", "'");
             var model = new AIIntakeFormModel();
@@ -999,7 +994,6 @@ namespace PainTrax.Web.Controllers
 
             if (model != null)
             {
-
                 InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
                 {
                     Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
@@ -1043,6 +1037,7 @@ namespace PainTrax.Web.Controllers
                 else
                     InjuryType = model.InjuryType;
 
+                string path = Environment.WebRootPath;
 
 
                 string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
@@ -1050,15 +1045,15 @@ namespace PainTrax.Web.Controllers
                 if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
                     HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
                 {
-                    peContent = this.GetPE(model);
-                    dtrContent = this.GetDTR(model);
-                    sensoryContent = this.GetSensory(model);
-                    mmstContent = this.GetMMST(model);
-                    ccContent = this.GetBHFCC(model);
+                    peContent = ReportHelper.GetPE(model, path);
+                    dtrContent = ReportHelper.GetDTR(model, path);
+                    sensoryContent = ReportHelper.GetSensory(model, path);
+                    mmstContent = ReportHelper.GetMMST(model, path);
+                    ccContent = ReportHelper.GetBHFCC(model);
                 }
                 else
                 {
-                    ccContent = string.IsNullOrEmpty(this.GetCC(model)) ? defaultPage1.cc : this.GetCC(model);
+                    ccContent = string.IsNullOrEmpty(ReportHelper.GetBHFCC(model)) ? defaultPage1.cc : ReportHelper.GetBHFCC(model);
                     //ccContent = this.GetBHFCC(model);
                 }
 
@@ -1066,7 +1061,7 @@ namespace PainTrax.Web.Controllers
                 assessment = assessment.Replace("#sex", model.Gender);
 
 
-                string vital = "", pmh = "", psh = "", med = "", allergy = "", working = "", dd = "";
+                string vital = "", pmh = "", psh = "", med = "", allergy = "", working = "", dd = "", gait = "", ros = "", adl = "", occupation = "", working_desc = "";
 
                 if (!string.IsNullOrEmpty(model.Height) && !string.IsNullOrEmpty(model.Weight))
                 {
@@ -1074,15 +1069,23 @@ namespace PainTrax.Web.Controllers
                 }
                 if (!string.IsNullOrEmpty(model.Heightft) && !string.IsNullOrEmpty(model.Weight))
                 {
-                    vital = "H: " + model.Heightft + "’" + model.Heightinch + ", W: " + model.Weight + " lbs, SpO2: " + model.SpO + ", HR: " + model.HR + ", BMI: " + model.BMI + ".";
+                    vital = "H: " + model.Heightft + "’" + model.Heightinch + ", W: " + model.Weight + " lbs, SpO2: " + model.SpO + "%, HR: " + model.HR + ", BMI: " + model.BMI + ".";
                 }
 
-                pmh = HistoryHelper.GeneratePmh(model.IsPMH, model.PMH, model.PMHOther);
-                psh = HistoryHelper.GeneratePsh(model.IsSMH, model.PSH);
-                med = HistoryHelper.GenerateMeds(model.Meds, model.MedsOther);
-                allergy = HistoryHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
-                working = model.IsWorking;
-                dd = string.IsNullOrEmpty(model.DisabilityPercentage) ? "" : model.DisabilityPercentage + "% Working";
+                pmh = ReportHelper.GeneratePmh(model.IsPMH, model.PMH, model.PMHOther);
+                psh = ReportHelper.GeneratePsh(model.IsSMH, model.PSH);
+                med = ReportHelper.GenerateMeds(model.Meds, model.OtherMeds);
+                allergy = ReportHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
+
+                dd = string.IsNullOrEmpty(model.DisabilityPercentage) ? "" : model.DisabilityPercentage + "%";
+                gait = ReportHelper.GenerateGait(model.GAITMultiR, model.GAITMulti, model.GAITOther);
+                ros = ReportHelper.GenerateRos(model.ROS, model.ROSOther);
+                adl = ReportHelper.GenerateADL(model);
+                occupation = ReportHelper.GenerateOccupation(model.Occupation, model.JobTitle);
+                working_desc = ReportHelper.GenerateJob(model);
+                string history = ReportHelper.GenerateHistory(model);
+                if (model.IsWorking != null)
+                    working = model.IsWorking.TrimEnd('.') + ". " + working_desc;
 
                 if (initialIntakeAI.Id == 0)
                 {
@@ -1138,28 +1141,26 @@ namespace PainTrax.Web.Controllers
 
                             if (ie > 0)
                             {
-
-                                string history = "";
-                                if (defaultPage1 != null)
+                                if (string.IsNullOrEmpty(history))
                                 {
+                                    if (defaultPage1 != null)
+                                    {
 
-                                    history = defaultPage1.history;
+                                        history = defaultPage1.history;
 
-                                    history = history.Replace("#fname", model.FN);
-                                    history = history.Replace("#fn", model.FN);
-                                    history = history.Replace("#lname", model.LN);
-                                    history = history.Replace("#ln", model.LN);
+                                        history = history.Replace("#fname", model.FN);
+                                        history = history.Replace("#fn", model.FN);
+                                        history = history.Replace("#lname", model.LN);
+                                        history = history.Replace("#ln", model.LN);
 
-                                    history = history.Replace("#dos", model.DOE);
-                                    //history = history.Replace("#doi", model.DOA);
-                                    history = history.Replace("#handedness", model.DominantHand);
-                                    history = history.Replace("#sex", model.Gender);
-                                    history = history.Replace("#gender", Common.GetMrMrsFromSex(model.Gender == "male" ? "1" : "2"));
+                                        history = history.Replace("#dos", model.DOE);
+                                        //history = history.Replace("#doi", model.DOA);
+                                        history = history.Replace("#handedness", model.DominantHand);
+                                        history = history.Replace("#sex", model.Gender);
+                                        history = history.Replace("#gender", Common.GetMrMrsFromSex(model.Gender == "male" ? "1" : "2"));
 
+                                    }
                                 }
-
-
-
 
                                 var objPage1 = new tbl_ie_page1()
                                 {
@@ -1168,7 +1169,7 @@ namespace PainTrax.Web.Controllers
                                     psh = string.IsNullOrEmpty(psh) ? defaultPage1.psh : psh,
                                     bodypart = string.Join(",", model.Complaints),
                                     allergies = allergy,
-                                    assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : model.Diagnosis,
+                                    assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : "<ul>" + model.Diagnosis + "</ul>" + model.DiagnosisOther,
                                     ie_id = ie,
                                     vital = string.IsNullOrEmpty(vital) ? defaultPage1.vital : vital,
                                     cc = ccContent,
@@ -1179,15 +1180,12 @@ namespace PainTrax.Web.Controllers
                                     history = history,
                                     medication = med,
                                     note = defaultPage1.note,
-                                    occupation = defaultPage1.occupation,
+                                    occupation = string.IsNullOrEmpty(occupation) ? defaultPage1.occupation : occupation,
                                     plan = defaultPage1.plan,
                                     rom = defaultPage1.rom,
                                     social_history = defaultPage1.social_history,
                                     work_status = string.IsNullOrEmpty(working) ? defaultPage1.work_status : working,
-
-
-                                }
-                            ;
+                                };
 
                                 _ieService.InsertPage1(objPage1);
 
@@ -1200,8 +1198,8 @@ namespace PainTrax.Web.Controllers
                                     var objPage2 = new tbl_ie_page2()
                                     {
                                         ie_id = ie,
-                                        ros = defaultPage2?.ros,
-                                        aod = defaultPage2?.aod,
+                                        ros = string.IsNullOrEmpty(ros) ? defaultPage2.ros : ros,
+                                        aod = string.IsNullOrEmpty(adl) ? defaultPage2.aod : adl,
                                         other = defaultPage2?.other,
                                         cmp_id = cmpid.Value,
                                         patient_id = patientId,
@@ -1241,7 +1239,6 @@ namespace PainTrax.Web.Controllers
 
                                 _ieService.InsertOtherPage(objOther);
 
-
                                 var _page3Setting = _settingservices.GetOne(cmpid.Value);
 
                                 var dataPage3 = new tbl_ie_page3();
@@ -1278,7 +1275,8 @@ namespace PainTrax.Web.Controllers
                                 dataPage3.other7_study = "0";
                                 dataPage3.other7_comma = _page3Setting.other7_comma;
 
-                                dataPage3.gait = string.IsNullOrEmpty(dataPage3.gait) ? _page3Setting.gait_default : dataPage3.gait;
+                                dataPage3.gait = string.IsNullOrEmpty(gait) ? (string.IsNullOrEmpty(dataPage3.gait) ? _page3Setting.gait_default : dataPage3.gait) :
+                                    gait;
 
 
                                 var _defaultdata = _defaultService.GetOneByCompany(cmpid.Value);
@@ -1377,30 +1375,42 @@ namespace PainTrax.Web.Controllers
                         id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId),
                         cc = ccContent,
                         pe = peContent,
-                        assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<br/>" + model.Diagnosis,
+                        assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ul>" + model.Diagnosis + "</ul>",
                         vital = vital,
                         pmh = pmh,
                         psh = psh,
                         medication = med,
                         allergies = allergy,
                         work_status = working,
-                        dd = dd
+                        dd = dd,
+                        history = history,
+                        occupation = occupation
                     };
 
                     _ieService.UpdatePage1Intake(objPage1);
 
-
                     var objNE = new tbl_ie_ne()
                     {
-
                         sensory = sensoryContent,
                         manual_muscle_strength_testing = mmstContent,
                         other_content = dtrContent,
                         ie_id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId)
-
                     };
 
                     _ieService.UpdateNEIntake(objNE);
+
+
+                    var objP2 = new tbl_ie_page2()
+                    {
+                        ros = ros,
+                        aod = adl,
+                        ie_id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId)
+                    };
+
+                    _ieService.UpdatePage2Intake(objP2);
+
+                   
+
 
                     var objpatient = new tbl_patient()
                     {
@@ -1414,7 +1424,20 @@ namespace PainTrax.Web.Controllers
                         id = patientId,
                     };
                     _patientservices.UpdateIntakePatient(objpatient);
+
+                    int ie_id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId);
+                    _ieService.UpdatePage3Intake(ie_id, gait);
                 }
+
+               var objIntOther = new tbl_ie_other()
+                {
+                    note3 = model.DrNote,
+                    followup_duration= model.FollowUp,
+                    followup_date=  string.IsNullOrEmpty(model.FollowUpOther) ? null : Convert.ToDateTime(model.FollowUpOther),
+                    ie_id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId)
+                };
+
+                _ieService.UpdateOtherPageIntake(objIntOther);
 
                 //return RedirectToAction("Index", "Visit");
             }
@@ -2245,63 +2268,75 @@ namespace PainTrax.Web.Controllers
             string pe = "";
             if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + CCHelper.NeckCC(model);
+                pe = pe + ReportHelper.NeckCC(model);
             }
             if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.MidbackCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.MidbackCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.LowBackCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LowBackCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.RightShoulderCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightShoulderCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.LeftShoulderCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftShoulderCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.RightKneeCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightKneeCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.LeftKneeCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftKneeCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.RightAnkleCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightAnkleCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.LeftAnkleCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftAnkleCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.RightElbowCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightElbowCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.LeftElbowCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftElbowCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.RightHipCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightHipCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.LeftHipCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftHipCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.RightWristCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightWristCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + CCHelper.LeftWristCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftWristCC(model) + "<br/></p>";
+            }
+            if (!string.IsNullOrEmpty(model.OtherBodyPart1))
+            {
+                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other1PainScale, model.Other1PainType, model.OtherBodyPart1) + "<br/></p>";
+            }
+            if (!string.IsNullOrEmpty(model.OtherBodyPart2))
+            {
+                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other2PainScale, model.Other2PainType, model.OtherBodyPart2) + "<br/></p>";
+            }
+            if (!string.IsNullOrEmpty(model.OtherBodyPart3))
+            {
+                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other3PainScale, model.Other3PainType, model.OtherBodyPart3) + "<br/></p>";
             }
             return pe.Replace(", and", " and");
         }
@@ -2312,65 +2347,81 @@ namespace PainTrax.Web.Controllers
 
             if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "neck", "Neck.html");
+                var topSection = ReportHelper.GenerateNeckExamSentence(model);
+                pe = pe + this.GetROM(model, "neck", "Neck.html", topSection);
             }
             if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "midback", "Midback.html");
+                pe = pe + this.GetROM(model, "midback", "Midback.html");
             }
             if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "lowback", "Lowback.html");
+                var topSection = ReportHelper.GenerateLowerBackNarrative(model);
+                pe = pe + this.GetROM(model, "lowback", "Lowback.html", topSection);
             }
             if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "right shoulder", "Shoulder.html");
+                pe = pe + this.GetROM(model, "right shoulder", "Shoulder.html");
             }
             if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "left shoulder", "Shoulder.html");
+                pe = pe + this.GetROM(model, "left shoulder", "Shoulder.html");
             }
             if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "right knee", "Knee.html");
+                pe = pe + this.GetROM(model, "right knee", "Knee.html");
             }
             if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "left knee", "Knee.html");
+                pe = pe + this.GetROM(model, "left knee", "Knee.html");
             }
             if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "right ankle", "Ankle.html");
+                pe = pe + this.GetROM(model, "right ankle", "Ankle.html");
             }
             if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "left ankle", "Ankle.html");
+                pe = pe + this.GetROM(model, "left ankle", "Ankle.html");
             }
             if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "right elbow", "Elbow.html");
+                pe = pe + this.GetROM(model, "right elbow", "Elbow.html");
             }
             if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "left elbow", "Elbow.html");
+                pe = pe + this.GetROM(model, "left elbow", "Elbow.html");
             }
             if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "right hip", "Hip.html");
+                pe = pe + this.GetROM(model, "right hip", "Hip.html");
             }
             if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "left hip", "Hip.html");
+                pe = pe + this.GetROM(model, "left hip", "Hip.html");
             }
             if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "right wrist", "Wrist.html");
+                pe = pe + this.GetROM(model, "right wrist", "Wrist.html");
             }
             if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/>" + this.GetROM(model, "left wrist", "Wrist.html");
+                pe = pe + this.GetROM(model, "left wrist", "Wrist.html");
             }
-
+            if (!string.IsNullOrEmpty(model.OtherBodyPart1))
+            {
+                pe = pe + "<b>" + model.OtherBodyPart1 + "</b><br/>" + this.GetOtherROM(model.Other1FlexionTitle, model.Other1FlexionROM, model.Other1FlexionNormal,
+                    model.Other1ExtTitle, model.Other1ExtRROM, model.Other1ExtRNormal);
+            }
+            if (!string.IsNullOrEmpty(model.OtherBodyPart2))
+            {
+                pe = pe + "<b>" + model.OtherBodyPart2 + "</b><br/>" + this.GetOtherROM(model.Other2FlexionTitle, model.Other2FlexionROM, model.Other2FlexionNormal,
+                    model.Other2ExtTitle, model.Other2ExtRROM, model.Other2ExtRNormal);
+            }
+            if (!string.IsNullOrEmpty(model.OtherBodyPart3))
+            {
+                pe = pe + "<b>" + model.OtherBodyPart3 + "</b><br/>" + this.GetOtherROM(model.Other3FlexionTitle, model.Other3FlexionROM, model.Other3FlexionNormal,
+                    model.Other3ExtTitle, model.Other3ExtRROM, model.Other3ExtRNormal);
+            }
             return pe;
         }
 
@@ -2467,6 +2518,10 @@ namespace PainTrax.Web.Controllers
                                               .Replace("#KneeRERight", string.IsNullOrEmpty(model.KneeRERight) ? "2+" : model.KneeRERight)
                                               .Replace("#AnkleRELeft", string.IsNullOrEmpty(model.AnkleRELeft) ? "2+" : model.AnkleRELeft)
                                               .Replace("#AnkleRERight", string.IsNullOrEmpty(model.AnkleRERight) ? "2+" : model.AnkleRERight);
+
+                if (!string.IsNullOrEmpty(model.Reflex))
+                    modifiedHtml = "<p>" + model.Reflex + "</p>" + modifiedHtml;
+
                 return modifiedHtml;
             }
             catch (Exception ex)
@@ -2479,6 +2534,22 @@ namespace PainTrax.Web.Controllers
 
         private string GetSensory(AIIntakeFormModel model)
         {
+            string strSE = "";
+
+
+            if (model.SE != null && model.SE.Any())
+            {
+                string seItems = model.SE.Count > 1
+                    ? $"{string.Join(", ", model.SE.Take(model.SE.Count - 1))} and {model.SE.Last()}"
+                    : model.SE.First();
+
+                strSE = $"SENSORY EXAMINATION To {seItems}".TrimEnd('.') + ". " + model.Sensory;
+            }
+            else
+            {
+                strSE = model.Sensory;
+            }
+
 
             var templateDir = Path.Combine(Environment.WebRootPath, "templates");
 
@@ -2581,6 +2652,10 @@ namespace PainTrax.Web.Controllers
                                           .Replace("#FootLateralRight", string.IsNullOrEmpty(model.FootLateralRight) ? "Normal" : model.FootLateralRight)
                                           .Replace("#LumbarLeft", string.IsNullOrEmpty(model.LumbarLeft) ? "Normal" : model.LumbarLeft)
                                           .Replace("#LumbarRight", string.IsNullOrEmpty(model.LumbarRight) ? "Normal" : model.LumbarRight);
+
+            if (!string.IsNullOrEmpty(strSE))
+                htmlString = "<p>" + strSE + "</p><br/>" + htmlString;
+
             return htmlString;
 
         }
@@ -2699,6 +2774,11 @@ namespace PainTrax.Web.Controllers
                                           .Replace("#AnklePlantarRight", string.IsNullOrEmpty(model.AnklePlantarRight) ? "5" : model.AnklePlantarRight)
                                           .Replace("#EHLLeft", string.IsNullOrEmpty(model.EHLLeft) ? "5" : model.EHLLeft)
                                           .Replace("#EHLRight", string.IsNullOrEmpty(model.EHLRight) ? "5" : model.EHLRight);
+
+            if (!string.IsNullOrEmpty(model.Motor))
+                htmlString = "<p>" + model.Motor + "</p>" + htmlString;
+
+
             return htmlString;
 
         }
@@ -3868,7 +3948,7 @@ Transcript:
             return char.ToUpper(result[0]) + result.Substring(1);
         }
 
-        public string GetROM(AIIntakeFormModel model, string bodyPart, string fileName)
+        public string GetROM(AIIntakeFormModel model, string bodyPart, string fileName, string topSection = "")
         {
             string rom = "";
 
@@ -3891,7 +3971,8 @@ Transcript:
                                            .Replace("#ExtensionROM", model.NeckExt)
                                            .Replace("#LLateralFlexionROM", model.NeckExtLeft)
                                            .Replace("#RLateralFlexionROM", model.NeckExtRight)
-                                           .Replace("#SPTest", model.NeckSpurlingTest);
+                                           .Replace("#RLateralFlexionROM", model.NeckExtRight)
+                                           .Replace("#topSection", topSection);
                     break;
                 case "midback":
                     htmlString = htmlString.Replace("#MbFFROM", model.MbFFROM)
@@ -3904,7 +3985,8 @@ Transcript:
                                            .Replace("#LbFFLeft", model.LBFFLeft)
                                            .Replace("#LbFFRight", model.LBFFRight)
                                            .Replace("#LbExt", model.LBExt)
-                                           .Replace("#SLRTest", model.LBSlrTest);
+                                           .Replace("#SLRTest", model.LBSlrTest)
+                                            .Replace("#topSection", topSection);
                     break;
                 case "left shoulder":
                     htmlString = htmlString.Replace("#AbductionROM", model.LSHAbductionROM)
@@ -3928,7 +4010,7 @@ Transcript:
                     htmlString = htmlString.Replace("#FlexionROM", model.LKNFlexionROM)
                                            .Replace("#ExtensionROM", model.LKNExtROM)
                                            .Replace("#FlexionNormal", model.LKNFlexionNormal)
-                                           .Replace("#ExtensionNormal", model.LKNExtRNormal)
+                                           .Replace("#ExtensionNormal", model.LKNExtNormal)
                                            .Replace("#FlexionTitle", model.LKNTitleROM)
                                            .Replace("#ExtensionTitle", model.LKNExtTitleROM)
                                            .Replace("#side", "LEFT");
@@ -3937,7 +4019,7 @@ Transcript:
                     htmlString = htmlString.Replace("#FlexionROM", model.RKNFlexionROM)
                                           .Replace("#ExtensionROM", model.RKNExtROM)
                                           .Replace("#FlexionNormal", model.RKNFlexionNormal)
-                                          .Replace("#ExtensionNormal", model.RKNExtRNormal)
+                                          .Replace("#ExtensionNormal", model.RKNExtNormal)
                                           .Replace("#FlexionTitle", model.RKNTitleROM)
                                           .Replace("#ExtensionTitle", model.RKNExtTitleROM)
                                           .Replace("#side", "RIGHT");
@@ -4009,6 +4091,31 @@ Transcript:
                     break;
             }
             return htmlString;
+        }
+
+        public string GetOtherROM(string NeckFFROM, string NeckFFLeft, string NeckFFRight,
+            string NeckExt, string NeckExtLeft, string NeckExtRight)
+        {
+            string rom = "";
+
+            var templateDir = Path.Combine(Environment.WebRootPath, "templates");
+
+            //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
+            var filePath = templateDir + "/BHF/Other.html";
+
+
+            // 2. Read the entire file content into a string asynchronously
+            string htmlString = System.IO.File.ReadAllText(filePath);
+
+            htmlString = htmlString.Replace("#FlexionTitle", NeckFFROM)
+                                          .Replace("#FlexionROM", NeckFFLeft)
+                                          .Replace("#FlexionNormal", NeckFFRight)
+                                          .Replace("#ExtTitle", NeckExt)
+                                          .Replace("#ExtRROM", NeckExtLeft)
+                                          .Replace("#ExtRNormal", NeckExtRight);
+
+            return htmlString;
+
         }
         #endregion
     }

@@ -92,6 +92,12 @@
                                         onclick="DownloadPdf('@ViewBag.Id')">
                                     Super Bill
                                 </button>
+                                <button type="button" id="btnSuperBill"
+                                        class="btn btn-outline-secondary"
+                                        @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                        onclick="ShowReport()">
+                                    Print Report
+                                </button>
                             </p>
                             <!-- Settings Button -->
                             <div class="position-absolute top-0 end-0 m-2">
@@ -2073,7 +2079,11 @@
             },
         });
     }
-
+    function ShowReport()
+         {
+            var url = '@Url.Action("FUPrint", "FUVisit")?ieid=' + encodeURIComponent($("#PatientIEId").val())+'&fuid='+$("#hdFUId").val();
+            window.open(url, '_blank');
+         }
 </script>
 
 <!-- html2pdf library -->

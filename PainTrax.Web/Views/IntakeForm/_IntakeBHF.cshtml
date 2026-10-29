@@ -106,11 +106,17 @@
                                             id="btnTranscribe">
                                         Open Voice Recorder
                                     </button>
-                                    <button type="button" id="btnSuperBill"
+                                   @*  <button type="button" id="btnSuperBill"
                                             class="btn btn-outline-primary"
                                             @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
                                             onclick="DownloadPdf('@ViewBag.Id')">
                                         Super Bill
+                                    </button> *@
+                                    <button type="button" id="btnSuperBill"
+                                            class="btn btn-outline-secondary"
+                                            @(Convert.ToInt32(ViewBag.Id) == 0 ? "disabled" : "")
+                                            onclick="ShowReport()">
+                                        Print Report
                                     </button>
                                 }
                             </p>
@@ -1478,6 +1484,7 @@
                 });
 
 
+
                $("#hdId").val('@ViewBag.Id');
                $("#PatientId").val('@ViewBag.PatientId');
                $("#hdIEId").val('@ViewBag.IEId');
@@ -1487,7 +1494,7 @@
                 setTimeout(function () {
                     $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
                     //updatePreview();
-                    $('#pdfLoader').hide();
+                  
 
 
 
@@ -1538,6 +1545,17 @@
                      $(".other3Div").toggle($("#OtherBodyPart3").val().trim() !== "");
                      if($("#OtherBodyPart3").val().trim() !== "")
                         $(".h1Title3").text($("#OtherBodyPart3").val().trim())
+
+
+                      var injuryType = $('input[name="InjuryType"]:checked').val();
+
+                      if(injuryType=="WC")
+                         $("#divWC1").show();
+                      else
+                         $("#divWC1").hide();
+
+                      $('#pdfLoader').hide();
+
                 }, 1000);
 
 
@@ -2052,6 +2070,12 @@
                      console.error('Error downloading Pdf file:', error);
                  });
 
+         }
+
+         function ShowReport()
+         {
+            var url = '@Url.Action("IEPrint", "Visit")?id=' + encodeURIComponent($("#PatientIEId").val());
+            window.open(url, '_blank');
          }
 </script>
 

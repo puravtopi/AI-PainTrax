@@ -3470,6 +3470,8 @@ namespace PainTrax.Web.Controllers
                     // Clean invalid or empty <img> tags
                     htmlContent = Regex.Replace(htmlContent, @"<img[^>]*base64,\s*""[^>]*>", "", RegexOptions.IgnoreCase);
 
+                    htmlContent = htmlContent.Replace("border:none;", "");
+
                     IList<OpenXmlCompositeElement> generatedBody = converter.Parse(htmlContent);
 
                     // Iterate over the parsed elements and apply RunProperties

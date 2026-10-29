@@ -67,6 +67,7 @@
         public string DisabilityPercentage { get; set; }
         public string Mechanism { get; set; }
         public string MedsOther { get; set; }
+        public string OtherMeds { get; set; }
         public string PreInjury { get; set; }
         public string Transport { get; set; }
         public List<string> Complaints { get; set; }
@@ -450,7 +451,8 @@
         public string LUMBARAchillestendonleft { get; set; }
         public string GAITrdo { get; set; }
         public string GAITOther { get; set; }
-
+        public string GAITMultiR { get; set; }
+        public List<string> GAITMulti { get; set; } = new List<string>();
         public List<string> ADL { get; set; }
         public string ADLSit { get; set; }
         public string ADLSittxt { get; set; }
@@ -526,12 +528,12 @@
         public List<string> LKndiff { get; set; }
         public string RKndiff { get; set; }
         public List<string> LKnDiffi { get; set; }
-       
+
         public List<string> RHipPainIn { get; set; }
         public string RHipSwelling { get; set; }
         public List<string> RHipPainWith { get; set; }
         public List<string> RHipImprove { get; set; }
-       
+
         public List<string> LHipPainIn { get; set; }
         public string LHipSwelling { get; set; }
         public List<string> LHipPainWith { get; set; }
@@ -693,14 +695,14 @@
         public string LKNFlexionNormal { get; set; }
         public string LKNExtTitleROM { get; set; }
         public string LKNExtROM { get; set; }
-        public string LKNExtRNormal { get; set; }
+        public string LKNExtNormal { get; set; }
 
         public string RKNTitleROM { get; set; }
         public string RKNFlexionROM { get; set; }
         public string RKNFlexionNormal { get; set; }
         public string RKNExtTitleROM { get; set; }
         public string RKNExtROM { get; set; }
-        public string RKNExtRNormal { get; set; }
+        public string RKNExtNormal { get; set; }
 
         //left Ankle and Right Ankle ROM
         public string RAnkleFlexionROM { get; set; }
@@ -776,14 +778,13 @@
         public string NeckExt { get; set; }
         public string NeckExtLeft { get; set; }
         public string NeckExtRight { get; set; }
-        public string NeckSpurlingTest { get; set; }
+
 
         // lowback ROM
         public string LBFFROM { get; set; }
         public string LBFFLeft { get; set; }
         public string LBFFRight { get; set; }
         public string LBExt { get; set; }
-        public string LBSlrTest { get; set; }
         // Midback ROM
         public string MbFFROM { get; set; }
         public string MbFFLeft { get; set; }
@@ -882,6 +883,138 @@
         //public string RWristRDROM { get; set; }
         public List<string> Headachesare { get; set; }
         public List<string> Headache { get; set; }
+        public string OtherBodyPart1 { get; set; }
+        public string Other1PainScale { get; set; }
+        public List<string> Other1PainType { get; set; }
+
+        public string OtherBodyPart2 { get; set; }
+        public string Other2PainScale { get; set; }
+        public List<string> Other2PainType { get; set; }
+
+        public string OtherBodyPart3 { get; set; }
+        public string Other3PainScale { get; set; }
+        public List<string> Other3PainType { get; set; }
+
+        public string Other1FlexionTitle { get; set; }
+        public string Other1FlexionROM { get; set; }
+        public string Other1FlexionNormal { get; set; }
+        public string Other1ExtTitle { get; set; }
+        public string Other1ExtRROM { get; set; }
+        public string Other1ExtRNormal { get; set; }
+
+        public string Other2FlexionTitle { get; set; }
+        public string Other2FlexionROM { get; set; }
+        public string Other2FlexionNormal { get; set; }
+        public string Other2ExtTitle { get; set; }
+        public string Other2ExtRROM { get; set; }
+        public string Other2ExtRNormal { get; set; }
+
+        public string Other3FlexionTitle { get; set; }
+        public string Other3FlexionROM { get; set; }
+        public string Other3FlexionNormal { get; set; }
+        public string Other3ExtTitle { get; set; }
+        public string Other3ExtRROM { get; set; }
+        public string Other3ExtRNormal { get; set; }
+        public string Reflex { get; set; }
+        public string Motor { get; set; }
+        public string Sensory { get; set; }
+        public List<string> SE { get; set; }
+
+        // Radio values: "left", "right", or "bilateral"
+        public string NeckTendernessPosition { get; set; }
+
+        // Checkbox values: e.g., ["C3/4", "C4/5", "C5/6", "C6/7"]
+        public List<string> NeckTendernessOptions { get; set; } = new List<string>();
+
+        // Radio values: "Positive" or "Negative"
+        public string NeckSpurlingTest { get; set; }
+
+        // Text input: additional notes / other findings
+        public string NeckSpurlingTestOther { get; set; }
+
+        // Optional flags (defaulted to true)
+        public bool HasMuscleSpasms { get; set; } = true;
+        public bool IncludeRomStatement { get; set; } = true;
+
+        // Radio values: "left", "right", or "bilateral"
+        public string LBTendernessPosition { get; set; }
+
+        // Checkbox values: e.g., ["L3/4", "L4/5", "L5/S1"]
+        public List<string> LBTendernessOptions { get; set; } = new List<string>();
+
+        // Radio values for SI Joint: "left", "right", or "bilateral"
+        public string LBOnexam { get; set; }
+
+        // Checkbox values for SI signs: e.g., ["Faber", "Gaenslen", "Yeoman"]
+        public List<string> LBSign { get; set; } = new List<string>();
+
+        // Radio values: "Positive" or "Negative"
+        public string LBSlrTest { get; set; }
+
+        // Text input: additional notes for SLR
+        public string LBSlrTestOther { get; set; }
+
+        //History
+
+        public string NFDescription { get; set; }
+        public string lblDOA { get; set; }
+        public string StatesOther { get; set; }
+        public string DirectImpact { get; set; }
+        public string DirectImpactBodyPart { get; set; }
+        public string LoseConsciousness { get; set; }
+        public string LOCForHowLong { get; set; }
+        public string HospitalName { get; set; }
+        public string TransportOther { get; set; }
+        public string SameDay { get; set; }
+        public string DaysLater { get; set; }
+        public string IsHospitalTest { get; set; }
+        public string HospitalTestOther { get; set; }
+        public string IsHospitalMedication { get; set; }
+        public string HospitalMedication { get; set; }
+        public string IsAccidentPast { get; set; }
+        public string AccidentPast { get; set; }
+        public string AccidentBodyPart { get; set; }
+        public string IsAccidentRecover { get; set; }
+        public string OtherSymptoms { get; set; }
+        public List<string> HospitalTest { get; set; }
+        public List<string> StatesType { get; set; }
+        public List<string> ROS { get; set; }
+        public string ROSOther { get; set; }
+        public string DiagnosisOther { get; set; }
+
+        //ADL
+
+        public string ADLPersonalHygienePerform { get; set; }
+        public string ADLPersonalHygieneDifficulty { get; set; }
+
+        public string ADLWalkingPerform { get; set; }
+        public string ADLWalkingDifficulty { get; set; }
+
+        public string ADLEatingPerform { get; set; }
+        public string ADLEatingDifficulty { get; set; }
+
+        public string ADLHouseholdPerform { get; set; }
+        public string ADLHouseholdDifficulty { get; set; }
+
+        public string ADLShoppingPerform { get; set; }
+        public string ADLShoppingDifficulty { get; set; }
+
+        public string ADLSleepingPerform { get; set; }
+        public string ADLSleepingDifficulty { get; set; }
+
+        // JOb Description
+
+        // Job specific fields
+        public string JobSitting { get; set; }
+        public string JobStanding { get; set; }
+        public string JobDriving { get; set; }
+        public string JobBending { get; set; }
+        public string JobKneeling { get; set; }
+        public string JobCrouching { get; set; }
+        public string JobLifting { get; set; }
+        public List<string> LiftingWeight { get; set; } = new List<string>();
+
+
 
     }
 }

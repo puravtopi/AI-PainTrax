@@ -2,9 +2,9 @@
     <h6 class="fw-bold">Neck</h6>
     <div class="select-group">
         Patient has pain and tenderness over the   @* <input id="NeckTenderness" class="form-control d-inline " style="width:100px" /> *@
-        <label><input type="radio" name="NeckTendernessPosition" value="left">  <span class="select-btn">L</span></label>
-        <label><input type="radio" name="NeckTendernessPosition" value="right">  <span class="select-btn">R</span></label>
-        <label><input type="radio" name="NeckTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>
+        <label><input type="radio" name="NeckTendernessPosition" value="left" onclick="uncheckRadio(this)">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="NeckTendernessPosition" value="right" onclick="uncheckRadio(this)">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="NeckTendernessPosition" value="bilateral" onclick="uncheckRadio(this)">  <span class="select-btn">B</span></label>
         <label>
             <input type="checkbox" class="chkMulti" name="NeckTendernessOptions" value="C3/4">
             <span class="select-btn">C3/4</span>
@@ -105,9 +105,9 @@
     <h6 class="fw-bold">Low back</h6>
     <div class="select-group">
         Patient has pain and tenderness over the
-        <label><input type="radio" name="LBTendernessPosition" value="left">  <span class="select-btn">L</span></label>
-        <label><input type="radio" name="LBTendernessPosition" value="right">  <span class="select-btn">R</span></label>
-        <label><input type="radio" name="LBTendernessPosition" value="bilateral">  <span class="select-btn">B</span></label>
+        <label><input type="radio" name="LBTendernessPosition" value="left" onclick="uncheckRadio(this)">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBTendernessPosition" value="right" onclick="uncheckRadio(this)">  <span class="select-btn" >R</span></label>
+        <label><input type="radio" name="LBTendernessPosition" value="bilateral" onclick="uncheckRadio(this)">  <span class="select-btn" >B</span></label>
         <label>
             <input type="checkbox" class="chkMulti" name="LBTendernessOptions" value="L3/4">
             <span class="select-btn">L3/4</span>
@@ -127,9 +127,9 @@
     <div class="select-group">
         On exam, patient has tenderness over the   @* <input id="LBTendernessExam" class="form-control d-inline " style="width:100px" /> *@
         @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LBTendernessExam')"></i> *@
-        <label><input type="radio" name="LBOnexam" value="left">  <span class="select-btn">L</span></label>
-        <label><input type="radio" name="LBOnexam" value="right">  <span class="select-btn">R</span></label>
-        <label><input type="radio" name="LBOnexam" value="bilateral">  <span class="select-btn">B</span></label>
+        <label><input type="radio" name="LBOnexam" value="left" onclick="uncheckRadio(this)">  <span class="select-btn">L</span></label>
+        <label><input type="radio" name="LBOnexam" value="right" onclick="uncheckRadio(this)">  <span class="select-btn">R</span></label>
+        <label><input type="radio" name="LBOnexam" value="bilateral" onclick="uncheckRadio(this)">  <span class="select-btn">B</span></label>
         SI joints.
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Faber"> <span class="select-btn">Faber</span></label>
         <label><input type="checkbox" class="chkMulti" name="LBSign" value="Gaenslen"><span class="select-btn">Gaenslen</span> </label>
@@ -748,14 +748,14 @@
 <div class="select-group">
     <strong>GAIT:</strong>
 
-    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Normal" checked> <span class="select-btn">Normal</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMultiR" value="Normal" onclick="uncheckRadio(this)" checked> <span class="select-btn">Normal</span></label>
 
-    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Antalgic"> <span class="select-btn">Antalgic</span></label>
-    <label><input type="radio" class="chkMulti" name="GAITMulti" value="Altered"> <span class="select-btn">Altered</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMultiR" value="Antalgic" onclick="uncheckRadio(this)"> <span class="select-btn">Antalgic</span></label>
+    <label><input type="radio" class="chkMulti" name="GAITMultiR" value="Altered" onclick="uncheckRadio(this)"> <span class="select-btn">Altered</span></label>
 
-    <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Ambulates with a cane"> <span class="select-btn">Ambulates with a cane</span></label>
+    <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Ambulates with a cane" onclick="uncheckRadio(this)"> <span class="select-btn">Ambulates with a cane</span></label>
 
-    <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Other"> <span class="select-btn">Other</span></label>
+    <label><input type="checkbox" class="chkMulti" name="GAITMulti" value="Other" onclick="uncheckRadio(this)"> <span class="select-btn">Other</span></label>
 
     <input id="GAITOther" class="form-control d-inline w-25" style="min-width:37%" placeholder="Specify other" />
     @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'GAITOther')"></i> *@

@@ -193,4 +193,71 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
     }
     #endregion
 
+    #region IntakeForm
+
+    public int UpdatePage1Intake(tbl_ie_page1 data)
+    {
+        MySqlCommand cm = new MySqlCommand("Update tbl_fu_page1 set cc=@p_cc,pe=@p_pe,bodypart=@p_bodypart," +
+            "assessment=@p_assessment,dd=@p_dd,work_status=@p_work_status where fu_id=@p_fu_id; select 1;", conn);
+
+        cm.Parameters.AddWithValue("@p_fu_id", data.id);
+        cm.Parameters.AddWithValue("@p_bodypart", data.bodypart);
+        cm.Parameters.AddWithValue("@p_cc", data.cc);
+        cm.Parameters.AddWithValue("@p_pe", data.pe);
+        cm.Parameters.AddWithValue("@p_assessment", data.assessment);
+        cm.Parameters.AddWithValue("@p_dd", data.dd);
+        cm.Parameters.AddWithValue("@p_work_status", data.work_status);
+       
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+
+    public int UpdateNEIntake(tbl_ie_ne data)
+    {
+
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("Update tbl_fu_ne set sensory=@p_sensory,pe=@p_pe,other_content=@p_other_content," +
+            "manual_muscle_strength_testing=@p_manual_muscle_strength_testing," +
+            " where fu_id=@p_fu_id; select 1;", conn);
+
+
+        cm.Parameters.AddWithValue("@p_sensory", data.sensory);
+        cm.Parameters.AddWithValue("@p_other_content", data.other_content);
+        cm.Parameters.AddWithValue("@p_manual_muscle_strength_testing", data.manual_muscle_strength_testing);
+        cm.Parameters.AddWithValue("@p_fu_id", data.id);
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+
+    public int UpdatePage2Intake(tbl_ie_page2 obj)
+    {
+        MySqlCommand cm = new MySqlCommand("update tbl_fu_page2 set  where aod=@p_adl where fu_id=@p_id", conn);
+
+
+        cm.Parameters.AddWithValue("@p_id", obj.id);
+        cm.Parameters.AddWithValue("@p_adl", obj.aod);
+
+
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+    public int UpdateOtherPageIntake(tbl_fu_other obj)
+    {
+        MySqlCommand cm = new MySqlCommand("call sp_SavePageFuOtherIntakeData(@p_fu_id,@p_ie_id,@p_note,@p_followup_duration,@p_followup_date);", conn);
+
+
+        cm.Parameters.AddWithValue("@p_fu_id", obj.fu_id);
+        cm.Parameters.AddWithValue("@p_ie_id", obj.ie_id);
+        cm.Parameters.AddWithValue("@p_note", obj.note3);
+        cm.Parameters.AddWithValue("@p_followup_duration", obj.followup_duration);
+        cm.Parameters.AddWithValue("@p_followup_date", obj.followup_date);
+
+
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+
+
+    #endregion
+
 }
