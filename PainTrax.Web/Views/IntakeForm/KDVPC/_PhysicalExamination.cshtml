@@ -1456,12 +1456,170 @@
 </div>
 <div id="rhandPE" style="display:none">
     <h6 class="fw-bold">Right Hand </h6>
-    <input id="txtrhandPE" class="form-control d-inline" style="width:95%" />
+    <div class="select-group">
+        Skin:
+        
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandSkinOptions" value="swelling">
+            <span class="select-btn">swelling</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandSkinOptions" value="redness">
+            <span class="select-btn">redness</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandSkinOptions" value="muscle wasting">
+            <span class="select-btn">muscle wasting (atrophy)</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandSkinOptions" value="joint misalignment">
+            <span class="select-btn">joint misalignment</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandSkinOptions" value="​skin/nail changes">
+            <span class="select-btn">skin/nail changes</span>
+        </label>
+        Tenderness to palpation:
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandTendernessOptions" value="bones">
+            <span class="select-btn">bones</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandTendernessOptions" value="joints">
+            <span class="select-btn">joints</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandTendernessOptions" value="tendon sheaths">
+            <span class="select-btn">tendon sheaths.</span>
+        </label>
+        
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandTests" value="Grip Test">
+            <span class="select-btn"> Grip Test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="RhandTests" value="pinch test">
+            <span class="select-btn"> pinch test</span>
+        </label>    
+
+
+    </div>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+               @*  <td>Normal</td> *@
+                <td></td>
+                <td>ROM</td>
+                @* <td>Normal</td> *@
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Bend</td>
+                <td><input id="RhandBendROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+               @*  <td>180</td> *@
+                <td>straighten</td>
+                <td><input id="RhandstraightenROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+               @*  <td>90</td> *@
+            </tr>
+            <tr>
+                <td>rotate fingers</td>
+                <td><input id="RhandsrotateROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                @* <td>180</td> *@
+               @*  <td>Internal rotation</td>
+                <td><input id="RSHIRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td> *@
+              @*   <td>90</td> *@
+            </tr>
+            
+        </tbody>
+    </table>
+   @*  <input id="txtrhandPE" class="form-control d-inline" style="width:95%" /> *@
    
 </div>
 <div id="lhandPE" style="display:none">
     <h6 class="fw-bold">Left Hand </h6>
-    <input id="txtlhandPE" class="form-control d-inline" style="width:95%" />
+    <div class="select-group">
+        Skin:
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandSkinOptions" value="swelling">
+            <span class="select-btn">swelling</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandSkinOptions" value="redness">
+            <span class="select-btn">redness</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandSkinOptions" value="muscle wasting">
+            <span class="select-btn">muscle wasting (atrophy)</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandSkinOptions" value="joint misalignment">
+            <span class="select-btn">joint misalignment</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandSkinOptions" value="​skin/nail changes">
+            <span class="select-btn">skin/nail changes</span>
+        </label>
+        Tenderness to palpation:
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandTendernessOptions" value="bones">
+            <span class="select-btn">bones</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandTendernessOptions" value="joints">
+            <span class="select-btn">joints</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandTendernessOptions" value="tendon sheaths">
+            <span class="select-btn">tendon sheaths.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandTests" value="Grip Test">
+            <span class="select-btn"> Grip Test</span>
+        </label>
+        <label>
+            <input type="checkbox" class="chkMulti" name="LhandTests" value="pinch test">
+            <span class="select-btn"> pinch test</span>
+        </label>
+
+
+    </div>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <td></td>
+                <td>ROM</td>
+                @*  <td>Normal</td> *@
+                <td></td>
+                <td>ROM</td>
+                @* <td>Normal</td> *@
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Bend</td>
+                <td><input id="LhandBendROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                @*  <td>180</td> *@
+                <td>straighten</td>
+                <td><input id="LhandstraightenROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td>
+                @*  <td>90</td> *@
+            </tr>
+            <tr>
+                <td>rotate fingers</td>
+                <td><input id="LhandsrotateROM" class="form-control d-inline " maxlength="3" style="width:50px" /> </td>
+                @* <td>180</td> *@
+                @*  <td>Internal rotation</td>
+                <td><input id="RSHIRROM" class="form-control d-inline " maxlength="3" style="width:50px" /></td> *@
+                @*   <td>90</td> *@
+            </tr>
+
+        </tbody>
+    </table>
+   @*  <input id="txtlhandPE" class="form-control d-inline" style="width:95%" /> *@
 
 </div>
 <div id="rfootPE" style="display:none">

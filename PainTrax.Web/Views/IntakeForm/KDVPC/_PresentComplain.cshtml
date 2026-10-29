@@ -1119,13 +1119,73 @@
 </div>
 <div id="rhandSection" style="display:none;">
     <h6 class="fw-bold">Right Hand</h6>
-
-    <input id="txtrhand" class="form-control d-inline" style="width:95%"/> 
+    <div class="select-group">
+        Pain:
+        <input id="RhandPain" class="form-control d-inline" style="width:100px;" maxlength="5" /> /10
+        <label><input type="checkbox" class="chkMulti" name="RhandSymptoms" value="Constant">  <span class="select-btn">Constant</span></label>
+        <label><input type="checkbox" class="chkMulti" name="RhandSymptoms" value="Intermittent">  <span class="select-btn">Intermittent</span></label>
+        <label><input type="checkbox" class="chkMulti" name="RhandSymptoms" value="Sharp">  <span class="select-btn">Sharp</span></label>
+        <label><input type="checkbox" class="chkMulti" name="RhandSymptoms" value="Dull">  <span class="select-btn">Dull</span></label>
+        <label><input type="checkbox" class="chkMulti" name="RhandSymptoms" value="Achy">  <span class="select-btn">Achy</span></label>
+        <label><input type="checkbox" class="chkMulti" name="RhandSymptoms" value="Throbbing">  <span class="select-btn">Throbbing</span></label>
+        <label><input type="checkbox" class="chkMulti" name="RhandSymptoms" value="Pulsating">  <span class="select-btn">Pulsating</span></label>
+    </div>
+    <div class="select-group">     
+        <label><input type="checkbox" class="chkMulti" name="Rhandswelling" value="Swelling">  <span class="select-btn">Swelling</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Rhandswelling" value="redness">  <span class="select-btn">redness</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Rhandswelling" value="bruising">  <span class="select-btn">bruising</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Rhandswelling" value="wounds">  <span class="select-btn">wounds</span></label>
+        noted.
+    </div>
+    <div class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="RhandNumbness" value="Numbness">  <span class="select-btn">Numbness</span></label>
+        <label><input type="checkbox" class="chkMulti" name="RhandNumbness" value="tingling">  <span class="select-btn">tingling</span></label>
+        <label><input type="checkbox" class="chkMulti" name="RhandNumbness" value="pins and needles">  <span class="select-btn">pins and needles</span></label>
+        <input id="txtrhand" class="form-control d-inline" style="width:300px" /> fingers.
+    </div>
+    <div class="select-group">
+        Hand pain worsens with
+        <label><input type="checkbox" class="chkMulti" name="RhandWorsens" value="movement"> <span class="select-btn">movement</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="RhandWorsens" value="gripping"> <span class="select-btn">gripping</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="RhandWorsens" value="lifting"> <span class="select-btn">lifting</span> </label>
+        <input id="txtrhandworsens" class="form-control d-inline" style="width:300px" />.
+    </div>
+   
 </div>
 <div id="lhandSection" style="display:none;">
     <h6 class="fw-bold">Left Hand</h6>
 
-    <input id="txtlhand" class="form-control d-inline" style="width:95%" />
+    <div class="select-group">
+        Pain:
+        <input id="LhandPain" class="form-control d-inline" style="width:100px;" maxlength="5" />/10
+        <label><input type="checkbox" class="chkMulti" name="LhandSymptoms" value="Constant">  <span class="select-btn">Constant</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LhandSymptoms" value="Intermittent">  <span class="select-btn">Intermittent</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LhandSymptoms" value="Sharp">  <span class="select-btn">Sharp</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LhandSymptoms" value="Dull">  <span class="select-btn">Dull</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LhandSymptoms" value="Achy">  <span class="select-btn">Achy</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LhandSymptoms" value="Throbbing">  <span class="select-btn">Throbbing</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LhandSymptoms" value="Pulsating">  <span class="select-btn">Pulsating</span></label>
+    </div>
+    <div class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="Lhandswelling" value="Swelling">  <span class="select-btn">Swelling</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Lhandswelling" value="redness">  <span class="select-btn">redness</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Lhandswelling" value="bruising">  <span class="select-btn">bruising</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Lhandswelling" value="wounds">  <span class="select-btn">wounds</span></label>
+      noted.
+    </div>
+    <div class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="LhandNumbness" value="Numbness">  <span class="select-btn">Numbness</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LhandNumbness" value="tingling">  <span class="select-btn">tingling</span></label>
+        <label><input type="checkbox" class="chkMulti" name="LhandNumbness" value="pins and needles">  <span class="select-btn">pins and needles</span></label>
+        <input id="txtlhand" class="form-control d-inline" style="width:300px" /> fingers.
+    </div>
+    <div class="select-group">
+        Hand pain worsens with
+        <label><input type="checkbox" class="chkMulti" name="LhandWorsens" value="movement"> <span class="select-btn">movement</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="LhandWorsens" value="gripping"> <span class="select-btn">gripping</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="LhandWorsens" value="lifting"> <span class="select-btn">lifting</span> </label>
+        <input id="txtlhandworsens" class="form-control d-inline" style="width:300px" />.
+    </div>
 </div>
 <div id="rfootSection" style="display:none;">
     <h6 class="fw-bold">Right Foot</h6>
