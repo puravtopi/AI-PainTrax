@@ -1,4 +1,5 @@
 ﻿using PainTrax.Web.ViewModel;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -209,7 +210,7 @@ namespace PainTrax.Web.Helper
 
                 if (axialTriggers != null && axialTriggers.Any())
                 {
-                    sentences.Add($"{painType} is exacerbated by {FormatList(axialTriggers)}.");
+                    sentences.Add($"{CultureInfo.InvariantCulture.TextInfo.ToTitleCase(painType.ToLowerInvariant())} is exacerbated by {FormatList(axialTriggers)}.");
                 }
                 else
                 {
@@ -486,7 +487,7 @@ namespace PainTrax.Web.Helper
 
                 if (axialTriggers != null && axialTriggers.Any())
                 {
-                    sentences.Add($"{painType} is exacerbated by {FormatList(axialTriggers)}.");
+                    sentences.Add($"{CultureInfo.InvariantCulture.TextInfo.ToTitleCase(painType.ToLowerInvariant())} is exacerbated by {FormatList(axialTriggers)}.");
                 }
                 else
                 {
@@ -508,7 +509,7 @@ namespace PainTrax.Web.Helper
                     ? modal.LBRadiatesTo.Trim().ToLower() + " "
                     : string.Empty;
 
-                var pluralizedAreas = radAreas.Select(a => PluralizeLowerBodyPart(a.ToLower(), sidePrefix));
+                var pluralizedAreas = radAreas.Select(a => PluralizeLowerBodyPart(a.ToLower(), sidePrefix).ToLower());
                 sentences.Add($"Lower back pain radiates to {sidePrefix}{FormatList(pluralizedAreas)}.");
             }
 
@@ -539,7 +540,7 @@ namespace PainTrax.Web.Helper
                     .Where(s => !s.Equals("numbness", StringComparison.OrdinalIgnoreCase) &&
                                 !s.Equals("tingling", StringComparison.OrdinalIgnoreCase) &&
                                 !s.Equals("forearm", StringComparison.OrdinalIgnoreCase))
-                    .Select(s => PluralizeLowerBodyPart(s.ToLower(), sidePrefix))
+                    .Select(s => PluralizeLowerBodyPart(s.ToLower(), sidePrefix).ToLower())
                     .Distinct()
                     .ToList();
 
@@ -1430,19 +1431,15 @@ namespace PainTrax.Web.Helper
                 };
             }
 
-            string tendernessSentence = $"Reveals tenderness upon palpation at {levelsText}";
+            string tendernessSentence = "";
             if (!string.IsNullOrEmpty(positionText))
             {
-                tendernessSentence += $" {positionText}";
+                tendernessSentence += $" Patient has pain and tenderness over the {positionText} at {levelsText}";
+                tendernessSentence += ".";
             }
-
-            if (model.HasMuscleSpasms)
-            {
-                tendernessSentence += " with muscle spasms present";
-            }
-            tendernessSentence += ".";
+                      
             sentences.Add(tendernessSentence);
-
+            sentences.Add(" Facet loading maneuvers are positive.");
             // --- 2. Spurling's Test Sentence ---
             if (!string.IsNullOrWhiteSpace(model.NeckSpurlingTest))
             {
@@ -1457,11 +1454,6 @@ namespace PainTrax.Web.Helper
                 sentences.Add(spurlingSentence);
             }
 
-            // --- 3. Goniometer Measurement Statement ---
-            if (model.IncludeRomStatement)
-            {
-                sentences.Add("ROM is measured using handheld goniometer.");
-            }
 
             return string.Join(" ", sentences);
         }
@@ -1470,79 +1462,56 @@ namespace PainTrax.Web.Helper
         {
             if (model == null) return string.Empty;
 
-            var sentences = new List<string>();
+            var lines = new List<string>();
 
-            // --- 1. Tenderness & Spasms Sentence ---
-            // Format Levels (e.g., "L3/4, L4/5, L5/S1 levels")
+            // --- 1. Tenderness & Facet Joints ---
+            string position = model.LBTendernessPosition?.Trim() ?? string.Empty;
             string levels = (model.LBTendernessOptions != null && model.LBTendernessOptions.Any())
-                ? string.Join(", ", model.LBTendernessOptions.Select(x => x.Trim())) + " levels"
-                : "lumbar levels";
+                ? string.Join(", ", model.LBTendernessOptions.Select(x => x.Trim()))
+                : string.Empty;
 
-            // Format Position ("bilateral" -> "bilaterally", "left" -> "on the left", "right" -> "on the right")
-            string position = "";
-            if (!string.IsNullOrWhiteSpace(model.LBTendernessPosition))
-            {
-                position = model.LBTendernessPosition.Trim().ToLower() switch
-                {
-                    "bilateral" => "bilaterally",
-                    "left" => "on the left",
-                    "right" => "on the right",
-                    _ => model.LBTendernessPosition.Trim()
-                };
-            }
+            // Combine position and levels with appropriate spacing
+            string targetArea = string.Join(" ", new[] { position," at ", levels }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            string targetPrefix = !string.IsNullOrWhiteSpace(targetArea) ? $"{targetArea} " : string.Empty;
 
-            string tendernessSentence = $"Reveals tenderness upon palpation at {levels}";
-            if (!string.IsNullOrEmpty(position))
-            {
-                tendernessSentence += $" {position}";
-            }
+            lines.Add($"Patient has pain and tenderness over the {targetPrefix}facet joints. Facet loading maneuvers are positive.");
 
-            if (model.HasMuscleSpasms)
-            {
-                tendernessSentence += " with muscle spasm present";
-            }
-            tendernessSentence += ".";
-            sentences.Add(tendernessSentence);
-
-            // --- 2. SI Joint & Special Signs (Optional if selected) ---
+            // --- 2. SI Joint & Special Signs ---
             bool hasSiJoint = !string.IsNullOrWhiteSpace(model.LBOnexam);
             bool hasSiSigns = model.LBSign != null && model.LBSign.Any();
 
             if (hasSiJoint || hasSiSigns)
             {
                 var siParts = new List<string>();
+
                 if (hasSiJoint)
                 {
-                    siParts.Add($"tenderness over the {model.LBOnexam.Trim()} SI joints");
+                    siParts.Add($"On exam, patient has tenderness over the {model.LBOnexam.Trim()} SI joints.");
                 }
+
                 if (hasSiSigns)
                 {
                     string signs = string.Join(", ", model.LBSign.Select(s => s.Trim()));
-                    siParts.Add($"{signs} sign are positive");
+                    siParts.Add($"{signs} sign are positive.");
                 }
-                sentences.Add(char.ToUpper(siParts[0][0]) + string.Join(" and ", siParts).Substring(1) + ".");
+
+                lines.Add(string.Join(" ", siParts));
             }
 
-            // --- 3. Straight Leg Raise (SLR) Test Sentence ---
+            // --- 3. SLR Test ---
             if (!string.IsNullOrWhiteSpace(model.LBSlrTest))
             {
-                string slrSentence = $"Straight leg raise test is {model.LBSlrTest.Trim()}";
+                string slrLine = $"The Spurling's test is {model.LBSlrTest.Trim()}";
 
                 if (!string.IsNullOrWhiteSpace(model.LBSlrTestOther))
                 {
-                    slrSentence += $" ({model.LBSlrTestOther.Trim()})";
+                    slrLine += $" ({model.LBSlrTestOther.Trim()})";
                 }
-                slrSentence += ".";
-                sentences.Add(slrSentence);
+
+                lines.Add(slrLine);
             }
 
-            // --- 4. Handheld Goniometer Measurement ---
-            if (model.IncludeRomStatement)
-            {
-                sentences.Add("ROM is measured using handheld goniometer.");
-            }
-
-            return string.Join(" ", sentences);
+            return string.Join(Environment.NewLine, lines);
         }
 
         #endregion
@@ -1816,7 +1785,7 @@ namespace PainTrax.Web.Helper
                     ? $"{string.Join(", ", model.SE.Take(model.SE.Count - 1))} and {model.SE.Last()}"
                     : model.SE.First();
 
-                strSE = $"SENSORY EXAMINATION To {seItems}".TrimEnd('.') + ". " + model.Sensory;
+                strSE = $"{seItems}".TrimEnd('.') + ". " + model.Sensory;
             }
             else
             {
@@ -2305,13 +2274,13 @@ namespace PainTrax.Web.Helper
                 string locDuration = !string.IsNullOrWhiteSpace(model.LOCForHowLong)
                     ? $" for {model.LOCForHowLong.Trim()}"
                     : string.Empty;
-                sentences.Add($"{pronounSubjCap} reports losing consciousness{locDuration}.");
+                sentences.Add($"Patient had loss of consciousness{locDuration}.");
             }
 
             // 6. EMS
             if (string.Equals(model.EMS, "Yes", StringComparison.OrdinalIgnoreCase))
             {
-                sentences.Add("EMS arrived at the scene.");
+                sentences.Add("The patient states that an EMS team arrived.");
             }
 
             // 7. Hospital Visit
@@ -2327,8 +2296,8 @@ namespace PainTrax.Web.Helper
 
                 string transportStr = !string.IsNullOrWhiteSpace(transportMethod)
                     ? (transportMethod.ToLower().Contains("with") || transportMethod.ToLower().Contains("by")
-                        ? transportMethod
-                        : $"with {transportMethod}")
+                        ? transportMethod.ToLower()
+                        : $"with {transportMethod.ToLower()}")
                     : "";
 
                 string timingStr = string.Equals(model.SameDay, "Yes", StringComparison.OrdinalIgnoreCase)
@@ -2387,15 +2356,15 @@ namespace PainTrax.Web.Helper
 
             if (hadPT && hadChiro)
             {
-                sentences.Add($"The patient has been receiving physical therapy {ptFreq} and chiropractic care {chiroFreq}.".Replace("  ", " "));
+                sentences.Add($"The patient has been receiving physical therapy {ptFreq}x a week and chiropractic care {chiroFreq}x a week.".Replace("  ", " "));
             }
             else if (hadPT)
             {
-                sentences.Add($"The patient has been receiving physical therapy {ptFreq}.".Replace("  ", " "));
+                sentences.Add($"The patient has been receiving physical therapy {ptFreq}x a week.".Replace("  ", " "));
             }
             else if (hadChiro)
             {
-                sentences.Add($"The patient has been receiving chiropractic care {chiroFreq}.".Replace("  ", " "));
+                sentences.Add($"The patient has been receiving chiropractic care {chiroFreq}x a week.".Replace("  ", " "));
             }
 
             //// 10. Review of Systems (ROS)
@@ -2691,7 +2660,7 @@ namespace PainTrax.Web.Helper
             if (string.Equals(perform, "Yes", StringComparison.OrdinalIgnoreCase))
             {
                 return !string.IsNullOrEmpty(comment)
-                    ? $"{activity} - able to perform, {comment}."
+                    ? $"{activity} - able to perform {comment}."
                     : $"{activity} - able to perform.";
             }
 
@@ -2699,7 +2668,7 @@ namespace PainTrax.Web.Helper
             if (string.Equals(perform, "No", StringComparison.OrdinalIgnoreCase))
             {
                 return !string.IsNullOrEmpty(comment)
-                    ? $"{activity} - cannot perform, {comment}."
+                    ? $"{activity} - cannot perform {comment}."
                     : $"{activity} - cannot perform.";
             }
 

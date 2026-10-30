@@ -165,11 +165,11 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeBHFFU");
             else if (client_code.ToLower() == "paintest")
                 return PartialView("_IntakeKDVPCFU");
-            else if (client_code.ToLower() == "hposm")
+            else if (client_code.ToLower() == "hposm" || client_code.ToLower() == "orthotest")
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeBHFFU");
+            else return PartialView("_IntakeHPOSM");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)

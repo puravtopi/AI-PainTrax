@@ -1,0 +1,362 @@
+﻿<div class="accordion-body">
+    <div id="rshSection" style="display:none;">
+        <h6 class="fw-bold">Right Shoulder</h6>
+
+        <div class="select-group">
+            Pain:
+            <input id="RShPain" class="form-control d-inline" style="width:40px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShPain')"></i>/10
+
+            <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label><span>.</span>
+            <span>Pain in the</span>
+            <label><input type="checkbox" class="chkMulti" name="RShPainIn" value="Anterior aspect"> <span class="select-btn">Anterior aspect</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="RShPainIn" value="Posterior aspect"> <span class="select-btn">Posterior aspect </span></label><span>.</span>
+            <span>Patient has</span>
+            <label><input type="checkbox" class="chkMulti" name="RShPatient" value="Stiff"> <span class="select-btn">Stiff</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="RShPatient" value="Weak"> <span class="select-btn">Weak </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShPatient" value="Pop"> <span class="select-btn">Pop </span> </label>
+            <label><input type="checkbox" class="chkMulti" name="RShPatient" value="Click"> <span class="select-btn">Click </span> </label>
+        </div>
+        <div class="select-group">
+            Pain with
+            <label><input type="checkbox" class="chkMulti" name="RShPainWith" value="Lifting"><span class="select-btn"> Lifting</span>  </label>
+            <label><input type="checkbox" class="chkMulti" name="RShPainWith" value="Carrying"> <span class="select-btn">Carrying</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="RShPainWith" value="Driving"> <span class="select-btn">Driving</span> </label>
+
+        </div>
+
+        <div class="select-group">
+            Diff Reach overhead :
+            <label><input type="radio" name="RShReachoverhead" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RShReachoverhead" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Diff Reach back:
+            <label><input type="radio" name="RShReachBack" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RShReachBack" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Unable to sleep at night:
+            <label><input type="radio" name="RShSleepIssue" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RShSleepIssue" value="No"><span class="select-btn"> N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Improved with:
+            <label><input type="checkbox" class="chkMulti" name="RShImprove" value="Rest"><span class="select-btn"> Rest</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShImprove" value="Med"><span class="select-btn"> Med</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShImprove" value="PT"> <span class="select-btn">PT</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShImprove" value="Ice"> <span class="select-btn">Ice</span></label>
+            <input id="RShImproveOther" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShImproveOther')"></i>
+        </div>
+
+    </div>
+
+    <div id="lshSection" style="display:none;">
+        <h6 class="fw-bold">Left Shoulder</h6>
+
+        <div class="select-group">
+            Pain:
+            <input id="LShPain" class="form-control d-inline" style="width:40px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LShPain')"></i>/10
+
+            <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label><span>.</span>
+            Pain in the
+            <label><input type="checkbox" class="chkMulti" name="LShPainIn" value="Anterior aspect"> <span class="select-btn">Anterior aspect</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LShPainIn" value="Posterior aspect"> <span class="select-btn">Posterior aspect</span> </label><span>.</span>
+            Patient has
+            <label><input type="checkbox" class="chkMulti" name="LShPatient" value="Stiff"> <span class="select-btn">Stiff</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LShPatient" value="Weak"> <span class="select-btn">Weak</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LShPatient" value="Pop"> <span class="select-btn">Pop  </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShPatient" value="Click"> <span class="select-btn">Click </span> </label>
+        </div>
+
+        <div class="select-group">
+            Pain with
+            <label><input type="checkbox" class="chkMulti" name="LShPainWith" value="Lifting"> <span class="select-btn">Lifting </span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LShPainWith" value="Carrying"> <span class="select-btn">Carrying</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LShPainWith" value="Driving"> <span class="select-btn">Driving</span> </label>
+        </div>
+
+        <div class="select-group">
+            Diff Reach overhead :
+            <label><input type="radio" name="LShReachoverhead" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LShReachoverhead" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Diff Reach back:
+            <label><input type="radio" name="LShReachBack" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LShReachBack" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Unable to sleep at night:
+            <label><input type="radio" name="LShSleepIssue" value="Yes"><span class="select-btn"> Y</span></label>
+            <label><input type="radio" name="LShSleepIssue" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Improved with:
+            <label><input type="checkbox" class="chkMulti" name="LShImprove" value="Rest"> <span class="select-btn">Rest</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShImprove" value="Med"><span class="select-btn"> Med</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShImprove" value="PT"> <span class="select-btn">PT</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShImprove" value="Ice"> <span class="select-btn">Ice</span></label>
+            <input id="LShImproveOther" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LShImproveOther')"></i>
+        </div>
+
+    </div>
+
+    <div id="rknSection" style="display:none;">
+        <h6 class="fw-bold">Right Knee</h6>
+
+        <div class="select-group">
+            Pain:
+            <input id="RKnPain" class="form-control d-inline" style="width:40px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RKnPain')"></i> /10
+
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label><span>.</span>
+            Patient has
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptomsPatient" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptomsPatient" value="Weakness"> <span class="select-btn">Weakness</span></label><span>.</span>
+            Pain in the
+            <label><input type="checkbox" class="chkMulti" name="RKnPainIn" value="Anterior"> <span class="select-btn">Anterior </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnPainIn" value="Medial"> <span class="select-btn">Medial</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="RKnPainIn" value="Lateral aspect"> <span class="select-btn">Lateral aspect</span> </label>
+        </div>
+
+        <div class="select-group">
+            Swelling :
+            <label><input type="radio" name="RKnSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RKnSwelling" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Diff :
+            <label><input type="radio" name="RKndiff" value="Bend"> <span class="select-btn">Bending</span></label>
+            <label><input type="radio" name="RKndiff" value="Kneel"> <span class="select-btn">Kneel</span></label>
+            <label><input type="radio" name="RKndiff" value="Squat"> <span class="select-btn">Squat</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Diff rising from chair:
+            <label><input type="radio" name="RKnRisingFromChair" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RKnRisingFromChair" value="No"><span class="select-btn"> N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Diff going up and down stairs:
+            <label><input type="radio" name="RKnUpDown" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RKnUpDown" value="No"><span class="select-btn"> N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Clicking"> <span class="select-btn">Clicking </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Popping"> <span class="select-btn">Popping </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Buckling"><span class="select-btn"> Buckling </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Locking"> <span class="select-btn">Locking</span></label>
+            Improved with:
+            <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="Rest"> <span class="select-btn">Rest</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="Med"><span class="select-btn">Med</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="PT"> <span class="select-btn">PT</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="Ice"><span class="select-btn"> Ice</span></label>
+            <input id="RKnImproveOther" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RKnImproveOther')"></i>
+        </div>
+
+    </div>
+
+    <div id="lknSection" style="display:none;">
+        <h6 class="fw-bold">Left Knee</h6>
+        <div class="select-group">
+            Pain:
+            <input id="LKnPain" class="form-control d-inline" style="width:40px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LKnPain')"></i> /10
+
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Constant"><span class="select-btn"> Constant</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Intermittent"><span class="select-btn"> Intermittent</span></label><span>.</span>
+            Patient has
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptomsPatient" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptomsPatient" value="Weakness"><span class="select-btn"> Weakness</span></label><span>.</span>
+            Pain in the
+            <label><input type="checkbox" class="chkMulti" name="LKnPainIn" value="Anterior"> <span class="select-btn">Anterior </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnPainIn" value="Medial"> <span class="select-btn">Medial </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnPainIn" value="Lateral aspect"> <span class="select-btn">Lateral aspect</span> </label>
+        </div>
+
+        <div class="select-group">
+            Swelling :
+            <label><input type="radio" name="LKnSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LKnSwelling" value="No"><span class="select-btn"> N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Diff :
+            <label><input type="checkbox" class="chkMulti" name="LKndiff" value="Bend"> <span class="select-btn">Bending</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKndiff" value="Kneel"> <span class="select-btn">Kneel</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKndiff" value="Squat"> <span class="select-btn">Squat</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Diff rising from chair:
+            <label><input type="radio" name="LKnRisingFromChair" value="Yes"><span class="select-btn"> Y</span></label>
+            <label><input type="radio" name="LKnRisingFromChair" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Diff going up and down stairs:
+            <label><input type="radio" name="LKnUpDown" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LKnUpDown" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Clicking"><span class="select-btn"> Clicking </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Popping"> <span class="select-btn">Popping </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Buckling"> <span class="select-btn">Buckling </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Locking"> <span class="select-btn">Locking</span></label>
+            Improved with:
+            <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="Rest"><span class="select-btn"> Rest</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="Med"> <span class="select-btn">Med</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="PT"> <span class="select-btn">PT</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="Ice"> <span class="select-btn">Ice</span></label>
+            <input id="LKnImproveOther" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LKnImproveOther')"></i>
+        </div>
+
+    </div>
+
+    <div id="rhipSection" style="display:none;">
+        <h6 class="fw-bold">Right Hip</h6>
+
+        <div class="select-group">
+            Pain:
+            <input id="RHipPain" class="form-control d-inline" style="width:40px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RHipPain')"></i> /10
+
+            <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="Constant"><span class="select-btn"> Constant</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="Locking"><span class="select-btn"> Locking</span></label><span>.</span>
+
+            Pain in the
+            <label><input type="checkbox" class="chkMulti" name="RHipPainIn" value="Lateral"> <span class="select-btn">Lateral </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipPainIn" value="Groin"> <span class="select-btn">Groin </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipPainIn" value="Buttock area"><span class="select-btn"> Buttock area</span> </label>
+        </div>
+
+        <div class="select-group">
+            Swelling :
+            <label><input type="radio" name="RHipSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RHipSwelling" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Pain with
+            <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Sitting"><span class="select-btn"> Sitting </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Standing"><span class="select-btn"> Standing </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Walking"> <span class="select-btn">Walking </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Climbing"> <span class="select-btn">Climbing</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="RHipPainWith" value="Standing from sitting"><span class="select-btn"> Standing from sitting</span></label>
+            Improved with:
+            <label><input type="checkbox" class="chkMulti" name="RHipImprove" value="Rest"> <span class="select-btn">Rest</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipImprove" value="Med"><span class="select-btn"> Med</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipImprove" value="PT"><span class="select-btn"> PT</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipImprove" value="Ice"><span class="select-btn"> Ice</span></label>
+            <input id="RHipImproveOther" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RHipImproveOther')"></i>
+        </div>
+
+    </div>
+
+    <div id="lhipSection" style="display:none;">
+        <h6 class="fw-bold">Left Hip</h6>
+        <div class="select-group">
+            Pain:
+            <input id="LHipPain" class="form-control d-inline" style="width:40px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LHipPain')"></i> /10
+
+            <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="Intermittent"><span class="select-btn"> Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="Locking"><span class="select-btn"> Locking</span></label><span>.</span>
+
+            Pain in the
+            <label><input type="checkbox" class="chkMulti" name="LHipPainIn" value="Lateral"> <span class="select-btn">Lateral</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LHipPainIn" value="Groin"><span class="select-btn"> Groin</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LHipPainIn" value="Buttock area"> <span class="select-btn">Buttock area </span></label>
+        </div>
+
+        <div class="select-group">
+            Swelling :
+            <label><input type="radio" name="LHipSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LHipSwelling" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Pain with
+            <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Sitting"> <span class="select-btn">Sitting</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Standing"> <span class="select-btn">Standing</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Walking"><span class="select-btn"> Walking </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Climbing"><span class="select-btn"> Climbing </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipPainWith" value="Standing from sitting"><span class="select-btn"> Standing from sitting</span></label>
+            Improved with:
+            <label><input type="checkbox" class="chkMulti" name="LHipImprove" value="Rest"> <span class="select-btn">Rest</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipImprove" value="Med"><span class="select-btn"> Med</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipImprove" value="PT"><span class="select-btn"> PT</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipImprove" value="Ice"><span class="select-btn"> Ice</span></label>
+            <input id="LHipImproveOther" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LHipImproveOther')"></i>
+        </div>
+
+    </div>
+
+    <div id="relbowSection" style="display:none;">
+        <h6 class="fw-bold">Right Elbow</h6>
+
+        <div class="select-group">
+            Pain:
+            <input id="RElbowPain" class="form-control d-inline" style="width:40px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RElbowPain')"></i> /10
+
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="Constant"><span class="select-btn"> Constant</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="Weakness"><span class="select-btn"> Weakness</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="Numbness"><span class="select-btn"> Numbness</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="Tingling"><span class="select-btn"> Tingling</span></label>
+
+        </div>
+
+        <div class="select-group">
+            Swelling :
+            <label><input type="radio" name="RElbowSwelling" value="Yes"><span class="select-btn"> Y</span></label>
+            <label><input type="radio" name="RElbowSwelling" value="No"> <span class="select-btn">N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Pain with
+            <label><input type="checkbox" class="chkMulti" name="RElbowPainWith" value="Lifting"> <span class="select-btn">Lifting </span> </label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowPainWith" value="Carrying"><span class="select-btn"> Carrying </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowPainWith" value="Driving"> <span class="select-btn">Driving. </span></label>
+            Improved with:
+            <label><input type="checkbox" class="chkMulti" name="RElbowImprove" value="Rest"><span class="select-btn"> Rest</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowImprove" value="Med"><span class="select-btn"> Med</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowImprove" value="PT"> <span class="select-btn">PT</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowImprove" value="Ice"><span class="select-btn"> Ice</span></label>
+            <input id="RElbowImproveOther" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RElbowImproveOther')"></i>
+        </div>
+
+    </div>
+
+    <div id="lelbowSection" style="display:none;">
+        <h6 class="fw-bold">Left Elbow</h6>
+        <div class="select-group">
+            Pain:
+            <input id="LElbowPain" class="form-control d-inline" style="width:40px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LElbowPain')"></i> /10
+
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="Weakness"> <span class="select-btn">Weakness</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="Numbness"> <span class="select-btn">Numbness</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="Tingling"> <span class="select-btn">Tingling</span></label>
+        </div>
+
+        <div class="select-group">
+            Swelling :
+            <label><input type="radio" name="LElbowSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LElbowSwelling" value="No"><span class="select-btn"> N</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Pain with
+            <label><input type="checkbox" class="chkMulti" name="LElbowPainWith" value="Lifting"> <span class="select-btn">Lifting </span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowPainWith" value="Carrying"> <span class="select-btn">Carrying</span> </label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowPainWith" value="Driving"><span class="select-btn"> Driving.</span> </label>
+            Improved with:
+            <label><input type="checkbox" class="chkMulti" name="LElbowImprove" value="Rest"><span class="select-btn"> Rest</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowImprove" value="Med"> <span class="select-btn">Med</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowImprove" value="PT"><span class="select-btn"> PT</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowImprove" value="Ice"> <span class="select-btn">Ice</span></label>
+            <input id="LElbowImproveOther" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LElbowImproveOther')"></i>
+        </div>
+
+    </div>
+    <p>
+        <strong>Other Complaints:</strong>
+
+
+        <textarea id="OtherComplaints" name="OtherComplaints" class="form-control d-inline" style="width:95%"></textarea>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherComplaints')"></i>
+    </p>
+</div>

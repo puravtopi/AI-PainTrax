@@ -1,0 +1,73 @@
+﻿<div class="accordion-body">
+    <!-- Injury Type -->
+    <div class="select-group">
+        Case Type:
+        <label>
+            <input type="radio" name="InjuryType" value="nf" />
+            <span class="select-btn">NF</span>
+        </label>
+        <label>
+            <input type="radio" name="InjuryType" value="work-related" />
+            <span class="select-btn">WC</span>
+        </label>
+        <label>
+            <input type="radio" name="InjuryType" value="mm" />
+            <span class="select-btn">MM</span>
+        </label>
+        <label>
+            <input type="radio" name="InjuryType" value="lien" />
+            <span class="select-btn">Lien</span>
+        </label>
+    </div>
+    <div class="select-group">
+
+        DOS
+        <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+        @* <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" /> *@
+        &nbsp;&nbsp;
+        Location: &nbsp;&nbsp;
+
+        <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
+        </select>
+        &nbsp;&nbsp;
+        @* Interpreter Used:   *@
+        <label><input type="checkbox" class="chkMulti" name="InterpreterUsed" value="Yes" /> <span class="select-btn">Interpreter Used</span></label>
+        &nbsp;&nbsp;
+        See Dictation: @* <input id="Dictation" name="Dictation" class="form-control d-inline" style="width:150px;" /> *@
+        <input id="Dictation" class="form-control d-inline" style="width:20%" value="None" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Dictation')"></i>
+    </div>
+
+    <!-- Patient Info -->
+    <div class="select-group">
+        Patient LName:
+        <input id="LN" name="LN" class="form-control d-inline" style="width:150px;" />
+        FName:
+        <input id="FN" name="FN" class="form-control d-inline" style="width:150px;" />
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
+        Gender
+        <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+            <option value="male">M</option>
+            <option value="female">F</option>
+        </select>
+        &nbsp;&nbsp;
+        handed:
+        <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+            <option value="right-handed">R</option>
+            <option value="left-handed">L</option>
+            <option value="ambidextrous">A</option>
+        </select>
+        <input id="txtDominantHand" class="form-control d-inline w-25" value="None" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtDominantHand')"></i>
+        <p>
+            DOB:
+            <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+            &nbsp;&nbsp; Age:
+            <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
+
+            &nbsp;&nbsp;DOA:
+            <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+        </p>
+    </div>
+
+</div>

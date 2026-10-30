@@ -843,11 +843,11 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeBHF");
             else if (client_code.ToLower() == "paintest")
                 return PartialView("_IntakeKDVPC");
-            else if (client_code.ToLower() == "hposm")
+            else if (client_code.ToLower() == "hposm" || client_code.ToLower() == "orthotest")
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
-            else return PartialView("_IntakeBHF");
+            else return PartialView("_IntakeHPOSM");
             //return View();
         }
 

@@ -1,0 +1,549 @@
+﻿<div class="accordion-body">
+    <!-- Chief Complaint -->
+    <div class="select-group">
+        <b> Chief complaint:</b>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" /> <span class="select-btn">Right Shoulder</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" /> <span class="select-btn">Left Shoulder</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> <span class="select-btn">Right Knee</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" /> <span class="select-btn">Left Knee</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Elbow" data-section="relbowSection" data-pe="relbowPE" /> <span class="select-btn">Right Elbow</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Elbow" data-section="lelbowSection" data-pe="lelbowPE" /> <span class="select-btn">Left Elbow</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Hip" data-section="rhipSection" data-pe="rhipPE" /> <span class="select-btn">Right Hip</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" /> <span class="select-btn">Left Hip</span></label>
+        <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+    </div>
+
+
+    <!-- Work -->
+
+    <div class="select-group">
+        Working:
+        <label><input type="radio" name="IsWorking" value="The patient is currently working"> <span class="select-btn">Yes</span></label>
+        <label><input type="radio" name="IsWorking" value="The patient stopped working immediately after accident."> <span class="select-btn">No</span></label>
+        <span id="divWorking" style="display:none">
+            &nbsp;&nbsp;
+            <label><input type="radio" id="PartTime" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span></label>
+            <label><input type="radio" id="FullTime" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span></label>
+
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
+
+
+    </div>
+    <!-- HPI -->
+    <div class="select-group">
+        <b> HPI:</b>
+        Type of Injury:
+        <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="MVA">  <span class="select-btn">MVA</span></label>
+        <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="Work-Related">  <span class="select-btn">Work-Related</span></label>
+        <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="Slip and fall">  <span class="select-btn">Slip and fall</span></label>
+        <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="Pedestrian-struck">  <span class="select-btn">Pedestrian-struck</span></label>
+        <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="Cyclist-struck">  <span class="select-btn">Cyclist-struck</span></label>
+        <label><input type="radio" id="FullTime" name="InjuryTypeHPI" value="e-bike">  <span class="select-btn">e-bike</span></label>
+
+
+        @* <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="MVA"> <span class="select-btn">MVA</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="Work-Related"> <span class="select-btn">Work-Related</span> </label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="Slip and fall"> <span class="select-btn">Slip and fall</span> </label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="Pedestrian-struck"> <span class="select-btn">Pedestrian-struck</span> </label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="Cyclist-struck"> <span class="select-btn">Cyclist-struck</span></label>
+                                                <label><input type="checkbox" class="chkMulti" name="InjuryTypeHPI" value="e-bike"> <span class="select-btn">e-bike</span> </label> *@
+        <p>
+            accident Others
+            <input type="text" class="form-control d-inline w-25" name="InjuryTypeOther" id="InjuryTypeOther" />.
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'InjuryTypeOther')"></i>
+        </p>
+    </div>
+    <div class="select-group">
+        Patient reports being:
+        <label><input type="checkbox" class="chkMulti" name="PatientType" value="Pedestrian"> <span class="select-btn">Pedestrian</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bicyclist"> <span class="select-btn">Bicyclist</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="PatientType" value="Motorcyclist"> <span class="select-btn">Motorcyclist</span></label>
+        <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bus Passenger"> <span class="select-btn">Bus Passenger</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="PatientType" value="Driver"><span class="select-btn">Driver</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="PatientType" value="Front Passenger"> <span class="select-btn">Front Passenger</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="PatientType" value="Rear Passenger"> <span class="select-btn">Rear Passenger</span> </label>
+        Restrained:
+        <label><input type="radio" name="PatientTypeYN" value="Yes"> <span class="select-btn">Yes</span></label>
+        <label><input type="radio" name="PatientTypeYN" value="No"><span class="select-btn">No</span> </label>
+    </div>
+    <div class="select-group">
+        Vehicle hit:
+        <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Rear"> <span class="select-btn">Rear</span></label>
+        <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Front"><span class="select-btn">Front</span> </label>
+        <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side front"> <span class="select-btn">Driver-side front</span></label>
+        <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side Rear"> <span class="select-btn">Driver-side rear</span></label>
+        <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side front"> <span class="select-btn">Passenger-side front</span></label>
+        <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side rear"> <span class="select-btn">Passenger-side rear</span></label>
+        <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned Driver side"> <span class="select-btn">T-boned Driver side</span></label>
+        <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="T-boned Passenger side"> <span class="select-btn">T-boned Passenger side</span></label>
+    </div>
+
+    <p>
+        Accident Description
+        <textarea id="AccidentDescription" name="AccidentDescription" class="form-control d-inline" style="width:95%"></textarea>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
+    </p>
+    <div class="select-group">
+        <b> Mechanism of Injury:</b>
+        Air bags deployed:
+        <label><input type="radio" name="Airbag" value="Yes"> <span class="select-btn">Yes</span></label>
+        <label><input type="radio" name="Airbag" value="No"> <span class="select-btn">No</span></label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        EMS arrived:
+        <label><input type="radio" name="EMS" value="Yes"> <span class="select-btn">Yes</span></label>
+        <label><input type="radio" name="EMS" value="No"> <span class="select-btn">No</span></label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Police arrived:
+        <label><input type="radio" name="Police" value="Yes"> <span class="select-btn">Yes</span></label>
+        <label><input type="radio" name="Police" value="No"> <span class="select-btn">No</span></label>
+        <p>
+            LOC:
+            <label><input type="radio" name="PoliceReport" value="Yes"> <span class="select-btn">Yes</span></label>
+            <label><input type="radio" name="PoliceReport" value="No"> <span class="select-btn">No</span></label>
+            <div id="divLOC" style="display:none">
+
+
+                <input id="txtLOC" class="form-control d-inline w-25" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtLOC')"></i>
+            </div>
+
+        </p>
+    </div>
+    <!-- Hospital -->
+
+    <div class="select-group">
+        <p>
+
+            Went to hospital:
+            <label><input type="radio" name="Hospital" value="Yes"> <span class="select-btn">Yes</span></label>
+            <label><input type="radio" name="Hospital" value="No"> <span class="select-btn">No</span></label>
+            <span id="divHospitalName" style="display:none">
+                Hospital name:
+                <input id="HospitalName" class="form-control d-inline" style="width:200px" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
+            </span>
+        </p>
+        <div id="divHospital" style="display:none">
+            <label><input type="radio" name="Records" value="Yes"> <span class="select-btn">Discharged the same day</span></label>
+            <label><input type="radio" name="Records" value="No"> <span class="select-btn">Admitted</span></label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            How did you get to hospital:
+            <label><input type="radio" name="Transport" value="Ambulance"> <span class="select-btn">Ambulance</span></label>
+            <label><input type="radio" name="Transport" value="Car"> <span class="select-btn">Car</span></label>
+            <label><input type="radio" name="Transport" value="Uber"> <span class="select-btn">Uber</span></label>
+            <label><input type="radio" name="Transport" value="Cab"> <span class="select-btn">Cab</span></label>
+            <label><input type="radio" name="Transport" value="Friend"> <span class="select-btn">Friend</span></label>
+
+        </div>
+    </div>
+
+
+    @*  <div class="patient-history"> *@
+
+    <div class="select-group">
+        <strong>Any symptoms prior to accident:</strong>
+
+
+        <label><input type="radio" name="PriorSymptoms" value="Y"> <span class="select-btn">Yes</span></label>
+
+        <label> <input type="radio" name="PriorSymptoms" value="N"> <span class="select-btn">No</span></label>
+
+        <div id="divPriorSymptoms" style="display:none">
+
+
+            <input id="txtPriorSymptoms" class="form-control d-inline w-25" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPriorSymptoms')"></i>
+        </div>
+    </div>
+
+    <div class="select-group">
+        <strong>History of Prior Trauma:</strong>
+
+
+        <label><input type="radio" name="PriorTrauma" value="Y"> <span class="select-btn">Yes</span></label>
+
+        <label> <input type="radio" name="PriorTrauma" value="N"> <span class="select-btn">No</span></label>
+
+        <div id="divPriorTrauma" style="display:none">
+
+
+            <input id="txtPriorTrauma" class="form-control d-inline w-25" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPriorTrauma')"></i>
+        </div>
+    </div>
+
+    <div class="select-group">
+        <strong>Transportation: How did you get to the office today?</strong>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="Transportation" value="Self"> <span class="select-btn">Self</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="Transportation" value="Drove"> <span class="select-btn">Drove</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="Transportation" value="Family member"> <span class="select-btn">Family member</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="Transportation" value="Uber"> <span class="select-btn">Uber</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="Transportation" value="Self transportation"> <span class="select-btn">Self - transportation</span>
+        </label>
+        <p>
+            Others:
+            <input id="TransportationOther" class="form-control d-inline w-25" style="min-width:250px" />
+
+            <i class="fa fa-microphone d-inline mic-btn"
+               onclick="startVoice(this,'TransportationOther')"></i>
+        </p>
+    </div>
+
+    <div class="select-group">
+        <strong>Needs daily life activity assistance:</strong>
+
+        <label>
+            <input type="radio" name="DailyLifeAssistance" value="Y"> <span class="select-btn">Yes</span>
+        </label>
+        <label>
+            <input type="radio" name="DailyLifeAssistance" value="N"> <span class="select-btn">No</span>
+        </label>
+        <p>
+            <input id="DailyLifeAssistanceOther" class="form-control d-inline w-25" style="min-width:250px" />
+            <i class="fa fa-microphone d-inline mic-btn"
+               onclick="startVoice(this,'DailyLifeAssistanceOther')"></i>
+        </p>
+    </div>
+
+    @*  </div> *@
+    <div class="select-group">
+        @*  <strong> Medical History & Functional Status:</strong> *@
+
+        <p>
+            PMH:
+            <label><input type="checkbox" class="chkMulti" name="PMH" value="None"> <span class="select-btn">None</span></label>
+            <label><input type="checkbox" class="chkMulti" name="PMH" value="Diabetes"> <span class="select-btn">Diabetes</span></label>
+            <label><input type="checkbox" class="chkMulti" name="PMH" value="HTN"> <span class="select-btn">HTN</span></label>
+            <label><input type="checkbox" class="chkMulti" name="PMH" value="HLD"> <span class="select-btn">HLD</span></label>
+            <label><input type="checkbox" class="chkMulti" name="PMH" value="Asthma"> <span class="select-btn">Asthma</span></label>
+            <label><input type="checkbox" class="chkMulti" name="PMH" value="Cardiac"> <span class="select-btn">Cardiac</span></label>
+            <label><input type="checkbox" class="chkMulti" name="PMH" value="Thyroid"> <span class="select-btn">Thyroid</span></label>
+            <label><input type="checkbox" class="chkMulti" name="PMH" value="CA"> <span class="select-btn">CA</span></label>
+
+            Other:
+            <input id="PMHOther" class="form-control d-inline w-25" style="min-width:250px" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PMHOther')"></i>
+        </p>
+    </div>
+    <div class="select-group">
+        <!-- PSH -->
+        <p>
+            PSH:
+            <label><input type="checkbox" class="chkMulti" name="PSHM" value="None"> <span class="select-btn">None</span></label>
+            <input id="txtPSH" class="form-control d-inline w-25" style="min-width:250px" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPSH')"></i>
+
+        </p>
+    </div>
+    <div class="select-group">
+        <!-- Meds -->
+        <p>
+            Meds:
+            <label><input type="radio" name="Meds" value="The patient is not taking any medication at this time."> <span class="select-btn">None</span></label>
+            <label><input type="radio" name="Meds" value="The patient is taking {{MedsOther}} pain medications p.r.n."> <span class="select-btn">Pain meds PRN</span></label>
+
+            <input id="MedsOther" class="form-control d-inline w-25" style="min-width:250px" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i>
+        </p>
+    </div>
+    <div class="select-group">
+        <p>
+            <!-- Allergies -->
+            Drug Allergies:
+            <label><input type="radio" name="Allergy" value="NO KNOWN DRUG ALLERGIES." checked> <span class="select-btn">NKDA</span></label>
+            <label><input type="radio" name="Allergy" value="Yes"> <span class="select-btn">Yes</span></label>
+            <span id="divAllergy" style="display:none">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Drug:
+                <input id="AllergyDrug" class="form-control d-inline w-25" style="min-width:250px" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyDrug')"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                What Allergy:
+                <input id="AllergyReaction" class="form-control d-inline w-25" style="min-width:250px" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i>
+            </span>
+
+        </p>
+    </div>
+    <div class="select-group">
+        <p>
+            <!-- Social History -->
+            Smoke:
+            <label><input type="radio" name="Smoke" value="Yes"><span class="select-btn"> Y</span></label>
+            <label><input type="radio" name="Smoke" value="No" checked> <span class="select-btn">N</span></label>
+            <span id="divSmoke" style="display:none">
+                <input id="PPD" class="form-control d-inline" style="width:150px" /> PPD.
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i>
+            </span>
+            &nbsp;&nbsp;
+            Alcohol:
+            <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol." checked><span class="select-btn"> N</span></label>
+            <span id="divAlcohol" style="display:none">
+                <input id="txtAlcohol" class="form-control d-inline" style="width:150px" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtAlcohol')"></i>
+            </span>
+            &nbsp;&nbsp;
+            Recreational Drugs:
+            <label><input type="radio" name="OtherDrugs" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="OtherDrugs" value="No" checked> <span class="select-btn">N</span></label>
+            <span id="divDrugs" style="display:none">
+                <input id="OtherDrugsTxt" class="form-control d-inline w-25" placeholder="Other Drugs Name" style="width:200px" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i>
+            </span>
+
+        </p>
+    </div>
+    <div class="select-group">
+        <p>
+            <!-- Therapy -->
+            Physical therapy:
+            <label><input type="radio" name="PT" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="PT" value="The patient has not had physical therapy."> <span class="select-btn">N</span></label>
+            <span id="divPT" style="display:none">
+
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Duration:
+                <input id="PTWeek" class="form-control d-inline" style="width:50px" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Week
+                <input id="PTMonth" class="form-control d-inline" style="width:50px" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Month
+                <input id="PTYear" class="form-control d-inline" style="width:50px" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Years
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Relief:
+                <select id="PTRelief" class="form-select d-inline" style="width:150px">
+                    <option>None</option>
+                    <option>Partial</option>
+                    <option>Minimal</option>
+                    <option>Good</option>
+                </select>
+
+            </span>
+        </p>
+    </div>
+    <div class="select-group">
+        <p>
+
+            <!-- Chiropractor -->
+            Chiropractor:
+            <label><input type="radio" name="Chiro" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="Chiro" value="No"> <span class="select-btn">N</span></label>
+            <span id="divChiro" style="display:none">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Frequency:
+                <input id="ChiroFreq" class="form-control d-inline" style="width:150px" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroFreq')"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Duration:
+                <input id="ChiroDuration" class="form-control d-inline " style="width:150px" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroDuration')"></i>
+
+                Relief:
+                <select id="ChiroRelief" class="form-select d-inline" style="width:150px">
+                    <option>None</option>
+                    <option>Partial</option>
+                    <option>Minimal</option>
+                    <option>Good</option>
+                </select>
+            </span>
+        </p>
+    </div>
+    <div class="select-group">
+        <strong>ADL:</strong>
+        <b>Sit:</b>
+        <label>
+            <input type="radio" name="ADLSit" value="Y"> <span class="select-btn">Yes</span>
+        </label>
+        <label>
+            <input type="radio" name="ADLSit" value="N"> <span class="select-btn">No</span>
+        </label>
+        <span id="divADLSitting" style="display:none">
+
+            <input id="ADLSittxt" class="form-control d-inline" style="width:150px" />
+        </span>
+
+
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <b>Stand:</b>
+        <label>
+            <input type="radio" name="ADLStand" value="Y"> <span class="select-btn">Yes</span>
+        </label>
+        <label>
+            <input type="radio" name="ADLStand" value="N"> <span class="select-btn">No</span>
+        </label>
+        <span id="divADLStand" style="display:none">
+
+            <input id="ADLStandtxt" class="form-control d-inline" style="width:100px" />mins.
+        </span>
+
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <b>Walk:</b>
+        <label>
+            <input type="radio" name="ADLWalk" value="Y"> <span class="select-btn">Yes</span>
+        </label>
+        <label>
+            <input type="radio" name="ADLWalk" value="N"> <span class="select-btn">No</span>
+        </label>
+        <span id="divADLWalk" style="display:none">
+
+            <input id="ADLWalktxt" class="form-control d-inline" style="width:100px" />
+            blocks.
+        </span>
+
+
+    </div>
+    <div class="select-group">
+
+
+        <p>
+            <b>Unable to:</b>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Garden "> <span class="select-btn">Garden </span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Play sports"> <span class="select-btn">Play sports</span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Drive"> <span class="select-btn">Drive </span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Lift"> <span class="select-btn">Lift</span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Childcare"> <span class="select-btn">Childcare</span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Carry"> <span class="select-btn">Carry</span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Reach overhead"> <span class="select-btn">Reach overhead</span></label>
+        </p>
+        <p>
+
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Laundry"> <span class="select-btn">Laundry </span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Shopping"> <span class="select-btn">Shopping</span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Errands"> <span class="select-btn">Errands </span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Kneeling"> <span class="select-btn">Kneeling</span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Squat"> <span class="select-btn">Squat</span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Stairs jog"> <span class="select-btn">Stairs jog</span></label>
+            <label><input type="checkbox" class="chkMulti" name="ADL" value="Exercise"> <span class="select-btn">Exercise</span></label>
+        </p>
+    </div>
+
+    <div class="select-group">
+        <strong>Gait:</strong>
+
+        <p>
+            <b>Ambulates with: </b>
+            <label><input type="radio" name="GAITrdo" value="Cane"> <span class="select-btn">Cane</span></label>
+            <label><input type="radio" name="GAITrdo" value="Walker"> <span class="select-btn">Walker</span></label>
+            <label><input type="radio" name="GAITrdo" value="Crutches"> <span class="select-btn">Crutches </span></label>
+            <label><input type="radio" name="GAITrdo" value="Assisted Device"> <span class="select-btn">Assisted Device</span></label>
+            <label><input type="radio" name="GAITrdo" value="No assisted device"> <span class="select-btn">No assisted device</span></label>
+
+        </p>
+
+
+    </div>
+    <p>
+        <textarea id="txtGait" name="txtGait" class="form-control d-inline" style="width:95%"></textarea>
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtGait')"></i>
+
+    </p>
+</div>
+@*  <div id="divWC" style="display:none;">
+                                                <!-- Paragraph Description -->
+                                                <p>
+                                                    The patient reports that on
+                                                    <input type="date" id="lblDOA" name="lblDOA" class="form-control d-inline w-auto" />
+                                                    while
+                                                    <select id="Activity" class="form-select d-inline" style="width:350px" name="Activity">
+                                                        <option value=""></option>
+                                                        <option value="performing regular job duties">performing regular job duties </option>
+                                                        <option value="performing assigned work tasks">performing assigned work tasks </option>
+                                                        <option value="engaged in usual occupational activities">engaged in usual occupational activities </option>
+                                                    </select>,
+                                                    they sustained a work-related injury when
+
+                                                    <select id="Incident" class="form-select d-inline" style="width:350px" name="Incident">
+                                                        <option value=""></option>
+                                                        <option value="slipped">slipped</option>
+                                                        <option value="tripped">tripped</option>
+                                                        <option value="lost balance">lost balance</option>
+                                                        <option value="was struck by an object">was struck by an object</option>
+                                                        <option value="lifted or carried an object">lifted or carried an object</option>
+                                                        <option value="pushed or pulled equipment">pushed or pulled equipment</option>
+                                                        <option value="twisted or turned abruptly">twisted or turned abruptly</option>
+                                                        <option value="experienced repetitive strain">experienced repetitive strain</option>
+                                                        <option value="experienced sudden forceful movement">experienced sudden forceful movement</option>
+                                                    </select>.
+                                                </p>
+
+                                                <p>
+                                                    The incident occurred
+                                                    <select name="IncidentType" class="form-select d-inline" style="width:250px" id="IncidentType">
+                                                        <option value=""></option>
+                                                        <option value="suddenly">suddenly</option>
+                                                        <option value="unexpectedly">unexpectedly</option>
+                                                        <option value="during normal work">during normal work</option>
+                                                    </select>
+                                                    and involved
+
+                                                    <select name="Mechanism" class="form-select d-inline" style="width:300px" id="Mechanism">
+                                                        <option value=""></option>
+                                                        <option value="direct impact">direct impact </option>
+                                                        <option value="overexertion">overexertion</option>
+                                                        <option value="awkward positioning">awkward positioning </option>
+                                                        <option value="forceful movement">forceful movement  </option>
+                                                        <option value="repetitive motion">repetitive motion</option>
+                                                        <option value="loss of footing">loss of footing</option>
+                                                        <option value="sudden loading of the body">sudden loading of the body</option>
+                                                    </select>
+                                                </p>
+
+                                                <p>
+                                                    As a result, the patient experienced
+                                                    <select class="form-select d-inline" style="width:150px" name="SymptomOnset" id="SymptomOnset">
+                                                        <option value=""></option>
+                                                        <option value="immediate">immediate</option>
+                                                        <option value="same-day">same-day</option>
+                                                        <option value="progressive">progressive</option>
+                                                    </select>
+                                                    pain affecting
+                                                    <input type="text" class="form-control d-inline w-25" name="BodyPart" id="BodyPart" placeholder="body part" />.
+                                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'BodyPart')"></i>
+                                                    which was
+                                                    <select class="form-select d-inline" style="width:350px" name="PainEffect" id="PainEffect">
+                                                        <option value=""></option>
+                                                        <option value="not present prior to this incident">not present prior to this incident</option>
+                                                        <option value="significantly less severe prior to this incident">significantly less severe prior to this incident</option>
+
+                                                    </select>.
+                                                </p>
+
+                                                <p>
+                                                    Since the time of injury, the patient reports
+                                                    <select class="form-select d-inline" style="width:150px" name="SymptomPattern" id="SymptomPattern">
+                                                        <option value=""></option>
+                                                        <option value="persistent">persistent</option>
+                                                        <option value="worsening">worsening</option>
+                                                        <option value="fluctuating">fluctuating</option>
+                                                    </select>
+                                                    symptoms that interfere with .
+                                                    <select class="form-select d-inline" style="width:350px" name="DailyActivities" id="DailyActivities">
+                                                        <option value=""></option>
+                                                        <option value="work duties">work duties</option>
+                                                        <option value="activities of daily living ">activities of daily living</option>
+                                                        <option value="physical tasks required for employment">physical tasks required for employment</option>
+                                                    </select>
+                                                </p>
+                                            </div> *@
