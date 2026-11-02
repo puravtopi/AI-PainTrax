@@ -56,6 +56,7 @@
                         <input type="hidden" id="hdId" name="hdId" value="@ViewBag.Id" />
                         <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
                         <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
+                        <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
                         <input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
                         <input type="hidden" id="hdIEId" name="hdIEId" />
@@ -152,7 +153,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                        <partial name="HPOSM/_PatientDetails" />
+                                        <partial name="OrthoTest/_PatientDetails" />
                                     </div>
                                 </div>
                                 <div class="accordion-item">
@@ -162,7 +163,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                        <partial name="HPOSM/_History" />
+                                        <partial name="OrthoTest/_History" />
                                     </div>
                                 </div>
                                 <div class="accordion-item" id="acordPresentComp" style="display:none">
@@ -172,7 +173,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
-                                        <partial name="HPOSM/_PresentComplain" />
+                                        <partial name="OrthoTest/_PresentComplain" />
                                     </div>
                                 </div>
                                 <div class="accordion-item" id="acordPhyExam" style="display:none">
@@ -182,7 +183,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
-                                        <partial name="HPOSM/_PhysicalExamination" />
+                                        <partial name="OrthoTest/_PhysicalExamination" />
                                     </div>
                                 </div>
                                 <div class="accordion-item" id="acordDiagnosis" style="display:none">
@@ -211,7 +212,7 @@
                                         </button>
                                     </h2>
                                     <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
-                                        <partial name="HPOSM/_Treatment" />
+                                        <partial name="OrthoTest/_Treatment" />
                                     </div>
                                 </div>
                             </div>
@@ -846,7 +847,10 @@
         formData["TreatmentIds"] = $("#TreatmentIds").val();
         formData["TreatmentDesc"] = $("#TreatmentDesc").val();
         formData["TreatmentDelimitDesc"] = $("#TreatmentDelimitDesc").val();
-
+         var prov_id=$("#providerid").val();
+            if(prov_id=="0")
+                prov_id= $("#ProviderId").val();
+            formData["ProviderId"] = prov_id;
         // URLs
         var url = '@Url.Action("SaveForm", "IntakeForm")';
         var indexurl = '@Url.Action("Index", "Visit")';

@@ -1,7 +1,13 @@
 ﻿<div class="accordion-body">
    
-    <div class="select-group">
+        <h6>
+            Provider Name:
+            <select id="providerid" name="providerid" asp-items="@ViewBag.providerList" class="form-select d-inline w-auto" style="width:230px !important">
+            </select>
+        </h6>
 
+    <div class="select-group">
+        
         DOS
         <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
         @* <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" /> *@
