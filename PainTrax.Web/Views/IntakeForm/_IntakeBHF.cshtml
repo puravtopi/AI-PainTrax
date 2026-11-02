@@ -933,7 +933,7 @@
                         $(".mmClass").hide();
 
                     }
-                                       else {
+                    else {
                         // Remove both
                         html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
                         html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
@@ -1553,6 +1553,11 @@
                          $("#divWC1").show();
                       else
                          $("#divWC1").hide();
+
+                      if(injuryType=="NF")
+                         $("#divNF").show();
+                      else
+                         $("#divNF").hide();
 
                       $('#pdfLoader').hide();
 

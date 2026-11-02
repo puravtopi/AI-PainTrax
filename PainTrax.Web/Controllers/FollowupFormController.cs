@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -166,10 +167,10 @@ namespace PainTrax.Web.Controllers
             else if (client_code.ToLower() == "paintest")
                 return PartialView("_IntakeKDVPCFU");
             else if (client_code.ToLower() == "hposm" || client_code.ToLower() == "orthotest")
-                return PartialView("_IntakeHPOSM");
+                return PartialView("_IntakeHPOSMFU");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
-            else return PartialView("_IntakeHPOSM");
+            else return PartialView("_IntakeHPOSMFU");
         }
         [HttpPost]
         public IActionResult Create(FollowupForm model)
@@ -713,8 +714,8 @@ namespace PainTrax.Web.Controllers
                     note3 = model.DrNote,
                     fu_id = newFU,
                     ie_id= string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
-                    followup_duration= model.FollowUp,
-                    followup_date = string.IsNullOrEmpty(model.FollowUpOther) ? null : Convert.ToDateTime(model.FollowUpOther),
+                    followup_duration = string.IsNullOrEmpty(model.FollowUpOther) ? model.FollowUp : model.FollowUpOther,
+                    followup_date = string.IsNullOrEmpty(model.FollowUpDate) ? null : Convert.ToDateTime(model.FollowUpDate),
                 };
 
                 _fuservices.UpdateOtherPageIntake(objOther);

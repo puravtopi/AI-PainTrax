@@ -231,7 +231,7 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
 
     public int UpdatePage2Intake(tbl_ie_page2 obj)
     {
-        MySqlCommand cm = new MySqlCommand("update tbl_fu_page2 set  where aod=@p_adl where fu_id=@p_id", conn);
+        MySqlCommand cm = new MySqlCommand("update tbl_fu_page2 set aod=@p_adl where fu_id=@p_id", conn);
 
 
         cm.Parameters.AddWithValue("@p_id", obj.id);

@@ -1364,6 +1364,7 @@ namespace PainTrax.Web.Helper
 
         #region Other
 
+        
         public static string GenerateOther(string PainScale, List<string> PainTypes, string title)
         {
 
@@ -1527,59 +1528,71 @@ namespace PainTrax.Web.Helper
             }
             if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.MidbackCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.MidbackCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.LowBackCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LowBackCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.RightShoulderCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightShoulderCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.LeftShoulderCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftShoulderCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.RightKneeCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightKneeCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.LeftKneeCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftKneeCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.RightAnkleCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightAnkleCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.LeftAnkleCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftAnkleCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.RightElbowCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightElbowCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.LeftElbowCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftElbowCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.RightHipCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightHipCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.LeftHipCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftHipCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.RightWristCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.RightWristCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<br/><p>" + ReportHelper.LeftWristCC(model) + "</p>";
+                pe = pe + "<p>" + ReportHelper.LeftWristCC(model) + "<br/></p>";
+            }
+            if (!string.IsNullOrEmpty(model.OtherBodyPart1))
+            {
+                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other1PainScale, model.Other1PainType, model.OtherBodyPart1) + "<br/></p>";
+            }
+            if (!string.IsNullOrEmpty(model.OtherBodyPart2))
+            {
+                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other2PainScale, model.Other2PainType, model.OtherBodyPart2) + "<br/></p>";
+            }
+            if (!string.IsNullOrEmpty(model.OtherBodyPart3))
+            {
+                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other3PainScale, model.Other3PainType, model.OtherBodyPart3) + "<br/></p>";
             }
             return pe.Replace(", and", " and");
         }

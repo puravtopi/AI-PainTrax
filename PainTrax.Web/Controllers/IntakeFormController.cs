@@ -987,10 +987,7 @@ namespace PainTrax.Web.Controllers
             if (model.Id != "0")
                 patientId = model.PatientId != null ? Convert.ToInt32(model.PatientId) : 0;
 
-            if (IsPatientPresent(model.FN, model.LN, doa, dob, patientId))
-            {
-                return Json(new { success = false, message = "The patient already exists in the system. Please verify the patient details before proceeding." });
-            }
+
 
             if (model != null)
             {
@@ -1089,6 +1086,12 @@ namespace PainTrax.Web.Controllers
 
                 if (initialIntakeAI.Id == 0)
                 {
+
+                    if (IsPatientPresent(model.FN, model.LN, doa, dob, patientId))
+                    {
+                        return Json(new { success = false, message = "The patient already exists in the system. Please verify the patient details before proceeding." });
+                    }
+
                     if (result != "0")
                     {
                         tbl_patient objPatient = new tbl_patient()
@@ -1375,7 +1378,7 @@ namespace PainTrax.Web.Controllers
                         id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId),
                         cc = ccContent,
                         pe = peContent,
-                        assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ul>" + model.Diagnosis + "</ul>",
+                        assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ul>" + model.Diagnosis + "</ul>" + model.DiagnosisOther,
                         vital = vital,
                         pmh = pmh,
                         psh = psh,
@@ -1409,7 +1412,7 @@ namespace PainTrax.Web.Controllers
 
                     _ieService.UpdatePage2Intake(objP2);
 
-                   
+
 
 
                     var objpatient = new tbl_patient()
@@ -1429,11 +1432,11 @@ namespace PainTrax.Web.Controllers
                     _ieService.UpdatePage3Intake(ie_id, gait);
                 }
 
-               var objIntOther = new tbl_ie_other()
+                var objIntOther = new tbl_ie_other()
                 {
                     note3 = model.DrNote,
-                    followup_duration= model.FollowUp,
-                    followup_date=  string.IsNullOrEmpty(model.FollowUpOther) ? null : Convert.ToDateTime(model.FollowUpOther),
+                    followup_duration = string.IsNullOrEmpty(model.FollowUpOther) ? model.FollowUp : model.FollowUpOther,
+                    followup_date = string.IsNullOrEmpty(model.FollowUpDate) ? null : Convert.ToDateTime(model.FollowUpDate),
                     ie_id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId)
                 };
 
@@ -2263,525 +2266,9 @@ namespace PainTrax.Web.Controllers
         }
 
 
-        private string GetBHFCC(AIIntakeFormModel model)
-        {
-            string pe = "";
-            if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + ReportHelper.NeckCC(model);
-            }
-            if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.MidbackCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.LowBackCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.RightShoulderCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.LeftShoulderCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.RightKneeCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.LeftKneeCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.RightAnkleCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.LeftAnkleCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.RightElbowCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.LeftElbowCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.RightHipCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.LeftHipCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.RightWristCC(model) + "<br/></p>";
-            }
-            if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + "<p>" + ReportHelper.LeftWristCC(model) + "<br/></p>";
-            }
-            if (!string.IsNullOrEmpty(model.OtherBodyPart1))
-            {
-                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other1PainScale, model.Other1PainType, model.OtherBodyPart1) + "<br/></p>";
-            }
-            if (!string.IsNullOrEmpty(model.OtherBodyPart2))
-            {
-                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other2PainScale, model.Other2PainType, model.OtherBodyPart2) + "<br/></p>";
-            }
-            if (!string.IsNullOrEmpty(model.OtherBodyPart3))
-            {
-                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other3PainScale, model.Other3PainType, model.OtherBodyPart3) + "<br/></p>";
-            }
-            return pe.Replace(", and", " and");
-        }
 
-        private string GetPE(AIIntakeFormModel model)
-        {
-            string pe = "";
 
-            if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
-            {
-                var topSection = ReportHelper.GenerateNeckExamSentence(model);
-                pe = pe + this.GetROM(model, "neck", "Neck.html", topSection);
-            }
-            if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "midback", "Midback.html");
-            }
-            if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
-            {
-                var topSection = ReportHelper.GenerateLowerBackNarrative(model);
-                pe = pe + this.GetROM(model, "lowback", "Lowback.html", topSection);
-            }
-            if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "right shoulder", "Shoulder.html");
-            }
-            if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "left shoulder", "Shoulder.html");
-            }
-            if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "right knee", "Knee.html");
-            }
-            if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "left knee", "Knee.html");
-            }
-            if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "right ankle", "Ankle.html");
-            }
-            if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "left ankle", "Ankle.html");
-            }
-            if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "right elbow", "Elbow.html");
-            }
-            if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "left elbow", "Elbow.html");
-            }
-            if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "right hip", "Hip.html");
-            }
-            if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "left hip", "Hip.html");
-            }
-            if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "right wrist", "Wrist.html");
-            }
-            if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
-            {
-                pe = pe + this.GetROM(model, "left wrist", "Wrist.html");
-            }
-            if (!string.IsNullOrEmpty(model.OtherBodyPart1))
-            {
-                pe = pe + "<b>" + model.OtherBodyPart1 + "</b><br/>" + this.GetOtherROM(model.Other1FlexionTitle, model.Other1FlexionROM, model.Other1FlexionNormal,
-                    model.Other1ExtTitle, model.Other1ExtRROM, model.Other1ExtRNormal);
-            }
-            if (!string.IsNullOrEmpty(model.OtherBodyPart2))
-            {
-                pe = pe + "<b>" + model.OtherBodyPart2 + "</b><br/>" + this.GetOtherROM(model.Other2FlexionTitle, model.Other2FlexionROM, model.Other2FlexionNormal,
-                    model.Other2ExtTitle, model.Other2ExtRROM, model.Other2ExtRNormal);
-            }
-            if (!string.IsNullOrEmpty(model.OtherBodyPart3))
-            {
-                pe = pe + "<b>" + model.OtherBodyPart3 + "</b><br/>" + this.GetOtherROM(model.Other3FlexionTitle, model.Other3FlexionROM, model.Other3FlexionNormal,
-                    model.Other3ExtTitle, model.Other3ExtRROM, model.Other3ExtRNormal);
-            }
-            return pe;
-        }
 
-        private string GetDTR(AIIntakeFormModel model)
-        {
-            try
-            {
-
-                var templateDir = Path.Combine(Environment.WebRootPath, "templates");
-
-                //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
-                var filePath = templateDir + "/BHF/DTR.html";
-
-
-                // 2. Read the entire file content into a string asynchronously
-                string htmlString = System.IO.File.ReadAllText(filePath);
-
-                // 2. Parse HTML
-                /*var parser = new HtmlParser();
-                var document = parser.ParseDocument(htmlString);
-
-                string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
-                string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
-
-                string className = "";
-
-                bool isUEPresent = model.Complaints.Any(value =>
-                {
-                    string sBody = value.Replace("Left", "")
-                                        .Replace("Right", "")
-                                        .Trim();
-
-                    // In C#, you can do a case-insensitive check directly without calling ToLower()
-                    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-                });
-
-                if (!isUEPresent)
-                {
-                    // 3. Select all elements matching the class and remove them
-                    className = "upper"; // Target class
-                    var elements = document.QuerySelectorAll($".{className}");
-
-                    foreach (var element in elements)
-                    {
-                        element.Remove(); // Completely removes the element
-                    }
-                }
-
-                bool isLEPresent = model.Complaints.Any(value =>
-                {
-                    string sBody = value.Replace("Left", "")
-                                        .Replace("Right", "")
-                                        .Trim();
-
-                    // In C#, you can do a case-insensitive check directly without calling ToLower()
-                    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-                });
-
-                if (!isLEPresent)
-                {
-                    // 3. Select all elements matching the class and remove them
-                    className = "lower"; // Target class
-                    var elements = document.QuerySelectorAll($".{className}");
-
-                    foreach (var element in elements)
-                    {
-                        element.Remove(); // Completely removes the element
-                    }
-                }
-
-                if (!isUEPresent && !isLEPresent)
-                {  // 3. Select all elements matching the class and remove them
-                    className = "hidAll"; // Target class
-                    var elements = document.QuerySelectorAll($".{className}");
-
-                    foreach (var element in elements)
-                    {
-                        element.Remove(); // Completely removes the element
-                    }
-
-                }*/
-
-                // 4. Output the result
-                //string modifiedHtml = document.Body.InnerHtml; // or document.DocumentElement.OuterHtml
-                string modifiedHtml = htmlString; // or document.DocumentElement.OuterHtml
-
-                modifiedHtml = modifiedHtml.Replace("#TricepsLeft", string.IsNullOrEmpty(model.TricepsLeft) ? "2+" : model.TricepsLeft)
-                                              .Replace("#TricepsRight", string.IsNullOrEmpty(model.TricepsRight) ? "2+" : model.TricepsRight)
-                                              .Replace("#BicepsLeft", string.IsNullOrEmpty(model.BicepsLeft) ? "2+" : model.BicepsLeft)
-                                              .Replace("#BicepsRight", string.IsNullOrEmpty(model.BicepsRight) ? "2+" : model.BicepsRight)
-                                              .Replace("#BrachioradialisLeft", string.IsNullOrEmpty(model.BrachioradialisLeft) ? "2+" : model.BrachioradialisLeft)
-                                              .Replace("#BrachioradialisRight", string.IsNullOrEmpty(model.BrachioradialisRight) ? "2+" : model.BrachioradialisRight)
-                                              .Replace("#KneeRELeft", string.IsNullOrEmpty(model.KneeRELeft) ? "2+" : model.KneeRELeft)
-                                              .Replace("#KneeRERight", string.IsNullOrEmpty(model.KneeRERight) ? "2+" : model.KneeRERight)
-                                              .Replace("#AnkleRELeft", string.IsNullOrEmpty(model.AnkleRELeft) ? "2+" : model.AnkleRELeft)
-                                              .Replace("#AnkleRERight", string.IsNullOrEmpty(model.AnkleRERight) ? "2+" : model.AnkleRERight);
-
-                if (!string.IsNullOrEmpty(model.Reflex))
-                    modifiedHtml = "<p>" + model.Reflex + "</p>" + modifiedHtml;
-
-                return modifiedHtml;
-            }
-            catch (Exception ex)
-            {
-                this.SaveLog(ex, "");
-                return "";
-            }
-
-        }
-
-        private string GetSensory(AIIntakeFormModel model)
-        {
-            string strSE = "";
-
-
-            if (model.SE != null && model.SE.Any())
-            {
-                string seItems = model.SE.Count > 1
-                    ? $"{string.Join(", ", model.SE.Take(model.SE.Count - 1))} and {model.SE.Last()}"
-                    : model.SE.First();
-
-                strSE = $"SENSORY EXAMINATION To {seItems}".TrimEnd('.') + ". " + model.Sensory;
-            }
-            else
-            {
-                strSE = model.Sensory;
-            }
-
-
-            var templateDir = Path.Combine(Environment.WebRootPath, "templates");
-
-            //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
-            var filePath = templateDir + "/BHF/Sensory.html";
-
-
-            // 2. Read the entire file content into a string asynchronously
-            string htmlString = System.IO.File.ReadAllText(filePath);
-
-            // 2. Parse HTML
-            //var parser = new HtmlParser();
-            //var document = parser.ParseDocument(htmlString);
-
-            //string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
-            //string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
-
-            //string className = "";
-
-            //bool isUEPresent = model.Complaints.Any(value =>
-            //{
-            //    string sBody = value.Replace("Left", "")
-            //                        .Replace("Right", "")
-            //                        .Trim();
-
-            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
-            //    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            //});
-
-            //if (!isUEPresent)
-            //{
-            //    // 3. Select all elements matching the class and remove them
-            //    className = "upper"; // Target class
-            //    var elements = document.QuerySelectorAll($".{className}");
-
-            //    foreach (var element in elements)
-            //    {
-            //        element.Remove(); // Completely removes the element
-            //    }
-            //}
-
-            //bool isLEPresent = model.Complaints.Any(value =>
-            //{
-            //    string sBody = value.Replace("Left", "")
-            //                        .Replace("Right", "")
-            //                        .Trim();
-
-            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
-            //    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            //});
-
-            //if (!isLEPresent)
-            //{
-            //    // 3. Select all elements matching the class and remove them
-            //    className = "lower"; // Target class
-            //    var elements = document.QuerySelectorAll($".{className}");
-
-            //    foreach (var element in elements)
-            //    {
-            //        element.Remove(); // Completely removes the element
-            //    }
-            //}
-
-            //if (!isUEPresent && !isLEPresent)
-            //{  // 3. Select all elements matching the class and remove them
-            //    className = "hidAll"; // Target class
-            //    var elements = document.QuerySelectorAll($".{className}");
-
-            //    foreach (var element in elements)
-            //    {
-            //        element.Remove(); // Completely removes the element
-            //    }
-
-            //}
-
-            //// 4. Output the result
-            //string modifiedHtml = document.Body.InnerHtml;
-
-            htmlString = htmlString.Replace("#UpperShoulderLeft", string.IsNullOrEmpty(model.UpperShoulderLeft) ? "Normal" : model.UpperShoulderLeft)
-                                          .Replace("#UpperShoulderRight", string.IsNullOrEmpty(model.UpperShoulderRight) ? "Normal" : model.UpperShoulderRight)
-                                          .Replace("#LateralArmLeft", string.IsNullOrEmpty(model.LateralArmLeft) ? "Normal" : model.LateralArmLeft)
-                                          .Replace("#LateralArmRight", string.IsNullOrEmpty(model.LateralArmRight) ? "Normal" : model.LateralArmRight)
-                                          .Replace("#ForearmC6Left", string.IsNullOrEmpty(model.ForearmC6Left) ? "Normal" : model.ForearmC6Left)
-                                          .Replace("#ForearmC6Right", string.IsNullOrEmpty(model.ForearmC6Right) ? "Normal" : model.ForearmC6Right)
-                                          .Replace("#MiddleFingerLeft", string.IsNullOrEmpty(model.MiddleFingerLeft) ? "Normal" : model.MiddleFingerLeft)
-                                          .Replace("#MiddleFingerRight", string.IsNullOrEmpty(model.MiddleFingerRight) ? "Normal" : model.MiddleFingerRight)
-                                          .Replace("#ForearmC8Left", string.IsNullOrEmpty(model.ForearmC8Left) ? "Normal" : model.ForearmC8Left)
-                                          .Replace("#ForearmC8Right", string.IsNullOrEmpty(model.ForearmC8Right) ? "Normal" : model.ForearmC8Right)
-                                          .Replace("#MedialArmLeft", string.IsNullOrEmpty(model.MedialArmLeft) ? "Normal" : model.MedialArmLeft)
-                                          .Replace("#MedialArmRight", string.IsNullOrEmpty(model.MedialArmRight) ? "Normal" : model.MedialArmRight)
-                                          .Replace("#CervicalLeft", string.IsNullOrEmpty(model.CervicalLeft) ? "Normal" : model.CervicalLeft)
-                                          .Replace("#CervicalRight", string.IsNullOrEmpty(model.CervicalRight) ? "Normal" : model.CervicalRight)
-                                          .Replace("#ThighLeft", string.IsNullOrEmpty(model.ThighLeft) ? "Normal" : model.ThighLeft)
-                                          .Replace("#ThighRight", string.IsNullOrEmpty(model.ThighRight) ? "Normal" : model.ThighRight)
-                                          .Replace("#FootMedialLeft", string.IsNullOrEmpty(model.FootMedialLeft) ? "Normal" : model.FootMedialLeft)
-                                          .Replace("#FootMedialRight", string.IsNullOrEmpty(model.FootMedialRight) ? "Normal" : model.FootMedialRight)
-                                          .Replace("#FootDorsumLeft", string.IsNullOrEmpty(model.FootDorsumLeft) ? "Normal" : model.FootDorsumLeft)
-                                          .Replace("#FootDorsumRight", string.IsNullOrEmpty(model.FootDorsumRight) ? "Normal" : model.FootDorsumRight)
-                                          .Replace("#FootLateralLeft", string.IsNullOrEmpty(model.FootLateralLeft) ? "Normal" : model.FootLateralLeft)
-                                          .Replace("#FootLateralRight", string.IsNullOrEmpty(model.FootLateralRight) ? "Normal" : model.FootLateralRight)
-                                          .Replace("#LumbarLeft", string.IsNullOrEmpty(model.LumbarLeft) ? "Normal" : model.LumbarLeft)
-                                          .Replace("#LumbarRight", string.IsNullOrEmpty(model.LumbarRight) ? "Normal" : model.LumbarRight);
-
-            if (!string.IsNullOrEmpty(strSE))
-                htmlString = "<p>" + strSE + "</p><br/>" + htmlString;
-
-            return htmlString;
-
-        }
-
-        private string GetMMST(AIIntakeFormModel model)
-        {
-
-            var templateDir = Path.Combine(Environment.WebRootPath, "templates");
-
-            //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
-            var filePath = templateDir + "/BHF/MMST.html";
-
-
-            // 2. Read the entire file content into a string asynchronously
-            string htmlString = System.IO.File.ReadAllText(filePath);
-
-            //// 2. Parse HTML
-            //var parser = new HtmlParser();
-            //var document = parser.ParseDocument(htmlString);
-
-            //string UEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionUEBodyPart);
-            //string LEBodyPart = HttpContext.Session.GetString(SessionKeys.SessionLEBodyPart);
-
-            //string className = "";
-
-            //bool isUEPresent = model.Complaints.Any(value =>
-            //{
-            //    string sBody = value.Replace("Left", "")
-            //                        .Replace("Right", "")
-            //                        .Trim();
-
-            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
-            //    return UEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            //});
-
-            //if (!isUEPresent)
-            //{
-            //    // 3. Select all elements matching the class and remove them
-            //    className = "upper"; // Target class
-            //    var elements = document.QuerySelectorAll($".{className}");
-
-            //    foreach (var element in elements)
-            //    {
-            //        element.Remove(); // Completely removes the element
-            //    }
-            //}
-
-            //bool isLEPresent = model.Complaints.Any(value =>
-            //{
-            //    string sBody = value.Replace("Left", "")
-            //                        .Replace("Right", "")
-            //                        .Trim();
-
-            //    // In C#, you can do a case-insensitive check directly without calling ToLower()
-            //    return LEBodyPart.Contains(sBody, StringComparison.OrdinalIgnoreCase);
-            //});
-
-            //if (!isLEPresent)
-            //{
-            //    // 3. Select all elements matching the class and remove them
-            //    className = "lower"; // Target class
-            //    var elements = document.QuerySelectorAll($".{className}");
-
-            //    foreach (var element in elements)
-            //    {
-            //        element.Remove(); // Completely removes the element
-            //    }
-            //}
-
-            //if (!isUEPresent && !isLEPresent)
-            //{  // 3. Select all elements matching the class and remove them
-            //    className = "hidAll"; // Target class
-            //    var elements = document.QuerySelectorAll($".{className}");
-
-            //    foreach (var element in elements)
-            //    {
-            //        element.Remove(); // Completely removes the element
-            //    }
-
-            //}
-
-            //// 4. Output the result
-            //string modifiedHtml = document.Body.InnerHtml;
-
-            htmlString = htmlString.Replace("#ShoulderAbductionLeft", string.IsNullOrEmpty(model.ShoulderAbductionLeft) ? "5" : model.ShoulderAbductionLeft)
-                                          .Replace("#ShoulderAbductionRight", string.IsNullOrEmpty(model.ShoulderAbductionRight) ? "5" : model.ShoulderAbductionRight)
-                                          .Replace("#ShoulderFlexionLeft", string.IsNullOrEmpty(model.ShoulderFlexionLeft) ? "5" : model.ShoulderFlexionLeft)
-                                          .Replace("#ShoulderFlexionRight", string.IsNullOrEmpty(model.ShoulderFlexionRight) ? "5" : model.ShoulderFlexionRight)
-                                          .Replace("#ElbowExtensionLeft", string.IsNullOrEmpty(model.ElbowExtensionLeft) ? "5" : model.ElbowExtensionLeft)
-                                          .Replace("#ElbowExtensionRight", string.IsNullOrEmpty(model.ElbowExtensionRight) ? "5" : model.ElbowExtensionRight)
-                                          .Replace("#ElbowFlexionLeft", string.IsNullOrEmpty(model.ElbowFlexionLeft) ? "5" : model.ElbowFlexionLeft)
-                                          .Replace("#ElbowFlexionRight", string.IsNullOrEmpty(model.ElbowFlexionRight) ? "5" : model.ElbowFlexionRight)
-                                          .Replace("#ElbowSupinationLeft", string.IsNullOrEmpty(model.ElbowSupinationLeft) ? "5" : model.ElbowSupinationLeft)
-                                          .Replace("#ElbowSupinationRight", string.IsNullOrEmpty(model.ElbowSupinationRight) ? "5" : model.ElbowSupinationRight)
-                                          .Replace("#ElbowPronationLeft", string.IsNullOrEmpty(model.ElbowPronationLeft) ? "5" : model.ElbowPronationLeft)
-                                          .Replace("#ElbowPronationRight", string.IsNullOrEmpty(model.ElbowPronationRight) ? "5" : model.ElbowPronationRight)
-                                          .Replace("#WristFlexionLeft", string.IsNullOrEmpty(model.WristFlexionLeft) ? "5" : model.WristFlexionLeft)
-                                          .Replace("#WristFlexionRight", string.IsNullOrEmpty(model.WristFlexionRight) ? "5" : model.WristFlexionRight)
-                                          .Replace("#WristExtensionLeft", string.IsNullOrEmpty(model.WristExtensionLeft) ? "5" : model.WristExtensionLeft)
-                                          .Replace("#WristExtensionRight", string.IsNullOrEmpty(model.WristExtensionRight) ? "5" : model.WristExtensionRight)
-                                          .Replace("#GripLeft", string.IsNullOrEmpty(model.GripLeft) ? "5" : model.GripLeft)
-                                          .Replace("#GripRight", string.IsNullOrEmpty(model.GripRight) ? "5" : model.GripRight)
-                                          .Replace("#FingerAbductionLeft", string.IsNullOrEmpty(model.FingerAbductionLeft) ? "5" : model.FingerAbductionLeft)
-                                          .Replace("#FingerAbductionRight", string.IsNullOrEmpty(model.FingerAbductionRight) ? "5" : model.FingerAbductionRight)
-                                          .Replace("#HipFlexionLeft", string.IsNullOrEmpty(model.HipFlexionLeft) ? "5" : model.HipFlexionLeft)
-                                          .Replace("#HipFlexionRight", string.IsNullOrEmpty(model.HipFlexionRight) ? "5" : model.HipFlexionRight)
-                                          .Replace("#HipAbductionLeft", string.IsNullOrEmpty(model.HipAbductionLeft) ? "5" : model.HipAbductionLeft)
-                                          .Replace("#HipAbductionRight", string.IsNullOrEmpty(model.HipAbductionRight) ? "5" : model.HipAbductionRight)
-                                          .Replace("#KneeExtensionLeft", string.IsNullOrEmpty(model.KneeExtensionLeft) ? "5" : model.KneeExtensionLeft)
-                                          .Replace("#KneeExtensionRight", string.IsNullOrEmpty(model.KneeExtensionRight) ? "5" : model.KneeExtensionRight)
-                                          .Replace("#KneeFlexionLeft", string.IsNullOrEmpty(model.KneeFlexionLeft) ? "5" : model.KneeFlexionLeft)
-                                          .Replace("#KneeFlexionRight", string.IsNullOrEmpty(model.KneeFlexionRight) ? "5" : model.KneeFlexionRight)
-                                          .Replace("#AnkleDorsiLeft", string.IsNullOrEmpty(model.AnkleDorsiLeft) ? "5" : model.AnkleDorsiLeft)
-                                          .Replace("#AnkleDorsiRight", string.IsNullOrEmpty(model.AnkleDorsiRight) ? "5" : model.AnkleDorsiRight)
-                                          .Replace("#AnklePlantarLeft", string.IsNullOrEmpty(model.AnklePlantarLeft) ? "5" : model.AnklePlantarLeft)
-                                          .Replace("#AnklePlantarRight", string.IsNullOrEmpty(model.AnklePlantarRight) ? "5" : model.AnklePlantarRight)
-                                          .Replace("#EHLLeft", string.IsNullOrEmpty(model.EHLLeft) ? "5" : model.EHLLeft)
-                                          .Replace("#EHLRight", string.IsNullOrEmpty(model.EHLRight) ? "5" : model.EHLRight);
-
-            if (!string.IsNullOrEmpty(model.Motor))
-                htmlString = "<p>" + model.Motor + "</p>" + htmlString;
-
-
-            return htmlString;
-
-        }
 
         private bool IsPatientPresent(string fname, string lname, DateTime? doa, DateTime? dob, int Id = 0)
         {

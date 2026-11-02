@@ -479,6 +479,7 @@
         //public List<string> PlanRecommendation { get; set; }
         public List<string> Recommendation { get; set; }
         public string FollowUpOther { get; set; }
+        public string FollowUpDate { get; set; }
         public string FollowUp { get; set; }
         public string OtherAsymptomatic { get; set; }
         public string OtherAsymptomaticAudio { get; set; }
