@@ -212,29 +212,28 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
         return result;
     }
 
-    public int UpdateNEIntake(tbl_ie_ne data)
+    public int UpdateNEIntake(tbl_fu_ne data)
     {
 
-        DataTable dt = new DataTable();
-        MySqlCommand cm = new MySqlCommand("Update tbl_fu_ne set sensory=@p_sensory,pe=@p_pe,other_content=@p_other_content," +
-            "manual_muscle_strength_testing=@p_manual_muscle_strength_testing," +
-            " where fu_id=@p_fu_id; select 1;", conn);
+        MySqlCommand cm = new MySqlCommand("call sp_SaveIntakeNEFUData(@p_id_id,@p_fu_id,@p_sensory,@p_manual_muscle_strength_testing,@p_other_content);", conn);
 
 
         cm.Parameters.AddWithValue("@p_sensory", data.sensory);
         cm.Parameters.AddWithValue("@p_other_content", data.other_content);
         cm.Parameters.AddWithValue("@p_manual_muscle_strength_testing", data.manual_muscle_strength_testing);
-        cm.Parameters.AddWithValue("@p_fu_id", data.id);
+        cm.Parameters.AddWithValue("@p_fu_id", data.fu_id);
+        cm.Parameters.AddWithValue("@ie_id", data.ie_id);
         var result = ExecuteScalar(cm);
         return result;
     }
 
-    public int UpdatePage2Intake(tbl_ie_page2 obj)
+    public int UpdatePage2Intake(tbl_fu_page2 obj)
     {
-        MySqlCommand cm = new MySqlCommand("update tbl_fu_page2 set aod=@p_adl where fu_id=@p_id", conn);
+        MySqlCommand cm = new MySqlCommand("call sp_SavePage2FUIntakeData(@p_fu_id,@p_ie_id,@p_adl);", conn);
 
 
-        cm.Parameters.AddWithValue("@p_id", obj.id);
+        cm.Parameters.AddWithValue("@p_fu_id", obj.fu_id);
+        cm.Parameters.AddWithValue("@p_ie_id", obj.ie_id);
         cm.Parameters.AddWithValue("@p_adl", obj.aod);
 
 
@@ -243,7 +242,7 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
     }
     public int UpdateOtherPageIntake(tbl_fu_other obj)
     {
-        MySqlCommand cm = new MySqlCommand("call sp_SavePageFuOtherIntakeData(@p_fu_id,@p_ie_id,@p_note,@p_followup_duration,@p_followup_date);", conn);
+        MySqlCommand cm = new MySqlCommand("call sp_SavePageFuOtherIntakeData(@p_fu_id,@p_ie_id,@p_note,@p_followup_duration,@p_followup_date,@p_treatment_details);", conn);
 
 
         cm.Parameters.AddWithValue("@p_fu_id", obj.fu_id);
@@ -251,7 +250,7 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
         cm.Parameters.AddWithValue("@p_note", obj.note3);
         cm.Parameters.AddWithValue("@p_followup_duration", obj.followup_duration);
         cm.Parameters.AddWithValue("@p_followup_date", obj.followup_date);
-
+        cm.Parameters.AddWithValue("@p_treatment_details", obj.treatment_details);
 
         var result = ExecuteScalar(cm);
         return result;

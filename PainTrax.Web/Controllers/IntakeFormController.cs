@@ -843,8 +843,10 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeBHF");
             else if (client_code.ToLower() == "paintest")
                 return PartialView("_IntakeKDVPC");
-            else if (client_code.ToLower() == "hposm" || client_code.ToLower() == "orthotest")
+            else if (client_code.ToLower() == "hposm" )
                 return PartialView("_IntakeHPOSM");
+            else if ( client_code.ToLower() == "orthotest")
+                return PartialView("_IntakeOrthoTest");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
             else return PartialView("_IntakeHPOSM");
@@ -1037,7 +1039,7 @@ namespace PainTrax.Web.Controllers
                 string path = Environment.WebRootPath;
 
 
-                string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "";
+                string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "", recommadation = "";
                 var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
                 if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
                     HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
@@ -1047,6 +1049,7 @@ namespace PainTrax.Web.Controllers
                     sensoryContent = ReportHelper.GetSensory(model, path);
                     mmstContent = ReportHelper.GetMMST(model, path);
                     ccContent = ReportHelper.GetBHFCC(model);
+                    recommadation = ReportHelper.GenerateRecommandation(model);
                 }
                 else
                 {
@@ -1236,8 +1239,9 @@ namespace PainTrax.Web.Controllers
                                     patient_id = patientId,
                                     treatment_delimit = model.TreatmentIds,
                                     treatment_delimit_desc = model.TreatmentDelimitDesc,
-                                    treatment_details = model.TreatmentDesc,
-                                    followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate)
+                                    treatment_details = string.IsNullOrEmpty(recommadation) ? model.TreatmentDesc : recommadation,
+                                    followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate),
+
                                 };
 
                                 _ieService.InsertOtherPage(objOther);
@@ -1437,7 +1441,8 @@ namespace PainTrax.Web.Controllers
                     note3 = model.DrNote,
                     followup_duration = string.IsNullOrEmpty(model.FollowUpOther) ? model.FollowUp : model.FollowUpOther,
                     followup_date = string.IsNullOrEmpty(model.FollowUpDate) ? null : Convert.ToDateTime(model.FollowUpDate),
-                    ie_id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId)
+                    ie_id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId),
+                    treatment_details = recommadation,
                 };
 
                 _ieService.UpdateOtherPageIntake(objIntOther);

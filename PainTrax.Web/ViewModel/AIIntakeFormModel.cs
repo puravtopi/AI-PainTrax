@@ -1015,6 +1015,39 @@
         public string JobLifting { get; set; }
         public List<string> LiftingWeight { get; set; } = new List<string>();
 
+        //RECOMMENDATIONS
+
+        // Checkbox groups sharing name="RECOMMENDATIONS"
+        public List<string> RECOMMENDATIONS { get; set; } = new();
+
+        // Checkbox groups with unique names
+        public List<string> RECOMMENDATIONSCONTINUE { get; set; } = new();
+        public List<string> RECOMMENDATIONSExecuted { get; set; } = new();
+
+        // Dosages & text inputs
+        public string Ibuprofen { get; set; }
+        public string Flexeril { get; set; }
+        public string Lidoderm { get; set; }
+        public string Lidocaine { get; set; }
+        public string Cyclobenzaprine { get; set; }
+        public string PrescribedMedicationText { get; set; }
+
+        // Orthopedist
+        public string Refertoorthopedist { get; set; }
+        public string followuporthopedist { get; set; }
+
+        // Other text inputs
+        public string ScheduleEMGOther { get; set; }
+        public string CervicalInjectionOther { get; set; }
+        public string LumbarInjectionOther { get; set; }
+        public string MRIRequestOther { get; set; }
+        public string CTRequestOther { get; set; }
+        public string XRRequestOther { get; set; }
+        public string TPIOther { get; set; }
+
+        // Additional recommendations
+        public string RecommandationOther1 { get; set; }
+        public string RecommandationOther2 { get; set; }
 
 
     }

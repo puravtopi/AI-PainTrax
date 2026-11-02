@@ -1364,7 +1364,7 @@ namespace PainTrax.Web.Helper
 
         #region Other
 
-        
+
         public static string GenerateOther(string PainScale, List<string> PainTypes, string title)
         {
 
@@ -1438,7 +1438,7 @@ namespace PainTrax.Web.Helper
                 tendernessSentence += $" Patient has pain and tenderness over the {positionText} at {levelsText}";
                 tendernessSentence += ".";
             }
-                      
+
             sentences.Add(tendernessSentence);
             sentences.Add(" Facet loading maneuvers are positive.");
             // --- 2. Spurling's Test Sentence ---
@@ -1472,7 +1472,7 @@ namespace PainTrax.Web.Helper
                 : string.Empty;
 
             // Combine position and levels with appropriate spacing
-            string targetArea = string.Join(" ", new[] { position," at ", levels }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            string targetArea = string.Join(" ", new[] { position, " at ", levels }.Where(s => !string.IsNullOrWhiteSpace(s)));
             string targetPrefix = !string.IsNullOrWhiteSpace(targetArea) ? $"{targetArea} " : string.Empty;
 
             lines.Add($"Patient has pain and tenderness over the {targetPrefix}facet joints. Facet loading maneuvers are positive.");
@@ -2783,6 +2783,175 @@ namespace PainTrax.Web.Helper
         }
         #endregion
 
+        #region Recommandation
+        public static string GenerateRecommandation(AIIntakeFormModel model)
+        {
+            if (model == null) return string.Empty;
+
+            var recList = model.RECOMMENDATIONS ?? new List<string>();
+            var sb = new StringBuilder();
+
+            // 1. Initial Recommendations (PT, Chiro, Acupuncture, HEP)
+            var therapyItems = new[] { "PT", "Chiro", "Acupuncture", "HEP" };
+            var selectedTherapy = therapyItems.Where(t => recList.Contains(t)).ToList();
+            if (selectedTherapy.Any())
+            {
+                sb.AppendLine($"Recommend {string.Join("/", selectedTherapy)}.");
+            }
+
+            // 2. Recommend to continue (PT, Chiro, Acupuncture, HEP)
+            var continueItems = model.RECOMMENDATIONSCONTINUE ?? new List<string>();
+            var selectedContinue = therapyItems.Where(t => continueItems.Contains(t)).ToList();
+            if (selectedContinue.Any())
+            {
+                sb.AppendLine($"Recommend to continue {string.Join("/", selectedContinue)}.");
+            }
+
+            // 3. Recommend to continue current medications
+            if (recList.Contains("Continue current medications"))
+            {
+                sb.AppendLine("Recommend to continue current medications.");
+            }
+
+            // 4. Prescribed Medications with dosages
+            var medsSelected = model.currentmedications ?? new List<string>();
+            var medDetails = new List<string>();
+
+            if (medsSelected.Contains("Ibuprofen"))
+                medDetails.Add($"Ibuprofen {model.Ibuprofen?.Trim()} mg");
+
+            if (medsSelected.Contains("Flexeril"))
+                medDetails.Add($"Flexeril {model.Flexeril?.Trim()} mg");
+
+            if (medsSelected.Contains("Lidoderm"))
+                medDetails.Add($"Lidoderm {model.Lidoderm?.Trim()}%");
+
+            if (medsSelected.Contains("Lidocaine"))
+                medDetails.Add($"Lidocaine {model.Lidocaine?.Trim()}%");
+
+            if (medsSelected.Contains("Cyclobenzaprine"))
+                medDetails.Add($"Cyclobenzaprine {model.Cyclobenzaprine?.Trim()} mg");
+
+            if (medDetails.Any() || !string.IsNullOrWhiteSpace(model.PrescribedMedicationText))
+            {
+                string medsText = FormatListWithAnd(medDetails);
+                if (!string.IsNullOrWhiteSpace(model.PrescribedMedicationText))
+                {
+                    medsText = string.IsNullOrEmpty(medsText)
+                        ? model.PrescribedMedicationText.Trim()
+                        : $"{medsText}, {model.PrescribedMedicationText.Trim()}";
+                }
+                sb.AppendLine($"{medsText} prescribed.");
+            }
+
+            // 5. Orthopedist referrals
+            if (recList.Contains("Refer to orthopedist"))
+            {
+                string note = string.IsNullOrWhiteSpace(model.Refertoorthopedist)
+                    ? "Refer to orthopedist."
+                    : $"Refer to orthopedist: {model.Refertoorthopedist.Trim()}.";
+                sb.AppendLine(note);
+            }
+
+            if (recList.Contains("Follow-up with orthopedist"))
+            {
+                string note = string.IsNullOrWhiteSpace(model.followuporthopedist)
+                    ? "Follow-up with orthopedist."
+                    : $"Follow-up with orthopedist: {model.followuporthopedist.Trim()}.";
+                sb.AppendLine(note);
+            }
+
+            // 6. Schedule EMG
+            var emgOptions = new[] { "UE", "LE" };
+            var scheduledEmg = emgOptions.Where(e => recList.Contains(e)).ToList();
+            if (scheduledEmg.Any() || !string.IsNullOrWhiteSpace(model.ScheduleEMGOther))
+            {
+                string other = !string.IsNullOrWhiteSpace(model.ScheduleEMGOther) ? $" ({model.ScheduleEMGOther.Trim()})" : "";
+                sb.AppendLine($"Schedule EMG: {string.Join("/", scheduledEmg)}{other}.");
+            }
+
+            // 7. Executed EMG
+            var executedEmgOptions = model.RECOMMENDATIONSExecuted ?? new List<string>();
+            var executedEmg = emgOptions.Where(e => executedEmgOptions.Contains(e)).ToList();
+            if (executedEmg.Any())
+            {
+                sb.AppendLine($"Executed EMG: {string.Join("/", executedEmg)}.");
+            }
+
+            // 8. Schedule Cervical Injections
+            var cInjections = new[] { "CESI", "CMBB", "CFB" }.Where(i => recList.Contains(i)).ToList();
+            if (cInjections.Any() || !string.IsNullOrWhiteSpace(model.CervicalInjectionOther))
+            {
+                string other = !string.IsNullOrWhiteSpace(model.CervicalInjectionOther) ? $" ({model.CervicalInjectionOther.Trim()})" : "";
+                sb.AppendLine($"Schedule Cervical Injection: {string.Join(", ", cInjections)}{other}.");
+            }
+
+            // 9. Schedule Lumbar Injections
+            var lInjections = new[] { "LESI", "LMBB", "LFB", "LPDA", "LED" }.Where(i => recList.Contains(i)).ToList();
+            if (lInjections.Any() || !string.IsNullOrWhiteSpace(model.LumbarInjectionOther))
+            {
+                string other = !string.IsNullOrWhiteSpace(model.LumbarInjectionOther) ? $" ({model.LumbarInjectionOther.Trim()})" : "";
+                sb.AppendLine($"Schedule Lumbar Injection: {string.Join(", ", lInjections)}{other}.");
+            }
+
+            // 10. Imaging (MRI, CT, XR)
+            var mris = new[] { "CMRI", "TMRI", "LMRI", "LSMRI", "RSMRI", "LKMRI", "RKMRI" }.Where(m => recList.Contains(m)).ToList();
+            if (mris.Any() || !string.IsNullOrWhiteSpace(model.MRIRequestOther))
+            {
+                string other = !string.IsNullOrWhiteSpace(model.MRIRequestOther) ? $" ({model.MRIRequestOther.Trim()})" : "";
+                sb.AppendLine($"Request MRI: {string.Join(", ", mris)}{other}.");
+            }
+
+            var cts = new[] { "CSCT", "TSCT", "LSCT" }.Where(c => recList.Contains(c)).ToList();
+            if (cts.Any() || !string.IsNullOrWhiteSpace(model.CTRequestOther))
+            {
+                string other = !string.IsNullOrWhiteSpace(model.CTRequestOther) ? $" ({model.CTRequestOther.Trim()})" : "";
+                sb.AppendLine($"Request CT: {string.Join(", ", cts)}{other}.");
+            }
+
+            var xrs = new[] { "CSXR", "TSXR", "LSXR" }.Where(x => recList.Contains(x)).ToList();
+            if (xrs.Any() || !string.IsNullOrWhiteSpace(model.XRRequestOther))
+            {
+                string other = !string.IsNullOrWhiteSpace(model.XRRequestOther) ? $" ({model.XRRequestOther.Trim()})" : "";
+                sb.AppendLine($"Request X-Ray: {string.Join(", ", xrs)}{other}.");
+            }
+
+            // 11. Executed TPI and Meds
+            var tpis = new[] { "CS", "TS", "LS" }.Where(t => recList.Contains(t)).ToList();
+            var tpiMeds = new[] { "Lidocaine", "Toradol", "Kenalog", "dexamethasone", "Marcaine", "B12" }
+                          .Where(m => recList.Contains(m)).ToList();
+
+            if (tpis.Any() || !string.IsNullOrWhiteSpace(model.TPIOther))
+            {
+                string other = !string.IsNullOrWhiteSpace(model.TPIOther) ? $" ({model.TPIOther.Trim()})" : "";
+                sb.AppendLine($"Executed TPI: {string.Join(", ", tpis)}{other}.");
+            }
+
+            if (tpiMeds.Any() || !string.IsNullOrWhiteSpace(model.MedsOther))
+            {
+                string other = !string.IsNullOrWhiteSpace(model.MedsOther) ? $" ({model.MedsOther.Trim()})" : "";
+                sb.AppendLine($"Meds administered: {string.Join(", ", tpiMeds)}{other}.");
+            }
+
+            // 12. Additional free-text notes
+            if (!string.IsNullOrWhiteSpace(model.RecommandationOther1))
+                sb.AppendLine(model.RecommandationOther1.Trim());
+
+            if (!string.IsNullOrWhiteSpace(model.RecommandationOther2))
+                sb.AppendLine(model.RecommandationOther2.Trim());
+
+            return sb.ToString().TrimEnd();
+        }
+
+        // Helper: Formats list into "Item 1, Item 2 and Item 3"
+        //private static string FormatListWithAnd(List<string> items)
+        //{
+        //    if (items == null || items.Count == 0) return string.Empty;
+        //    if (items.Count == 1) return items[0];
+        //    if (items.Count == 2) return $"{items[0]} and {items[1]}";
+        //    return $"{string.Join(", ", items.Take(items.Count - 1))} and {items.Last()}";
+        //}
+        #endregion
 
     }
 }

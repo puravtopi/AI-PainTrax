@@ -1,0 +1,581 @@
+﻿<div class="accordion-body">
+    <div class="select-group">
+        <label><input type="checkbox" class="chkMulti" name="Goniometerwasused" value="Goniometer was used"> <span class="select-btn">Goniometer was used</span></label>
+    </div>
+
+
+    <div id="rshPE" style="display:none">
+        <h6 class="fw-bold">Right Shoulder</h6>
+        <div class="select-group">
+
+            Swelling
+            <label><input type="radio" name="RShPESwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RShPESwelling" value="No"> <span class="select-btn">N</span></label>
+            <input id="PESwelling" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwelling')"></i>
+
+        </div>
+        <div class="select-group">
+            Tenderness to palpation:
+            <label><input type="checkbox" class="chkMulti" name="RShTenderness" value="Bicipital groove"> <span class="select-btn">Bicipital groove</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShTenderness" value="Greater tuberosity"> <span class="select-btn">Greater tuberosity</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShTenderness" value="Posterior joint line"><span class="select-btn"> Posterior joint line</span></label>
+        </div>
+
+        <div class="select-group">
+            Template:
+            <label><input type="radio" name="RShTemplate" value="Normal"> <span class="select-btn">Normal</span></label>
+            <label><input type="radio" name="RShTemplate" value="Instability"> <span class="select-btn">Instability</span></label>
+            <label><input type="radio" name="RShTemplate" value="T1SLAP"> <span class="select-btn">T1SLAP</span></label>
+            <label><input type="radio" name="RShTemplate" value="T2SLAP"> <span class="select-btn">T2SLAP</span></label>
+            <label><input type="radio" name="RShTemplate" value="T1Cuff"> <span class="select-btn">T1Cuff</span></label>
+            <label><input type="radio" name="RShTemplate" value="T2Cuff"> <span class="select-btn">T2Cuff</span></label>
+            <label><input type="radio" name="RShTemplate" value="Post-op"> <span class="select-btn">Post-op</span></label>
+
+            @* <label><input type="checkbox" class="chkMulti" name="RShTemplate" value="Normal"><span class="select-btn"> Normal</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShTemplate" value="Instability"> <span class="select-btn">Instability</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShTemplate" value="T1SLAP"> <span class="select-btn">T1 SLAP</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShTemplate" value="T2SLAP"> <span class="select-btn">T2 SLAP</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShTemplate" value="T1Cuff"> <span class="select-btn">T1 Cuff</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShTemplate" value="T2Cuff"> <span class="select-btn">T2 Cuff</span></label>
+                                                    <label><input type="checkbox" class="chkMulti" name="RShTemplate" value="Post-op"><span class="select-btn"> Post-op</span></label> *@
+        </div>
+
+        <div class="select-group">
+            ROM:
+            Abduction:
+            <input id="RShAbduction" class="form-control d-inline" style="width:50px;" /> /180
+
+            Adduction:
+            <input id="RShAdduction" class="form-control d-inline" style="width:50px;" /> /45
+
+            Forward Flexion:
+            <input id="RShForwardFlexion" class="form-control d-inline" style="width:50px;" /> /180
+        </div>
+
+        <div class="select-group">
+            Extension:
+            <input id="RShExtension" class="form-control d-inline" style="width:50px;" /> /60
+
+            External Rotation:
+            <input id="RShExternalRotation" class="form-control d-inline" style="width:50px;" /> /90
+
+            Internal Rotation:
+            <input id="RShInternalRotation" class="form-control d-inline" style="width:50px;" /> /90
+        </div>
+        <p>
+            <textarea id="txtRSh" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtRSh')"></i>
+        </p>
+    </div>
+
+
+    <div id="lshPE" style="display:none">
+        <h6 class="fw-bold">Left Shoulder</h6>
+        <div class="select-group">
+            Swelling
+            <label><input type="radio" name="LShSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LShSwelling" value="No"> <span class="select-btn">N</span></label>
+            <input id="PESwellingLS" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellingLS')"></i>
+        </div>
+
+        <div class="select-group">
+            Tenderness to palpation:
+            <label><input type="checkbox" class="chkMulti" name="LShTenderness" value="Bicipital groove"> <span class="select-btn">Bicipital groove</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShTenderness" value="Greater tuberosity"> <span class="select-btn">Greater tuberosity</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShTenderness" value="Posterior joint line"> <span class="select-btn">Posterior joint line</span></label>
+        </div>
+
+        <div class="select-group">
+            Template:
+            <label><input type="radio" name="LShTemplate" value="Normal"><span class="select-btn"> Normal</span></label>
+            <label><input type="radio" name="LShTemplate" value="Instability"><span class="select-btn"> Instability</span></label>
+            <label><input type="radio" name="LShTemplate" value="T1SLAP"> <span class="select-btn">T1 SLAP</span></label>
+            <label><input type="radio" name="LShTemplate" value="T2SLAP"><span class="select-btn"> T2 SLAP</span></label>
+            <label><input type="radio" name="LShTemplate" value="T1Cuff"> <span class="select-btn">T1 Cuff</span></label>
+            <label><input type="radio" name="LShTemplate" value="T2Cuff"> <span class="select-btn">T2 Cuff</span></label>
+            <label><input type="radio" name="LShTemplate" value="Post-op"> <span class="select-btn">Post-op</span></label>
+        </div>
+
+        <div class="select-group">
+            ROM:
+            Abduction:
+            <input id="LShAbduction" class="form-control d-inline" style="width:50px;" /> /180
+
+            Adduction:
+            <input id="LShAdduction" class="form-control d-inline" style="width:50px;" /> /45
+
+            Forward Flexion:
+            <input id="LShForwardFlexion" class="form-control d-inline" style="width:50px;" /> /180
+        </div>
+
+        <div class="select-group">
+            Extension:
+            <input id="LShExtension" class="form-control d-inline" style="width:50px;" /> /60
+
+            External Rotation:
+            <input id="LShExternalRotation" class="form-control d-inline" style="width:50px;" /> /90
+
+            Internal Rotation:
+            <input id="LShInternalRotation" class="form-control d-inline" style="width:50px;" /> /90
+        </div>
+        <p>
+            <textarea id="txtLSh" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtLSh')"></i>
+        </p>
+    </div>
+
+    <div id="rknPE" style="display:none">
+        <h6 class="fw-bold">Right Knee</h6>
+        <div class="select-group">
+            Swelling
+            <label><input type="radio" name="RKnPESwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RKnPESwelling" value="No"><span class="select-btn"> N</span></label>
+            <input id="PESwellingRKn" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellingRKn')"></i>
+        </div>
+
+        <div class="select-group">
+            Tenderness Along the:
+            <label><input type="checkbox" class="chkMulti" name="RKnTenderness" value="Medial Joint Line"> <span class="select-btn">Medial Joint Line</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnTenderness" value="Lateral Joint Line"><span class="select-btn"> Lateral Joint Line</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnTenderness" value="Popliteal Fossa"> <span class="select-btn">Popliteal Fossa</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnTenderness" value="Patellar Tendon"> <span class="select-btn">Patellar Tendon</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnTenderness" value="Pes Bursa"> <span class="select-btn">Pes Bursa</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnTenderness" value="MFC"> <span class="select-btn">MFC</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnTenderness" value="LFC"> <span class="select-btn">LFC</span></label>
+        </div>
+
+        <div class="select-group">
+            Template:
+            <label><input type="radio" name="RKnTemplate" value="Normal"><span class="select-btn"> Normal</span></label>
+            <label><input type="radio" name="RKnTemplate" value="Arthritis"> <span class="select-btn">Arthritis</span></label>
+            <label><input type="radio" name="RKnTemplate" value="MMT"> <span class="select-btn">MMT</span></label>
+            <label><input type="radio" name="RKnTemplate" value="LMT"> <span class="select-btn">LMT</span></label>
+            <label><input type="radio" name="RKnTemplate" value="MMT&LMT"><span class="select-btn"> MMT & LMT</span></label>
+            <label><input type="radio" name="RKnTemplate" value="Post-op"><span class="select-btn"> Post-op</span></label>
+        </div>
+
+        <div class="select-group">
+            ROM:
+            Flexion:
+            <input id="RKnFlexion" class="form-control d-inline" style="width:50px;" /> /140
+
+            Extension:
+            <input id="RKnExtension" class="form-control d-inline" style="width:50px;" /> /0
+        </div>
+
+        <div class="select-group">
+            Patellar Grind Test:
+            <label><input type="radio" name="RKnGrindTest" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="RKnGrindTest" value="Negative"> <span class="select-btn">Negative</span></label>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            Pain with Deep Flexion:
+            <label><input type="radio" name="RKnDeepFlexion" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="RKnDeepFlexion" value="Negative"><span class="select-btn"> Negative</span></label>
+        </div>
+        <p>
+            <textarea id="txtrknPE" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtrknPE')"></i>
+        </p>
+    </div>
+
+    <div id="lknPE" style="display:none">
+        <h6 class="fw-bold">Left Knee</h6>
+
+        <div class="select-group">
+            Left Knee:
+            Swelling
+            <label><input type="radio" name="LPEKnSwelling" value="Yes"><span class="select-btn"> Y</span></label>
+            <label><input type="radio" name="LPEKnSwelling" value="No"> <span class="select-btn">N</span></label>
+            <input id="PESwellingLKn" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellingLKn')"></i>
+        </div>
+
+        <div class="select-group">
+            Tenderness Along the:
+            <label><input type="checkbox" class="chkMulti" name="LKnTenderness" value="Medial Joint Line"> <span class="select-btn">Medial Joint Line</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnTenderness" value="Lateral Joint Line"><span class="select-btn"> Lateral Joint Line</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnTenderness" value="Popliteal Fossa"> <span class="select-btn">Popliteal Fossa</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnTenderness" value="Patellar Tendon"> <span class="select-btn">Patellar Tendon</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnTenderness" value="Pes Bursa"> <span class="select-btn">Pes Bursa</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnTenderness" value="MFC"> <span class="select-btn">MFC</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnTenderness" value="LFC"><span class="select-btn"> LFC</span></label>
+        </div>
+
+        <div class="select-group">
+            Template:
+            <label><input type="radio" name="LKnTemplate" value="Normal"><span class="select-btn"> Normal</span></label>
+            <label><input type="radio" name="LKnTemplate" value="Arthritis"> <span class="select-btn">Arthritis</span></label>
+            <label><input type="radio" name="LKnTemplate" value="MMT"> <span class="select-btn">MMT</span></label>
+            <label><input type="radio" name="LKnTemplate" value="LMT"> <span class="select-btn">LMT</span></label>
+            <label><input type="radio" name="LKnTemplate" value="MMT&LMT"> <span class="select-btn">MMT & LMT</span></label>
+            <label><input type="radio" name="LKnTemplate" value="Post-op"><span class="select-btn"> Post-op</span></label>
+        </div>
+
+        <div class="select-group">
+            ROM:
+            Flexion:
+            <input id="LKnFlexion" class="form-control d-inline" style="width:50px;" /> /140
+
+            Extension:
+            <input id="LKnExtension" class="form-control d-inline" style="width:50px;" /> /0
+        </div>
+
+        <div class="select-group">
+            Patellar Grind Test:
+            <label><input type="radio" name="LKnGrindTest" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="LKnGrindTest" value="Negative"> <span class="select-btn">Negative</span></label>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            Pain With Deep Flexion:
+            <label><input type="radio" name="LKnDeepFlexion" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="LKnDeepFlexion" value="Negative"> <span class="select-btn">Negative</span></label>
+        </div>
+        <p>
+            <textarea id="txtlknPE" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtlknPE')"></i>
+        </p>
+    </div>
+
+    <div id="rhipPE" style="display:none">
+        <h6 class="fw-bold">Right Hip</h6>
+
+        @* <div class="select-group">
+                                                    Gait: Antalgic
+                                                    <label><input type="radio" name="RHipGait" value="Yes"> <span class="select-btn">Y</span></label>
+                                                    <label><input type="radio" name="RHipGait" value="No"> <span class="select-btn">N</span></label>
+                                                </div> *@
+
+        <div class="select-group">
+            Pain with Straight Leg Raise:
+            <label><input type="radio" name="RHipSLR" value="Yes"><span class="select-btn"> Y</span></label>
+            <label><input type="radio" name="RHipSLR" value="No"> <span class="select-btn">N</span></label>
+
+            <label><input type="checkbox" class="chkMulti" name="RHipSLRType" value="Passive"> <span class="select-btn">Passive</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipSLRType" value="Resisted"> <span class="select-btn">Resisted</span></label>
+        </div>
+
+        <div class="select-group">
+            Template:
+            <label><input type="radio" name="RHipTemplate" value="Traumatic"><span class="select-btn"> Traumatic</span></label>
+            <label><input type="radio" name="RHipTemplate" value="Post-op"> <span class="select-btn">Post-op</span></label>
+        </div>
+
+        <div class="select-group">
+            Tenderness To Palpation Along the:
+            <label><input type="checkbox" class="chkMulti" name="RHipTendernessPal" value="Greater Trochanter"> <span class="select-btn">Greater Trochanter</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipTendernessPal" value="Groin"> <span class="select-btn">Groin</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipTendernessPal" value="Medial Thigh"> <span class="select-btn">Medial Thigh</span></label>
+        </div>
+
+        <div class="select-group">
+            ROM:
+            Abduction:
+            <input id="RHipAbduction" class="form-control d-inline" style="width:50px;" /> /45
+
+            Adduction:
+            <input id="RHipAdduction" class="form-control d-inline" style="width:50px;" /> /35
+
+            Flexion:
+            <input id="RHipFlexion" class="form-control d-inline" style="width:50px;" /> /120
+        </div>
+
+        <div class="select-group">
+            Internal Rotation:
+            <input id="RHipInternalRotation" class="form-control d-inline" style="width:50px;" /> /45
+
+            External Rotation:
+            <input id="RHipExternalRotation" class="form-control d-inline" style="width:50px;" /> /45
+        </div>
+
+        <div class="select-group">
+            FADIR TEST:
+            <label><input type="radio" name="RHipFADIR" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="RHipFADIR" value="Negative"><span class="select-btn"> Negative</span></label>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            FABER TEST:
+            <label><input type="radio" name="RHipFABER" value="Positive"><span class="select-btn"> Positive</span></label>
+            <label><input type="radio" name="RHipFABER" value="Negative"> <span class="select-btn">Negative</span></label>
+        </div>
+
+        <div class="select-group">
+            OBER TEST:
+            <label><input type="radio" name="RHipOBER" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="RHipOBER" value="Negative" checked> <span class="select-btn">Negative</span></label>
+            (Default is Negative)
+        </div>
+        <p>
+            <textarea id="txtrhipPE" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtrhipPE')"></i>
+        </p>
+    </div>
+
+
+    <div id="lhipPE" style="display:none">
+        <h6 class="fw-bold">Left Hip</h6>
+
+        @* <div class="select-group">
+                                                    Gait: Antalgic
+                                                    <label><input type="radio" name="LHipGait" value="Yes"> <span class="select-btn">Y</span></label>
+                                                    <label><input type="radio" name="LHipGait" value="No"> <span class="select-btn">N</span></label>
+                                                </div> *@
+
+        <div class="select-group">
+            Pain with Straight Leg Raise:
+            <label><input type="radio" name="LHipSLR" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LHipSLR" value="No"> <span class="select-btn">N</span></label>
+
+            <label><input type="checkbox" class="chkMulti" name="LHipSLRType" value="Passive"><span class="select-btn"> Passive</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipSLRType" value="Resisted"> <span class="select-btn">Resisted</span></label>
+        </div>
+
+        <div class="select-group">
+            Template:
+
+            <label><input type="radio" name="LHipTemplate" value="Traumatic"> <span class="select-btn">Traumatic</span></label>
+            <label><input type="radio" name="LHipTemplate" value="Post-op"> <span class="select-btn">Post-op</span></label>
+        </div>
+
+        <div class="select-group">
+            Tenderness To Palpation Along the:
+            <label><input type="checkbox" class="chkMulti" name="LHipTendernessPal" value="Greater Trochanter"> <span class="select-btn">Greater Trochanter</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipTendernessPal" value="Groin"><span class="select-btn"> Groin</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipTendernessPal" value="Medial Thigh"> <span class="select-btn">Medial Thigh</span></label>
+        </div>
+
+        <div class="select-group">
+            ROM:
+            Abduction:
+            <input id="LHipAbduction" class="form-control d-inline" style="width:50px;" /> /45
+
+            Adduction:
+            <input id="LHipAdduction" class="form-control d-inline" style="width:50px;" /> /35
+
+            Flexion:
+            <input id="LHipFlexion" class="form-control d-inline" style="width:50px;" /> /120
+        </div>
+
+        <div class="select-group">
+            Internal Rotation:
+            <input id="LHipInternalRotation" class="form-control d-inline" style="width:50px;" /> /45
+
+            External Rotation:
+            <input id="LHipExternalRotation" class="form-control d-inline" style="width:50px;" /> /45
+        </div>
+
+        <div class="select-group">
+            FADIR TEST:
+            <label><input type="radio" name="LHipFADIR" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="LHipFADIR" value="Negative"> <span class="select-btn">Negative</span></label>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            FABER TEST:
+            <label><input type="radio" name="LHipFABER" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="LHipFABER" value="Negative"> <span class="select-btn">Negative</span></label>
+        </div>
+
+        <div class="select-group">
+            OBER TEST:
+            <label><input type="radio" name="LHipOBER" value="Positive"><span class="select-btn"> Positive</span></label>
+            <label><input type="radio" name="LHipOBER" value="Negative" checked> <span class="select-btn">Negative</span></label>
+            (Default is Negative)
+        </div>
+        <p>
+            <textarea id="txtlhipPE" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtlhipPE')"></i>
+        </p>
+    </div>
+
+    <div id="relbowPE" style="display:none">
+        <h6 class="fw-bold">Right Elbow</h6>
+        <div class="select-group">
+            Swelling:
+            <label><input type="radio" name="RShElbowSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="RShElbowSwelling" value="No"> <span class="select-btn">N</span></label>
+            <input id="PESwellingrelbow" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellingrelbow')"></i>
+        </div>
+
+        <div class="select-group">
+            Tender along the:
+            <label><input type="checkbox" class="chkMulti" name="RShElbowTenderness" value="Medial Epicondyle"><span class="select-btn"> Medial Epicondyle</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShElbowTenderness" value="Lateral Epicondyle"> <span class="select-btn">Lateral Epicondyle</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShElbowTenderness" value="Olecranon Process"><span class="select-btn"> Olecranon Process</span></label>
+        </div>
+
+        <div class="select-group">
+            Varus:
+            <label><input type="radio" name="RShElbowVarus" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="RShElbowVarus" value="Negative"> <span class="select-btn">Negative</span></label>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            Valgus:
+            <label><input type="radio" name="RShElbowValgus" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="RShElbowValgus" value="Negative"> <span class="select-btn">Negative</span></label>
+        </div>
+
+        <div class="select-group">
+            Tinel’s Sign:
+            <label><input type="radio" name="RShElbowTinels" value="Positive"><span class="select-btn"> Positive</span></label>
+            <label><input type="radio" name="RShElbowTinels" value="Negative"> <span class="select-btn">Negative</span></label>
+        </div>
+
+        <div class="select-group">
+            ROM:
+            Flexion:
+            <input id="RShElbowFlexion" class="form-control d-inline" style="width:50px;" /> /150
+
+            Extension:
+            <input id="RShElbowExtension" class="form-control d-inline" style="width:50px;" /> /150
+
+            Supination:
+            <input id="RShElbowSupination" class="form-control d-inline" style="width:50px;" /> /50
+
+            Pronation:
+            <input id="RShElbowPronation" class="form-control d-inline" style="width:50px;" /> /50
+        </div>
+        <p>
+            <textarea id="txtrelbowPE" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtrelbowPE')"></i>
+        </p>
+    </div>
+
+    <div id="lelbowPE" style="display:none">
+        <h6 class="fw-bold">Left Elbow</h6>
+        <div class="select-group">
+            Swelling:
+            <label><input type="radio" name="LShElbowSwelling" value="Yes"> <span class="select-btn">Y</span></label>
+            <label><input type="radio" name="LShElbowSwelling" value="No"> <span class="select-btn">N</span></label>
+            <input id="PESwellinglelbow" class="form-control d-inline w-auto" style="width:80px;" />
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PESwellinglelbow')"></i>
+        </div>
+
+        <div class="select-group">
+            Tender along the:
+            <label><input type="checkbox" class="chkMulti" name="LShElbowTenderness" value="Medial Epicondyle"> <span class="select-btn">Medial Epicondyle</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShElbowTenderness" value="Lateral Epicondyle"> <span class="select-btn">Lateral Epicondyle</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShElbowTenderness" value="Olecranon Process"> <span class="select-btn">Olecranon Process</span></label>
+        </div>
+
+        <div class="select-group">
+            Varus:
+            <label><input type="radio" name="LShElbowVarus" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="LShElbowVarus" value="Negative"> <span class="select-btn">Negative</span></label>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            Valgus:
+            <label><input type="radio" name="LShElbowValgus" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="LShElbowValgus" value="Negative"> <span class="select-btn">Negative</span></label>
+        </div>
+
+        <div class="select-group">
+            Tinel’s Sign:
+            <label><input type="radio" name="LShElbowTinels" value="Positive"> <span class="select-btn">Positive</span></label>
+            <label><input type="radio" name="LShElbowTinels" value="Negative"> <span class="select-btn">Negative</span></label>
+        </div>
+
+        <div class="select-group">
+            ROM:
+            Flexion:
+            <input id="LShElbowFlexion" class="form-control d-inline" style="width:50px;" /> /150
+
+            Extension:
+            <input id="LShElbowExtension" class="form-control d-inline" style="width:50px;" /> /150
+
+            Supination:
+            <input id="LShElbowSupination" class="form-control d-inline" style="width:50px;" /> /50
+
+            Pronation:
+            <input id="LShElbowPronation" class="form-control d-inline" style="width:50px;" /> /50
+        </div>
+        <p>
+            <textarea id="txtlelbowPE" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtlelbowPE')"></i>
+        </p>
+    </div>
+
+
+    <div class="imaging-section">
+
+        <div class="select-group">
+            <strong>IMAGING:</strong>
+        </div>
+
+        <div class="select-group">
+            X-ray done in the office of
+
+            <label>
+                <input type="checkbox" class="chkMulti" name="XrayOffice" value="Right Shoulder"> <span class="select-btn">Right Shoulder</span>
+            </label>
+
+            <label>
+                <input type="checkbox" class="chkMulti" name="XrayOffice" value="Left Shoulder"> <span class="select-btn">Left Shoulder</span>
+            </label>
+
+            <label>
+                <input type="checkbox" class="chkMulti" name="XrayOffice" value="Right Knee"> <span class="select-btn">Right Knee</span>
+            </label>
+
+            <label>
+                <input type="checkbox" class="chkMulti" name="XrayOffice" value="Left Knee"> <span class="select-btn">Left Knee</span>
+            </label>
+
+            <label>
+                <input type="checkbox" class="chkMulti" name="XrayOffice" value="Right Hip"> <span class="select-btn">Right Hip</span>
+            </label>
+
+            <label>
+                <input type="checkbox" class="chkMulti" name="XrayOffice" value="Left Hip"> <span class="select-btn">Left Hip</span>
+            </label>
+
+            <input id="XrayViews"
+                   class="form-control d-inline"
+                   style="width:100px"
+                   placeholder="Views" />
+
+            views.
+        </div>
+
+        <div class="select-group">
+            <label>
+                <input type="checkbox" class="chkMulti"
+                       name="ImagingFindings"
+                       value="No acute fracture or dislocation">
+                <span class="select-btn">Shows no acute fracture or dislocation.</span>
+            </label>
+
+            It shows
+
+            <input id="ImagingFindingsDetails"
+                   class="form-control d-inline"
+                   style="min-width:350px; width:50%;" />
+        </div>
+        <p>
+            <textarea id="XRayDetails" name="XRayDetails" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'XRayDetails')"></i>
+        </p>
+
+        <p>
+            <strong>MRI / CT:</strong>
+
+
+            <textarea id="MRICTDetails" name="MRICTDetails" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MRICTDetails')"></i>
+        </p>
+        @* <textarea id="MRICTDetails"
+                                                              class="form-control"
+                                                              rows="3"></textarea> *@
+
+
+    </div>
+</div>

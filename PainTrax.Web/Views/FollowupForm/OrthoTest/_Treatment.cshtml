@@ -1,0 +1,244 @@
+﻿<div class="accordion-body">
+
+
+    <div class="treatment-plan">
+        <div class="select-group">
+            <p>
+                <label><input type="radio" name="Plansurgical" value="Plan Non-surgical"> <span class="select-btn">Plan Non-surgical</span></label>
+                <label><input type="radio" name="Plansurgical" value="Plan Surgical"> <span class="select-btn">Plan Surgical</span></label>
+
+                @* <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Plan Non-surgical"><span class="select-btn"> Plan Non-surgical</span></label>
+
+                                                    <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Plan Surgical"> <span class="select-btn">Plan Surgical</span></label> *@
+
+                <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="R/SH"><span class="select-btn"> R/SH</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="L/SH"><span class="select-btn"> L/SH</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="R/KN"> <span class="select-btn">R/KN</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="L/KN"> <span class="select-btn">L/KN</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="R/HIP"> <span class="select-btn">R/HIP</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="SurgicalArea" value="L/HIP"><span class="select-btn"> L/HIP</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Surgical Risk"> <span class="select-btn">Surgical Risk</span></label>
+                <input id="SurgicalOthers" class="form-control d-inline" style="width:30%" value="None" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SurgicalOthers')"></i>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Imaging reviewed"> <span class="select-btn">Imaging studies and clinical examinations were reviewed with the patient</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Treatment options discussed"> <span class="select-btn">All treatment options discussed with the patient.</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Continue anti-inflammatory medications"><span class="select-btn"> Continue anti-inflammatory medications p.r.n.</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="radio" name="StartPhysical" value="Start Physical Therapy"> <span class="select-btn">Start Physical Therapy</span></label>
+                <label><input type="radio" name="StartPhysical" value="Continue physical therapy"> <span class="select-btn">Continue physical therapy</span></label>
+
+
+
+                <input id="ContinuePT" class="form-control d-inline" style="width:30%" placeholder="Specify" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ContinuePT')"></i>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="Planexercises" value="Transition to home exercises"> <span class="select-btn">Transition to home exercises</span></label>
+                <label><input type="checkbox" class="chkMulti" name="Planexercises" value="Perform at home exercises"> <span class="select-btn">Perform at-home exercises</span></label>
+
+
+
+                <input id="txtPlanexercises" class="form-control d-inline" style="width:30%" placeholder="Specify" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPlanexercises')"></i>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                Recommend steroid injection for pain management
+
+                <label><input type="checkbox" class="chkMulti" name="InjectionStatus" value="Patient accepts"> <span class="select-btn">Patient accepts</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="InjectionStatus" value="Patient refused injection"> <span class="select-btn">Patient refused injection</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/SH"><span class="select-btn"> R/SH</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/SH"> <span class="select-btn">L/SH</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/KN"> <span class="select-btn">R/KN</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/KN"> <span class="select-btn">L/KN</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/HIP"> <span class="select-btn">R/HIP</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/HIP"> <span class="select-btn">L/HIP</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/ANK"> <span class="select-btn">R/ANK</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/ANK"><span class="select-btn"> L/ANK</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/WRI"><span class="select-btn"> R/WRI</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/WRI"> <span class="select-btn">L/WRI</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="R/ELB"><span class="select-btn"> R/ELB</span></label>
+                <label><input type="checkbox" class="chkMulti" name="InjectionArea" value="L/ELB"><span class="select-btn"> L/ELB</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Cortisone injection template"><span class="select-btn"> Cortisone injection template</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Will get authorization"> <span class="select-btn">Will get authorization</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                Ultrasound guided cortisone injection
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanUltrasound" value="R HIP"> <span class="select-btn">R HIP</span></label>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanUltrasound" value="L HIP"> <span class="select-btn">L HIP</span></label>
+
+                <input id="TreatmentPlanUltrasoundtxt" class="form-control d-inline" style="width:30%" placeholder="Specify" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'TreatmentPlanUltrasoundtxt')"></i>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                Recommend gel injection to
+
+                <label><input type="checkbox" class="chkMulti" name="GelInjection" value="R KN"> <span class="select-btn">R KN</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="GelInjection" value="L KN"> <span class="select-btn">L KN</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Will get authorization"><span class="select-btn"> Will get authorization</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Euflexxa template"> <span class="select-btn">Euflexxa template</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                Patient received the
+
+                <input id="GelInjectionNo" class="form-control d-inline" style="width:80px" placeholder="#" />
+
+                gel injection to the
+
+                <label><input type="checkbox" class="chkMulti" name="GelInjectionOffice" value="R KN"> <span class="select-btn">R KN</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="GelInjectionOffice" value="L KN"> <span class="select-btn">L KN</span></label>
+
+                in the office today.
+
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Euflexxa template"> <span class="select-btn">Euflexxa template</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                MRI ordered
+
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/SH"> <span class="select-btn">R/SH</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/SH"> <span class="select-btn">L/SH</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/KN"> <span class="select-btn">R/KN</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/KN"> <span class="select-btn">L/KN</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/HIP"> <span class="select-btn">R/HIP</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/HIP"> <span class="select-btn">L/HIP</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/ANK"> <span class="select-btn">R/ANK</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/ANK"><span class="select-btn"> L/ANK</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/WRI"><span class="select-btn"> R/WRI</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/WRI"> <span class="select-btn">L/WRI</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="R/ELB"><span class="select-btn"> R/ELB</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L/ELB"> <span class="select-btn">L/ELB</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="C Spine"><span class="select-btn"> C Spine</span></label>
+                <label><input type="checkbox" class="chkMulti" name="MRIArea" value="L Spine"><span class="select-btn"> L Spine</span></label>
+                <input id="MRIordered" class="form-control d-inline" style="width:20%" value="None" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MRIordered')"></i>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                X-ray ordered
+
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/SH"> <span class="select-btn">R/SH</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/SH"> <span class="select-btn">L/SH</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/KN"> <span class="select-btn">R/KN</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/KN"><span class="select-btn"> L/KN</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/HIP"> <span class="select-btn">R/HIP</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/HIP"> <span class="select-btn">L/HIP</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/ANK"><span class="select-btn"> R/ANK</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/ANK"><span class="select-btn"> L/ANK</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="R/WRI"><span class="select-btn"> R/WRI</span></label>
+                <label><input type="checkbox" class="chkMulti" name="XrayArea" value="L/WRI"><span class="select-btn"> L/WRI</span></label>
+                <input id="Xrayordered" class="form-control d-inline" style="width:20%" value="None" />
+                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Xrayordered')"></i>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                Follow-up in
+
+                <input id="FollowUpDuration" class="form-control d-inline" style="width:100px" />
+
+                <label><input type="checkbox" class="chkMulti" name="FollowUpType" value="weeks"> <span class="select-btn">Weeks</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="FollowUpType" value="months"> <span class="select-btn">Months</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="FollowUpType" value="PRN"> <span class="select-btn">PRN</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="FollowUpType" value="After imaging completed"> <span class="select-btn">After imaging studies are completed</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Proceed with surgery"> <span class="select-btn">Proceed with surgery</span></label>
+
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Wants to think about it"> <span class="select-btn">Wants to think about it</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Patient consents to surgery"><span class="select-btn"> Patient consents to surgery</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Medical clearance needed"> <span class="select-btn">Medical clearance needed prior to Surgery</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="WC authorization needed"> <span class="select-btn">W/C authorization needed prior to Surgery</span></label>
+            </p>
+        </div>
+        <div class="select-group">
+            <p>
+                Refer to
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanRefer" value="pain management"><span class="select-btn"> pain management</span></label>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanRefer" value="spine surgeon"><span class="select-btn"> spine surgeon </span></label>for
+
+                <input id="PainManagementReason" class="form-control d-inline w-25" placeholder="Specify" />
+            </p>
+        </div>
+        <p>
+
+            <textarea id="txtPAStatement" name="txtPAStatement" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPAStatement')"></i>
+        </p>
+        <p>
+
+            <textarea id="txtPAStatementOther" name="txtPAStatementOther" class="form-control d-inline" style="width:95%"></textarea>
+            <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtPAStatementOther')"></i>
+        </p>
+
+
+        <div class="select-group">
+
+            <p>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="PA statement"> <span class="select-btn">PA statement</span></label>
+            </p>
+        </div>
+
+
+    </div>
+</div>

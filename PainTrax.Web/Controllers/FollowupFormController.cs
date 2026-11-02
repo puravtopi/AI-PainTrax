@@ -166,8 +166,10 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeBHFFU");
             else if (client_code.ToLower() == "paintest")
                 return PartialView("_IntakeKDVPCFU");
-            else if (client_code.ToLower() == "hposm" || client_code.ToLower() == "orthotest")
+            else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSMFU");
+            else if (client_code.ToLower() == "orthotest")
+                return PartialView("_IntakeOrthoTestFU");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
             else return PartialView("_IntakeHPOSMFU");
@@ -688,34 +690,37 @@ namespace PainTrax.Web.Controllers
 
                 _fuservices.UpdatePage1Intake(objPage1);
 
-                var objNE = new tbl_ie_ne()
+                var objNE = new tbl_fu_ne()
                 {
 
                     sensory = sensoryContent,
                     manual_muscle_strength_testing = mmstContent,
                     other_content = dtrContent,
-                    id = newFU
-
+                    id = newFU,
+                    ie_id = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
                 };
 
                 _fuservices.UpdateNEIntake(objNE);
 
                 string adl = ReportHelper.GenerateADL(model);
-                var objP2 = new tbl_ie_page2()
+                var objP2 = new tbl_fu_page2()
                 {
                     aod = adl,
-                    id = newFU
+                    fu_id = newFU,
+                    ie_id = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
                 };
 
                 _fuservices.UpdatePage2Intake(objP2);
 
+           
                 var objOther = new tbl_fu_other()
                 {
                     note3 = model.DrNote,
                     fu_id = newFU,
-                    ie_id= string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
+                    ie_id = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
                     followup_duration = string.IsNullOrEmpty(model.FollowUpOther) ? model.FollowUp : model.FollowUpOther,
                     followup_date = string.IsNullOrEmpty(model.FollowUpDate) ? null : Convert.ToDateTime(model.FollowUpDate),
+                    treatment_details= ReportHelper.GenerateRecommandation(model)
                 };
 
                 _fuservices.UpdateOtherPageIntake(objOther);

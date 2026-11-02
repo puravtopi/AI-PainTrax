@@ -552,13 +552,14 @@ poc_assesment=@poc_assesment
     }
     public int UpdateOtherPageIntake(tbl_ie_other obj)
     {
-        MySqlCommand cm = new MySqlCommand("CALL sp_SaveOtherPageIntakeData(@p_ie_id,@p_note,@p_followup_duration,@p_followup_date) ", conn);
+        MySqlCommand cm = new MySqlCommand("CALL sp_SaveOtherPageIntakeData(@p_ie_id,@p_note,@p_followup_duration,@p_followup_date,@p_treatment_details) ", conn);
 
 
         cm.Parameters.AddWithValue("@p_ie_id", obj.ie_id);
         cm.Parameters.AddWithValue("@p_note", obj.note3);
         cm.Parameters.AddWithValue("@p_followup_duration", obj.followup_duration);
         cm.Parameters.AddWithValue("@p_followup_date", obj.followup_date);
+        cm.Parameters.AddWithValue("@p_treatment_details", obj.treatment_details);
 
         var result = ExecuteScalar(cm);
         return result;
