@@ -1,0 +1,453 @@
+﻿<div class="accordion-body">
+
+<input type="hidden" id="FN" name="FN" />
+<input type="hidden" id="LN" name="LN" />
+<input type="hidden" id="PatientId" name="PatientId" />
+<input type="hidden" id="PatientIEId" name="PatientIEId" />
+    <div class="select-group">
+
+        DOS
+        <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+        @* <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" /> *@
+        &nbsp;&nbsp;
+        Location: &nbsp;&nbsp;
+
+        <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
+        </select>
+        &nbsp;&nbsp;
+        @* Interpreter Used:   *@
+        <label><input type="checkbox" class="chkMulti" name="InterpreterUsed" value="Yes" /> <span class="select-btn">Interpreter Used</span></label>
+        &nbsp;&nbsp;
+        See Dictation: @* <input id="Dictation" name="Dictation" class="form-control d-inline" style="width:150px;" /> *@
+        <input id="Dictation" class="form-control d-inline" style="width:20%" value="None" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Dictation')"></i>
+    </div>
+    
+    
+
+    <!-- Patient Info -->
+    <p>
+        Patient Name:
+        <input id="PatientName" name="PatientName" required class="form-control d-inline" style="width:250px;" />
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
+        Gender
+        <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+            <option value="male">M</option>
+            <option value="female">F</option>
+        </select>
+        &nbsp;&nbsp;
+        handed:
+        <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+            <option value="right-handed">R</option>
+            <option value="left-handed">L</option>
+            <option value="ambidextrous">A</option>
+        </select>
+        <input id="txtDominantHand" class="form-control d-inline w-25" value="None" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtDominantHand')"></i>
+
+    <div id="patientGrid"
+         class="table-responsive border bg-white position-absolute shadow"
+         style="width:500px; z-index:999; display:none; max-height:250px; overflow:auto;">
+
+        <table class="table table-sm table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Patient Name</th>
+                    <th>DOB</th>
+                    <th>DOA</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    </p>
+        <p>
+            DOB:
+            <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+            &nbsp;&nbsp; Age:
+            <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
+
+            &nbsp;&nbsp;DOA:
+            <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+        </p>
+
+    <div class="select-group">
+        Case Type:
+        <label>
+            <input type="radio" name="InjuryType" value="nf" />
+            <span class="select-btn">NF</span>
+        </label>
+        <label>
+            <input type="radio" name="InjuryType" value="work-related" />
+            <span class="select-btn">WC</span>
+        </label>
+        <label>
+            <input type="radio" name="InjuryType" value="mm" />
+            <span class="select-btn">MM</span>
+        </label>
+        <label>
+            <input type="radio" name="InjuryType" value="lien" />
+            <span class="select-btn">Lien</span>
+        </label>
+    </div>
+    <div class="select-group">
+        <b> Chief complaint:</b>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" /> <span class="select-btn">Right Shoulder</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" /> <span class="select-btn">Left Shoulder</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> <span class="select-btn">Right Knee</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" /> <span class="select-btn">Left Knee</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Elbow" data-section="relbowSection" data-pe="relbowPE" /> <span class="select-btn">Right Elbow</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Elbow" data-section="lelbowSection" data-pe="lelbowPE" /> <span class="select-btn">Left Elbow</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Hip" data-section="rhipSection" data-pe="rhipPE" /> <span class="select-btn">Right Hip</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" /> <span class="select-btn">Left Hip</span></label>
+        <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+    </div>
+
+
+    <!-- Work -->
+
+    <div class="select-group">
+        Working:
+        <label><input type="radio" name="IsWorking" value="The patient is currently working"> <span class="select-btn">Yes</span></label>
+        <label><input type="radio" name="IsWorking" value="The patient stopped working immediately after accident."> <span class="select-btn">No</span></label>
+        <span id="divWorking" style="display:none">
+            &nbsp;&nbsp;
+            <label><input type="radio" id="PartTime" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span></label>
+            <label><input type="radio" id="FullTime" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span></label>
+
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
+
+
+    </div>
+
+
+</div>
+<script>
+    $("#PatientName").on("keyup", function () {
+
+        let search = $(this).val();
+         var url = '@Url.Action("SearchPatient", "FollowupForm")';
+
+        if (search.length < 2) {
+            $("#patientGrid").hide();
+            return;
+        }
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { term: search },
+            success: function (data) {
+
+                let rows = "";
+
+
+                $.each(data, function (i, item) {
+
+                        rows += `
+        <tr class="patient-row"
+            data-id="${item.id}"
+            data-intakeid="${item.intakeid}"
+            data-patientid="${item.patient_id}"
+            data-providerid="${item.provider_id}"
+            data-name="${item.lname} ${item.fname}"
+            data-doa="${item.doa}"
+            data-injurytype="${item.compensation}"
+            data-accidenttype="${item.accidentType}"
+            data-dob="${item.dob}">
+
+            <td>${item.lname} ${item.fname}</td>
+
+            <td>
+                ${
+                    item.dob
+                        ? new Date(item.dob).toLocaleDateString('en-US', {
+                              month: '2-digit',
+                              day: '2-digit',
+                              year: 'numeric'
+                          })
+                        : ''
+                }
+            </td>
+             <td>
+                ${
+                    item.doa
+                        ? new Date(item.doa).toLocaleDateString('en-US', {
+                              month: '2-digit',
+                              day: '2-digit',
+                              year: 'numeric'
+                          })
+                        : ''
+                }
+            </td>
+        </tr>
+    `;
+                });
+
+                $("#patientGrid tbody").html(rows);
+
+                if (data.length > 0)
+                    $("#patientGrid").show();
+                else
+                    $("#patientGrid").hide();
+            }
+        });
+
+    });
+
+    // Row Select Event
+    $(document).on("click", ".patient-row", function () {
+        $('#pdfLoader').show();
+        let patientName = $(this).data("name");
+        let patientId = $(this).data("patientid");
+        let patientIEId = $(this).data("id");
+        let patientIntakeId = $(this).data("intakeid");
+        let providerId= $(this).data("providerid");
+        let accidentType= $(this).data("accidenttype");
+
+        $("#PatientName").val(patientName);
+        $("#PatientIEId").val(patientIEId);
+        $("#PatientId").val(patientId);
+
+        if(providerId!='' && providerId!=null)
+            $("#ProviderId").val(providerId);
+
+        if(accidentType!='' && accidentType!=null)
+            $("#AccidentType").val(accidentType);
+
+        $("#DOB").val(formatToISODate($(this).data("dob")));
+        $("#DOA").val(formatToISODate($(this).data("doa")));
+
+         if($(this).data("dob")!=null)
+         {
+                $("#DOB").val(formatToISODate($(this).data("dob")));
+                var age = calculateAge($("#DOB").val());
+                $('#Age').val(age);
+         }
+
+        // console.log("InuryType:", $(this).data("injurytype"));
+        // $('input[name="InjuryType"][value="' + $(this).data("injurytype") + '"]').prop('checked', true);
+        // console.log("Selected Patient Intake ID:", patientIntakeId);
+
+        $("#patientGrid").hide();
+        $('input[name="RadicularPecentage"]').trigger('change');
+        $('input[name="VASPecentage"]').trigger('change');
+        // var injuryType = $(this).data("injurytype");
+
+
+
+        let url="@Url.Action("GetIntakeData", "FollowupForm")?id="+patientId;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (res) {
+                debugger
+                selected=[];
+                $('#bodyPartLinks').text('');
+
+                if (!$.isEmptyObject(res)) {
+                    $("#divDiagnosis").html(res.diagnosis);
+                    console.log("Result: "+res.diagnosis);
+                    bindForm(res.formData,res.forwardSetting);
+                     // Apply injury type rule AFTER bindForm
+                    clearWorkStatusIfRequired();
+
+                    $("#PatientIEId").val(patientIEId);
+                    $("#PatientId").val(patientId);
+
+                    if(providerId!='' && providerId!=null)
+                        $("#ProviderId").val(providerId);
+
+                    if(accidentType!='' && accidentType!=null)
+                        $("#AccidentType").val(accidentType);
+
+                     if($(this).data("dob")!=null)
+                     {
+                            $("#DOB").val(formatToISODate($(this).data("dob")));
+                            var age = calculateAge($("#DOB").val());
+                            $('#Age').val(age);
+                     }
+
+                }
+                var today = new Date().toISOString().split('T')[0];
+                $('#DOE').val(today);
+                $('#pdfLoader').hide();
+                // $('input[name="InjuryType"]').prop('checked', false);
+            },
+            error: function (xhr, status, error) {
+               $('#pdfLoader').hide();
+            }
+        });
+    });
+
+    function clearWorkStatusIfRequired() {
+
+        var injuryType = $('input[name="InjuryType"]:checked').val();
+
+        if (injuryType !== 'WC') {
+            $('input[name="IsWorking"]').prop('checked', false);
+            $('#DisabilityPercentage').val('');
+        }
+    }
+
+    $(document).on('change', 'input[name="InjuryType"]', function () {
+        clearWorkStatusIfRequired();
+    });    // Hide grid when click outside
+    $(document).click(function (e) {
+        if (!$(e.target).closest('#PatientName, #patientGrid').length) {
+            $("#patientGrid").hide();
+        }
+    });
+     function validateDateStrict(dateStr, fieldLabel, blockFuture, fieldId) {
+
+            var regex = /^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+            if (!regex.test(dateStr)) {
+                alert(fieldLabel + " must be after 01/01/1900");
+
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
+
+                return null;
+            }
+
+            var parts = dateStr.split('-');
+            var year = parseInt(parts[0], 10);
+            var month = parseInt(parts[1], 10);
+            var day = parseInt(parts[2], 10);
+
+            var date = new Date(year, month - 1, day);
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                alert("Invalid " + fieldLabel);
+
+                if (fieldId === "#DOB")
+                    clearDOBFields();
+                else
+                    $(fieldId).val('').focus();
+
+                return null;
+            }
+
+            if (blockFuture) {
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (date > today) {
+                    alert(fieldLabel + " cannot be future date");
+
+                    if (fieldId === "#DOB")
+                        clearDOBFields();
+                    else
+                        $(fieldId).val('').focus();
+
+                    return null;
+                }
+            }
+
+            return date;
+        }
+            function clearDOBFields() {
+            $('#DOB').val('');
+            $('#Age').val('');
+            $('#pdDOB').text('');
+            $('#pdAge').text('');
+            $('#DOB').focus();
+        }
+           function fnvalidateDatefields() {
+
+            var dob = $('#DOB').val();
+            var dos = $('#DOE').val();
+            var doa = $('#DOA').val();
+
+            var dobDate = null;
+            var dosDate = null;
+            var doaDate = null;
+
+               // DOB
+        if (dob) {
+            dobDate = validateDateStrict(dob, "DOB", true, "#DOB");
+            if (!dobDate) return;
+        }
+
+        // DOS
+
+        if (dos) {
+            dosDate = validateDateStrict(dos, "DOS", true, "#DOE");
+            if (!dosDate) return;
+        }
+
+        // if (injuryType !== 'MM') {
+        // // DOA
+        // if (doa) {
+        //     doaDate = validateDateStrict(doa, "DOA", false, "#DOA");
+        //     if (!doaDate) return;
+        // }
+        // }
+
+            // ---------- DOA vs DOS ----------
+        if (dosDate && doaDate && doaDate > dosDate) {
+            alert("DOA cannot be greater than DOS");
+
+            $('#DOA').val('').focus();
+            $('#pdDOA').text('');
+
+            return;
+        }
+
+            // // ---------- Side panel ----------
+            // var fullname = $("#lname").val() + ' ' + $("#fname").val();
+            // $('#pdName').text(fullname);
+
+            // if (dos) $('#pdDOS').text(fngetAGE(dos));
+            // if (doa) $('#pdDOA').text(fngetAGE(doa));
+
+            // ---------- Age ----------
+            if (dobDate && dosDate) {
+
+                var age = dosDate.getFullYear() - dobDate.getFullYear();
+                var m = dosDate.getMonth() - dobDate.getMonth();
+
+                if (m < 0 || (m === 0 && dosDate.getDate() < dobDate.getDate())) {
+                    age--;
+                }
+
+                   if (age > 90) {
+        alert("Age should not be greater than 90 years");
+
+        clearDOBFields();
+
+        return;
+    }
+            }
+
+              // $('#pdCT').text($("#compensation option:selected").text());
+              // $('#pdLoc').text($("#locationid option:selected").text());
+              // $('#pdGender').text($("#gender option:selected").text());
+        }
+        function fngetAGE(inputDate) {
+            if (inputDate) {
+                var date = new Date(inputDate);
+
+                // Extract month, date, and year
+                var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+                var day = date.getDate().toString().padStart(2, '0');
+                var year = date.getFullYear();
+
+                // Format date as MM/dd/yyyy
+                var formattedDate = month + '/' + day + '/' + year;
+
+                return formattedDate;
+            }
+            return '';
+        }
+</script>
