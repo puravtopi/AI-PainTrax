@@ -210,7 +210,7 @@ namespace PainTrax.Web.Helper
 
                 if (axialTriggers != null && axialTriggers.Any())
                 {
-                    sentences.Add($"{CultureInfo.InvariantCulture.TextInfo.ToTitleCase(painType.ToLowerInvariant())} is exacerbated by {FormatList(axialTriggers)}.");
+                    sentences.Add($"{CapitalizeFirstLetter(painType.ToLowerInvariant())} is exacerbated by {FormatList(axialTriggers)}.");
                 }
                 else
                 {
@@ -487,7 +487,7 @@ namespace PainTrax.Web.Helper
 
                 if (axialTriggers != null && axialTriggers.Any())
                 {
-                    sentences.Add($"{CultureInfo.InvariantCulture.TextInfo.ToTitleCase(painType.ToLowerInvariant())} is exacerbated by {FormatList(axialTriggers)}.");
+                    sentences.Add($"{CapitalizeFirstLetter(painType.ToLowerInvariant())} is exacerbated by {FormatList(axialTriggers)}.");
                 }
                 else
                 {
@@ -1387,9 +1387,9 @@ namespace PainTrax.Web.Helper
                 var formattedTypes = string.Join(", ", PainTypes.Select(t => t.Trim()));
 
                 if (hasScale)
-                    sb.Append($", which is {formattedTypes}.");
+                    sb.Append($", which is {formattedTypes.ToLower()}.");
                 else
-                    sb.Append($"Pain is described as {formattedTypes}.");
+                    sb.Append($"Pain is described as {formattedTypes.ToLower()}.");
             }
             else
             {
@@ -1909,7 +1909,7 @@ namespace PainTrax.Web.Helper
                                           .Replace("#LumbarRight", string.IsNullOrEmpty(model.LumbarRight) ? "Normal" : model.LumbarRight);
 
             if (!string.IsNullOrEmpty(strSE))
-                htmlString = "<p>" + strSE + "</p><br/>" + htmlString;
+                htmlString = "<p>To " + strSE + "</p><br/>" + htmlString;
 
             return htmlString;
 
@@ -2331,7 +2331,7 @@ namespace PainTrax.Web.Helper
                         ? $" {model.HospitalTestOther.Trim()}"
                         : "";
 
-                    sentences.Add($"At the hospital, the patient had {tests}{testOther} which revealed no fracture.");
+                    sentences.Add($"At the hospital, the patient had {tests}{testOther}.");
                 }
 
                 // Hospital Medication
@@ -2344,10 +2344,10 @@ namespace PainTrax.Web.Helper
                     sentences.Add($"At the hospital, prescription was given for {meds}.");
                 }
             }
-            else if (string.Equals(model.Hospital, "No", StringComparison.OrdinalIgnoreCase))
-            {
-                sentences.Add("The patient did not go to the hospital following the accident.");
-            }
+            //else if (string.Equals(model.Hospital, "No", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    sentences.Add("The patient did not go to the hospital following the accident.");
+            //}
 
             // 8. Past Accident
             if (string.Equals(model.IsAccidentPast, "Yes", StringComparison.OrdinalIgnoreCase))
@@ -2551,21 +2551,23 @@ namespace PainTrax.Web.Helper
             // Case C: Antalgic / Altered or with notes
             var sentenceParts = new List<string>();
 
+            primaryGait = CapitalizeFirstLetter(primaryGait);
+
             if (!string.IsNullOrEmpty(otherDetails))
             {
-                sentenceParts.Add($"{primaryGait.ToLower()} ({otherDetails})");
+                sentenceParts.Add($"{primaryGait} ({otherDetails})");
             }
             else
             {
-                sentenceParts.Add($"{primaryGait.ToLower()}");
+                sentenceParts.Add($"{primaryGait}");
             }
 
             if (hasCane)
             {
-                sentenceParts.Add("patient ambulates with a cane");
+                sentenceParts.Add("Patient ambulates with a cane");
             }
 
-            return string.Join(", and ", sentenceParts) + ".";
+            return string.Join(". ", sentenceParts) + ".";
         }
         #endregion
 
@@ -2583,8 +2585,8 @@ namespace PainTrax.Web.Helper
             "bowel incontinence",
             "seizure history",
             "sleep issues/difficulty",
-            "anxiety/depression",
-            "muscle spasms"
+            "anxiety/depression"
+           
         };
 
         public static string GenerateRos(List<string> selectedRos, string rosOther = null)
@@ -2951,6 +2953,18 @@ namespace PainTrax.Web.Helper
         //    if (items.Count == 2) return $"{items[0]} and {items[1]}";
         //    return $"{string.Join(", ", items.Take(items.Count - 1))} and {items.Last()}";
         //}
+        #endregion
+
+        #region Private Method
+
+        public static string CapitalizeFirstLetter(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            return char.ToUpperInvariant(input[0]) + input.Substring(1);
+        }
+
         #endregion
 
     }

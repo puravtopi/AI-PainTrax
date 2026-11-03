@@ -681,7 +681,7 @@ namespace PainTrax.Web.Controllers
                     id = newFU,
                     cc = ccContent,
                     pe = peContent,
-                    assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ul>" + model.Diagnosis + "</ul>",
+                    assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ol>" + model.Diagnosis + "</ol>",
                     dd = dd,
                     work_status = working
 
