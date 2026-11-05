@@ -172,6 +172,8 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeOrthoTestFU");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPCFU");
+            else if (client_code.ToLower() == "seldesmd")
+                return PartialView("_IntakeSeldesMDFU");
             else return PartialView("_IntakeHPOSMFU");
         }
         [HttpPost]

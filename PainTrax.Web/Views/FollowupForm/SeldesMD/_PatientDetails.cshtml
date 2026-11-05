@@ -1,0 +1,137 @@
+﻿<div class="accordion-body">
+    <input type="hidden" id="FN" name="FN" />
+    <input type="hidden" id="LN" name="LN" />
+    <input type="hidden" id="PatientId" name="PatientId" />
+    <input type="hidden" id="PatientIEId" name="PatientIEId" />
+        <h6>
+            Provider Name:
+            <select id="providerid" name="providerid" asp-items="@ViewBag.providerList" class="form-select d-inline w-auto" style="width:230px !important">
+            </select>
+        </h6>
+
+    <div class="select-group">
+        
+        DOS
+        <input id="DOE" name="DOE" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+        @* <input id="DOE" name="DOE" type="date" class="form-control d-inline w-auto" /> *@
+        &nbsp;&nbsp;
+        Location: &nbsp;&nbsp;
+
+        <select id="LocationId" name="LocationId" asp-items="@ViewBag.locList" class="form-select d-inline w-auto" style="width:230px !important">
+        </select>
+      
+       
+    </div>
+
+    <!-- Patient Info -->
+    <p>
+        Patient Name:
+        <input id="PatientName" name="PatientName" required class="form-control d-inline" style="width:250px;" />
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
+        Gender
+        <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+            <option value="male">M</option>
+            <option value="female">F</option>
+        </select>
+        &nbsp;&nbsp;
+        handed:
+        <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+            <option value="right-handed">R</option>
+            <option value="left-handed">L</option>
+            <option value="ambidextrous">A</option>
+        </select>
+        <input id="txtDominantHand" class="form-control d-inline w-25" value="None" />
+        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtDominantHand')"></i>
+
+        <div id="patientGrid"
+             class="table-responsive border bg-white position-absolute shadow"
+             style="width:500px; z-index:999; display:none; max-height:250px; overflow:auto;">
+
+            <table class="table table-sm table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>DOB</th>
+                        <th>DOA</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </p>
+    <p>
+        DOB:
+        <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+        &nbsp;&nbsp; Age:
+        <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
+
+        &nbsp;&nbsp;DOA:
+        <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
+    </p>
+    <!-- Injury Type -->
+    <div class="select-group">
+        Case Type:
+        <label>
+            <input type="radio" name="InjuryType" value="nf" />
+            <span class="select-btn">NF</span>
+        </label>
+        <label>
+            <input type="radio" name="InjuryType" value="work-related" />
+            <span class="select-btn">WC</span>
+        </label>
+        @* <label>
+            <input type="radio" name="InjuryType" value="mm" />
+            <span class="select-btn">MM</span>
+        </label> *@
+        <label>
+            <input type="radio" name="InjuryType" value="lien" />
+            <span class="select-btn">Lien</span>
+        </label>
+        <label>
+            <input type="radio" name="InjuryType" value="SF" />
+            <span class="select-btn">Slip & Fall</span>
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id="AccidentType" name="AccidentType" class="form-select d-inline" style="width:220px !important" asp-items="@ViewBag.ATList"></select>
+    </div>
+    <div class="select-group">
+        <b> Chief complaint:</b>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" /> <span class="select-btn">Right Shoulder</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" /> <span class="select-btn">Left Shoulder</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> <span class="select-btn">Right Knee</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" /> <span class="select-btn">Left Knee</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Elbow" data-section="relbowSection" data-pe="relbowPE" /> <span class="select-btn">Right Elbow</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Elbow" data-section="lelbowSection" data-pe="lelbowPE" /> <span class="select-btn">Left Elbow</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Hip" data-section="rhipSection" data-pe="rhipPE" /> <span class="select-btn">Right Hip</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" /> <span class="select-btn">Left Hip</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Ankle" data-section="rankleSection" data-pe="ranklePE" /> <span class="select-btn">R/Ank</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Ankle" data-section="lankleSection" data-pe="lanklePE" />  <span class="select-btn">L/Ank</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Wrist" data-section="rwristSection" data-pe="rwristPE" /> <span class="select-btn">R/Wrist</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Wrist" data-section="lwristSection" data-pe="lwristPE" />  <span class="select-btn">L/Wrist</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Neck" data-section="neckSection" data-pe="neckPE" />  <span class="select-btn">Neck</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Midback" data-section="mbSection" data-pe="mbPE" /> <span class="select-btn">Mid back</span></label>
+        <label><input type="checkbox" class="chkMulti" name="Complaints" value="Lowback" data-section="lbSection" data-pe="lbPE" />  <span class="select-btn">Low back</span></label>
+        <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
+    </div>
+
+
+    <!-- Work -->
+
+    <div class="select-group">
+       @*  Occupation: <input id="degree" class="form-control d-inline" style="width:200px" />
+        &nbsp;&nbsp;&nbsp; *@
+        Working:
+        <label><input type="radio" name="IsWorking" value="The patient is currently working"> <span class="select-btn">Yes</span></label>
+        <label><input type="radio" name="IsWorking" value="The patient stopped working immediately after accident."> <span class="select-btn">No</span></label>
+        <span id="divWorking" style="display:none">
+            &nbsp;&nbsp;
+            <label><input type="radio" id="PartTime" name="YesWork" value="Part time."> <span class="select-btn">Part-time</span></label>
+            <label><input type="radio" id="FullTime" name="YesWork" value="Full time">  <span class="select-btn">Full-time</span></label>
+
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Degree of Disability <input id="degree" class="form-control d-inline" style="width:250px" /> %.
+
+
+    </div>
+</div>
