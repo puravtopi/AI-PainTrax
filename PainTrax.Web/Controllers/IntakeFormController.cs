@@ -849,6 +849,8 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeOrthoTest");
             else if (client_code.ToLower() == "imnpfhpc")
                 return PartialView("_IntakeIMNPFHPC");
+            else if (client_code.ToLower() == "seldesmd")
+                return PartialView("_IntakeSeldesMD");
             else return PartialView("_IntakeHPOSM");
             //return View();
         }
