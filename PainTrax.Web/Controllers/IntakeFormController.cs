@@ -843,7 +843,7 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeBHF");
             else if (client_code.ToLower() == "paintest")
                 return PartialView("_IntakeKDVPC");
-            else if (client_code.ToLower() == "hposm" )
+            else if (client_code.ToLower() == "hposm")
                 return PartialView("_IntakeHPOSM");
             else if (client_code.ToLower() == "orthotest")
                 return PartialView("_IntakeOrthoTest");
@@ -979,6 +979,8 @@ namespace PainTrax.Web.Controllers
             }
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            string clientcode = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower();
+
             var result = "0";
 
             DateTime? doa = DateTime.TryParse(model.DOA, out var parsedDOA) ? parsedDOA : (DateTime?)null;
@@ -993,6 +995,7 @@ namespace PainTrax.Web.Controllers
 
             if (model != null)
             {
+                model.client_code = clientcode;
                 InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
                 {
                     Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
@@ -1041,19 +1044,18 @@ namespace PainTrax.Web.Controllers
 
                 string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "", recommadation = "";
                 var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
-                if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
-                    HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
+                if (clientcode == "bhfpc" || clientcode == "ipmc" || clientcode == "imnpfhpc")
                 {
                     peContent = ReportHelper.GetPE(model, path);
                     dtrContent = ReportHelper.GetDTR(model, path);
                     sensoryContent = ReportHelper.GetSensory(model, path);
                     mmstContent = ReportHelper.GetMMST(model, path);
-                    ccContent = ReportHelper.GetBHFCC(model);
+                    ccContent = ReportHelper.GetCC(model);
                     recommadation = ReportHelper.GenerateRecommandation(model);
                 }
                 else
                 {
-                    ccContent = string.IsNullOrEmpty(ReportHelper.GetBHFCC(model)) ? defaultPage1.cc : ReportHelper.GetBHFCC(model);
+                    ccContent = string.IsNullOrEmpty(ReportHelper.GetCC(model)) ? defaultPage1.cc : ReportHelper.GetCC(model);
                     //ccContent = this.GetBHFCC(model);
                 }
 
@@ -1069,17 +1071,32 @@ namespace PainTrax.Web.Controllers
                 }
                 if (!string.IsNullOrEmpty(model.Heightft) && !string.IsNullOrEmpty(model.Weight))
                 {
-                    vital = "H: " + model.Heightft + "’" + model.Heightinch + ", W: " + model.Weight + " lbs, SpO2: " + model.SpO + "%, HR: " + model.HR + ", BMI: " + model.BMI + ".";
+                    if (clientcode == "imnpfhpc")
+                        vital = "H: " + model.Heightft + "’" + model.Heightinch + ", W: " + model.Weight + " lbs, BMI: " + model.BMI + ".";
+                    else
+                        vital = "H: " + model.Heightft + "’" + model.Heightinch + ", W: " + model.Weight + " lbs, SpO2: " + model.SpO + "%, HR: " + model.HR + ", BMI: " + model.BMI + ".";
                 }
+
+                if (clientcode == "imnpfhpc")
+                {
+                    ros = ReportHelper.GenerateRosIrina(model);
+                    model.IsPMH = "Yes";
+                    model.IsSMH = "Yes";
+                    model.Meds = "Yes";
+                }
+                else
+                    ros = ReportHelper.GenerateRos(model.ROS, model.ROSOther);
 
                 pmh = ReportHelper.GeneratePmh(model.IsPMH, model.PMH, model.PMHOther);
                 psh = ReportHelper.GeneratePsh(model.IsSMH, model.PSH);
-                med = ReportHelper.GenerateMeds(model.Meds, model.OtherMeds);
+                med = ReportHelper.GenerateMeds(model.Meds, string.IsNullOrEmpty(model.OtherMeds) ? model.MedsOther : model.OtherMeds);
                 allergy = ReportHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
 
-                dd = string.IsNullOrEmpty(model.DisabilityPercentage) ? "" : model.DisabilityPercentage + "%";
+                dd = string.IsNullOrEmpty(model.DisabilityPercentage) ? model.degree : model.DisabilityPercentage + "%";
                 gait = ReportHelper.GenerateGait(model.GAITMultiR, model.GAITMulti, model.GAITOther);
-                ros = ReportHelper.GenerateRos(model.ROS, model.ROSOther);
+
+
+
                 adl = ReportHelper.GenerateADL(model);
                 occupation = ReportHelper.GenerateOccupation(model.Occupation, model.JobTitle);
                 working_desc = ReportHelper.GenerateJob(model);
@@ -1382,7 +1399,7 @@ namespace PainTrax.Web.Controllers
                         id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId),
                         cc = ccContent,
                         pe = peContent,
-                        assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ol>" + model.Diagnosis + "</ol>" + model.DiagnosisOther,
+                        assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment + "<p>" + model.DiagnosisOther + "</p>" : assessment + "<ol>" + model.Diagnosis + "</ol>" + model.DiagnosisOther,
                         vital = vital,
                         pmh = pmh,
                         psh = psh,

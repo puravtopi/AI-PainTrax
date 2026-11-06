@@ -70,7 +70,8 @@
                         <input type="hidden" id="ProviderId" name="ProviderId" value="@ViewBag.ProviderId" />
                         <input type="hidden" id="PatientId" name="PatientId" value="@ViewBag.PatientId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
-                        <input type="hidden" id="hdIEId" name="hdIEId" />
+                        <input type="hidden" id="hdIEId" name="hdIEId" value="@ViewBag.IEId" />
+                        <input type="hidden" id="PatientIEId" name="PatientIEId" value="@ViewBag.IEId" />
                         <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
                         <input type="hidden" id="Diagnosis" name="Diagnosis" />
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
@@ -605,8 +606,8 @@
                                                         <h6 class="fw-bold">Midback</h6>
                                                         <div class="select-group">
                                                             Pain:
-                                                            <input id="MidbackSection" class="form-control d-inline" style="width:60px" />
-                                                            <i class="fa fa-microphone d-inline mic-btn mic-hide" onclick="startVoice(this,'MidbackSection')"></i>/10
+                                                            <input id="MbPain" class="form-control d-inline" style="width:60px" />
+                                                            <i class="fa fa-microphone d-inline mic-btn mic-hide" onclick="startVoice(this,'MbPain')"></i>/10
 
                                                             <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
                                                             <label><input type="checkbox" class="chkMulti" name="mdbackPain" value="Diff sleeping"> <span class="select-btn">Diff sleeping</span></label>
@@ -1996,7 +1997,7 @@
 
                                                     <p>
                                                         Others
-                                                        <textarea id="DiagnosisOthers" name="DiagnosisOthers" class="form-control d-inline" style="width:90%"></textarea>
+                                                        <textarea id="DiagnosisOther" name="DiagnosisOther" class="form-control d-inline" style="width:90%"></textarea>
                                                         <i class="fa fa-microphone d-inline mic-btn mic-hide" onclick="startVoice(this,'DiagnosisOthers')"></i>
                                                     </p>
                                                 </div>

@@ -440,11 +440,11 @@ namespace PainTrax.Web.Controllers
                     dtrContent = ReportHelper.GetDTR(model, path);
                     sensoryContent = ReportHelper.GetSensory(model, path);
                     mmstContent = ReportHelper.GetMMST(model, path);
-                    ccContent = ReportHelper.GetBHFCC(model);
+                    ccContent = ReportHelper.GetCC(model);
                 }
                 else
                 {
-                    ccContent = ReportHelper.GetBHFCC(model);
+                    ccContent = ReportHelper.GetCC(model);
                 }
 
                 if (initialIntakeAI.Id == 0)

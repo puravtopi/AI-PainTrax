@@ -183,7 +183,7 @@ namespace PainTrax.Web.Helper
         }
 
 
-        public static string NeckCC(AIIntakeFormModel modal)
+        public static string Bhf_NeckCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -323,28 +323,166 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", sentences);
         }
 
+        public static string Irina_NeckCC(AIIntakeFormModel model)
+        {
+            var sb = new StringBuilder();
+            sb.Append("CERVICAL SPINE: ");
+
+            var complaintItems = new List<string> { "pain" };
+
+            if (model.NeckStiffness != null && model.NeckStiffness.Count > 0)
+            {
+                // Filter out "Diff..." and "rotating..." so they go to the difficulty sentence
+                var symptoms = model.NeckStiffness
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Where(s => !s.Trim().StartsWith("Diff", StringComparison.OrdinalIgnoreCase) &&
+                                !s.Trim().Contains("rotating", StringComparison.OrdinalIgnoreCase))
+                    .Select(s => s.Trim().ToLower())
+                    .ToList();
+
+                complaintItems.AddRange(symptoms);
+            }
+
+            // Dynamic output:
+            // - Only Pain: "The patient complains of pain in the neck region. "
+            // - Pain + Stiffness: "The patient complains of pain and stiffness in the neck region. "
+            // - Pain + Stiffness + Spasms: "The patient complains of pain, stiffness, and spasms in the neck region. "
+            sb.Append($"The patient complains of {FormatList(complaintItems)} in the neck region. ");
+
+            // 2. Radiation & Associated Symptoms
+            var radiationParts = new List<string>();
+            string sidePrefix = !string.IsNullOrWhiteSpace(model.NeckRadiatesTo)
+                ? model.NeckRadiatesTo.Trim().ToLower() + " "
+                : "";
+
+            if (model.NeckRadiates != null && model.NeckRadiates.Count > 0)
+            {
+                for (int i = 0; i < model.NeckRadiates.Count; i++)
+                {
+                    // Clean punctuation like trailing dots (e.g., "fingers. ")
+                    string part = model.NeckRadiates[i].Trim().TrimEnd('.');
+
+                    // Prefix the first radiation location with the side (e.g., "right arm")
+                    if (i == 0 && !string.IsNullOrEmpty(sidePrefix))
+                    {
+                        radiationParts.Add($"{sidePrefix}{part}");
+                    }
+                    else
+                    {
+                        radiationParts.Add(part);
+                    }
+                }
+            }
+
+            string radiationText = FormatList(radiationParts);
+            string associatedText = FormatList(model.NeckAssociated?.Select(s =>
+                s.Trim().Equals("burning", StringComparison.OrdinalIgnoreCase) ? "burning sensation" : s.Trim()).ToList());
+
+            if (!string.IsNullOrEmpty(radiationText) && !string.IsNullOrEmpty(associatedText))
+            {
+                sb.Append($"The pain radiates from the neck to {radiationText} and associated with {associatedText}. ");
+            }
+            else if (!string.IsNullOrEmpty(radiationText))
+            {
+                sb.Append($"The pain radiates from the neck to {radiationText}. ");
+            }
+            else if (!string.IsNullOrEmpty(associatedText))
+            {
+                sb.Append($"The pain is associated with {associatedText}. ");
+            }
+
+            // 3. Functional Difficulties
+            var difficulties = new List<string>();
+            if (model.NeckStiffness != null)
+            {
+                bool diffTurning = model.NeckStiffness.Any(x => x.Contains("Diff turning", StringComparison.OrdinalIgnoreCase));
+                bool rotatingHead = model.NeckStiffness.Any(x => x.Contains("rotating head", StringComparison.OrdinalIgnoreCase));
+                bool diffGripping = model.NeckStiffness.Any(x => x.Contains("gripping", StringComparison.OrdinalIgnoreCase));
+
+                if (diffTurning && rotatingHead)
+                    difficulties.Add("turning/rotating the head");
+                else if (diffTurning)
+                    difficulties.Add("turning the head");
+                else if (rotatingHead)
+                    difficulties.Add("rotating the head");
+
+                if (diffGripping)
+                    difficulties.Add("gripping objects");
+            }
+
+            if (difficulties.Count > 0)
+            {
+                sb.Append($"The patient has difficulty {FormatList(difficulties)}. ");
+            }
+
+            // 4. Physical Therapy Improvement
+            if (!string.IsNullOrWhiteSpace(model.NeckSustainedStiffness))
+            {
+                if (model.NeckSustainedStiffness.Contains("No sustained", StringComparison.OrdinalIgnoreCase))
+                    sb.Append("There is no sustained improvement with physical therapy. ");
+                else if (model.NeckSustainedStiffness.Contains("Sustained", StringComparison.OrdinalIgnoreCase))
+                    sb.Append("There is sustained improvement with physical therapy. ");
+            }
+
+            // 5. Aggravating & Relieving Factors (if selected)
+            if (model.NeckWorsens != null && model.NeckWorsens.Count > 0)
+            {
+                sb.Append($"The pain is worsened with {FormatList(model.NeckWorsens.Select(x => x.Trim()).ToList())}. ");
+            }
+
+            if (model.NeckImproves != null && model.NeckImproves.Count > 0)
+            {
+                sb.Append($"The pain is improved with {FormatList(model.NeckImproves.Select(x => x.Trim()).ToList())}. ");
+            }
+
+            // 6. Pain Score
+            string painScore = !string.IsNullOrWhiteSpace(model.NeckPain) ? model.NeckPain.Trim() : "___";
+            sb.Append($"Pain score is {painScore}/10.");
+
+            return sb.ToString().Trim();
+        }
+
+       
+
         public static string MidbackCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
             // 1. Pain Score & Nature
             // Template: "The patient complains of mid-back pain that is __/10, with 10 being the worst, which is constant, intermittent, sharp, shooting, electric, throbbing, pulsating, dull, and achy in nature."
-            string painScore = !string.IsNullOrWhiteSpace(modal.MbPain) ? modal.MbPain.Trim() : "__";
+            string painScore = !string.IsNullOrWhiteSpace(modal.MbPain) ? modal.MbPain.Trim() : modal.MidbackSection;
             var symptomsList = modal.MbSymptoms?.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
+
+            if (symptomsList.Count == 0)
+                symptomsList = modal.mdbackPain?.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
 
             if (symptomsList != null && symptomsList.Any())
             {
                 string symptomsStr = FormatList(symptomsList.Select(s => s.ToLower().Trim()));
-                sentences.Add($"The patient complains of mid-back pain that is {painScore}/10, with 10 being the worst, which is {symptomsStr} in nature.");
+
+                if (string.IsNullOrEmpty(modal.mdbackSustainedPain))
+                    sentences.Add($"The patient complains of mid-back pain that is {painScore}/10, with 10 being the worst, which is {symptomsStr} in nature.");
+                else
+                    sentences.Add($"The patient complains of mid-back pain that is {painScore}/10, with 10 being the worst, which is {symptomsStr} {modal.mdbackSustainedPain}.");
             }
             else
             {
                 sentences.Add($"The patient complains of mid-back pain that is {painScore}/10, with 10 being the worst.");
             }
 
+            if (!string.IsNullOrEmpty(modal.MidbackRadiatesTo))
+                sentences.Add($"Midback pain {modal.MidbackRadiatesTo}.");
+
             // 2. Worsens With
             // Template: "The mid-back pain worsens with sitting, standing, bending forward, bending backward, sleeping, twisting, and lifting."
             var worsensList = modal.MbWorsens?
+                .Where(w => !string.IsNullOrWhiteSpace(w))
+                .Select(NormalizeWorseningTerm)
+                .Distinct()
+                .ToList();
+
+            if (worsensList.Count == 0)
+                worsensList = modal.MidbackWorsens?
                 .Where(w => !string.IsNullOrWhiteSpace(w))
                 .Select(NormalizeWorseningTerm)
                 .Distinct()
@@ -359,10 +497,18 @@ namespace PainTrax.Web.Helper
             // Template: "Mid-back pain improves with resting, medication, and therapy."
             var improvesList = modal.MbImproves != null ? new List<string>(modal.MbImproves) : new List<string>();
 
+            if (improvesList.Count == 0)
+                improvesList = modal.MidbackImproves != null ? new List<string>(modal.MidbackImproves) : new List<string>();
+
             if (!string.IsNullOrWhiteSpace(modal.MbImprovesOther))
             {
                 improvesList.RemoveAll(i => i.Equals("Others", StringComparison.OrdinalIgnoreCase));
                 improvesList.Add(modal.MbImprovesOther.Trim());
+            }
+            else if (!string.IsNullOrWhiteSpace(modal.MidbackImprovesOther))
+            {
+                improvesList.RemoveAll(i => i.Equals("Others", StringComparison.OrdinalIgnoreCase));
+                improvesList.Add(modal.MidbackImprovesOther.Trim());
             }
             else
             {
@@ -460,7 +606,7 @@ namespace PainTrax.Web.Helper
 
         #region Lowback
 
-        public static string LowBackCC(AIIntakeFormModel modal)
+        public static string Bhf_LowBackCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -600,6 +746,112 @@ namespace PainTrax.Web.Helper
 
             return string.Join(" ", sentences);
         }
+
+        public static string Irina_LowBackCC(AIIntakeFormModel model)
+        {
+            var sb = new StringBuilder();
+            sb.Append("LUMBAR SPINE: ");
+
+            // 1. Chief Complaint & Stiffness
+            bool hasStiffness = model.LbackPain != null &&
+                                model.LbackPain.Any(x => x.Contains("Stiffness", StringComparison.OrdinalIgnoreCase));
+
+            if (hasStiffness)
+                sb.Append("The patient complains of pain and stiffness in the low back region. ");
+            else
+                sb.Append("The patient complains of pain in the low back region. ");
+
+            // 2. Radiation & Associated Symptoms
+            var radiationParts = new List<string>();
+            string sidePrefix = !string.IsNullOrWhiteSpace(model.LowBackRadiatesTo)
+                ? model.LowBackRadiatesTo.Trim().ToLower() + " "
+                : "";
+
+            if (model.LowBackRadiates != null && model.LowBackRadiates.Count > 0)
+            {
+                for (int i = 0; i < model.LowBackRadiates.Count; i++)
+                {
+                    string part = model.LowBackRadiates[i].Trim();
+                    // Apply the side (left/right/bilateral) to the first anatomical part (e.g., "right buttock")
+                    if (i == 0 && !string.IsNullOrEmpty(sidePrefix))
+                    {
+                        radiationParts.Add($"{sidePrefix}{part}");
+                    }
+                    else
+                    {
+                        radiationParts.Add(part);
+                    }
+                }
+            }
+
+            string radiationText = FormatList(radiationParts);
+            string associatedText = FormatList(model.LowBackAssociated?.Select(s =>
+                s.Trim().Equals("burning", StringComparison.OrdinalIgnoreCase) ? "burning sensation" : s.Trim()).ToList());
+
+            if (!string.IsNullOrEmpty(radiationText) && !string.IsNullOrEmpty(associatedText))
+            {
+                sb.Append($"The pain radiates from the low back to {radiationText} and associated with {associatedText}. ");
+            }
+            else if (!string.IsNullOrEmpty(radiationText))
+            {
+                sb.Append($"The pain radiates from the low back to {radiationText}. ");
+            }
+            else if (!string.IsNullOrEmpty(associatedText))
+            {
+                sb.Append($"The pain is associated with {associatedText}. ");
+            }
+
+            // 3. Functional Difficulties
+            var difficulties = new List<string>();
+            if (model.LbackPain != null)
+            {
+                if (model.LbackPain.Any(x => x.Contains("sleeping", StringComparison.OrdinalIgnoreCase)))
+                    difficulties.Add("sleeping on the back");
+                if (model.LbackPain.Any(x => x.Contains("lifting", StringComparison.OrdinalIgnoreCase)))
+                    difficulties.Add("lifting objects");
+                if (model.LbackPain.Any(x => x.Contains("bending", StringComparison.OrdinalIgnoreCase)))
+                    difficulties.Add("bending");
+            }
+
+            if (difficulties.Count > 0)
+            {
+                sb.Append($"The patient has difficulty {FormatList(difficulties)}. ");
+            }
+
+            // 4. Physical Therapy Improvement
+            if (!string.IsNullOrWhiteSpace(model.LbackSustainedPain))
+            {
+                if (model.LbackSustainedPain.Contains("No sustained", StringComparison.OrdinalIgnoreCase))
+                    sb.Append("There is no sustained improvement with physical therapy. ");
+                else if (model.LbackSustainedPain.Contains("Sustained", StringComparison.OrdinalIgnoreCase))
+                    sb.Append("There is sustained improvement with physical therapy. ");
+            }
+
+            // 5. Worsened / Improved factors (if selected)
+            if (model.LowBackWorsens != null && model.LowBackWorsens.Count > 0)
+            {
+                sb.Append($"The pain is worsened with {FormatList(model.LowBackWorsens.Select(x => x.Trim()).ToList())}. ");
+            }
+
+            if (model.LowBackImproves != null && model.LowBackImproves.Count > 0)
+            {
+                sb.Append($"The pain is improved with {FormatList(model.LowBackImproves.Select(x => x.Trim()).ToList())}. ");
+            }
+
+            // 6. Pain Score
+            string painScore = !string.IsNullOrWhiteSpace(model.LowBackPain) ? model.LowBackPain.Trim() : "___";
+            sb.Append($"Pain score is {painScore}/10.");
+
+            return sb.ToString().Trim();
+        }
+
+        /// <summary>
+        /// Formats a list of strings into natural English text with Oxford comma:
+        /// ["a"] -> "a"
+        /// ["a", "b"] -> "a and b"
+        /// ["a", "b", "c"] -> "a, b, and c"
+        /// </summary>
+
 
         /// <summary>
         /// Pluralizes lower body locations (e.g., hip -> hips, foot -> feet).
@@ -1449,7 +1701,7 @@ namespace PainTrax.Web.Helper
 
                 if (!string.IsNullOrWhiteSpace(model.NeckSpurlingTestOther))
                 {
-                    spurlingSentence += $" ({model.NeckSpurlingTestOther.Trim()})";
+                    spurlingSentence += $" {model.NeckSpurlingTestOther.Trim()}";
                 }
                 spurlingSentence += ".";
                 sentences.Add(spurlingSentence);
@@ -1506,7 +1758,7 @@ namespace PainTrax.Web.Helper
 
                 if (!string.IsNullOrWhiteSpace(model.LBSlrTestOther))
                 {
-                    slrLine += $" ({model.LBSlrTestOther.Trim()})";
+                    slrLine += $" {model.LBSlrTestOther.Trim()}";
                 }
 
                 lines.Add(slrLine);
@@ -1519,12 +1771,15 @@ namespace PainTrax.Web.Helper
 
         #region AI Content
 
-        public static string GetBHFCC(AIIntakeFormModel model)
+        public static string GetCC(AIIntakeFormModel model)
         {
             string pe = "";
             if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + ReportHelper.NeckCC(model);
+                if (model.client_code == "imnpfhpc")
+                    pe = pe + ReportHelper.Irina_NeckCC(model);
+                else
+                    pe = pe + ReportHelper.Bhf_NeckCC(model);
             }
             if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
             {
@@ -1532,7 +1787,10 @@ namespace PainTrax.Web.Helper
             }
             if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.LowBackCC(model) + "<br/></p>";
+                if (model.client_code == "imnpfhpc")
+                    pe = pe + "<p>" + ReportHelper.Irina_LowBackCC(model) + "<br/></p>";
+                else
+                    pe = pe + "<p>" + ReportHelper.Bhf_LowBackCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
             {
@@ -2497,6 +2755,8 @@ namespace PainTrax.Web.Helper
             return string.Empty;
         }
 
+
+
         public static string GenerateAllergy(string allergy, string allergyDetails)
         {
             // 1. If "No"
@@ -2586,7 +2846,7 @@ namespace PainTrax.Web.Helper
             "seizure history",
             "sleep issues/difficulty",
             "anxiety/depression"
-           
+
         };
 
         public static string GenerateRos(List<string> selectedRos, string rosOther = null)
@@ -2624,6 +2884,42 @@ namespace PainTrax.Web.Helper
             }
 
             return string.Join(" ", parts);
+        }
+
+        public static string GenerateRosIrina(AIIntakeFormModel model)
+        {
+            var items = new (string Label, string SystemKey, string Value)[]
+ {
+            ("GENERAL", "General", model.GeneralROS),
+            ("SKIN", "Skin", model.SkinROS),
+            ("HEENT", "HEENT", model.HEENTROS),
+            ("NECK", "Neck", model.NeckROS),
+            ("CARDIOVASCULAR", "Cardiovascular", model.CardiovascularROS),
+            ("RESPIRATORY", "Respiratory", model.RespiratoryROS),
+            ("GASTROINTESTINAL", "Gastrointestinal", model.GastrointestinalROS),
+            ("URINARY", "Urinary", model.UrinaryROS),
+            ("PERIPHERAL VASCULAR", "Peripheral vascular", model.PeripheralvascularROS),
+            ("MUSCULOSKELETAL", "Musculoskeletal", model.MusculoskeletalROS),
+            ("NEUROLOGICAL", "Neurological", model.NeurologicalROS),
+            ("ENDOCRINE", "Endocrine", model.EndocrineROS)
+ };
+
+            var sb = new StringBuilder();
+
+            foreach (var item in items)
+            {
+                if (!string.IsNullOrWhiteSpace(item.Value))
+                {
+                    // Custom user text entered (e.g. "pain, stiffness")
+                    string description = item.Value.Trim();
+                    if (!description.EndsWith("."))
+                    {
+                        description += ".";
+                    }
+                    sb.AppendLine($"{item.Label}: {description}");
+                }
+            }
+            return sb.ToString().TrimEnd();
         }
 
         // Helper to format items with commas and "and"
@@ -2717,62 +3013,73 @@ namespace PainTrax.Web.Helper
             }
 
         }
-
+            
 
         public static string GenerateJob(AIIntakeFormModel model)
         {
-            if (model == null) return string.Empty;
+            var activities = new List<string>();
 
-            // Pronoun selection
-            bool isFemale = string.Equals(model.Gender, "2", StringComparison.OrdinalIgnoreCase);
-            string possessive = isFemale ? "Her" : "His";
-
-            // Map inputs to activity names
-            var rawActivities = new List<(string Name, string Hours)>
-        {
-            ("sitting", model.JobSitting),
-            ("standing", model.JobStanding),
-            ("driving", model.JobDriving),
-            ("bending", model.JobBending),
-            ("kneeling", model.JobKneeling),
-            ("crouching", model.JobCrouching),
-            ("lifting", model.JobLifting)
-        };
-
-            // Filter out empty/unspecified items
-            var filledActivities = rawActivities
-                .Where(a => !string.IsNullOrWhiteSpace(a.Hours))
-                .Select(a => (a.Name, Hours: a.Hours.Trim()))
-                .ToList();
-
-            if (!filledActivities.Any())
-                return string.Empty;
-
-            // Determine if lifting has weight associated
-            string weight = model.LiftingWeight?.FirstOrDefault()?.Trim();
-            string liftingWeightClause = !string.IsNullOrWhiteSpace(weight)
-                ? $"lifting {weight} pounds"
-                : "lifting";
-
-            // Group by hours if multiple activities share the same hours (e.g., "8 hours of standing, kneeling...")
-            var groupedByHours = filledActivities
-                .GroupBy(a => a.Hours)
-                .Select(g =>
+            // Helper local function: only adds if a value exists
+            void AddIfPresent(string? value, string label)
+            {
+                if (!string.IsNullOrWhiteSpace(value))
                 {
-                    string hoursStr = g.Key;
-                    string hourUnit = (hoursStr == "1" || hoursStr == "1.0") ? "hour" : "hours";
+                    activities.Add($"{label} {value.Trim()} hr.");
+                }
+            }
 
-                    var actionNames = g.Select(x => x.Name == "lifting" ? liftingWeightClause : x.Name).ToList();
+            AddIfPresent(model.JobSitting, "Sitting");
+            AddIfPresent(model.JobStanding, "Standing");
+            AddIfPresent(model.JobDriving, "Driving");
+            AddIfPresent(model.JobBending, "Bending");
+            AddIfPresent(model.WalkHr, "Walking");
+            AddIfPresent(model.JobKneeling, "Kneeling");
+            AddIfPresent(model.KneelHr, "Stooping");
+            AddIfPresent(model.JobCrouching, "Crouching");
+            AddIfPresent(model.JobLifting, "Lifting");
 
-                    string actionsJoined = FormatListWithAnd(actionNames);
+            // Lifting weights (only if any are checked)
+            if (model.LiftingWeight != null)
+            {
+                var validWeights = model.LiftingWeight
+                    .Where(w => !string.IsNullOrWhiteSpace(w))
+                    .Select(w => w.Trim())
+                    .ToList();
 
-                    return $"{hoursStr} {hourUnit} of {actionsJoined}";
-                })
-                .ToList();
+                if (validWeights.Any())
+                {
+                    activities.Add($"If lifting, how many pounds: {string.Join(", ", validWeights)}");
+                }
+            }
 
-            string combinedActivities = FormatListWithAnd(groupedByHours);
+            var lines = new List<string>();
 
-            return $"{possessive} job activities include {combinedActivities}.";
+            // Line 1: Only add if at least one activity has a value
+            if (activities.Any())
+            {
+                lines.Add($"On your job how many hours a day do you spend: {string.Join(" ", activities)}");
+            }
+
+            // Line 2: Reach Overhead / Reach Below Waist
+            var reachParts = new List<string>();
+
+            if (!string.IsNullOrWhiteSpace(model.ReachOverhead))
+            {
+                reachParts.Add($"Reach Overhead {model.ReachOverhead.Trim()}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.ReachBelowWaist))
+            {
+                reachParts.Add($"Reach Below Waist {model.ReachBelowWaist.Trim()}");
+            }
+
+            // Only add if at least one reach value is present
+            if (reachParts.Any())
+            {
+                lines.Add(string.Join("                      ", reachParts));
+            }
+
+            return string.Join(Environment.NewLine, lines);
         }
 
         private static string FormatListWithAnd(List<string> items)

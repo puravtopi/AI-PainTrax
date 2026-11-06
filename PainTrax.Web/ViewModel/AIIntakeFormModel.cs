@@ -193,10 +193,18 @@
         public List<string> NeckImproves { get; set; }
 
         public string MbPain { get; set; }
+        public string MidbackSection { get; set; }
+        public string mdbackSustainedPain { get; set; }
+        public string MidbackRadiatesTo { get; set; }
         public List<string> MbSymptoms { get; set; } = new List<string>();
         public List<string> MbWorsens { get; set; } = new List<string>();
         public List<string> MbImproves { get; set; } = new List<string>();
         public string MbImprovesOther { get; set; }
+
+        public List<string> mdbackPain { get; set; } = new List<string>();
+        public List<string> MidbackWorsens { get; set; } = new List<string>();
+        public List<string> MidbackImproves { get; set; } = new List<string>();
+        public string MidbackImprovesOther { get; set; }
 
         public string LowBackPain { get; set; }
         public List<string> lbackPain { get; set; }
@@ -209,8 +217,18 @@
         public List<string> LBSymptoms { get; set; } = new List<string>();
 
         // Pain classification & Axial triggers
+        public string lbackSustainedPain { get; set; } // FACET PAIN, SI JOINT PAIN, RADICULAR PAIN
+        public string LowBackRadiatesTo { get; set; } // FACET PAIN, SI JOINT PAIN, RADICULAR PAIN
         public string LBPainOption { get; set; } // FACET PAIN, SI JOINT PAIN, RADICULAR PAIN
+        public List<string> LowBackRadiates { get; set; } = new List<string>();
+        public List<string> LowBackAssociated { get; set; } = new List<string>();
+        public List<string> LowBackWorsens { get; set; } = new List<string>();
+        public List<string> LowBackImproves { get; set; } = new List<string>();
         public List<string> LBAxial { get; set; } = new List<string>();
+
+        public List<string> LbackPain { get; set; } = new();             // Stiffness, Diff sleeping, etc.
+        public string LbackSustainedPain { get; set; }                   // Radio: Sustained improvement with PT
+     
 
         // Radiation
         public string LBRadiatesTo { get; set; } // Left, Right, Bilateral
@@ -1013,6 +1031,10 @@
         public string JobKneeling { get; set; }
         public string JobCrouching { get; set; }
         public string JobLifting { get; set; }
+        public string WalkHr { get; set; }
+        public string KneelHr { get; set; }
+        public string ReachOverhead { get; set; }
+        public string ReachBelowWaist { get; set; }
         public List<string> LiftingWeight { get; set; } = new List<string>();
 
         //RECOMMENDATIONS
@@ -1049,7 +1071,7 @@
         public string RecommandationOther1 { get; set; }
         public string RecommandationOther2 { get; set; }
 
-
+        public string client_code { get; set; }
     }
 }
 
