@@ -1,8 +1,9 @@
-﻿<div class="accordion-body">   
+﻿<div class="accordion-body">
     <div id="rshPE" style="display:none">
         <h6 class="fw-bold">Right Shoulder</h6>
         <div class="select-group">
-            Inspection : There is            
+            Inspection : There is
+            <label><input type="checkbox" class="chkMulti" name="Rshmild" value="mild"> <span class="select-btn">mild</span></label>
             <label><input type="radio" name="RShPESwelling" value="Yes"> <span class="select-btn">+</span></label>
             <label><input type="radio" name="RShPESwelling" value="No"> <span class="select-btn">-</span></label>
             Swelling,&nbsp;&nbsp;&nbsp;
@@ -16,433 +17,434 @@
             <label><input type="radio" name="RShPEmasses" value="No"> <span class="select-btn">-</span></label>
             masses
             <p>
-            <input id="RShWellhealed" class="form-control d-inline" style="width:200px;" />
-            Well healed portal incisions.
+                <input id="RShWellhealed" class="form-control d-inline" style="width:200px;" />
+                Well healed portal incisions.
             </p>
         </div>
         <br />
-         <p>Palpation: There is tenderness over:</p>
-        <div class="select-group">          
-        
-        <table cellspacing="0" cellpadding="5" border="1"
+        <p>Palpation: There is tenderness over:</p>
+        <div class="select-group">
+
+            <table cellspacing="0" cellpadding="5" border="1"
                    style="width:50%;border-collapse:collapse; border:1px solid black;">
 
                 <tbody>
-                <tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            AC joint
-                        </label>
-                    </td>
-
-                        <td style="border:1px solid black;">
-                        
-                        <label><input type="radio" name="RshACjointPalpation" value="No"> <span class="select-btn">No </span></label>
-
-                        <label><input type="radio" name="RshACjointPalpation" value="mild"><span class="select-btn"> mild </span></label>
-
-                        <label><input type="radio" name="RshACjointPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
-
-                        <label><input type="radio" name="RshACjointPalpation" value="severe"><span class="select-btn">severe </span> </label>
-                    </td> 
-                </tr>
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            Scapula spine
-                        </label>
-                    </td>
-                   
-                    <td>
-                        <label><input type="radio" name="RshScapulaspinePalpation" value="No"> <span class="select-btn">No </span></label>
-
-                        <label><input type="radio" name="RshScapulaspinePalpation" value="mild"><span class="select-btn"> mild </span></label>
-
-                        <label><input type="radio" name="RshScapulaspinePalpation" value="moderate"> <span class="select-btn">moderate </span></label>
-
-                        <label><input type="radio" name="RshScapulaspinePalpation" value="severe"><span class="select-btn">severe </span> </label>
-                    </td>
-                </tr>
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            Anterior deltoid
-                        </label>
-                    </td>
+                            <label>
+                                AC joint
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshAnteriordeltoidPalpation" value="No"> <span class="select-btn">No </span></label>
 
-                        <label><input type="radio" name="RshAnteriordeltoidPalpation" value="mild"><span class="select-btn"> mild </span></label>
+                            <label><input type="radio" name="RshACjointPalpation" value="No"> <span class="select-btn">No </span></label>
 
-                        <label><input type="radio" name="RshAnteriordeltoidPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
+                            <label><input type="radio" name="RshACjointPalpation" value="mild"><span class="select-btn"> mild </span></label>
 
-                        <label><input type="radio" name="RshAnteriordeltoidPalpation" value="severe"><span class="select-btn">severe </span> </label>
-                    </td>
-                </tr>
-                <tr>
+                            <label><input type="radio" name="RshACjointPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
+
+                            <label><input type="radio" name="RshACjointPalpation" value="severe"><span class="select-btn">severe </span> </label>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            Proximal biceps tendon
-                        </label>
-                    </td>
+                            <label>
+                                Scapula spine
+                            </label>
+                        </td>
+
+                        <td>
+                            <label><input type="radio" name="RshScapulaspinePalpation" value="No"> <span class="select-btn">No </span></label>
+
+                            <label><input type="radio" name="RshScapulaspinePalpation" value="mild"><span class="select-btn"> mild </span></label>
+
+                            <label><input type="radio" name="RshScapulaspinePalpation" value="moderate"> <span class="select-btn">moderate </span></label>
+
+                            <label><input type="radio" name="RshScapulaspinePalpation" value="severe"><span class="select-btn">severe </span> </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                Anterior deltoid
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshProximalbicepstendonPalpation" value="No"> <span class="select-btn">No </span></label>
+                            <label><input type="radio" name="RshAnteriordeltoidPalpation" value="No"> <span class="select-btn">No </span></label>
 
-                        <label><input type="radio" name="RshProximalbicepstendonPalpation" value="mild"><span class="select-btn"> mild </span></label>
+                            <label><input type="radio" name="RshAnteriordeltoidPalpation" value="mild"><span class="select-btn"> mild </span></label>
 
-                        <label><input type="radio" name="RshProximalbicepstendonPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
+                            <label><input type="radio" name="RshAnteriordeltoidPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
 
-                        <label><input type="radio" name="RshProximalbicepstendonPalpation" value="severe"><span class="select-btn">severe </span> </label>
-                    </td>
-                </tr>
-                <tr>
+                            <label><input type="radio" name="RshAnteriordeltoidPalpation" value="severe"><span class="select-btn">severe </span> </label>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            Crepitus
-                        </label>
-                    </td>
+                            <label>
+                                Proximal biceps tendon
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshCrepitusPalpation" value="No"> <span class="select-btn">No </span></label>
+                            <label><input type="radio" name="RshProximalbicepstendonPalpation" value="No"> <span class="select-btn">No </span></label>
 
-                        <label><input type="radio" name="RshCrepitusPalpation" value="mild"><span class="select-btn"> mild </span></label>
+                            <label><input type="radio" name="RshProximalbicepstendonPalpation" value="mild"><span class="select-btn"> mild </span></label>
 
-                        <label><input type="radio" name="RshCrepitusPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
+                            <label><input type="radio" name="RshProximalbicepstendonPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
 
-                        <label><input type="radio" name="RshCrepitusPalpation" value="severe"><span class="select-btn">severe </span> </label>
-                    </td>
-                </tr>
-                
+                            <label><input type="radio" name="RshProximalbicepstendonPalpation" value="severe"><span class="select-btn">severe </span> </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                Crepitus
+                            </label>
+                        </td>
+
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshCrepitusPalpation" value="No"> <span class="select-btn">No </span></label>
+
+                            <label><input type="radio" name="RshCrepitusPalpation" value="mild"><span class="select-btn"> mild </span></label>
+
+                            <label><input type="radio" name="RshCrepitusPalpation" value="moderate"> <span class="select-btn">moderate </span></label>
+
+                            <label><input type="radio" name="RshCrepitusPalpation" value="severe"><span class="select-btn">severe </span> </label>
+                        </td>
+                    </tr>
 
 
-            </tbody>
-        </table>
+
+                </tbody>
+            </table>
         </div>
         <br />
         <div class="select-group">
-        <table cellspacing="0" cellpadding="5" border="1"
+            <table cellspacing="0" cellpadding="5" border="1"
                    style="width:50%;border-collapse:collapse; border:1px solid black;">
-            <thead>
-                <tr>
+                <thead>
+                    <tr>
                         <td style="border:1px solid black;"> </td>
                         <td style="border:1px solid black;">ROM (degrees) </td>
                         <td style="border:1px solid black;">Muscle strength </td>
 
                     </tr>
-            </thead>
-            <tbody>
-                <tr>
+                </thead>
+                <tbody>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            Forward elevation
-                        </label>
-                    </td>
-
-                        <td style="border:1px solid black;">
-                        <input id="RshAForwardelevation" class="form-control d-inline " style="width:50px" maxlength="3" />
-                        <label>
-                            /180
-                        </label>
-
-                    </td>
-                        <td style="border:1px solid black;">
-                        <input id="RshAForwardelevation1" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /5
-                        </label>
-
-                    </td>
-                </tr>
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            Abduction
-                        </label>
-                    </td>
+                            <label>
+                                Forward elevation
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <input id="RshAbduction" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /180
-                        </label>
+                            <input id="RshAForwardelevation" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <label>
+                                /180
+                            </label>
 
-                    </td>
-                     <td style="border:1px solid black;">
-                        <input id="RshAbduction1" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /5
-                        </label>
-
-                    </td>
-                </tr>
-                <tr>
+                        </td>
                         <td style="border:1px solid black;">
-                        <label>
-                            Internal rotation
-                        </label>
-                    </td>
+                            <input id="RshAForwardelevation1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
+                            <label>
+                                /5
+                            </label>
 
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <input id="RshInternalrotation" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /70
-                        </label>
-
-                    </td>
-                        <td style="border:1px solid black;">
-                        <input id="RshInternalrotation1" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /5
-                        </label>
-
-                    </td>
-                </tr>
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            External rotation
-                        </label>
-                    </td>
+                            <label>
+                                Abduction
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <input id="RshExternalrotation" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /90
-                        </label>
+                            <input id="RshAbduction" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <label>
+                                /180
+                            </label>
 
-                    </td>
+                        </td>
                         <td style="border:1px solid black;">
-                        <input id="RshExternalrotation1" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /5
-                        </label>
+                            <input id="RshAbduction1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
+                            <label>
+                                /5
+                            </label>
 
-                    </td>
-                </tr>
-                <tr>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            Posterior extension
-                        </label>
-                    </td>
-
-                        <td style="border:1px solid black;">
-                        <input id="RshPosteriorextension" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /60
-                        </label>
-
-                    </td>
-                        <td style="border:1px solid black;">
-                        <input id="RshPosteriorextension1" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /5
-                        </label>
-
-                    </td>
-                </tr>
-                
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            Adduction
-                        </label>
-                    </td>
+                            <label>
+                                Internal rotation
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <input id="RshAdduction" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /30
-                        </label>
+                            <input id="RshInternalrotation" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <label>
+                                /70
+                            </label>
 
-                    </td>
+                        </td>
                         <td style="border:1px solid black;">
-                        <input id="RshAdduction1" class="form-control d-inline " style="width:50px"  maxlength="3" />
-                        <label>
-                            /5
-                        </label>
+                            <input id="RshInternalrotation1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
+                            <label>
+                                /5
+                            </label>
 
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                External rotation
+                            </label>
+                        </td>
+
+                        <td style="border:1px solid black;">
+                            <input id="RshExternalrotation" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <label>
+                                /90
+                            </label>
+
+                        </td>
+                        <td style="border:1px solid black;">
+                            <input id="RshExternalrotation1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
+                            <label>
+                                /5
+                            </label>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                Posterior extension
+                            </label>
+                        </td>
+
+                        <td style="border:1px solid black;">
+                            <input id="RshPosteriorextension" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <label>
+                                /60
+                            </label>
+
+                        </td>
+                        <td style="border:1px solid black;">
+                            <input id="RshPosteriorextension1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
+                            <label>
+                                /5
+                            </label>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                Adduction
+                            </label>
+                        </td>
+
+                        <td style="border:1px solid black;">
+                            <input id="RshAdduction" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <label>
+                                /30
+                            </label>
+
+                        </td>
+                        <td style="border:1px solid black;">
+                            <input id="RshAdduction1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
+                            <label>
+                                /5
+                            </label>
+
+                        </td>
+                    </tr>
 
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         </div>
         <br />
         <div class="select-group">
-        <table cellspacing="0" cellpadding="5" border="1"
+            <table cellspacing="0" cellpadding="5" border="1"
                    style="width:50%;border-collapse:collapse; border:1px solid black;">
-            <thead>
-                <tr>
+                <thead>
+                    <tr>
                         <td style="border:1px solid black;"> PROVOCATIVE TEST</td>
                         <td style="border:1px solid black;">POSITIVE </td>
                         <td style="border:1px solid black;">NEGATIVE </td>
 
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            Hawkins
-                        </label>
-                    </td>
-
-                        <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshHawkins" value="Yes"> <span class="select-btn">+</span></label>
-
-                    </td>
-                        <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshHawkins" value="No"> <span class="select-btn">-</span></label>
-
-                    </td>
-                </tr>
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            Neer’s
-                        </label>
-                    </td>
+                            <label>
+                                Hawkins
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshNeers" value="Yes"> <span class="select-btn">+</span></label>
+                            <label><input type="radio" name="RshHawkins" value="Yes"> <span class="select-btn">+</span></label>
 
-                    </td>
+                        </td>
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshNeers" value="No"> <span class="select-btn">-</span></label>
+                            <label><input type="radio" name="RshHawkins" value="No"> <span class="select-btn">-</span></label>
 
-                    </td>
-                </tr>
-                <tr>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            Yergason
-                        </label>
-                    </td>
-
-                        <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshYergason" value="Yes"> <span class="select-btn">+</span></label>
-
-                    </td>
-                        <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshYergason" value="No"> <span class="select-btn">-</span></label>
-
-                    </td>
-                </tr>
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            Speed
-                        </label>
-                    </td>
+                            <label>
+                                Neer’s
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshSpeed" value="Yes"> <span class="select-btn">+</span></label>
+                            <label><input type="radio" name="RshNeers" value="Yes"> <span class="select-btn">+</span></label>
 
-                    </td>
+                        </td>
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshSpeed" value="No"> <span class="select-btn">-</span></label>
+                            <label><input type="radio" name="RshNeers" value="No"> <span class="select-btn">-</span></label>
 
-                    </td>
-                </tr>
-                <tr>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            O’Brien
-                        </label>
-                    </td>
-
-                        <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshOBrien " value="Yes"> <span class="select-btn">+</span></label>
-
-                    </td>
-                        <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshOBrien " value="No"> <span class="select-btn">-</span></label>
-
-                    </td>
-                </tr>
-
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            Liff-off
-                        </label>
-                    </td>
+                            <label>
+                                Yergason
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshLiffoff" value="Yes"> <span class="select-btn">+</span></label>
+                            <label><input type="radio" name="RshYergason" value="Yes"> <span class="select-btn">+</span></label>
 
-                    </td>
+                        </td>
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshLiffoff" value="No"> <span class="select-btn">-</span></label>
+                            <label><input type="radio" name="RshYergason" value="No"> <span class="select-btn">-</span></label>
 
-                    </td>
-                </tr>
-                <tr>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            Belly press
-                        </label>
-                    </td>
-
-                        <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshBellypress" value="Yes"> <span class="select-btn">+</span></label>
-
-                    </td>
-                        <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshBellypress" value="No"> <span class="select-btn">-</span></label>
-
-                    </td>
-                </tr>
-                <tr>
-                        <td style="border:1px solid black;">
-                        <label>
-                            Cross Arm
-                        </label>
-                    </td>
+                            <label>
+                                Speed
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshCrossArm" value="Yes"> <span class="select-btn">+</span></label>
+                            <label><input type="radio" name="RshSpeed" value="Yes"> <span class="select-btn">+</span></label>
 
-                    </td>
+                        </td>
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshCrossArm" value="No"> <span class="select-btn">-</span></label>
+                            <label><input type="radio" name="RshSpeed" value="No"> <span class="select-btn">-</span></label>
 
-                    </td>
-                </tr>
-                <tr>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid black;">
-                        <label>
-                            Drop Arm
-                        </label>
-                    </td>
+                            <label>
+                                O’Brien
+                            </label>
+                        </td>
 
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshDropArm" value="Yes"> <span class="select-btn">+</span></label>
+                            <label><input type="radio" name="RshOBrien " value="Yes"> <span class="select-btn">+</span></label>
 
-                    </td>
+                        </td>
                         <td style="border:1px solid black;">
-                        <label><input type="radio" name="RshDropArm" value="No"> <span class="select-btn">-</span></label>
+                            <label><input type="radio" name="RshOBrien " value="No"> <span class="select-btn">-</span></label>
 
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                Liff-off
+                            </label>
+                        </td>
+
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshLiffoff" value="Yes"> <span class="select-btn">+</span></label>
+
+                        </td>
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshLiffoff" value="No"> <span class="select-btn">-</span></label>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                Belly press
+                            </label>
+                        </td>
+
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshBellypress" value="Yes"> <span class="select-btn">+</span></label>
+
+                        </td>
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshBellypress" value="No"> <span class="select-btn">-</span></label>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                Cross Arm
+                            </label>
+                        </td>
+
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshCrossArm" value="Yes"> <span class="select-btn">+</span></label>
+
+                        </td>
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshCrossArm" value="No"> <span class="select-btn">-</span></label>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid black;">
+                            <label>
+                                Drop Arm
+                            </label>
+                        </td>
+
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshDropArm" value="Yes"> <span class="select-btn">+</span></label>
+
+                        </td>
+                        <td style="border:1px solid black;">
+                            <label><input type="radio" name="RshDropArm" value="No"> <span class="select-btn">-</span></label>
+
+                        </td>
+                    </tr>
 
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         </div>
         <p>
             <textarea id="txtRSh" class="form-control d-inline" style="width:95%"></textarea>
             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtRSh')"></i>
         </p>
-    </div>  
+    </div>
     <div id="lshPE" style="display:none">
         <h6 class="fw-bold">Left Shoulder</h6>
         <div class="select-group">
             Inspection : There is
+            <label><input type="checkbox" class="chkMulti" name="Lshmild" value="mild"> <span class="select-btn">mild</span></label>
             <label><input type="radio" name="LShPESwelling" value="Yes"> <span class="select-btn">+</span></label>
             <label><input type="radio" name="LShPESwelling" value="No"> <span class="select-btn">-</span></label>
             Swelling,&nbsp;&nbsp;&nbsp;
@@ -456,14 +458,14 @@
             <label><input type="radio" name="LShPEmasses" value="No"> <span class="select-btn">-</span></label>
             masses
             <p>
-            <input id="LShWellhealed" class="form-control d-inline" style="width:200px;" />
-            Well healed portal incisions.
+                <input id="LShWellhealed" class="form-control d-inline" style="width:200px;" />
+                Well healed portal incisions.
             </p>
         </div>
         <br />
-         <p>Palpation: There is tenderness over:</p>
+        <p>Palpation: There is tenderness over:</p>
         <div class="select-group">
-           
+
             <table cellspacing="0" cellpadding="5" border="1"
                    style="width:50%;border-collapse:collapse; border:1px solid black;">
 
@@ -588,7 +590,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="LshAForwardelevation1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="LshAForwardelevation1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -610,7 +612,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="LshAbduction1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="LshAbduction1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -632,7 +634,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="LshInternalrotation1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="LshInternalrotation1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -654,7 +656,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="LshExternalrotation1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="LshExternalrotation1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -676,7 +678,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="LshPosteriorextension1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="LshPosteriorextension1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -699,7 +701,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="LshAdduction1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="LshAdduction1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -883,6 +885,7 @@
         <h6 class="fw-bold">Right Knee</h6>
         <div class="select-group">
             Inspection : There is
+            <label><input type="checkbox" class="chkMulti" name="RKnhmild" value="mild"> <span class="select-btn">mild</span></label>
             <label><input type="radio" name="RKnPESwelling" value="Yes"> <span class="select-btn">+</span></label>
             <label><input type="radio" name="RKhPESwelling" value="No"> <span class="select-btn">-</span></label>
             Swelling,&nbsp;&nbsp;&nbsp;
@@ -896,14 +899,14 @@
             <label><input type="radio" name="RKnPEmasses" value="No"> <span class="select-btn">-</span></label>
             masses
             <p>
-            <input id="RKnWellhealed" class="form-control d-inline" style="width:200px;" />
-            Well healed portal incisions.
+                <input id="RKnWellhealed" class="form-control d-inline" style="width:200px;" />
+                Well healed portal incisions.
             </p>
         </div>
         <br />
-         <p>Palpation: There is tenderness over:</p>
+        <p>Palpation: There is tenderness over:</p>
         <div class="select-group">
-           
+
             <table cellspacing="0" cellpadding="5" border="1"
                    style="width:50%;border-collapse:collapse; border:1px solid black;">
 
@@ -1028,7 +1031,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="RKnFlexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="RKnFlexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -1050,14 +1053,14 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="RKnExtension1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="RKnExtension1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
 
                         </td>
                     </tr>
-                    
+
 
 
                 </tbody>
@@ -1251,6 +1254,7 @@
         <h6 class="fw-bold">Left Knee</h6>
         <div class="select-group">
             Inspection : There is
+            <label><input type="checkbox" class="chkMulti" name="Lknmild" value="mild"> <span class="select-btn">mild</span></label>
             <label><input type="radio" name="LKnPESwelling" value="Yes"> <span class="select-btn">+</span></label>
             <label><input type="radio" name="LKhPESwelling" value="No"> <span class="select-btn">-</span></label>
             Swelling,&nbsp;&nbsp;&nbsp;
@@ -1264,14 +1268,14 @@
             <label><input type="radio" name="LKnPEmasses" value="No"> <span class="select-btn">-</span></label>
             masses
             <p>
-            <input id="LKnWellhealed" class="form-control d-inline" style="width:200px;" />
-            Well healed portal incisions.
+                <input id="LKnWellhealed" class="form-control d-inline" style="width:200px;" />
+                Well healed portal incisions.
             </p>
         </div>
         <br />
         <P>Palpation: There is tenderness over:</P>
-        <div class="select-group">          
-            
+        <div class="select-group">
+
             <table cellspacing="0" cellpadding="5" border="1"
                    style="width:50%;border-collapse:collapse; border:1px solid black;">
 
@@ -1396,7 +1400,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="LKnFlexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="LKnFlexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -1418,7 +1422,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="LKnExtension1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="LKnExtension1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -1627,7 +1631,7 @@
             <input id="rhipPEinspection" class="form-control d-inline " style="width:250px" />
 
         </div>
-       @*  <div class="select-group">
+        @*  <div class="select-group">
             Inspection : There is
             <label><input type="radio" name="rhipPESwelling" value="Yes"> <span class="select-btn">+</span></label>
             <label><input type="radio" name="rhipPESwelling" value="No"> <span class="select-btn">-</span></label>
@@ -1720,7 +1724,7 @@
 
                         </td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td style="border:1px solid black;">
                             <label>
                                 Hip Thrust test
@@ -1757,20 +1761,20 @@
         </div>
         <br />
         <div class="select-group">
-            Tenderness to Palpation          
-            
+            Tenderness to Palpation
+
             <label><input type="checkbox" class="chkMulti" name="rhipPEtenderness" value="Great Troch"> <span class="select-btn">Great Troch</span></label>
             <label><input type="checkbox" class="chkMulti" name="rhipPEtenderness" value="Groin"> <span class="select-btn">Groin</span></label>
             <label><input type="checkbox" class="chkMulti" name="rhipPEtenderness" value="Medial thigh"> <span class="select-btn">Medial thigh</span></label>
             <label><input type="checkbox" class="chkMulti" name="rhipPEtenderness" value=" PSIS"> <span class="select-btn"> PSIS.</span></label>
-           
+
 
         </div>
         <br />
         <div class="select-group">
             ROM
             <label><input type="radio" name="rhipPEROM" value="Full"> <span class="select-btn">Full</span></label>
-            <label><input type="radio" name="rhipPEROM" value="Limited"> <span class="select-btn">Limited and painful.</span></label>           
+            <label><input type="radio" name="rhipPEROM" value="Limited"> <span class="select-btn">Limited and painful.</span></label>
         </div>
         <br />
         <div class="select-group">
@@ -1800,7 +1804,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rhipPEFlex1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rhipPEFlex1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -1822,7 +1826,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rhipPEExt1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rhipPEExt1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -1844,7 +1848,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rhipPEAbd1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rhipPEAbd1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -1866,7 +1870,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rhipPEAdd1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rhipPEAdd1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -1876,7 +1880,7 @@
                     <tr>
                         <td style="border:1px solid black;">
                             <label>
-                               IR
+                                IR
                             </label>
                         </td>
 
@@ -1888,7 +1892,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rhipPEIR1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rhipPEIR1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -1910,21 +1914,21 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rhipPEER1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rhipPEER1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
 
                         </td>
                     </tr>
-                    
+
 
 
 
                 </tbody>
             </table>
         </div>
-      
+
         <p>
             <textarea id="txtRHip" class="form-control d-inline" style="width:95%"></textarea>
             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtRHip')"></i>
@@ -1932,7 +1936,7 @@
     </div>
     <div id="lhipPE" style="display:none">
         <h6 class="fw-bold">Left Hip</h6>
-         <div class="select-group">
+        <div class="select-group">
             Inspection : There is
 
             <label><input type="checkbox" class="chkMulti" name="lhipPEInspection" value="Swelling"> <span class="select-btn">Swelling</span></label>
@@ -2115,7 +2119,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lhipPEFlex1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lhipPEFlex1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2137,7 +2141,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lhipPEExt1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lhipPEExt1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2159,7 +2163,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lhipPEAbd1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lhipPEAbd1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2181,7 +2185,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lhipPEAdd1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lhipPEAdd1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2203,7 +2207,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lhipPEIR1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lhipPEIR1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2225,7 +2229,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lhipPEER1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lhipPEER1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2285,13 +2289,13 @@
             <label><input type="checkbox" class="chkMulti" name="ranklePEtenderness" value="PTT"> <span class="select-btn">PTT</span></label>
             <label><input type="checkbox" class="chkMulti" name="ranklePEtenderness" value="Achilles ligament"> <span class="select-btn">Achilles ligament</span></label>
             <label><input type="checkbox" class="chkMulti" name="ranklePEtenderness" value="5th MT base"> <span class="select-btn">5th MT base</span></label>
-           
-           
+
+
         </div>
         <br />
         <div class="select-group">
             <label><input type="checkbox" class="chkMulti" name="ranklePENoevidence" value="No evidence of any masses"> <span class="select-btn">No evidence of any masses.</span></label>
-             </div>
+        </div>
         <br />
         <div class="select-group">
             <table cellspacing="0" cellpadding="5" border="1"
@@ -2320,7 +2324,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rankleDorsiflexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rankleDorsiflexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2342,14 +2346,14 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="ranklePlantarflex1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="ranklePlantarflex1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
 
                         </td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td style="border:1px solid black;">
                             <label>
                                 Inversion
@@ -2364,7 +2368,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rankleInversion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rankleInversion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2386,7 +2390,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rankleEversion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rankleEversion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2494,13 +2498,13 @@
             <label><input type="checkbox" class="chkMulti" name="lanklePEtenderness" value="PTT"> <span class="select-btn">PTT</span></label>
             <label><input type="checkbox" class="chkMulti" name="lanklePEtenderness" value="Achilles ligament"> <span class="select-btn">Achilles ligament</span></label>
             <label><input type="checkbox" class="chkMulti" name="lanklePEtenderness" value="5th MT base"> <span class="select-btn">5th MT base</span></label>
-            
+
 
         </div>
         <br />
         <div class="select-group">
             <label><input type="checkbox" class="chkMulti" name="lanklePENoevidence" value="No evidence of any masses"> <span class="select-btn">No evidence of any masses.</span></label>
-             </div>
+        </div>
         <br />
         <div class="select-group">
             <table cellspacing="0" cellpadding="5" border="1"
@@ -2529,7 +2533,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lankleDorsiflexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lankleDorsiflexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2551,7 +2555,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lanklePlantarflex1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lanklePlantarflex1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2573,7 +2577,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lankleInversion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lankleInversion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2595,7 +2599,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lankleEversion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lankleEversion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2693,9 +2697,9 @@
             <label><input type="radio" name="rwristPEPalpation" value="severe"> <span class="select-btn">severe </span></label>
             <label>tenderness</label>
             <label><input type="checkbox" class="chkMulti" name="rwristPEtenderness" value="DRUJ"> <span class="select-btn">DRUJ</span></label>
-            <label><input type="checkbox" class="chkMulti" name="rwristPEtenderness" value="radial carpal joint"> <span class="select-btn">radial carpal joint</span></label>           
-            <label><input type="checkbox" class="chkMulti" name="rwristPEtenderness" value="ulnar carpal joint"> <span class="select-btn">ulnar carpal joint</span></label>           
-            
+            <label><input type="checkbox" class="chkMulti" name="rwristPEtenderness" value="radial carpal joint"> <span class="select-btn">radial carpal joint</span></label>
+            <label><input type="checkbox" class="chkMulti" name="rwristPEtenderness" value="ulnar carpal joint"> <span class="select-btn">ulnar carpal joint</span></label>
+
 
         </div>
         <br />
@@ -2730,7 +2734,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rwristPEDorsiflexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rwristPEDorsiflexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2752,7 +2756,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rwristPalmarflexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rwristPalmarflexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2774,7 +2778,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rwristRadialdev1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rwristRadialdev1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2796,7 +2800,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="rwristUlnardev1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="rwristUlnardev1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -2942,13 +2946,13 @@
             <label><input type="radio" name="lwristPEPalpation" value="severe"> <span class="select-btn">severe </span></label>
             <label>tenderness</label>
             <label><input type="checkbox" class="chkMulti" name="lwristPEtenderness" value="DRUJ"> <span class="select-btn">DRUJ</span></label>
-            <label><input type="checkbox" class="chkMulti" name="lwristPEtenderness" value="radial carpal joint"> <span class="select-btn">radial carpal joint</span></label>           
-            <label><input type="checkbox" class="chkMulti" name="lwristPEtenderness" value="ulnar carpal joint"> <span class="select-btn">ulnar carpal joint</span></label>           
+            <label><input type="checkbox" class="chkMulti" name="lwristPEtenderness" value="radial carpal joint"> <span class="select-btn">radial carpal joint</span></label>
+            <label><input type="checkbox" class="chkMulti" name="lwristPEtenderness" value="ulnar carpal joint"> <span class="select-btn">ulnar carpal joint</span></label>
             @* <label><input type="checkbox" class="chkMulti" name="lwristPEtenderness" value="No evidence of any masses"> <span class="select-btn">No evidence of any masses.</span></label> *@
 
         </div>
         <br />
-         <div class="select-group">
+        <div class="select-group">
             <label><input type="checkbox" class="chkMulti" name="lwristPENoevidence" value="No evidence of any masses"> <span class="select-btn">No evidence of any masses.</span></label>
         </div>
         <br />
@@ -2979,7 +2983,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lwristPEDorsiflexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lwristPEDorsiflexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3001,7 +3005,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lwristPalmarflexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lwristPalmarflexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3023,7 +3027,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lwristRadialdev1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lwristRadialdev1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3045,7 +3049,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lwristUlnardev1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lwristUlnardev1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3195,11 +3199,11 @@
             <label><input type="checkbox" class="chkMulti" name="relbowPEtenderness" value="olecranon"> <span class="select-btn">olecranon</span></label>
             <label><input type="checkbox" class="chkMulti" name="relbowPEtenderness" value="radial head"> <span class="select-btn">radial head</span></label>
             <label><input type="checkbox" class="chkMulti" name="relbowPEtenderness" value="ulnar nerve"> <span class="select-btn">ulnar nerve</span></label>
-            
+
 
         </div>
         <br />
-         <div class="select-group">
+        <div class="select-group">
             <label><input type="checkbox" class="chkMulti" name="relbowPENoevidence" value="No evidence of any masses"> <span class="select-btn">No evidence of any masses.</span></label>
         </div>
         <br />
@@ -3230,7 +3234,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="relbowPEFlexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="relbowPEFlexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3252,7 +3256,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="relbowPEFullExtension1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="relbowPEFullExtension1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3274,7 +3278,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="relbowPESupin" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="relbowPESupin" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3296,14 +3300,14 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="relbowPEPron1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="relbowPEPron1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
 
                         </td>
                     </tr>
-                    
+
 
 
 
@@ -3387,7 +3391,7 @@
 
                         </td>
                     </tr>
-                     <tr>
+                    <tr>
                         <td style="border:1px solid black;">
                             <label>
                                 Resisted wrist extension test
@@ -3462,7 +3466,7 @@
             <label><input type="checkbox" class="chkMulti" name="lelbowPEtenderness" value="olecranon"> <span class="select-btn">olecranon</span></label>
             <label><input type="checkbox" class="chkMulti" name="lelbowPEtenderness" value="radial head"> <span class="select-btn">radial head</span></label>
             <label><input type="checkbox" class="chkMulti" name="lelbowPEtenderness" value="ulnar nerve"> <span class="select-btn">ulnar nerve</span></label>
-            
+
 
         </div>
         <br />
@@ -3497,7 +3501,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lelbowPEFlexion1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lelbowPEFlexion1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3519,7 +3523,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lelbowPEFullExtension1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lelbowPEFullExtension1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3541,7 +3545,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lelbowPESupin" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lelbowPESupin" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3563,7 +3567,7 @@
 
                         </td>
                         <td style="border:1px solid black;">
-                            <input id="lelbowPEPron1" class="form-control d-inline " style="width:50px" maxlength="3" />
+                            <input id="lelbowPEPron1" class="form-control d-inline " style="width:50px" value="5" maxlength="3" />
                             <label>
                                 /5
                             </label>
@@ -3695,5 +3699,5 @@
             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtlelbow')"></i>
         </p>
     </div>
-   
+
 </div>

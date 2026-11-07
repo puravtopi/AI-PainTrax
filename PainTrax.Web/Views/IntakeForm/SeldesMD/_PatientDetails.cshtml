@@ -38,18 +38,22 @@
             <option value="left-handed">L</option>
             <option value="ambidextrous">A</option>
         </select>
-        <input id="txtDominantHand" class="form-control d-inline w-25" value="None" />
-        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtDominantHand')"></i>
+        @* <input id="txtDominantHand" class="form-control d-inline w-25" value="None" /> *@
+       @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'txtDominantHand')"></i> *@
         <p>
             DOB:
             <input id="DOB" name="DOB" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
             &nbsp;&nbsp; Age:
             <input id="Age" name="Age" class="form-control d-inline" style="width:50px" /> years
-            &nbsp;&nbsp; Height
-            <input id="Height" name="Height:" class="form-control d-inline" style="width:50px" />
-            &nbsp;&nbsp; Weight:
-            <input id="Weight" name="Weight" class="form-control d-inline" style="width:50px" /> 
-
+            &nbsp;&nbsp; 
+            <b>VITAL SIGNS:</b>&nbsp;&nbsp;&nbsp;&nbsp;Height:
+            <input id="Heightft" name="Heightft" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />ft
+            <input id="Heightinch" name="Heightinch" class="form-control d-inline" style="width:30px" onchange="calculateBMI()" />inches
+            Weight:
+            <input id="Weight" name="Weight" class="form-control d-inline" onchange="calculateBMI()" style="width:50px" />
+            lbs,           
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BMI:
+            <input id="BMI" name="BMI" class="form-control d-inline" style="width:100px" />
             &nbsp;&nbsp;DOA:
             <input id="DOA" name="DOA" type="date" class="form-control d-inline" style="width:125px" onblur="fnvalidateDatefields()" />
         </p>

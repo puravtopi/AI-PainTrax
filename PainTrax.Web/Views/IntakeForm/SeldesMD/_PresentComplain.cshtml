@@ -8,7 +8,11 @@
             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShPain')"></i>/10
 
             <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
-            <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label><span>.</span>
+            <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
            @*  <span>Pain in the</span>
             <label><input type="checkbox" class="chkMulti" name="RShPainIn" value="Anterior aspect"> <span class="select-btn">Anterior aspect</span> </label>
             <label><input type="checkbox" class="chkMulti" name="RShPainIn" value="Posterior aspect"> <span class="select-btn">Posterior aspect </span></label><span>.</span> *@
@@ -35,6 +39,10 @@
             <label><input type="radio" name="RShReachBack" value="Yes"> <span class="select-btn">Y</span></label>
             <label><input type="radio" name="RShReachBack" value="No"> <span class="select-btn">N</span></label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Worse with
+            <label><input type="checkbox" class="chkMulti" name="RShROM" value="ROM"> <span class="select-btn">ROM</span></label>
+            <input id="txtRShROM" name="txtRShROM" class="form-control d-inline" style="width:200px;" />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Unable to sleep at night:
             <label><input type="radio" name="RShSleepIssue" value="Yes"> <span class="select-btn">Y</span></label>
             <label><input type="radio" name="RShSleepIssue" value="No"><span class="select-btn"> N</span></label>
@@ -59,7 +67,11 @@
             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LShPain')"></i>/10
 
             <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
-            <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label><span>.</span>
+            <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
             @* Pain in the
             <label><input type="checkbox" class="chkMulti" name="LShPainIn" value="Anterior aspect"> <span class="select-btn">Anterior aspect</span> </label>
             <label><input type="checkbox" class="chkMulti" name="LShPainIn" value="Posterior aspect"> <span class="select-btn">Posterior aspect</span> </label><span>.</span> *@
@@ -85,7 +97,10 @@
             Diff Reach back:
             <label><input type="radio" name="LShReachBack" value="Yes"> <span class="select-btn">Y</span></label>
             <label><input type="radio" name="LShReachBack" value="No"> <span class="select-btn">N</span></label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            
+            Worse with
+            <label><input type="checkbox" class="chkMulti" name="LShROM" value="ROM"> <span class="select-btn">ROM</span></label>
+            <input id="txtLShROM" name="txtLShROM" class="form-control d-inline" style="width:200px;" />
             Unable to sleep at night:
             <label><input type="radio" name="LShSleepIssue" value="Yes"><span class="select-btn"> Y</span></label>
             <label><input type="radio" name="LShSleepIssue" value="No"> <span class="select-btn">N</span></label>
@@ -110,7 +125,11 @@
             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RKnPain')"></i> /10
 
             <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
-            <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label><span>.</span>
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
             Patient has
             <label><input type="checkbox" class="chkMulti" name="RKnSymptomsPatient" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
             <label><input type="checkbox" class="chkMulti" name="RKnSymptomsPatient" value="Weakness"> <span class="select-btn">Weakness</span></label><span>.</span>
@@ -126,9 +145,9 @@
             <label><input type="radio" name="RKnSwelling" value="No"> <span class="select-btn">N</span></label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Diff :
-            <label><input type="radio" name="RKndiff" value="Bend"> <span class="select-btn">Bending</span></label>
-            <label><input type="radio" name="RKndiff" value="Kneel"> <span class="select-btn">Kneel</span></label>
-            <label><input type="radio" name="RKndiff" value="Squat"> <span class="select-btn">Squat</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKndiff" value="Bend"> <span class="select-btn">Bending</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKndiff" value="Kneel"> <span class="select-btn">Kneel</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKndiff" value="Squat"> <span class="select-btn">Squat</span></label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Diff rising from chair:
             <label><input type="radio" name="RKnRisingFromChair" value="Yes"> <span class="select-btn">Y</span></label>
@@ -141,7 +160,9 @@
             <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Clicking"> <span class="select-btn">Clicking </span></label>
             <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Popping"> <span class="select-btn">Popping </span></label>
             <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Buckling"><span class="select-btn"> Buckling </span></label>
+            <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
             <label><input type="checkbox" class="chkMulti" name="RKnDiffi" value="Locking"> <span class="select-btn">Locking</span></label>
+            Improved with:
             Improved with:
             <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="Rest"> <span class="select-btn">Rest</span></label>
             <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="Med"><span class="select-btn">Med</span></label>
@@ -161,7 +182,11 @@
             <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LKnPain')"></i> /10
 
             <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Constant"><span class="select-btn"> Constant</span></label>
-            <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Intermittent"><span class="select-btn"> Intermittent</span></label><span>.</span>
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Intermittent"><span class="select-btn"> Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
             Patient has
             <label><input type="checkbox" class="chkMulti" name="LKnSymptomsPatient" value="Stiffness"> <span class="select-btn">Stiffness</span></label>
             <label><input type="checkbox" class="chkMulti" name="LKnSymptomsPatient" value="Weakness"><span class="select-btn"> Weakness</span></label><span>.</span>
@@ -192,6 +217,7 @@
             <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Clicking"><span class="select-btn"> Clicking </span></label>
             <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Popping"> <span class="select-btn">Popping </span></label>
             <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Buckling"> <span class="select-btn">Buckling </span></label>
+            <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
             <label><input type="checkbox" class="chkMulti" name="LKnDiffi" value="Locking"> <span class="select-btn">Locking</span></label>
             Improved with:
             <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="Rest"><span class="select-btn"> Rest</span></label>
@@ -214,6 +240,10 @@
 
             <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="Constant"><span class="select-btn"> Constant</span></label>
             <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="achy"> <span class="select-btn">achy</span></label>
             <label><input type="checkbox" class="chkMulti" name="RHipSymptoms" value="Locking"><span class="select-btn"> Locking</span></label><span>.</span>
 
             @* Pain in the
@@ -253,6 +283,10 @@
 
             <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="Constant"> <span class="select-btn">Constant</span></label>
             <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="Intermittent"><span class="select-btn"> Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="achy"> <span class="select-btn">achy</span></label>
             <label><input type="checkbox" class="chkMulti" name="LHipSymptoms" value="Locking"><span class="select-btn"> Locking</span></label><span>.</span>
 
             @* Pain in the
@@ -292,6 +326,10 @@
 
             <label><input type="checkbox" class="chkMulti" name="RankleSymptoms" value="Constant"><span class="select-btn"> Constant</span></label>
             <label><input type="checkbox" class="chkMulti" name="RankleSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RankleSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RankleSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RankleSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RankleSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
            
 
             @* Pain in the
@@ -331,6 +369,10 @@
 
             <label><input type="checkbox" class="chkMulti" name="LankleSymptoms" value="Constant"><span class="select-btn"> Constant</span></label>
             <label><input type="checkbox" class="chkMulti" name="LankleSymptoms" value="Intermittent"> <span class="select-btn">Intermittent</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LankleSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LankleSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LankleSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LankleSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
 
 
             @* Pain in the
@@ -373,6 +415,10 @@
             <label><input type="checkbox" class="chkMulti" name="RWristymptoms" value="Weakness"><span class="select-btn"> Weakness</span></label>
             <label><input type="checkbox" class="chkMulti" name="RWristSymptoms" value="Numbness"><span class="select-btn"> Numbness</span></label>
             <label><input type="checkbox" class="chkMulti" name="RWristSymptoms" value="Tingling"><span class="select-btn"> Tingling</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RWristSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RWristSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RWristSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RWristSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
 
         </div>
 
@@ -408,6 +454,10 @@
             <label><input type="checkbox" class="chkMulti" name="LWristymptoms" value="Weakness"><span class="select-btn"> Weakness</span></label>
             <label><input type="checkbox" class="chkMulti" name="LWristSymptoms" value="Numbness"><span class="select-btn"> Numbness</span></label>
             <label><input type="checkbox" class="chkMulti" name="LWristSymptoms" value="Tingling"><span class="select-btn"> Tingling</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LWristSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LWristSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LWristSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LWristSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
 
         </div>
 
@@ -443,6 +493,10 @@
             <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="Weakness"><span class="select-btn"> Weakness</span></label>
             <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="Numbness"><span class="select-btn"> Numbness</span></label>
             <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="Tingling"><span class="select-btn"> Tingling</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="RElbowSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
 
         </div>
 
@@ -478,6 +532,10 @@
             <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="Weakness"> <span class="select-btn">Weakness</span></label>
             <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="Numbness"> <span class="select-btn">Numbness</span></label>
             <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="Tingling"> <span class="select-btn">Tingling</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="sharp"> <span class="select-btn">sharp</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="stabbing"> <span class="select-btn">stabbing</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="dull"> <span class="select-btn">dull</span></label>
+            <label><input type="checkbox" class="chkMulti" name="LElbowSymptoms" value="achy"> <span class="select-btn">achy</span></label><span>.</span>
         </div>
 
         <div class="select-group">

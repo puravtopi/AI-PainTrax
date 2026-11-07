@@ -36,20 +36,38 @@
             </p>
         </div>
         <div class="select-group">
+           
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Apply Ice Pack for"> <span class="select-btn">Apply Ice Pack for</span></label>
+                
+                
+                <input type="text" id="ApplyIcePackDesc" name="ApplyIcePackDesc" class="form-control d-inline" style="width:80%;" />
+            
+        </div>
+        <div class="select-group">
+           
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Recommended"> <span class="select-btn">Recommended</span></label>
+                 
+                <input type="text" id="braceDesc" name="braceDesc" class="form-control d-inline" style="width:80%;" />
+                brace
+
+                
+            
+        </div>
+        <div class="select-group">
             <p>
                 <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Continue anti-inflammatory medications"><span class="select-btn"> Continue anti-inflammatory and muscle relaxant medications PRN</span></label>
             </p>
         </div>
         <div class="select-group">
-            <p>
-                <label><input type="radio" name="StartPhysical" value="Start Physical Therapy"> <span class="select-btn">Start Physical Therapy</span></label>
-                <label><input type="radio" name="StartPhysical" value="Continue physical therapy"> <span class="select-btn">Continue physical therapy</span></label>
+           
+                Physical
+                <label><input type="radio" name="StartPhysical" value="Start"> <span class="select-btn">Start</span></label>
+                <label><input type="radio" name="StartPhysical" value="Continue"> <span class="select-btn">Continue</span></label>
 
+                <input type="text" id="ContinuePTDesc" name="ContinuePTDesc" class="form-control d-inline" style="width:80%;" />
 
-
-                <input id="ContinuePT" class="form-control d-inline" style="width:30%" placeholder="Specify" />
-                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ContinuePT')"></i>
-            </p>
+                
+            
         </div>
     @*     <div class="select-group">
             <p>
@@ -93,6 +111,15 @@
 
                 <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="Will get authorization"> <span class="select-btn">Will get authorization</span></label> *@
             </p>
+        </div>
+        <div class="select-group">
+           
+                <label><input type="checkbox" class="chkMulti" name="TreatmentPlanC" value="MRI"> <span class="select-btn">MRI</span></label>
+                <input type="text" id="MRIorderedDesc" name="MRIorderedDesc" class="form-control d-inline" style="width:50%;" />
+                <label><input type="checkbox" class="chkMulti" name="TreatmentMRIordered" value="Pending"> <span class="select-btn">Pending</span></label>
+                <label><input type="checkbox" class="chkMulti" name="TreatmentMRIordered" value="Ordered"> <span class="select-btn">Ordered</span></label>
+                
+           
         </div>
         @* <div class="select-group">
             <p>
