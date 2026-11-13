@@ -442,7 +442,7 @@ namespace PainTrax.Web.Helper
             return sb.ToString().Trim();
         }
 
-       
+
 
         public static string MidbackCC(AIIntakeFormModel modal)
         {
@@ -1691,12 +1691,15 @@ namespace PainTrax.Web.Helper
                 tendernessSentence += ".";
             }
 
-            sentences.Add(tendernessSentence);
-            sentences.Add(" Facet loading maneuvers are positive.");
+            if (!string.IsNullOrEmpty(tendernessSentence))
+            {
+                sentences.Add(tendernessSentence);
+                sentences.Add(" Facet loading maneuvers are positive.");
+            }
             // --- 2. Spurling's Test Sentence ---
             if (!string.IsNullOrWhiteSpace(model.NeckSpurlingTest))
             {
-                string spurlingResult = model.NeckSpurlingTest.Trim();
+                string spurlingResult = model.NeckSpurlingTest.Trim().ToLower();
                 string spurlingSentence = $"The Spurling's test is {spurlingResult}";
 
                 if (!string.IsNullOrWhiteSpace(model.NeckSpurlingTestOther))
@@ -1727,7 +1730,8 @@ namespace PainTrax.Web.Helper
             string targetArea = string.Join(" ", new[] { position, " at ", levels }.Where(s => !string.IsNullOrWhiteSpace(s)));
             string targetPrefix = !string.IsNullOrWhiteSpace(targetArea) ? $"{targetArea} " : string.Empty;
 
-            lines.Add($"Patient has pain and tenderness over the {targetPrefix}facet joints. Facet loading maneuvers are positive.");
+            if (!string.IsNullOrEmpty(targetPrefix))
+                lines.Add($"Patient has pain and tenderness over the {targetPrefix} facet joints. Facet loading maneuvers are positive.");
 
             // --- 2. SI Joint & Special Signs ---
             bool hasSiJoint = !string.IsNullOrWhiteSpace(model.LBOnexam);
@@ -1754,7 +1758,7 @@ namespace PainTrax.Web.Helper
             // --- 3. SLR Test ---
             if (!string.IsNullOrWhiteSpace(model.LBSlrTest))
             {
-                string slrLine = $"The Spurling's test is {model.LBSlrTest.Trim()}";
+                string slrLine = $"Straight leg raise test is {model.LBSlrTest.Trim().ToLower()}";
 
                 if (!string.IsNullOrWhiteSpace(model.LBSlrTestOther))
                 {
@@ -2483,11 +2487,14 @@ namespace PainTrax.Web.Helper
             string pName = model.LN + " " + model.FN;
 
             // 1. Encounter / Introduction
-            string accidentType = model.StatesType != null && model.StatesType.Any()
-                ? string.Join(", ", model.StatesType).Trim()
-                : "motor vehicle accident";
+            //string accidentType = model.StatesType != null && model.StatesType.Any()
+            //    ? string.Join(", ", model.StatesType).Trim()
+            //    : "motor vehicle accident";
 
-            string formattedDoa = !string.IsNullOrWhiteSpace(model.lblDOA) ? model.lblDOA.Trim() : "an unspecified date";
+            string accidentType = (model.InjuryType.ToLower() == "wc") ? "work-related accident" : "motor vehicle accident";
+            //string doaStr = model.DOA ?? "____";
+
+            string formattedDoa = !string.IsNullOrWhiteSpace(model.lblDOA) ? Convert.ToDateTime(model.lblDOA.Trim()).ToString("MM/dd/yyyy") : "an unspecified date";
             string title = (isFemale ? "Ms." : "Mr.");
             string patientName = !string.IsNullOrWhiteSpace(pName) ? pName.Trim() : "Patient";
             string handedness = !string.IsNullOrWhiteSpace(model.DominantHand) ? model.DominantHand.Trim() : "right-handed";
@@ -2616,6 +2623,13 @@ namespace PainTrax.Web.Helper
 
                 string recoveryStr = recovered ? "has completely recovered" : "has not completely recovered";
                 sentences.Add($"Patient had a previous accident on {pastDate} and injured {pronounPoss} {injuredParts} and {recoveryStr}.");
+            }
+
+
+            if (!string.IsNullOrEmpty(model.InjuryType))
+            {
+                if (model.InjuryType.ToLower() != "mm")
+                    sentences.Add($"During the accident, the patient reports injuries to {string.Join(",", model.Complaints)}".Replace("  ", " ").ToLower());
             }
 
             // 9. Physical Therapy & Chiropractic Care
@@ -3013,7 +3027,7 @@ namespace PainTrax.Web.Helper
             }
 
         }
-            
+
 
         public static string GenerateJob(AIIntakeFormModel model)
         {

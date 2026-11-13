@@ -1106,6 +1106,8 @@ namespace PainTrax.Web.Controllers
                 if (model.IsWorking != null)
                     working = model.IsWorking.TrimEnd('.') + ". " + working_desc;
 
+                var cleanDiagnosis = model.Diagnosis?.Replace("<li>", "<p>").Replace("</li>", "</p>");
+
                 if (initialIntakeAI.Id == 0)
                 {
 
@@ -1187,6 +1189,9 @@ namespace PainTrax.Web.Controllers
                                     }
                                 }
 
+                             
+                                                            
+
                                 var objPage1 = new tbl_ie_page1()
                                 {
                                     pmh = string.IsNullOrEmpty(pmh) ? defaultPage1.pmh : pmh,
@@ -1194,7 +1199,10 @@ namespace PainTrax.Web.Controllers
                                     psh = string.IsNullOrEmpty(psh) ? defaultPage1.psh : psh,
                                     bodypart = string.Join(",", model.Complaints),
                                     allergies = allergy,
-                                    assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : "<ol>" + model.Diagnosis + "</ol>" + model.DiagnosisOther,
+                                    // assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : "<ol>" + model.Diagnosis + "</ol>" + model.DiagnosisOther,
+                                    assessment = string.IsNullOrEmpty(model.Diagnosis)
+                                    ? assessment
+                                    : cleanDiagnosis + model.DiagnosisOther,
                                     ie_id = ie,
                                     vital = string.IsNullOrEmpty(vital) ? defaultPage1.vital : vital,
                                     cc = ccContent,
@@ -1401,7 +1409,10 @@ namespace PainTrax.Web.Controllers
                         id = string.IsNullOrEmpty(model.PatientIEId) ? 0 : Convert.ToInt32(model.PatientIEId),
                         cc = ccContent,
                         pe = peContent,
-                        assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment + "<p>" + model.DiagnosisOther + "</p>" : assessment + "<ol>" + model.Diagnosis + "</ol>" + model.DiagnosisOther,
+                        //  assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment + "<p>" + model.DiagnosisOther + "</p>" : assessment + "<ol>" + model.Diagnosis + "</ol>" + model.DiagnosisOther,
+                        assessment = string.IsNullOrEmpty(model.Diagnosis)
+                                    ? assessment
+                                    : cleanDiagnosis + model.DiagnosisOther,
                         vital = vital,
                         pmh = pmh,
                         psh = psh,

@@ -451,11 +451,14 @@ namespace PainTrax.Web.Controllers
 
                 if (initialIntakeAI.Id == 0)
                 {
-                    var data = _ieService.CheckFUDOS(initialIntakeAI.PatientIEId.Value, initialIntakeAI.DOE);
-
-                    if (data)
+                    if (model.PatientIEId != "0")
                     {
-                        return Json(new { success = false, message = "A visit has already been recorded for this patient on the selected DOS.", id = 0, locid = model.LocationId, provid = model.ProviderId });
+                        var data = _ieService.CheckFUDOS(initialIntakeAI.PatientIEId.Value, initialIntakeAI.DOE);
+
+                        if (data)
+                        {
+                            return Json(new { success = false, message = "A visit has already been recorded for this patient on the selected DOS.", id = 0, locid = model.LocationId, provid = model.ProviderId });
+                        }
                     }
                 }
 
@@ -670,7 +673,7 @@ namespace PainTrax.Web.Controllers
                 }
                 patientId = string.IsNullOrEmpty(model.PatientId) ? 0 : Convert.ToInt32(model.PatientId);
                 _ieService.UpdateHandeness(Handeness, patientId);
-
+                var cleanDiagnosis = model.Diagnosis?.Replace("<li>", "<p>").Replace("</li>", "</p>");
 
                 //Intake to PainTrax
                 var working = model.IsWorking;
@@ -683,7 +686,10 @@ namespace PainTrax.Web.Controllers
                     id = newFU,
                     cc = ccContent,
                     pe = peContent,
-                    assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ol>" + model.Diagnosis + "</ol>",
+                    // assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ol>" + model.Diagnosis + "</ol>",
+                    assessment = string.IsNullOrEmpty(model.Diagnosis)
+                                    ? assessment
+                                    : cleanDiagnosis + model.DiagnosisOther,
                     dd = dd,
                     work_status = working
 

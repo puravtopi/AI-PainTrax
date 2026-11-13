@@ -68,8 +68,11 @@
                         <input type="hidden" id="PatientSubmitDate" name="PatientSubmitDate" value="@ViewBag.SubmitDate" />
                         <input type="hidden" id="LocationId" name="LocationId" value="@ViewBag.LocId" />
                         <input type="hidden" id="DLPath" name="DLPath" />
-                        <input type="hidden" id="hdIEId" name="hdIEId" />
+                        <input type="hidden" id="hdIEId" name="hdIEId" value="@ViewBag.IEId" />
+                        <input type="hidden" id="hdFUId" name="hdFUId" value="@ViewBag.FUId" />
                         <input type="hidden" id="hdSelectedBody" name="hdSelectedBody" />
+                        <input type="hidden" id="PatientIEId" name="PatientIEId" value="@ViewBag.IEId" />
+                        <input type="hidden" id="PatientFuID" name="PatientFuID" value="@ViewBag.FUId" />
                         <input type="hidden" id="Diagnosis" name="Diagnosis" />
                         <input type="hidden" id="TreatmentIds" name="TreatmentIds" />
                         <input type="hidden" id="TreatmentDesc" name="TreatmentDesc" />
@@ -1391,8 +1394,11 @@
                 });
 
 
-               $("#hdId").val('@ViewBag.Id');
-             
+                   $("#hdId").val('@ViewBag.Id');
+                   // $("#hdIEId").val('@ViewBag.IEId');
+                   //$("#PatientIEId").val('@ViewBag.IEId');
+                   // $("#hdFUId").val('@ViewBag.FUId');
+                   // $("#PatientFuId").val('@ViewBag.FUId');
               // $("#PatientId").val('@ViewBag.PatientId');
 
 
