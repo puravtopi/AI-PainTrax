@@ -181,6 +181,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#OH" aria-expanded="false" aria-controls="collapseTwo">
+                                            Other History
+                                        </button>
+                                    </h2>
+                                    <div id="OH" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <partial name="BHF/_OtherHistory" />
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="accordion-item" id="acordPresentComp" style="display:none">
                                     <h2 class="accordion-header" id="headingSix">
@@ -842,6 +854,7 @@
                         let regex = new RegExp('{{' + key + '}}', 'g');
                         html = html.replace(regex, data[key]);
                     });
+                     fnToggle(data);
 
                         toggleSection(data.Hospital === "Yes", "#divHospital");
                         toggleSection(data.Allergy === "Yes", "#divAllergy");
@@ -1352,8 +1365,8 @@
                     }
 
 
-                    $('#patientForm').find('input, select, textarea').each(function () {
-
+                   $('#patientForm').find('input, select, textarea').each(function () {
+                       
                         var key = $(this).attr('name') || $(this).attr('id');
                         if (!key || data[key] === undefined || data[key] === null) return;
 
@@ -1401,6 +1414,45 @@
 
                     setTimeout(function () {
                         $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
+
+
+
+                         var values = {};
+
+               $('#patientForm').find('input, select, textarea').each(function () {
+                    var key = $(this).attr('name') || $(this).attr('id');
+                    var cls = $(this).attr('class');
+                    if (!key) return;
+
+                    var type = $(this).attr('type');
+
+                    if (type === 'radio') {
+                        if ($(this).is(':checked')) {
+                            values[key] = $(this).val();
+                        }
+                    }
+                    else if (type === 'checkbox') {
+
+                        // 🔹 Special handling for Complaints (multi-checkbox)
+                        if (cls === "chkMulti") {
+                            if (!values[key]) values[key] = [];
+                            if ($(this).is(':checked')) {
+                                values[key].push($(this).val());
+                            }
+                        }
+                        else {
+                            // normal checkbox (true/false)
+                            values[key] = $(this).is(':checked');
+                        }
+                    }
+                    else {
+                        values[key] = $(this).val() || "";
+                    }
+                });
+
+
+                    fnToggle(values);
+
                         // ADD THESE LINES
                         $('input[name="FUType"]:checked').trigger('change');
                         $('input[name="RadicularPecentage"]:checked').trigger('change');
@@ -1485,9 +1537,19 @@
                          $(".other3Div").toggle($("#OtherBodyPart3").val().trim() !== "");
                          if($("#OtherBodyPart3").val().trim() !== "")
                             $(".h1Title3").text($("#OtherBodyPart3").val().trim())
+
+                       
                          $('#pdfLoader').hide();
                         //updatePreview();
                     }, 2000);
+                }
+
+                function fnToggle(data){
+                    toggleSection(data.IsSMH === "Yes", "#divIsSMH");
+                    toggleSection(data.Meds === "Yes", "#divMeds");
+                    toggleSection(data.IsPMH === "Yes", "#divIsPMH");
+                    toggleSection(data.Allergy === "Yes", "#divAllergy");
+                   
                 }
 
                 function formatDate(inputDate) {
@@ -2061,6 +2123,7 @@
     }
 
     function toggleSection(condition, selector) {
+        debugger
         $(selector).toggle(condition);
     }
     function fnShowPOC() {

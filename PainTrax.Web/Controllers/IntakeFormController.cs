@@ -15,6 +15,7 @@ using PainTrax.Web.AzureServices;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
+using PainTrax.Web.Services.Report;
 using PainTrax.Web.ViewModel;
 using System.Data;
 using System.Text.Json;
@@ -30,7 +31,7 @@ namespace PainTrax.Web.Controllers
         #region Vriables
         private readonly Common _commonservices = new Common();
         private readonly IntakeService service = new IntakeService();
-        private readonly LocationsService _locservices = new LocationsService();
+        private readonly LocationsService _locservices = new LocationsService(); 
         private readonly ProviderService _povservices = new ProviderService();
         private readonly POCServices _pocservices = new POCServices();
         private readonly PatientIEService _ieService = new PatientIEService();
@@ -54,7 +55,7 @@ namespace PainTrax.Web.Controllers
          Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
          IWebHostEnvironment env, AzureAIServices azureService,
          ILogger<IntakeFormController> logger,
-         IConfiguration config
+                  IConfiguration config
         )
         {
             Environment = environment;
@@ -967,6 +968,16 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult SaveForm([FromBody] object formData)
         {
+            string clientcode = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower();
+            IReportHelper reportHelper = null;
+
+            if (clientcode == "bhfpc")
+                reportHelper = new ReportHelperBHF();
+            else if (clientcode == "imnpfhpc")
+                reportHelper = new ReportHelperIMNPFHPC();
+            else
+                reportHelper = new ReportHelperBHF();
+
             var json = System.Text.Json.JsonSerializer.Serialize(formData);
             json = json.Replace("\\u0027", "'");
             var model = new AIIntakeFormModel();
@@ -981,7 +992,7 @@ namespace PainTrax.Web.Controllers
             }
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-            string clientcode = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower();
+
 
             var result = "0";
 
@@ -1044,20 +1055,22 @@ namespace PainTrax.Web.Controllers
                 string path = Environment.WebRootPath;
 
 
-                string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "", recommadation = "";
+                string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "",
+                    mmstContent = "", recommadation = "", socialHistory = "";
                 var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
                 if (clientcode == "bhfpc" || clientcode == "ipmc" || clientcode == "imnpfhpc")
                 {
-                    peContent = ReportHelper.GetPE(model, path);
-                    dtrContent = ReportHelper.GetDTR(model, path);
-                    sensoryContent = ReportHelper.GetSensory(model, path);
-                    mmstContent = ReportHelper.GetMMST(model, path);
-                    ccContent = ReportHelper.GetCC(model);
-                    recommadation = ReportHelper.GenerateRecommandation(model);
+                    peContent = reportHelper.GetPE(model, path);
+                    dtrContent = reportHelper.GetDTR(model, path);
+                    sensoryContent = reportHelper.GetSensory(model, path);
+                    mmstContent = reportHelper.GetMMST(model, path);
+                    ccContent = reportHelper.GetCC(model);
+                    recommadation = reportHelper.GenerateRecommandation(model);
+                    socialHistory = reportHelper.GenerateSocialHistory(model);
                 }
                 else
                 {
-                    ccContent = string.IsNullOrEmpty(ReportHelper.GetCC(model)) ? defaultPage1.cc : ReportHelper.GetCC(model);
+                    ccContent = string.IsNullOrEmpty(reportHelper.GetCC(model)) ? defaultPage1.cc : reportHelper.GetCC(model);
                     //ccContent = this.GetBHFCC(model);
                 }
 
@@ -1081,28 +1094,28 @@ namespace PainTrax.Web.Controllers
 
                 if (clientcode == "imnpfhpc")
                 {
-                    ros = ReportHelper.GenerateRosIrina(model);
+                    ros = reportHelper.GenerateRosIrina(model);
                     model.IsPMH = "Yes";
                     model.IsSMH = "Yes";
                     model.Meds = "Yes";
                 }
                 else
-                    ros = ReportHelper.GenerateRos(model.ROS, model.ROSOther);
+                    ros = reportHelper.GenerateRos(model.ROS, model.ROSOther);
 
-                pmh = ReportHelper.GeneratePmh(model.IsPMH, model.PMH, model.PMHOther);
-                psh = ReportHelper.GeneratePsh(model.IsSMH, model.PSH);
-                med = ReportHelper.GenerateMeds(model.Meds, string.IsNullOrEmpty(model.OtherMeds) ? model.MedsOther : model.OtherMeds);
-                allergy = ReportHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
+                pmh = reportHelper.GeneratePmh(model.IsPMH, model.PMH, model.PMHOther);
+                psh = reportHelper.GeneratePsh(model.IsSMH, model.PSH);
+                med = reportHelper.GenerateMeds(model.Meds, string.IsNullOrEmpty(model.OtherMeds) ? model.MedsOther : model.OtherMeds);
+                allergy = reportHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
 
                 dd = string.IsNullOrEmpty(model.DisabilityPercentage) ? model.degree : model.DisabilityPercentage + "%";
-                gait = ReportHelper.GenerateGait(model.GAITMultiR, model.GAITMulti, model.GAITOther);
+                gait = reportHelper.GenerateGait(model.GAITMultiR, model.GAITMulti, model.GAITOther);
 
 
 
-                adl = ReportHelper.GenerateADL(model);
-                occupation = ReportHelper.GenerateOccupation(model.Occupation, model.JobTitle);
-                working_desc = ReportHelper.GenerateJob(model);
-                string history = ReportHelper.GenerateHistory(model);
+                adl = reportHelper.GenerateADL(model);
+                occupation = reportHelper.GenerateOccupation(model.Occupation, model.JobTitle);
+                working_desc = reportHelper.GenerateJob(model);
+                string history = reportHelper.GenerateHistory(model);
                 if (model.IsWorking != null)
                     working = model.IsWorking.TrimEnd('.') + ". " + working_desc;
 
@@ -1189,8 +1202,8 @@ namespace PainTrax.Web.Controllers
                                     }
                                 }
 
-                             
-                                                            
+
+
 
                                 var objPage1 = new tbl_ie_page1()
                                 {
@@ -1216,7 +1229,7 @@ namespace PainTrax.Web.Controllers
                                     occupation = string.IsNullOrEmpty(occupation) ? defaultPage1.occupation : occupation,
                                     plan = defaultPage1.plan,
                                     rom = defaultPage1.rom,
-                                    social_history = defaultPage1.social_history,
+                                    social_history = string.IsNullOrEmpty(socialHistory) ? defaultPage1.social_history : socialHistory,
                                     work_status = string.IsNullOrEmpty(working) ? defaultPage1.work_status : working,
                                 };
 
@@ -1421,7 +1434,8 @@ namespace PainTrax.Web.Controllers
                         work_status = working,
                         dd = dd,
                         history = history,
-                        occupation = occupation
+                        occupation = occupation,
+                        social_history= socialHistory
                     };
 
                     _ieService.UpdatePage1Intake(objPage1);
@@ -3029,134 +3043,134 @@ namespace PainTrax.Web.Controllers
         }
         #endregion
 
-        #region Report
-        [HttpGet]
-        public IActionResult GenerateReport(string id)
-        {
-            var data = service.GetInitialIntakeAIById(Convert.ToInt32(id));
-            if (data == null || string.IsNullOrEmpty(data.FormData))
-                return Json(new { });
+        //    #region Report
+        //    [HttpGet]
+        //    public IActionResult GenerateReport(string id)
+        //    {
+        //        var data = service.GetInitialIntakeAIById(Convert.ToInt32(id));
+        //        if (data == null || string.IsNullOrEmpty(data.FormData))
+        //            return Json(new { });
 
-            byte[] templateBytes = null;
+        //        byte[] templateBytes = null;
 
-            var json = string.IsNullOrEmpty(data.FormData)
-        ? null
-        : data.FormData;
+        //        var json = string.IsNullOrEmpty(data.FormData)
+        //    ? null
+        //    : data.FormData;
 
-            var model = new AIIntakeFormModel();
+        //        var model = new AIIntakeFormModel();
 
-            model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
+        //        model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
 
-            string folderPath = Path.Combine(_env.WebRootPath, "ReportTemplate", HttpContext.Session.GetString(SessionKeys.SessionCmpClientId));
-            string fileName = "report-template-ie.docx"; // Change this to your actual file name
-            string TemplateDocURL = Path.Combine(folderPath, fileName);
-            templateBytes = System.IO.File.ReadAllBytes(TemplateDocURL);
-            using (MemoryStream mem = new MemoryStream())
-            {
-                mem.Write(templateBytes, 0, templateBytes.Length);
-                mem.Position = 0;
+        //        string folderPath = Path.Combine(_env.WebRootPath, "ReportTemplate", HttpContext.Session.GetString(SessionKeys.SessionCmpClientId));
+        //        string fileName = "report-template-ie.docx"; // Change this to your actual file name
+        //        string TemplateDocURL = Path.Combine(folderPath, fileName);
+        //        templateBytes = System.IO.File.ReadAllBytes(TemplateDocURL);
+        //        using (MemoryStream mem = new MemoryStream())
+        //        {
+        //            mem.Write(templateBytes, 0, templateBytes.Length);
+        //            mem.Position = 0;
 
-                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(mem, true))
-                {
-                    // 1. Get the Main XML
-                    var mainPart = wordDoc.MainDocumentPart;
-                    string docXml;
-                    using (StreamReader sr = new StreamReader(mainPart.GetStream()))
-                    {
-                        docXml = sr.ReadToEnd();
-                    }
+        //            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(mem, true))
+        //            {
+        //                // 1. Get the Main XML
+        //                var mainPart = wordDoc.MainDocumentPart;
+        //                string docXml;
+        //                using (StreamReader sr = new StreamReader(mainPart.GetStream()))
+        //                {
+        //                    docXml = sr.ReadToEnd();
+        //                }
 
-                    var diagnosis = ReportHelper.GetDiagnosis(model.Diagnosis);
-                    var CevicalSpurlingTest = "";
-                    List<string> spurlingParts = new List<string>();
+        //                var diagnosis = reportHelper.GetDiagnosis(model.Diagnosis);
+        //                var CevicalSpurlingTest = "";
+        //                List<string> spurlingParts = new List<string>();
 
-                    if (model.CevicalSpurlingTest.Count > 0)
-                    {
-                        if (model.CevicalSpurlingTest.Contains("right"))
-                        {
-                            spurlingParts.Add("right at " + model.CERVICALRighttxt + " degrees");
-                        }
+        //                if (model.CevicalSpurlingTest.Count > 0)
+        //                {
+        //                    if (model.CevicalSpurlingTest.Contains("right"))
+        //                    {
+        //                        spurlingParts.Add("right at " + model.CERVICALRighttxt + " degrees");
+        //                    }
 
-                        if (model.CevicalSpurlingTest.Contains("left"))
-                        {
-                            spurlingParts.Add("left at " + model.CERVICALLefttxt + " degrees");
-                        }
+        //                    if (model.CevicalSpurlingTest.Contains("left"))
+        //                    {
+        //                        spurlingParts.Add("left at " + model.CERVICALLefttxt + " degrees");
+        //                    }
 
-                        if (model.CevicalSpurlingTest.Contains("bilaterally"))
-                        {
-                            spurlingParts.Add("bilaterally");
-                        }
-                    }
+        //                    if (model.CevicalSpurlingTest.Contains("bilaterally"))
+        //                    {
+        //                        spurlingParts.Add("bilaterally");
+        //                    }
+        //                }
 
-                    // 3. Join them with a slash or comma
-                    CevicalSpurlingTest = string.Join(" / ", spurlingParts);
+        //                // 3. Join them with a slash or comma
+        //                CevicalSpurlingTest = string.Join(" / ", spurlingParts);
 
-                    // 2. Prepare all replacements
-                    var replacements = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-    {
-        { "{{PatientName}}", $"{model.LN} {model.FN}" },
-        { "{{DOB}}", model.DOB ?? "" },
-        { "{{DOE}}", model.DOE ?? "" },
-        { "{{DOA}}", model.DOA ?? "" },
-        { "{{AccidentType}}", model.AccidentType ?? "" },
-        { "{{DisabilitySummary}}", ReportHelper.GetDisabilityStatement(model) },
-        { "{{Palpation}}", ReportHelper.GetPalpation(model) },
-        { "{{Inspection}}", ToGrammaticalList(string.Join(", ", model.CervicalPE ?? new List<string>())) },
-        { "{{History}}", ReportHelper.GetHistory(model) },
-        { "{{Diagnosis}}", diagnosis },
-        { "{{CevicalSpurlingTest}}", CevicalSpurlingTest },
-        { "{{Complaints}}", ToGrammaticalList(string.Join(", ", model.Complaints ?? new List<string>())) },
-        { "{{NeckCC}}",  ReportHelper.GenerateCervicalSpineReport(model)  },
-    };
+        //                // 2. Prepare all replacements
+        //                var replacements = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        //{
+        //    { "{{PatientName}}", $"{model.LN} {model.FN}" },
+        //    { "{{DOB}}", model.DOB ?? "" },
+        //    { "{{DOE}}", model.DOE ?? "" },
+        //    { "{{DOA}}", model.DOA ?? "" },
+        //    { "{{AccidentType}}", model.AccidentType ?? "" },
+        //    { "{{DisabilitySummary}}", reportHelper.GetDisabilityStatement(model) },
+        //    { "{{Palpation}}", reportHelper.GetPalpation(model) },
+        //    { "{{Inspection}}", ToGrammaticalList(string.Join(", ", model.CervicalPE ?? new List<string>())) },
+        //    { "{{History}}", reportHelper.GetHistory(model) },
+        //    { "{{Diagnosis}}", diagnosis },
+        //    { "{{CevicalSpurlingTest}}", CevicalSpurlingTest },
+        //    { "{{Complaints}}", ToGrammaticalList(string.Join(", ", model.Complaints ?? new List<string>())) },
+        //    { "{{NeckCC}}",  reportHelper.GenerateCervicalSpineReport(model)  },
+        //};
 
-                    // Auto-add all 200+ properties from the model
-                    foreach (var prop in model.GetType().GetProperties())
-                    {
-                        string key = "{{" + prop.Name + "}}";
-                        if (!replacements.ContainsKey(key))
-                            replacements.Add(key, prop.GetValue(model)?.ToString() ?? "");
-                    }
+        //                // Auto-add all 200+ properties from the model
+        //                foreach (var prop in model.GetType().GetProperties())
+        //                {
+        //                    string key = "{{" + prop.Name + "}}";
+        //                    if (!replacements.ContainsKey(key))
+        //                        replacements.Add(key, prop.GetValue(model)?.ToString() ?? "");
+        //                }
 
-                    // 3. THE "SUPER CLEANER": Remove hidden XML junk that breaks placeholders
-                    // This removes proofing errors, grammar tags, and language markers
-                    docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"<w:proofErr [^>]*/>", "");
-                    docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"<w:noProof[^>]*/>", "");
-                    docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"<w:lang [^>]*/>", "");
-                    docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"<w:lastRenderedPageBreak[^>]*/>", "");
+        //                // 3. THE "SUPER CLEANER": Remove hidden XML junk that breaks placeholders
+        //                // This removes proofing errors, grammar tags, and language markers
+        //                docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"<w:proofErr [^>]*/>", "");
+        //                docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"<w:noProof[^>]*/>", "");
+        //                docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"<w:lang [^>]*/>", "");
+        //                docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"<w:lastRenderedPageBreak[^>]*/>", "");
 
-                    // 4. THE "XML FLATTENER": This regex finds fragmented placeholders like {{Dis<junk>ability}} 
-                    // and merges them back into {{Disability}}
-                    docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"\{\{.*?\}\}", m =>
-                    {
-                        // Remove all XML tags found BETWEEN the curly braces
-                        return System.Text.RegularExpressions.Regex.Replace(m.Value, @"<[^>]+>", "");
-                    }, System.Text.RegularExpressions.RegexOptions.Singleline);
+        //                // 4. THE "XML FLATTENER": This regex finds fragmented placeholders like {{Dis<junk>ability}} 
+        //                // and merges them back into {{Disability}}
+        //                docXml = System.Text.RegularExpressions.Regex.Replace(docXml, @"\{\{.*?\}\}", m =>
+        //                {
+        //                    // Remove all XML tags found BETWEEN the curly braces
+        //                    return System.Text.RegularExpressions.Regex.Replace(m.Value, @"<[^>]+>", "");
+        //                }, System.Text.RegularExpressions.RegexOptions.Singleline);
 
-                    // 5. PERFORM THE REPLACEMENT
-                    foreach (var item in replacements)
-                    {
-                        // Use HtmlEncode to ensure symbols like '&' don't crash the Word file
-                        string safeValue = System.Web.HttpUtility.HtmlEncode(item.Value);
+        //                // 5. PERFORM THE REPLACEMENT
+        //                foreach (var item in replacements)
+        //                {
+        //                    // Use HtmlEncode to ensure symbols like '&' don't crash the Word file
+        //                    string safeValue = System.Web.HttpUtility.HtmlEncode(item.Value);
 
-                        // B. Convert newlines into Word XML line breaks
-                        // We close the current <w:t>, insert <w:br/>, and open a new <w:t>
-                        string wordFriendlyValue = safeValue.Replace("\r\n", "</w:t><w:br/><w:t>")
-                                                            .Replace("\n", "</w:t><w:br/><w:t>");
+        //                    // B. Convert newlines into Word XML line breaks
+        //                    // We close the current <w:t>, insert <w:br/>, and open a new <w:t>
+        //                    string wordFriendlyValue = safeValue.Replace("\r\n", "</w:t><w:br/><w:t>")
+        //                                                        .Replace("\n", "</w:t><w:br/><w:t>");
 
-                        docXml = docXml.Replace(item.Key, wordFriendlyValue);
-                    }
+        //                    docXml = docXml.Replace(item.Key, wordFriendlyValue);
+        //                }
 
-                    // 6. Save back to the document
-                    using (StreamWriter sw = new StreamWriter(mainPart.GetStream(FileMode.Create)))
-                    {
-                        sw.Write(docXml);
-                    }
-                }
+        //                // 6. Save back to the document
+        //                using (StreamWriter sw = new StreamWriter(mainPart.GetStream(FileMode.Create)))
+        //                {
+        //                    sw.Write(docXml);
+        //                }
+        //            }
 
-                return File(mem.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "PatientReport.docx");
-            }
-        }
-        #endregion
+        //            return File(mem.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "PatientReport.docx");
+        //        }
+        //    }
+        //    #endregion
 
         #region Recordings
         [HttpPost]

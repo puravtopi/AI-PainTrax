@@ -461,7 +461,7 @@ poc_assesment=@poc_assesment
 
     public int UpdatePage1Intake(tbl_ie_page1 data)
     {
-        MySqlCommand cm = new MySqlCommand("CALL sp_SaveIntakePage1Data(@p_ie_id,@p_bodypart,@p_cc,@p_pe,@p_assessment,@p_vital,@p_pmh,@p_psh,@p_medication,@p_allergies,@p_work_status,@p_dd,@p_history,@p_occupation) ", conn);
+        MySqlCommand cm = new MySqlCommand("CALL sp_SaveIntakePage1Data(@p_ie_id,@p_bodypart,@p_cc,@p_pe,@p_assessment,@p_vital,@p_pmh,@p_psh,@p_medication,@p_allergies,@p_work_status,@p_dd,@p_history,@p_occupation,@p_social_history) ", conn);
 
 
         cm.Parameters.AddWithValue("@p_ie_id", data.id);
@@ -478,6 +478,7 @@ poc_assesment=@poc_assesment
         cm.Parameters.AddWithValue("@p_dd", data.dd);
         cm.Parameters.AddWithValue("@p_history", data.history);
         cm.Parameters.AddWithValue("@p_occupation", data.occupation);
+        cm.Parameters.AddWithValue("@p_social_history", data.social_history);
         
         var result = ExecuteScalar(cm);
         return result;

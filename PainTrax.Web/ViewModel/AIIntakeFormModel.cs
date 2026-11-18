@@ -1072,6 +1072,14 @@
         public string RecommandationOther2 { get; set; }
 
         public string client_code { get; set; }
+
+        public string? PatientAType { get; set; }  // "Driver", "Front Pass", "Rear Pass", "Pedestrian", "Bicyclist"
+    
+        public string? PhysicalTherapyDuration { get; set; }
+        public string? OtherCollision { get; set; }
+        public string? TxtAlcohol { get; set; }
+
+       
     }
 }
 

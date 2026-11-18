@@ -1,0 +1,123 @@
+﻿<!-- PMH -->
+<div class="select-group">
+    Any Medical conditions?:
+    <label>
+        <input type="radio" class="chkMulti" name="IsPMH" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+
+    <label>
+        <input type="radio" class="chkMulti" name="IsPMH" value="No">
+        <span class="select-btn">No</span>
+    </label>
+    <p id="divIsPMH" style="display:none">
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Diabetes">
+            <span class="select-btn">Diabetes</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="High BP">
+            <span class="select-btn">High BP</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Asthma">
+            <span class="select-btn">Asthma</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Heart disease">
+            <span class="select-btn">Heart disease</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Pregnant">
+            <span class="select-btn">Pregnant</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Seizure History">
+            <span class="select-btn">Seizure History</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Bleeding Problems/Bruise easily/Blood clotting Issues">
+            <span class="select-btn">Bleeding Problems/Bruise easily/Blood clotting Issues</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="chkMulti" name="PMH" value="Immune Deficiency">
+            <span class="select-btn">Immune Deficiency</span>
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Other:
+        <input id="PMHOther" class="form-control d-inline w-25" style="min-width:37%" />
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PMHOther')"></i> *@
+    </p>
+</div>
+
+<!-- PSH -->
+<div class="select-group">
+    Have you ever had any surgeries?
+
+    <label>
+        <input type="radio" class="chkMulti" name="IsSMH" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+
+    <label>
+        <input type="radio" class="chkMulti" name="IsSMH" value="No">
+        <span class="select-btn">No</span>
+    </label>
+    <p id="divIsSMH" style="display:none">
+        <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
+
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i> *@
+    </p>
+</div>
+
+<!-- Meds -->
+<div class="select-group">
+    Are you taking any medications?
+
+    <label>
+        <input type="radio" class="chkMulti" name="Meds" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+
+    <label>
+        <input type="radio" class="chkMulti" name="Meds" value="No">
+        <span class="select-btn">No</span>
+    </label>
+    <p id="divMeds" style="display:none">
+        <input id="OtherMeds" class="form-control d-inline" />
+
+        @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i> *@
+    </p>
+</div>
+
+<!-- Allergies -->
+<div class="select-group">
+    Drug Allergies:
+    <label>
+        <input type="radio" class="chkMulti" name="Allergy" value="Yes">
+        <span class="select-btn">Yes</span>
+    </label>
+    <label>
+        <input type="radio" class="chkMulti" name="Allergy" value="No">
+        <span class="select-btn">No</span>
+    </label>
+
+
+    <span id="divAllergy" style="display:none">
+        @*  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        Drug:
+                                                        <input id="AllergyDrug" class="form-control d-inline w-25" />
+                                                        <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyDrug')"></i> *@
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        What Allergy:
+        <input id="AllergyReaction" class="form-control d-inline" />
+        @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i> *@
+    </span>
+</div>

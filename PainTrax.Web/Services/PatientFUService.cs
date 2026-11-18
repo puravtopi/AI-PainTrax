@@ -215,14 +215,14 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
     public int UpdateNEIntake(tbl_fu_ne data)
     {
 
-        MySqlCommand cm = new MySqlCommand("call sp_SaveIntakeNEFUData(@p_id_id,@p_fu_id,@p_sensory,@p_manual_muscle_strength_testing,@p_other_content);", conn);
+        MySqlCommand cm = new MySqlCommand("call sp_SaveIntakeNEFUData(@p_ie_id,@p_fu_id,@p_sensory,@p_manual_muscle_strength_testing,@p_other_content);", conn);
 
 
         cm.Parameters.AddWithValue("@p_sensory", data.sensory);
         cm.Parameters.AddWithValue("@p_other_content", data.other_content);
         cm.Parameters.AddWithValue("@p_manual_muscle_strength_testing", data.manual_muscle_strength_testing);
         cm.Parameters.AddWithValue("@p_fu_id", data.fu_id);
-        cm.Parameters.AddWithValue("@ie_id", data.ie_id);
+        cm.Parameters.AddWithValue("@p_ie_id", data.ie_id);
         var result = ExecuteScalar(cm);
         return result;
     }

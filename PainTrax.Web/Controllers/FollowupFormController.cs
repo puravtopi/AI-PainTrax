@@ -16,6 +16,7 @@ using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
+using PainTrax.Web.Services.Report;
 using PainTrax.Web.ViewModel;
 using System.Data;
 using System.Text.Json;
@@ -387,6 +388,16 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult SaveForm([FromBody] object formData)
         {
+            string clientcode = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower();
+            IReportHelper reportHelper = null;
+
+            if (clientcode == "bhfpc")
+                reportHelper = new ReportHelperBHF();
+            else if (clientcode == "imnpfhpc")
+                reportHelper = new ReportHelperIMNPFHPC();
+            else
+                reportHelper = new ReportHelperBHF();
+
             var json = System.Text.Json.JsonSerializer.Serialize(formData);
             json = json.Replace("\\u0027", "'");
             var model = new AIIntakeFormModel();
@@ -438,15 +449,15 @@ namespace PainTrax.Web.Controllers
                 if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
                     HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
                 {
-                    peContent = ReportHelper.GetPE(model, path);
-                    dtrContent = ReportHelper.GetDTR(model, path);
-                    sensoryContent = ReportHelper.GetSensory(model, path);
-                    mmstContent = ReportHelper.GetMMST(model, path);
-                    ccContent = ReportHelper.GetCC(model);
+                    peContent = reportHelper.GetPE(model, path);
+                    dtrContent = reportHelper.GetDTR(model, path);
+                    sensoryContent = reportHelper.GetSensory(model, path);
+                    mmstContent = reportHelper.GetMMST(model, path);
+                    ccContent = reportHelper.GetCC(model);
                 }
                 else
                 {
-                    ccContent = ReportHelper.GetCC(model);
+                    ccContent = reportHelper.GetCC(model);
                 }
 
                 if (initialIntakeAI.Id == 0)
@@ -704,13 +715,13 @@ namespace PainTrax.Web.Controllers
                     sensory = sensoryContent,
                     manual_muscle_strength_testing = mmstContent,
                     other_content = dtrContent,
-                    id = newFU,
+                    fu_id = newFU,
                     ie_id = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
                 };
 
                 _fuservices.UpdateNEIntake(objNE);
 
-                string adl = ReportHelper.GenerateADL(model);
+                string adl = reportHelper.GenerateADL(model);
                 var objP2 = new tbl_fu_page2()
                 {
                     aod = adl,
@@ -728,7 +739,7 @@ namespace PainTrax.Web.Controllers
                     ie_id = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
                     followup_duration = string.IsNullOrEmpty(model.FollowUpOther) ? model.FollowUp : model.FollowUpOther,
                     followup_date = string.IsNullOrEmpty(model.FollowUpDate) ? null : Convert.ToDateTime(model.FollowUpDate),
-                    treatment_details= ReportHelper.GenerateRecommandation(model)
+                    treatment_details= reportHelper.GenerateRecommandation(model)
                 };
 
                 _fuservices.UpdateOtherPageIntake(objOther);

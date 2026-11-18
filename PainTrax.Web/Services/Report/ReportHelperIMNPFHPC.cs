@@ -1,15 +1,11 @@
 ﻿using PainTrax.Web.ViewModel;
-using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-
-namespace PainTrax.Web.Helper
+namespace PainTrax.Web.Services.Report
 {
-    public static class ReportHelper
+    public class ReportHelperIMNPFHPC : IReportHelper
     {
-
-
-        public static string GetDisabilityStatement(AIIntakeFormModel data)
+        public string GetDisabilityStatement(AIIntakeFormModel data)
         {
             string pct = data.degree ?? "";
 
@@ -22,7 +18,7 @@ namespace PainTrax.Web.Helper
             return $"{pct}% - temporarily partially disabled - The patient is currently {isNotWorking} {isPartially}.";
         }
 
-        public static string GetHistory(AIIntakeFormModel model)
+        public string GetHistory(AIIntakeFormModel model)
         {
             // 1. Basic Info
             string genderStr = model.Gender?.ToLower() == "male" ? "male" : "female";
@@ -78,7 +74,7 @@ namespace PainTrax.Web.Helper
                    $"My evaluation is limited to {injuriesStr} injury sustained in the accident of {doaStr}.";
         }
 
-        public static string GenerateCervicalSpineReport(AIIntakeFormModel model)
+        public string GenerateCervicalSpineReport(AIIntakeFormModel model)
         {
             var report = new StringBuilder("CERVICAL SPINE: ");
 
@@ -139,7 +135,7 @@ namespace PainTrax.Web.Helper
             return report.ToString();
         }
 
-        public static string GetDiagnosis(string html)
+        public string GetDiagnosis(string html)
         {
             // 1. Extract the text inside each <li> tag
             var matches = Regex.Matches(html, @"<li>(.*?)</li>", RegexOptions.IgnoreCase);
@@ -152,7 +148,7 @@ namespace PainTrax.Web.Helper
             return string.Join(Environment.NewLine, lines);
         }
 
-        public static string GetPalpation(dynamic model)
+        public string GetPalpation(dynamic model)
         {
             // 1. Tenderness Logic
             // Handles: No/mild/moderate/severe ... bilaterally/right/left
@@ -182,148 +178,7 @@ namespace PainTrax.Web.Helper
             return $"{tendernessPart}. {triggerPart}. {spasmPart}.";
         }
 
-
-        public static string Bhf_NeckCC(AIIntakeFormModel modal)
-        {
-            var sentences = new List<string>();
-
-            // 1. Pain Score & Nature Sentence
-            // Format: "The patient complains of neck pain that is __/10, with 10 being the worst, which is [qualities] in nature."
-            string painScore = !string.IsNullOrWhiteSpace(modal.NeckPain) ? modal.NeckPain.Trim() : "__";
-            var symptomsList = modal.NeckSymptoms?.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
-
-            if (symptomsList != null && symptomsList.Any())
-            {
-                string symptomsStr = FormatList(symptomsList.Select(s => s.ToLower()));
-                sentences.Add($"The patient complains of neck pain that is {painScore}/10, with 10 being the worst, which is {symptomsStr} in nature.");
-            }
-            else
-            {
-                sentences.Add($"The patient complains of neck pain that is {painScore}/10, with 10 being the worst.");
-            }
-
-            // 1b. Pain Type (Facet / Radicular) & Axial Exacerbation (if selected)
-            if (!string.IsNullOrWhiteSpace(modal.PainOption) || (modal.Axial != null && modal.Axial.Any()))
-            {
-                var axialTriggers = modal.Axial?.Where(a => !string.IsNullOrWhiteSpace(a)).Select(a => a.ToLower().Trim()).ToList();
-                string painType = !string.IsNullOrWhiteSpace(modal.PainOption) ? modal.PainOption.Trim() : "Axial pain";
-
-                if (axialTriggers != null && axialTriggers.Any())
-                {
-                    sentences.Add($"{CapitalizeFirstLetter(painType.ToLowerInvariant())} is exacerbated by {FormatList(axialTriggers)}.");
-                }
-                else
-                {
-                    sentences.Add($"Pain is characterized as {painType.ToLower()}.");
-                }
-            }
-
-            // 2. Radiation Sentence
-            // Format: "Neck pain radiates to left/right/bilateral shoulders, arms, forearms, hands, wrists and fingers."
-            var radAreas = modal.NeckRadiates != null ? new List<string>(modal.NeckRadiates) : new List<string>();
-            if (!string.IsNullOrWhiteSpace(modal.NeckRadiatesOther))
-            {
-                radAreas.Add(modal.NeckRadiatesOther.Trim());
-            }
-
-            if (radAreas.Any())
-            {
-                string sidePrefix = !string.IsNullOrWhiteSpace(modal.NeckRadiatesTo)
-                    ? modal.NeckRadiatesTo.Trim().ToLower() + " "
-                    : string.Empty;
-
-                var pluralizedAreas = radAreas.Select(a => PluralizeBodyPart(a.ToLower(), sidePrefix));
-                sentences.Add($"Neck pain radiates to {sidePrefix}{FormatList(pluralizedAreas)}.");
-            }
-
-            // 3. Associated Symptoms Sentence
-            // Format: "Neck pain is associated with numbness and tingling to left/right/bilateral shoulders, arms, forearms, hands, wrists and fingers."
-            var assocSymptoms = modal.NeckAssociated != null ? new List<string>(modal.NeckAssociated) : new List<string>();
-            if (!string.IsNullOrWhiteSpace(modal.NeckAssociatedOther))
-            {
-                assocSymptoms.Add(modal.NeckAssociatedOther.Trim());
-            }
-
-            if (assocSymptoms.Any())
-            {
-                // Separate sensory symptom keywords (numbness, tingling) from body areas (arms, hands, etc.)
-                var sensations = assocSymptoms
-                    .Where(s => s.Equals("numbness", StringComparison.OrdinalIgnoreCase) ||
-                                s.Equals("tingling", StringComparison.OrdinalIgnoreCase))
-                    .Select(s => s.ToLower())
-                    .Distinct()
-                    .ToList();
-
-
-                string sidePrefix = !string.IsNullOrWhiteSpace(modal.NeckAssociatedTo)
-                  ? modal.NeckAssociatedTo.Trim().ToLower() + " "
-                  : string.Empty;
-
-                var bodyParts = assocSymptoms
-                    .Where(s => !s.Equals("numbness", StringComparison.OrdinalIgnoreCase) &&
-                                !s.Equals("tingling", StringComparison.OrdinalIgnoreCase))
-                    .Select(s => PluralizeBodyPart(s.ToLower(), sidePrefix))
-                    .Distinct()
-                    .ToList();
-
-
-
-                if (sensations.Any() && bodyParts.Any())
-                {
-                    sentences.Add($"Neck pain is associated with {FormatList(sensations)} to {sidePrefix}{FormatList(bodyParts)}.");
-                }
-                else if (sensations.Any())
-                {
-                    sentences.Add($"Neck pain is associated with {FormatList(sensations)}.");
-                }
-                else
-                {
-                    sentences.Add($"Neck pain is associated with symptoms in the {sidePrefix}{FormatList(bodyParts)}.");
-                }
-            }
-
-            // 4. Worsens With Sentence
-            // Format: "Neck pain worsens with looking up, looking down, turning head to right, turning head to left, driving and twisting."
-            var worsensList = modal.NeckWorsens?
-                .Where(w => !string.IsNullOrWhiteSpace(w))
-                .Select(w => w.Trim().TrimEnd('.').ToLower())
-                .Distinct()
-                .ToList();
-
-            if (worsensList != null && worsensList.Any())
-            {
-                sentences.Add($"Neck pain worsens with {FormatList(worsensList)}.");
-            }
-
-            // 5. Improves With Sentence
-            // Format: "Neck pain improves with resting, medication, and therapy."
-            var improvesList = modal.NeckImproves != null ? new List<string>(modal.NeckImproves) : new List<string>();
-
-            if (!string.IsNullOrWhiteSpace(modal.NeckImprovesOther))
-            {
-                improvesList.RemoveAll(i => i.Equals("Others", StringComparison.OrdinalIgnoreCase));
-                improvesList.Add(modal.NeckImprovesOther.Trim());
-            }
-            else
-            {
-                improvesList.RemoveAll(i => i.Equals("Others", StringComparison.OrdinalIgnoreCase));
-            }
-
-            if (improvesList.Any())
-            {
-                var cleanImproves = improvesList
-                    .Where(i => !string.IsNullOrWhiteSpace(i))
-                    .Select(i => i.Trim().TrimEnd('.').ToLower())
-                    .Distinct()
-                    .ToList();
-
-                sentences.Add($"Neck pain improves with {FormatList(cleanImproves)}.");
-            }
-
-            return string.Join(" ", sentences);
-        }
-
-        public static string Irina_NeckCC(AIIntakeFormModel model)
+        public string NeckCC(AIIntakeFormModel model)
         {
             var sb = new StringBuilder();
             sb.Append("CERVICAL SPINE: ");
@@ -442,9 +297,7 @@ namespace PainTrax.Web.Helper
             return sb.ToString().Trim();
         }
 
-
-
-        public static string MidbackCC(AIIntakeFormModel modal)
+        public string MidbackCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -529,8 +382,7 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", sentences);
         }
 
-
-        private static string FormatList(IEnumerable<string> items)
+        private string FormatList(IEnumerable<string> items)
         {
             var list = items?.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
             if (list == null || !list.Any()) return string.Empty;
@@ -539,7 +391,7 @@ namespace PainTrax.Web.Helper
             return $"{string.Join(", ", list.Take(list.Count - 1))}, and {list.Last()}";
         }
 
-        private static string PluralizeBodyPart(string part, string laterality = null)
+        private string PluralizeBodyPart(string part, string laterality = null)
         {
             if (string.IsNullOrWhiteSpace(part)) return part;
 
@@ -576,7 +428,7 @@ namespace PainTrax.Web.Helper
             }
         }
 
-        private static string NormalizeWorseningTerm(string term)
+        private string NormalizeWorseningTerm(string term)
         {
             term = term.Trim().TrimEnd('.').ToLower();
 
@@ -591,7 +443,7 @@ namespace PainTrax.Web.Helper
             }
         }
 
-        private static string NormalizeImprovementTerm(string term)
+        private string NormalizeImprovementTerm(string term)
         {
             term = term.Trim().TrimEnd('.').ToLower();
 
@@ -604,150 +456,62 @@ namespace PainTrax.Web.Helper
             }
         }
 
-        #region Lowback
-
-        public static string Bhf_LowBackCC(AIIntakeFormModel modal)
+        public string GenerateSocialHistory(AIIntakeFormModel modal)
         {
-            var sentences = new List<string>();
+            var parts = new List<string>();
 
-            // 1. Pain Score & Nature
-            // Template: "The patient complains of lower back pain that is __/10, with 10 being the worst, which is constant, intermittent, sharp, shooting, electric, throbbing, pulsating, dull, and achy in nature."
-            string painScore = !string.IsNullOrWhiteSpace(modal.LBPain) ? modal.LBPain.Trim() : "__";
-            var symptomsList = modal.LBSymptoms?.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
-
-            if (symptomsList != null && symptomsList.Any())
+            // 1. Smoking
+            if (string.Equals(modal.Smoke, "Yes", StringComparison.OrdinalIgnoreCase))
             {
-                string symptomsStr = FormatList(symptomsList.Select(s => s.ToLower().Trim()));
-                sentences.Add($"The patient complains of lower back pain that is {painScore}/10, with 10 being the worst, which is {symptomsStr} in nature.");
+                parts.Add(!string.IsNullOrWhiteSpace(modal.PPD)
+                    ? $"The patient is a smoker {modal.PPD.Trim()} PPD."
+                    : "The patient is a smoker.");
             }
             else
             {
-                sentences.Add($"The patient complains of lower back pain that is {painScore}/10, with 10 being the worst.");
+                parts.Add("The patient is a nonsmoker.");
             }
 
-            // 1b. Pain Type (Facet / SI Joint / Radicular) & Axial Exacerbation (if selected)
-            if (!string.IsNullOrWhiteSpace(modal.LBPainOption) || (modal.LBAxial != null && modal.LBAxial.Any()))
+            // 2. Alcohol
+            // Since the HTML 'Y' radio button value is "The patient drinks alcohol occasionally."
+            if (!string.IsNullOrWhiteSpace(modal.Alcohol) &&
+                modal.Alcohol.Contains("drinks alcohol", StringComparison.OrdinalIgnoreCase) &&
+                !modal.Alcohol.Contains("does not", StringComparison.OrdinalIgnoreCase))
             {
-                var axialTriggers = modal.LBAxial?.Where(a => !string.IsNullOrWhiteSpace(a)).Select(a => a.ToLower().Trim()).ToList();
-                string painType = !string.IsNullOrWhiteSpace(modal.LBPainOption) ? modal.LBPainOption.Trim() : "Axial pain";
-
-                if (axialTriggers != null && axialTriggers.Any())
+                if (!string.IsNullOrWhiteSpace(modal.txtAlcohol))
                 {
-                    sentences.Add($"{CapitalizeFirstLetter(painType.ToLowerInvariant())} is exacerbated by {FormatList(axialTriggers)}.");
+                    // Inserts txtAlcohol into the blank ("The patient ____ drinks alcohol occasionally.")
+                    // Or change to $"The patient drinks alcohol ({txtAlcohol.Trim()})." if txtAlcohol holds quantity/type
+                    parts.Add($"The patient {modal.txtAlcohol.Trim()} drinks alcohol occasionally.");
                 }
                 else
                 {
-                    sentences.Add($"Pain is characterized as {painType.ToLower()}.");
+                    parts.Add("The patient drinks alcohol occasionally.");
                 }
-            }
-
-            // 2. Radiation Sentence
-            // Template: "Lower back pain radiates to left/right/bilateral hips, thighs, knees, legs, ankles, and feet."
-            var radAreas = modal.LBRadiates != null ? new List<string>(modal.LBRadiates) : new List<string>();
-            if (!string.IsNullOrWhiteSpace(modal.LBRadiatesOther))
-            {
-                radAreas.Add(modal.LBRadiatesOther.Trim());
-            }
-
-            if (radAreas.Any())
-            {
-                string sidePrefix = !string.IsNullOrWhiteSpace(modal.LBRadiatesTo)
-                    ? modal.LBRadiatesTo.Trim().ToLower() + " "
-                    : string.Empty;
-
-                var pluralizedAreas = radAreas.Select(a => PluralizeLowerBodyPart(a.ToLower(), sidePrefix).ToLower());
-                sentences.Add($"Lower back pain radiates to {sidePrefix}{FormatList(pluralizedAreas)}.");
-            }
-
-            // 3. Associated Symptoms Sentence
-            // Template: "Lower back pain is associated with numbness and tingling to left/right/bilateral hips, thighs, knees, legs, ankles, and feet."
-            var assocSymptoms = modal.LBAssociated != null ? new List<string>(modal.LBAssociated) : new List<string>();
-            if (!string.IsNullOrWhiteSpace(modal.LBAssociatedOther))
-            {
-                assocSymptoms.Add(modal.LBAssociatedOther.Trim());
-            }
-
-            if (assocSymptoms.Any())
-            {
-                // In HTML, tingling checkbox value was "forearm"; we normalize it to "tingling"
-                var sensations = assocSymptoms
-                    .Where(s => s.Equals("numbness", StringComparison.OrdinalIgnoreCase) ||
-                                s.Equals("tingling", StringComparison.OrdinalIgnoreCase) ||
-                                s.Equals("forearm", StringComparison.OrdinalIgnoreCase))
-                    .Select(s => s.Equals("forearm", StringComparison.OrdinalIgnoreCase) ? "tingling" : s.ToLower())
-                    .Distinct()
-                    .ToList();
-
-                string sidePrefix = !string.IsNullOrWhiteSpace(modal.LBAssociatedTo)
-                  ? modal.LBAssociatedTo.Trim().ToLower() + " "
-                  : string.Empty;
-
-                var bodyParts = assocSymptoms
-                    .Where(s => !s.Equals("numbness", StringComparison.OrdinalIgnoreCase) &&
-                                !s.Equals("tingling", StringComparison.OrdinalIgnoreCase) &&
-                                !s.Equals("forearm", StringComparison.OrdinalIgnoreCase))
-                    .Select(s => PluralizeLowerBodyPart(s.ToLower(), sidePrefix).ToLower())
-                    .Distinct()
-                    .ToList();
-
-
-
-                if (sensations.Any() && bodyParts.Any())
-                {
-                    sentences.Add($"Lower back pain is associated with {FormatList(sensations)} to {sidePrefix}{FormatList(bodyParts)}.");
-                }
-                else if (sensations.Any())
-                {
-                    sentences.Add($"Lower back pain is associated with {FormatList(sensations)}.");
-                }
-                else
-                {
-                    sentences.Add($"Lower back pain is associated with symptoms in the {sidePrefix}{FormatList(bodyParts)}.");
-                }
-            }
-
-            // 4. Worsens With Sentence
-            // Template: "Lower back pain worsens with sitting, standing, bending forward, bending backwards, sleeping, twisting right, twisting left, and lifting."
-            var worsensList = modal.LBWorsens?
-                .Where(w => !string.IsNullOrWhiteSpace(w))
-                .Select(NormalizeWorseningTerm)
-                .Distinct()
-                .ToList();
-
-            if (worsensList != null && worsensList.Any())
-            {
-                sentences.Add($"Lower back pain worsens with {FormatList(worsensList)}.");
-            }
-
-            // 5. Improves With Sentence
-            // Template: "The lower back pain improves with resting, medication, and therapy."
-            var improvesList = modal.LBImproves != null ? new List<string>(modal.LBImproves) : new List<string>();
-
-            if (!string.IsNullOrWhiteSpace(modal.LBImprovesOther))
-            {
-                improvesList.RemoveAll(i => i.Equals("Others", StringComparison.OrdinalIgnoreCase));
-                improvesList.Add(modal.LBImprovesOther.Trim());
             }
             else
             {
-                improvesList.RemoveAll(i => i.Equals("Others", StringComparison.OrdinalIgnoreCase));
+                parts.Add("The patient does not drink alcohol.");
             }
 
-            if (improvesList.Any())
+            // 3. Recreational Drugs
+            if (string.Equals(modal.OtherDrugs, "Yes", StringComparison.OrdinalIgnoreCase))
             {
-                var cleanImproves = improvesList
-                    .Where(i => !string.IsNullOrWhiteSpace(i))
-                    .Select(NormalizeImprovementTerm)
-                    .Distinct()
-                    .ToList();
-
-                sentences.Add($"The lower back pain improves with {FormatList(cleanImproves)}.");
+                parts.Add(!string.IsNullOrWhiteSpace(modal.OtherDrugsTxt)
+                    ? $"The patient uses recreational drugs {modal.OtherDrugsTxt.Trim()}."
+                    : "The patient uses recreational drugs.");
+            }
+            else
+            {
+                parts.Add("The patient does not use recreational drugs.");
             }
 
-            return string.Join(" ", sentences);
+            return string.Join(" ", parts);
         }
 
-        public static string Irina_LowBackCC(AIIntakeFormModel model)
+        #region Lowback
+
+        public string LowBackCC(AIIntakeFormModel model)
         {
             var sb = new StringBuilder();
             sb.Append("LUMBAR SPINE: ");
@@ -856,7 +620,7 @@ namespace PainTrax.Web.Helper
         /// <summary>
         /// Pluralizes lower body locations (e.g., hip -> hips, foot -> feet).
         /// </summary>
-        private static string PluralizeLowerBodyPart(string part, string laterality = null)
+        private string PluralizeLowerBodyPart(string part, string laterality = null)
         {
             if (string.IsNullOrWhiteSpace(part)) return part;
 
@@ -896,7 +660,7 @@ namespace PainTrax.Web.Helper
         #endregion
 
         #region Shoulder
-        public static string LeftShoulderCC(AIIntakeFormModel modal)
+        public string LeftShoulderCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -962,7 +726,7 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", sentences);
         }
 
-        public static string RightShoulderCC(AIIntakeFormModel modal)
+        public string RightShoulderCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1031,7 +795,7 @@ namespace PainTrax.Web.Helper
         #region Helper Functions
 
 
-        private static string NormalizeShoulderWorseningTerm(string term)
+        private string NormalizeShoulderWorseningTerm(string term)
         {
             if (string.IsNullOrWhiteSpace(term)) return string.Empty;
 
@@ -1048,7 +812,7 @@ namespace PainTrax.Web.Helper
             }
         }
 
-        private static string NormalizeShoulderImprovementTerm(string term)
+        private string NormalizeShoulderImprovementTerm(string term)
         {
             if (string.IsNullOrWhiteSpace(term)) return string.Empty;
 
@@ -1069,7 +833,7 @@ namespace PainTrax.Web.Helper
         #endregion
 
         #region Knee
-        public static string RightKneeCC(AIIntakeFormModel modal)
+        public string RightKneeCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1135,7 +899,7 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", sentences);
         }
 
-        public static string LeftKneeCC(AIIntakeFormModel modal)
+        public string LeftKneeCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1203,7 +967,7 @@ namespace PainTrax.Web.Helper
 
         #region Knee Helper Methods
 
-        private static string NormalizeKneeWorseningTerm(string term)
+        private string NormalizeKneeWorseningTerm(string term)
         {
             if (string.IsNullOrWhiteSpace(term)) return string.Empty;
 
@@ -1222,7 +986,7 @@ namespace PainTrax.Web.Helper
             }
         }
 
-        private static string NormalizeKneeImprovementTerm(string term)
+        private string NormalizeKneeImprovementTerm(string term)
         {
             if (string.IsNullOrWhiteSpace(term)) return string.Empty;
 
@@ -1241,7 +1005,7 @@ namespace PainTrax.Web.Helper
         #endregion
 
         #region Ankle
-        public static string RightAnkleCC(AIIntakeFormModel modal)
+        public string RightAnkleCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1280,7 +1044,7 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", sentences);
         }
 
-        public static string LeftAnkleCC(AIIntakeFormModel modal)
+        public string LeftAnkleCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1322,7 +1086,7 @@ namespace PainTrax.Web.Helper
 
         #region Elbow
 
-        public static string RightElbowCC(AIIntakeFormModel modal)
+        public string RightElbowCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1374,7 +1138,7 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", sentences);
         }
 
-        public static string LeftElbowCC(AIIntakeFormModel modal)
+        public string LeftElbowCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1429,7 +1193,7 @@ namespace PainTrax.Web.Helper
         #endregion
 
         #region Hip
-        public static string RightHipCC(AIIntakeFormModel modal)
+        public string RightHipCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1481,7 +1245,7 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", sentences);
         }
 
-        public static string LeftHipCC(AIIntakeFormModel modal)
+        public string LeftHipCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1535,7 +1299,7 @@ namespace PainTrax.Web.Helper
         #endregion
 
         #region Wrist
-        public static string RightWristCC(AIIntakeFormModel modal)
+        public string RightWristCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1574,7 +1338,7 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", sentences);
         }
 
-        public static string LeftWristCC(AIIntakeFormModel modal)
+        public string LeftWristCC(AIIntakeFormModel modal)
         {
             var sentences = new List<string>();
 
@@ -1617,7 +1381,7 @@ namespace PainTrax.Web.Helper
         #region Other
 
 
-        public static string GenerateOther(string PainScale, List<string> PainTypes, string title)
+        public string GenerateOther(string PainScale, List<string> PainTypes, string title)
         {
 
             // If no values were entered, return empty
@@ -1656,65 +1420,162 @@ namespace PainTrax.Web.Helper
 
         #region PE
 
-        public static string GenerateNeckExamSentence(AIIntakeFormModel model)
+        private string GenerateNeckExamSentence(IEnumerable<string> cervicalPE,
+        string palpation,
+        string palpationTenderness,
+        IEnumerable<string> peTriggerCervical,
+        string peMuscleCervical,
+        string peMuscleCervicalSide,
+        string region = "cervical")
         {
-            if (model == null) return string.Empty;
+            var lines = new List<string>();
 
-            var sentences = new List<string>();
+            // 1. Inspection (Checkboxes: CervicalPE)
+            var inspectionItems = cervicalPE?
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .ToList() ?? new List<string>();
 
-            // --- 1. Tenderness & Spasms Sentence ---
-            var tendernessParts = new List<string>();
-
-            // Format Levels (e.g., "C3/4, C4/5 levels")
-            string levelsText = (model.NeckTendernessOptions != null && model.NeckTendernessOptions.Any())
-                ? string.Join(", ", model.NeckTendernessOptions.Select(x => x.Trim())) + " levels"
-                : "cervical levels";
-
-            // Format Position ("bilateral" -> "bilaterally", "left" -> "on the left", "right" -> "on the right")
-            string positionText = "";
-            if (!string.IsNullOrWhiteSpace(model.NeckTendernessPosition))
+            if (inspectionItems.Count > 0)
             {
-                string pos = model.NeckTendernessPosition.Trim().ToLower();
-                positionText = pos switch
-                {
-                    "bilateral" => "bilaterally",
-                    "left" => "on the left",
-                    "right" => "on the right",
-                    _ => pos
-                };
+                string joined = string.Join(", ", inspectionItems);
+                // Capitalize first letter (e.g., "Unremarkable, kyphotic, lordotic.")
+                string formatted = char.ToUpper(joined[0]) + joined.Substring(1);
+                lines.Add($"Inspection: {formatted}.");
             }
 
-            string tendernessSentence = "";
-            if (!string.IsNullOrEmpty(positionText))
+            // 2. Palpation
+            var palpationParts = new List<string>();
+
+            // 2a. Tenderness (Radios: Palpation, Palpationtenderness)
+            if (!string.IsNullOrWhiteSpace(palpation))
             {
-                tendernessSentence += $" Patient has pain and tenderness over the {positionText} at {levelsText}";
-                tendernessSentence += ".";
+                string severity = palpation.Trim();
+                string regionText = string.IsNullOrWhiteSpace(region) ? "" : $" {region.Trim()}";
+
+                // Omit side if tenderness is "No" or no side is selected
+                string sideText = (!string.Equals(severity, "No", StringComparison.OrdinalIgnoreCase) &&
+                                   !string.IsNullOrWhiteSpace(palpationTenderness))
+                    ? $" {palpationTenderness.Trim()}"
+                    : "";
+
+                palpationParts.Add(
+                    $"{severity} tenderness to palpation of the{regionText} midline and paraspinal muscles{sideText}.");
             }
 
-            if (!string.IsNullOrEmpty(tendernessSentence))
-            {
-                sentences.Add(tendernessSentence);
-                sentences.Add(" Facet loading maneuvers are positive.");
-            }
-            // --- 2. Spurling's Test Sentence ---
-            if (!string.IsNullOrWhiteSpace(model.NeckSpurlingTest))
-            {
-                string spurlingResult = model.NeckSpurlingTest.Trim().ToLower();
-                string spurlingSentence = $"The Spurling's test is {spurlingResult}";
+            // 2b. Trigger points (Checkboxes: PETriggerCervical)
+            var triggerItems = peTriggerCervical?
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .ToList() ?? new List<string>();
 
-                if (!string.IsNullOrWhiteSpace(model.NeckSpurlingTestOther))
-                {
-                    spurlingSentence += $" {model.NeckSpurlingTestOther.Trim()}";
-                }
-                spurlingSentence += ".";
-                sentences.Add(spurlingSentence);
+            if (triggerItems.Count > 0)
+            {
+                palpationParts.Add($"Trigger points noted in {string.Join(", ", triggerItems)}.");
             }
 
+            // 2c. Muscle spasms (Radios: PEMuscleCervical, PEMuscleCervicalSide)
+            if (!string.IsNullOrWhiteSpace(peMuscleCervical))
+            {
+                string spasmSeverity = peMuscleCervical.Trim();
 
-            return string.Join(" ", sentences);
+                // Omit side if spasms are "none" or no side is selected
+                string spasmSide = (!string.Equals(spasmSeverity, "none", StringComparison.OrdinalIgnoreCase) &&
+                                    !string.IsNullOrWhiteSpace(peMuscleCervicalSide))
+                    ? $" {peMuscleCervicalSide.Trim()}"
+                    : "";
+
+                palpationParts.Add($"Muscle spasms are {spasmSeverity}{spasmSide}.");
+            }
+
+            if (palpationParts.Count > 0)
+            {
+                lines.Add($"Palpation: {string.Join(" ", palpationParts)}");
+            }
+
+            return string.Join(Environment.NewLine, lines);
         }
 
-        public static string GenerateLowerBackNarrative(AIIntakeFormModel model)
+        private string GenerateNerveProvocation(
+    string cevicalSpurling,
+    IEnumerable<string> cevicalSpurlingTest,
+    string cervicalRightTxt,
+    string cervicalLeftTxt,
+    string cevicalCompression,
+    string cevicalCompressionTest)
+        {
+            var lines = new List<string>();
+
+            // 1. Spurling's test
+            if (!string.IsNullOrWhiteSpace(cevicalSpurling))
+            {
+                string spurlingResult = cevicalSpurling.Trim().ToLower();
+
+                var selectedSides = new HashSet<string>(
+                    cevicalSpurlingTest?
+                        .Where(x => !string.IsNullOrWhiteSpace(x))
+                        .Select(x => x.Trim()) ?? Enumerable.Empty<string>(),
+                    StringComparer.OrdinalIgnoreCase);
+
+                bool hasRight = selectedSides.Contains("right");
+                bool hasLeft = selectedSides.Contains("left");
+                bool hasBilateral = selectedSides.Contains("bilaterally");
+
+                var sideParts = new List<string>();
+
+                if (hasRight)
+                {
+                    string rightDeg = !string.IsNullOrWhiteSpace(cervicalRightTxt)
+                        ? $" at {cervicalRightTxt.Trim()} degrees"
+                        : string.Empty;
+                    sideParts.Add($"on the right{rightDeg}");
+                }
+
+                if (hasLeft)
+                {
+                    string leftPrefix = hasRight ? "left" : "on the left";
+                    string leftDeg = !string.IsNullOrWhiteSpace(cervicalLeftTxt)
+                        ? $" at {cervicalLeftTxt.Trim()} degrees"
+                        : string.Empty;
+                    sideParts.Add($"{leftPrefix}{leftDeg}");
+                }
+
+                if (hasBilateral)
+                {
+                    sideParts.Add("bilaterally");
+                }
+
+                string spurlingSidesText = sideParts.Any()
+                    ? " " + string.Join(" and ", sideParts)
+                    : string.Empty;
+
+                lines.Add($"Spurling test is {spurlingResult}{spurlingSidesText}.");
+            }
+
+            // 2. Compression test
+            if (!string.IsNullOrWhiteSpace(cevicalCompression))
+            {
+                string compResult = cevicalCompression.Trim().ToLower();
+                string compSideRaw = cevicalCompressionTest?.Trim().ToLower();
+
+                string compSideText = string.Empty;
+                if (!string.IsNullOrWhiteSpace(compSideRaw))
+                {
+                    compSideText = compSideRaw == "bilaterally"
+                        ? " bilaterally"
+                        : $" on the {compSideRaw}";
+                }
+
+                lines.Add($"Compression test is {compResult}{compSideText}.");
+            }
+
+            if (!lines.Any())
+                return string.Empty;
+
+            return "Nerve Provocation:" + Environment.NewLine + string.Join(Environment.NewLine, lines);
+        }
+
+        private string GenerateLowerBackNarrative(AIIntakeFormModel model)
         {
             if (model == null) return string.Empty;
 
@@ -1775,98 +1636,106 @@ namespace PainTrax.Web.Helper
 
         #region AI Content
 
-        public static string GetCC(AIIntakeFormModel model)
+        public string GetCC(AIIntakeFormModel model)
         {
             string pe = "";
             if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
             {
-                if (model.client_code == "imnpfhpc")
-                    pe = pe + ReportHelper.Irina_NeckCC(model);
-                else
-                    pe = pe + ReportHelper.Bhf_NeckCC(model);
+                pe = pe + this.NeckCC(model);
             }
             if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.MidbackCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.MidbackCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
             {
-                if (model.client_code == "imnpfhpc")
-                    pe = pe + "<p>" + ReportHelper.Irina_LowBackCC(model) + "<br/></p>";
-                else
-                    pe = pe + "<p>" + ReportHelper.Bhf_LowBackCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.LowBackCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.RightShoulderCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.RightShoulderCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left shoulder", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.LeftShoulderCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.LeftShoulderCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right knee", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.RightKneeCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.RightKneeCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left knee", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.LeftKneeCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.LeftKneeCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right ankle", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.RightAnkleCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.RightAnkleCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left ankle", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.LeftAnkleCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.LeftAnkleCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right Elbow", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.RightElbowCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.RightElbowCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left elbow", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.LeftElbowCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.LeftElbowCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right hip", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.RightHipCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.RightHipCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left hip", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.LeftHipCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.LeftHipCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("right wrist", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.RightWristCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.RightWristCC(model) + "<br/></p>";
             }
             if (model.Complaints.Contains("left wrist", StringComparer.OrdinalIgnoreCase))
             {
-                pe = pe + "<p>" + ReportHelper.LeftWristCC(model) + "<br/></p>";
+                pe = pe + "<p>" + this.LeftWristCC(model) + "<br/></p>";
             }
             if (!string.IsNullOrEmpty(model.OtherBodyPart1))
             {
-                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other1PainScale, model.Other1PainType, model.OtherBodyPart1) + "<br/></p>";
+                pe = pe + "<p>" + this.GenerateOther(model.Other1PainScale, model.Other1PainType, model.OtherBodyPart1) + "<br/></p>";
             }
             if (!string.IsNullOrEmpty(model.OtherBodyPart2))
             {
-                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other2PainScale, model.Other2PainType, model.OtherBodyPart2) + "<br/></p>";
+                pe = pe + "<p>" + this.GenerateOther(model.Other2PainScale, model.Other2PainType, model.OtherBodyPart2) + "<br/></p>";
             }
             if (!string.IsNullOrEmpty(model.OtherBodyPart3))
             {
-                pe = pe + "<p>" + ReportHelper.GenerateOther(model.Other3PainScale, model.Other3PainType, model.OtherBodyPart3) + "<br/></p>";
+                pe = pe + "<p>" + this.GenerateOther(model.Other3PainScale, model.Other3PainType, model.OtherBodyPart3) + "<br/></p>";
             }
             return pe.Replace(", and", " and");
         }
 
-        public static string GetPE(AIIntakeFormModel model, string path)
+        public string GetPE(AIIntakeFormModel model, string path)
         {
             string pe = "";
 
             if (model.Complaints.Contains("neck", StringComparer.OrdinalIgnoreCase))
             {
-                var topSection = ReportHelper.GenerateNeckExamSentence(model);
-                pe = pe + "<br/>" + GetROM(model, "neck", "Neck.html", topSection, path);
+                var topSection = this.GenerateNeckExamSentence(model.CervicalPE,
+        model.Palpation,
+        model.Palpationtenderness,
+        model.PETriggerCervical,
+        model.PEMuscleCervical,
+        model.PEMuscleCervicalSide);
+
+                var nerveSection = this.GenerateNerveProvocation(
+   model.CevicalSpurling,
+   model.CevicalSpurlingTest,
+   model.CERVICALRighttxt,
+   model.CERVICALLefttxt,
+   model.CevicalCompression,
+   model.CevicalCompressionTest
+);
+                pe = pe + "<br/>" + GetROM(model, "neck", "Neck.html", topSection, path, nerveSection);
             }
             if (model.Complaints.Contains("midback", StringComparer.OrdinalIgnoreCase))
             {
@@ -1874,7 +1743,7 @@ namespace PainTrax.Web.Helper
             }
             if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
             {
-                var topSection = ReportHelper.GenerateLowerBackNarrative(model);
+                var topSection = this.GenerateLowerBackNarrative(model);
                 pe = pe + "<br/>" + GetROM(model, "lowback", "Lowback.html", topSection, path);
             }
             if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
@@ -1943,7 +1812,7 @@ namespace PainTrax.Web.Helper
             return pe;
         }
 
-        public static string GetDTR(AIIntakeFormModel model, string path)
+        public string GetDTR(AIIntakeFormModel model, string path)
         {
             try
             {
@@ -2050,7 +1919,7 @@ namespace PainTrax.Web.Helper
 
         }
 
-        public static string GetSensory(AIIntakeFormModel model, string path)
+        public string GetSensory(AIIntakeFormModel model, string path)
         {
             string strSE = "";
 
@@ -2177,7 +2046,7 @@ namespace PainTrax.Web.Helper
 
         }
 
-        public static string GetMMST(AIIntakeFormModel model, string path = "")
+        public string GetMMST(AIIntakeFormModel model, string path = "")
         {
 
             var templateDir = Path.Combine(path, "templates");
@@ -2300,14 +2169,14 @@ namespace PainTrax.Web.Helper
 
         }
 
-        public static string GetROM(AIIntakeFormModel model, string bodyPart, string fileName, string topSection = "", string path = "")
+        private string GetROM(AIIntakeFormModel model, string bodyPart, string fileName, string topSection = "", string path = "", string nerveSection = "")
         {
             string rom = "";
 
             var templateDir = Path.Combine(path, "templates");
 
             //var filePath = templateDir + "/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/BHF";
-            var filePath = templateDir + "/BHF/" + fileName;
+            var filePath = templateDir + "/IMNPFHPC/" + fileName;
 
 
             // 2. Read the entire file content into a string asynchronously
@@ -2317,14 +2186,41 @@ namespace PainTrax.Web.Helper
             switch (bodyPart.ToLower())
             {
                 case "neck":
-                    htmlString = htmlString.Replace("#ForwardFlexionROM", model.NeckFFROM)
-                                           .Replace("#LRotationROM", model.NeckFFLeft)
-                                           .Replace("#RRotationROM", model.NeckFFRight)
-                                           .Replace("#ExtensionROM", model.NeckExt)
-                                           .Replace("#LLateralFlexionROM", model.NeckExtLeft)
-                                           .Replace("#RLateralFlexionROM", model.NeckExtRight)
-                                           .Replace("#RLateralFlexionROM", model.NeckExtRight)
-                                           .Replace("#topSection", topSection);
+                    htmlString = htmlString.Replace("#CervicalFlexion", model.CervicalFlexion)
+                                           .Replace("#CervicalExtension", model.CervicalExtension)
+                                           .Replace("#CervicalLeftRotation", model.CervicalLeftRotation)
+                                           .Replace("#CervicalRightRotation", model.CervicalRightRotation)
+                                           .Replace("#CervicalLeftLateralbending", model.CervicalLeftLateralbending)
+                                           .Replace("#CervicalrightLateralbending", model.CervicalrightLateralbending)
+                                           .Replace("#CERVICALRightDeltoid", model.CERVICALRightDeltoid)
+                                           .Replace("#CERVICALRightBiceps", model.CERVICALRightBiceps)
+                                           .Replace("#CERVICALRightTriceps", model.CERVICALRightTriceps)
+                                           .Replace("#CERVICALRightWristext", model.CERVICALRightWristext)
+                                           .Replace("#CERVICALRightWristflex", model.CERVICALRightWristflex)
+                                           .Replace("#CERVICALRightIntrinsic", model.CERVICALRightIntrinsic)
+                                           .Replace("#CERVICALLEFTDeltoid", model.CERVICALLEFTDeltoid)
+                                           .Replace("#CERVICALLEFTBiceps", model.CERVICALLEFTBiceps)
+                                           .Replace("#CERVICALLEFTTriceps", model.CERVICALLEFTTriceps)
+                                           .Replace("#CERVICALLeftWristext", model.CERVICALLeftWristext)
+                                           .Replace("#CERVICALLEFTWristflex", model.CERVICALLEFTWristflex)
+                                           .Replace("#CERVICALLEFTIntrinsic", model.CERVICALLEFTIntrinsic)
+                                           .Replace("#CERVICALRightC5", model.CERVICALRightC5)
+                                           .Replace("#CERVICALRightC6", model.CERVICALRightC6)
+                                           .Replace("#CERVICALRightC7", model.CERVICALRightC7)
+                                           .Replace("#CERVICALRightC8", model.CERVICALRightC8)
+                                           .Replace("#CERVICALRightT1", model.CERVICALRightT1)
+                                           .Replace("#CERVICALLeftC5", model.CERVICALLeftC5)
+                                           .Replace("#CERVICALLeftC6", model.CERVICALLeftC6)
+                                           .Replace("#CERVICALLeftC7", model.CERVICALLeftC7)
+                                           .Replace("#CERVICALLeftC8", model.CERVICALLeftC8)
+                                           .Replace("#CERVICALLeftT1", model.CERVICALLeftT1)
+                                           .Replace("#THORACICBicepstendonright", this.ConvertGradeText(model.THORACICBicepstendonright))
+                                           .Replace("#THORACICBicepstendonleft", this.ConvertGradeText(model.THORACICBicepstendonleft))
+                                           .Replace("#THORACICTricepstendonright", this.ConvertGradeText(model.THORACICTricepstendonright))
+                                           .Replace("#THORACICTricepstendonleft", this.ConvertGradeText(model.THORACICTricepstendonleft))
+                                           .Replace("#topSection", topSection)
+                                           .Replace("#nerveSection", nerveSection);
+
                     break;
                 case "midback":
                     htmlString = htmlString.Replace("#MbFFROM", model.MbFFROM)
@@ -2445,7 +2341,7 @@ namespace PainTrax.Web.Helper
             return htmlString;
         }
 
-        public static string GetOtherROM(string NeckFFROM, string NeckFFLeft, string NeckFFRight,
+        public string GetOtherROM(string NeckFFROM, string NeckFFLeft, string NeckFFRight,
             string NeckExt, string NeckExtLeft, string NeckExtRight, string path)
         {
             string rom = "";
@@ -2473,201 +2369,146 @@ namespace PainTrax.Web.Helper
 
         #region History
 
-        public static string GenerateHistory(AIIntakeFormModel model)
+        public string GenerateHistory(AIIntakeFormModel model)
         {
-            if (model == null) return string.Empty;
+            var sb = new StringBuilder();
 
-            var sentences = new List<string>();
+            // 1. Age, Dominant Hand, Gender
+            string age = !string.IsNullOrWhiteSpace(model.Age)
+                ? model.Age.Trim()
+                : CalculateAge(Convert.ToDateTime(model.DOB), Convert.ToDateTime(model.DOE));
 
-            // Determine pronouns
-            bool isFemale = string.Equals(model.Gender, "Female", StringComparison.OrdinalIgnoreCase);
-            string pronounSubj = isFemale ? "she" : "he";
-            string pronounSubjCap = isFemale ? "She" : "He";
-            string pronounPoss = isFemale ? "her" : "his";
-            string pName = model.LN + " " + model.FN;
+            string handedness = model.DominantHand?.Trim() ?? "";
+            string gender = model.Gender?.Trim() ?? "";
 
-            // 1. Encounter / Introduction
-            //string accidentType = model.StatesType != null && model.StatesType.Any()
-            //    ? string.Join(", ", model.StatesType).Trim()
-            //    : "motor vehicle accident";
+            // 2. Restraint & Role (Driver / Passenger / Pedestrian / Bicyclist)
+            string restraintText = model.SeatBelt?.Equals("Yes", StringComparison.OrdinalIgnoreCase) == true
+                ? "restrained"
+                : "unrestrained";
 
-            string accidentType = (model.InjuryType.ToLower() == "wc") ? "work-related accident" : "motor vehicle accident";
-            //string doaStr = model.DOA ?? "____";
-
-            string formattedDoa = !string.IsNullOrWhiteSpace(model.lblDOA) ? Convert.ToDateTime(model.lblDOA.Trim()).ToString("MM/dd/yyyy") : "an unspecified date";
-            string title = (isFemale ? "Ms." : "Mr.");
-            string patientName = !string.IsNullOrWhiteSpace(pName) ? pName.Trim() : "Patient";
-            string handedness = !string.IsNullOrWhiteSpace(model.DominantHand) ? model.DominantHand.Trim() : "right-handed";
-
-            sentences.Add($"On {model.DOE}, {title} {patientName}, a {handedness} {model.Age}-year-old {model.Gender.ToLower()} presents for the initial evaluation of the injuries sustained in a {accidentType} which occurred on {formattedDoa}.");
-
-            // 2. Patient Role & Impact Type
-            var patientType = model.PatientType?.FirstOrDefault();
-            var vehicleHit = model.VehicleHit?.FirstOrDefault();
-
-            if (!string.IsNullOrWhiteSpace(patientType) || !string.IsNullOrWhiteSpace(vehicleHit))
+            string roleSentencePart = model.PatientAType switch
             {
-                string roleText;
-                if (!string.IsNullOrWhiteSpace(patientType))
+                "Driver" => $"the {restraintText} driver of a vehicle that was",
+                "Front Pass" => $"the {restraintText} front passenger of a vehicle that was",
+                "Rear Pass" => $"the {restraintText} rear passenger of a vehicle that was",
+                "Pedestrian" => "a pedestrian who was",
+                "Bicyclist" => "a bicyclist who was",
+                _ => $"the {restraintText} occupant of a vehicle that was"
+            };
+
+            // 3. Accident Type & DOA
+            string accidentType = model.InjuryType?.Equals("WC", StringComparison.OrdinalIgnoreCase) == true
+                ? "work-related"
+                : "motor vehicle";
+
+            string doaText = string.IsNullOrEmpty(model.DOA) == false
+                ? Convert.ToDateTime(model.DOA).ToString("MM/dd/yyyy")
+                : "________";
+
+            sb.Append($"The patient is a {age}-year-old {handedness} {gender}, who was {roleSentencePart} involved in a {accidentType} accident on {doaText}. ");
+
+            // 4. Impact / Collision Side (skip if Pedestrian/Bicyclist with no vehicle impact selected)
+            var impactParts = model.PatientAccidentType
+                .Select(x => x switch
                 {
-                    if (patientType.Equals("Belted Driver", StringComparison.OrdinalIgnoreCase))
-                        roleText = "the restrained driver of a vehicle";
-                    else if (patientType.Equals("Pedestrian", StringComparison.OrdinalIgnoreCase))
-                        roleText = "a pedestrian";
-                    else if (patientType.Equals("Bicyclist", StringComparison.OrdinalIgnoreCase))
-                        roleText = "a bicyclist";
-                    else
-                        roleText = $"a {patientType.ToLower()}";
-                }
-                else
-                {
-                    roleText = "an occupant of a vehicle";
-                }
+                    "Frontend" => "front end",
+                    "Rearend" => "rear end",
+                    "Driverside" => "driver side",
+                    "Passside" => "passenger side",
+                    _ => x
+                })
+                .ToList();
 
-                string hitText = !string.IsNullOrWhiteSpace(vehicleHit)
-                    ? $" which was involved in a {vehicleHit.ToLower()} collision."
-                    : ".";
+            if (!string.IsNullOrWhiteSpace(model.OtherCollision))
+                impactParts.Add(model.OtherCollision.Trim());
 
-                sentences.Add($"The patient states {pronounSubj} was {roleText}{hitText}");
+            if (impactParts.Any())
+            {
+                sb.Append($"The patient's vehicle was impacted on the {FormatList(impactParts)}. ");
             }
 
-            // 3. Free-text Mechanism of Accident (NFDescription)
-            if (!string.IsNullOrWhiteSpace(model.NFDescription))
+            // 5. Airbags
+            if (!string.IsNullOrWhiteSpace(model.Airbagsdeployed))
             {
-                string desc = model.NFDescription.Trim();
-                if (!desc.EndsWith(".")) desc += ".";
-                sentences.Add($"Patient states {desc}");
-            }
-
-            // 4. Direct Impact
-            if (string.Equals(model.DirectImpact, "Yes", StringComparison.OrdinalIgnoreCase) &&
-                !string.IsNullOrWhiteSpace(model.DirectImpactBodyPart))
-            {
-                sentences.Add($"Due to the impact, {pronounSubj} injured {pronounPoss} {model.DirectImpactBodyPart.Trim()}.");
-            }
-
-            // 5. Loss of Consciousness
-            if (string.Equals(model.LoseConsciousness, "Yes", StringComparison.OrdinalIgnoreCase))
-            {
-                string locDuration = !string.IsNullOrWhiteSpace(model.LOCForHowLong)
-                    ? $" for {model.LOCForHowLong.Trim()}"
-                    : string.Empty;
-                sentences.Add($"Patient had loss of consciousness{locDuration}.");
+                string airbags = model.Airbagsdeployed.Equals("Yes", StringComparison.OrdinalIgnoreCase)
+                    ? "deployed"
+                    : "did not deploy";
+                sb.Append($"The airbags {airbags}. ");
             }
 
             // 6. EMS
-            if (string.Equals(model.EMS, "Yes", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(model.EMS))
             {
-                sentences.Add("The patient states that an EMS team arrived.");
+                string ems = model.EMS.Equals("Yes", StringComparison.OrdinalIgnoreCase)
+                    ? "arrived"
+                    : "did not arrive";
+                sb.Append($"The EMS {ems} on the scene. ");
             }
 
-            // 7. Hospital Visit
-            if (string.Equals(model.Hospital, "Yes", StringComparison.OrdinalIgnoreCase))
-            {
-                string hospName = !string.IsNullOrWhiteSpace(model.HospitalName)
-                    ? model.HospitalName.Trim()
-                    : "the hospital";
+            // 7. LOC & Bruises
+            bool hasLoc = model.LOC?.Equals("Yes", StringComparison.OrdinalIgnoreCase) == true;
+            bool hasBruises = model.Bruises?.Equals("Yes", StringComparison.OrdinalIgnoreCase) == true;
 
-                string transportMethod = !string.IsNullOrWhiteSpace(model.TransportOther)
-                    ? model.TransportOther.Trim()
-                    : (!string.IsNullOrWhiteSpace(model.Transport) ? model.Transport.Trim() : "");
+            if (hasLoc && hasBruises)
+                sb.Append("The patient reports loss of consciousness and bruises. ");
+            else if (hasLoc)
+                sb.Append("The patient reports loss of consciousness and denies bruises. ");
+            else if (hasBruises)
+                sb.Append("The patient denies loss of consciousness and reports bruises. ");
+            else
+                sb.Append("The patient denies loss of consciousness. ");
 
-                string transportStr = !string.IsNullOrWhiteSpace(transportMethod)
-                    ? (transportMethod.ToLower().Contains("with") || transportMethod.ToLower().Contains("by")
-                        ? transportMethod.ToLower()
-                        : $"with {transportMethod.ToLower()}")
-                    : "";
-
-                string timingStr = string.Equals(model.SameDay, "Yes", StringComparison.OrdinalIgnoreCase)
-                    ? "the same day the accident occurred"
-                    : (!string.IsNullOrWhiteSpace(model.DaysLater) ? $"{model.DaysLater.Trim()} days after the accident occurred" : "subsequently");
-
-                string hospSentence = $"Patient went to {hospName} {transportStr} {timingStr}.".Replace("  ", " ");
-                sentences.Add(hospSentence);
-
-                // Hospital Tests
-                if (string.Equals(model.IsHospitalTest, "Yes", StringComparison.OrdinalIgnoreCase))
+            // 8. Body Parts / Chief Complaints
+            var bodyParts = model.Complaints
+                .Select(c => c switch
                 {
-                    var tests = model.HospitalTest != null && model.HospitalTest.Any()
-                        ? string.Join(" and ", model.HospitalTest)
-                        : "diagnostic testing";
+                    "Neck" => "neck",
+                    "Midback" => "mid back",
+                    "Lowback" => "low back",
+                    _ => c.ToLower()
+                })
+                .ToList();
 
-                    string testOther = !string.IsNullOrWhiteSpace(model.HospitalTestOther)
-                        ? $" {model.HospitalTestOther.Trim()}"
-                        : "";
+            if (!string.IsNullOrWhiteSpace(model.OtherBodyPart))
+                bodyParts.Add(model.OtherBodyPart.Trim());
 
-                    sentences.Add($"At the hospital, the patient had {tests}{testOther}.");
-                }
+            string bodyPartsText = bodyParts.Any() ? FormatList(bodyParts) : "________";
 
-                // Hospital Medication
-                if (string.Equals(model.IsHospitalMedication, "Yes", StringComparison.OrdinalIgnoreCase))
-                {
-                    string meds = !string.IsNullOrWhiteSpace(model.HospitalMedication)
-                        ? model.HospitalMedication.Trim()
-                        : "pain medication";
+            sb.Append($"The patient sustained multiple skeletal injuries including injury to {bodyPartsText}. ");
 
-                    sentences.Add($"At the hospital, prescription was given for {meds}.");
-                }
-            }
-            //else if (string.Equals(model.Hospital, "No", StringComparison.OrdinalIgnoreCase))
-            //{
-            //    sentences.Add("The patient did not go to the hospital following the accident.");
-            //}
-
-            // 8. Past Accident
-            if (string.Equals(model.IsAccidentPast, "Yes", StringComparison.OrdinalIgnoreCase))
+            // 9. Hospital
+            if (model.Hospital?.Equals("Yes", StringComparison.OrdinalIgnoreCase) == true)
             {
-                string pastDate = !string.IsNullOrWhiteSpace(model.AccidentPast) ? model.AccidentPast.Trim() : "a previous date";
-                string injuredParts = !string.IsNullOrWhiteSpace(model.AccidentBodyPart) ? model.AccidentBodyPart.Trim() : "various body parts";
-                bool recovered = string.Equals(model.IsAccidentRecover, "Yes", StringComparison.OrdinalIgnoreCase);
+                string hospName = !string.IsNullOrWhiteSpace(model.hospitalname)
+                    ? model.hospitalname.Trim()
+                    : "________";
 
-                string recoveryStr = recovered ? "has completely recovered" : "has not completely recovered";
-                sentences.Add($"Patient had a previous accident on {pastDate} and injured {pronounPoss} {injuredParts} and {recoveryStr}.");
+                // Avoid duplicating "Hospital" if the user already typed it
+                string hospitalFull = hospName.EndsWith("Hospital", StringComparison.OrdinalIgnoreCase)
+                    ? hospName
+                    : $"{hospName} Hospital";
+
+                sb.Append($"The patient was taken on an emergent basis to {hospitalFull} where the patient was treated and released. ");
             }
-
-
-            if (!string.IsNullOrEmpty(model.InjuryType))
+            else if (model.Hospital?.Equals("No", StringComparison.OrdinalIgnoreCase) == true)
             {
-                if (model.InjuryType.ToLower() != "mm")
-                    sentences.Add($"During the accident, the patient reports injuries to {string.Join(",", model.Complaints)}".Replace("  ", " ").ToLower());
+                sb.Append("The patient did not go to any hospital that same day. ");
             }
 
-            // 9. Physical Therapy & Chiropractic Care
-            bool hadPT = string.Equals(model.PT, "Yes", StringComparison.OrdinalIgnoreCase);
-            bool hadChiro = string.Equals(model.Chiro, "Yes", StringComparison.OrdinalIgnoreCase);
+            // 10. Physical Therapy Duration
+            // Uses PhysicalTherapyDuration if provided; otherwise estimates from DOA to DOE/Today
+            string ptDuration = !string.IsNullOrWhiteSpace(model.PhysicalTherapyDuration)
+                ? model.PhysicalTherapyDuration.Trim()
+                : EstimateWeeksOrMonths(Convert.ToDateTime(model.DOA), Convert.ToDateTime(model.DOE));
 
-            string ptFreq = !string.IsNullOrWhiteSpace(model.PTFreq) ? model.PTFreq.Trim() : "";
-            string chiroFreq = !string.IsNullOrWhiteSpace(model.ChiroFreq) ? model.ChiroFreq.Trim() : "";
+            sb.Append($"The patient has been undergoing physical therapy for the past {ptDuration}. ");
 
-            if (hadPT && hadChiro)
-            {
-                sentences.Add($"The patient has been receiving physical therapy {ptFreq}x a week and chiropractic care {chiroFreq}x a week.".Replace("  ", " "));
-            }
-            else if (hadPT)
-            {
-                sentences.Add($"The patient has been receiving physical therapy {ptFreq}x a week.".Replace("  ", " "));
-            }
-            else if (hadChiro)
-            {
-                sentences.Add($"The patient has been receiving chiropractic care {chiroFreq}x a week.".Replace("  ", " "));
-            }
+            // 11. Closing Evaluation Scope
+            sb.Append($"My evaluation is limited to {bodyPartsText} injury sustained in the accident of {doaText}.");
 
-            //// 10. Review of Systems (ROS)
-            //if (model.ROS != null && model.ROS.Any())
-            //{
-            //    string rosList = string.Join(", ", model.ROS);
-            //    if (!string.IsNullOrWhiteSpace(model.ROSOther))
-            //    {
-            //        rosList += $", {model.ROSOther.Trim()}";
-            //    }
-            //    sentences.Add($"Review of systems is positive for {rosList}.");
-            //}
-
-            // Clean multiple whitespace characters and join sentences
-            string fullParagraph = string.Join(" ", sentences);
-            return Regex.Replace(fullParagraph, @"\s{2,}", " ").Trim();
+            return sb.ToString();
         }
-        public static string GeneratePmh(string isPmh, List<string> pmhList, string pmhOther)
+        public string GeneratePmh(string isPmh, List<string> pmhList, string pmhOther)
         {
             // 1. If "No"
             if (string.Equals(isPmh, "No", StringComparison.OrdinalIgnoreCase))
@@ -2715,7 +2556,7 @@ namespace PainTrax.Web.Helper
             return string.Empty;
         }
 
-        public static string GeneratePsh(string isSmh, string pshDetails)
+        public string GeneratePsh(string isSmh, string pshDetails)
         {
             // 1. If "No"
             if (string.Equals(isSmh, "No", StringComparison.OrdinalIgnoreCase))
@@ -2742,7 +2583,7 @@ namespace PainTrax.Web.Helper
             return string.Empty;
         }
 
-        public static string GenerateMeds(string meds, string medsDetails)
+        public string GenerateMeds(string meds, string medsDetails)
         {
             // 1. If "No"
             if (string.Equals(meds, "No", StringComparison.OrdinalIgnoreCase))
@@ -2769,9 +2610,7 @@ namespace PainTrax.Web.Helper
             return string.Empty;
         }
 
-
-
-        public static string GenerateAllergy(string allergy, string allergyDetails)
+        public string GenerateAllergy(string allergy, string allergyDetails)
         {
             // 1. If "No"
             if (string.Equals(allergy, "No", StringComparison.OrdinalIgnoreCase))
@@ -2798,7 +2637,7 @@ namespace PainTrax.Web.Helper
             return string.Empty;
         }
 
-        public static string GenerateGait(string gaitRadio, List<string> gaitCheckboxes, string gaitOther)
+        public string GenerateGait(string gaitRadio, List<string> gaitCheckboxes, string gaitOther)
         {
             // 1. Primary gait (defaults to 'Normal' if nothing selected)
             string primaryGait = string.IsNullOrWhiteSpace(gaitRadio) ? "Normal" : gaitRadio.Trim();
@@ -2847,7 +2686,7 @@ namespace PainTrax.Web.Helper
 
         #region ROS
 
-        private static readonly List<string> AllRosOptions = new List<string>
+        private readonly List<string> AllRosOptions = new List<string>
         {
             "headaches",
             "chest pain/shortness of breath",
@@ -2863,7 +2702,7 @@ namespace PainTrax.Web.Helper
 
         };
 
-        public static string GenerateRos(List<string> selectedRos, string rosOther = null)
+        public string GenerateRos(List<string> selectedRos, string rosOther = null)
         {
             var admits = new List<string>();
 
@@ -2900,7 +2739,7 @@ namespace PainTrax.Web.Helper
             return string.Join(" ", parts);
         }
 
-        public static string GenerateRosIrina(AIIntakeFormModel model)
+        public string GenerateRosIrina(AIIntakeFormModel model)
         {
             var items = new (string Label, string SystemKey, string Value)[]
  {
@@ -2937,7 +2776,7 @@ namespace PainTrax.Web.Helper
         }
 
         // Helper to format items with commas and "and"
-        private static string FormatList(List<string> items)
+        private string FormatList(List<string> items)
         {
             if (items == null || items.Count == 0) return string.Empty;
             if (items.Count == 1) return items[0];
@@ -2949,7 +2788,7 @@ namespace PainTrax.Web.Helper
         #endregion
 
         #region ADL
-        public static string GenerateADL(AIIntakeFormModel model)
+        public string GenerateADL(AIIntakeFormModel model)
         {
             if (model == null) return string.Empty;
 
@@ -2977,7 +2816,7 @@ namespace PainTrax.Web.Helper
             return sb.ToString().TrimEnd();
         }
 
-        private static string FormatAdlRow(string activity, string perform, string rawComment)
+        private string FormatAdlRow(string activity, string perform, string rawComment)
         {
             string comment = rawComment?.Trim()?.TrimEnd('.');
 
@@ -3008,7 +2847,7 @@ namespace PainTrax.Web.Helper
         #endregion
 
         #region Occupation
-        public static string GenerateOccupation(string occupation, string jobTitle)
+        public string GenerateOccupation(string occupation, string jobTitle)
         {
             // 1. If "No"
             if (string.IsNullOrEmpty(occupation))
@@ -3029,7 +2868,7 @@ namespace PainTrax.Web.Helper
         }
 
 
-        public static string GenerateJob(AIIntakeFormModel model)
+        public string GenerateJob(AIIntakeFormModel model)
         {
             var activities = new List<string>();
 
@@ -3096,7 +2935,7 @@ namespace PainTrax.Web.Helper
             return string.Join(Environment.NewLine, lines);
         }
 
-        private static string FormatListWithAnd(List<string> items)
+        private string FormatListWithAnd(List<string> items)
         {
             if (items == null || items.Count == 0) return string.Empty;
             if (items.Count == 1) return items[0];
@@ -3107,7 +2946,7 @@ namespace PainTrax.Web.Helper
         #endregion
 
         #region Recommandation
-        public static string GenerateRecommandation(AIIntakeFormModel model)
+        public string GenerateRecommandation(AIIntakeFormModel model)
         {
             if (model == null) return string.Empty;
 
@@ -3267,7 +3106,7 @@ namespace PainTrax.Web.Helper
         }
 
         // Helper: Formats list into "Item 1, Item 2 and Item 3"
-        //private static string FormatListWithAnd(List<string> items)
+        //private  string FormatListWithAnd(List<string> items)
         //{
         //    if (items == null || items.Count == 0) return string.Empty;
         //    if (items.Count == 1) return items[0];
@@ -3278,12 +3117,78 @@ namespace PainTrax.Web.Helper
 
         #region Private Method
 
-        public static string CapitalizeFirstLetter(string input)
+        public string CapitalizeFirstLetter(string input)
         {
             if (string.IsNullOrEmpty(input))
                 return input;
 
             return char.ToUpperInvariant(input[0]) + input.Substring(1);
+        }
+
+        private string CalculateAge(DateTime? dob, DateTime? referenceDate)
+        {
+            if (!dob.HasValue) return "___";
+            var refDate = referenceDate ?? DateTime.Today;
+            int age = refDate.Year - dob.Value.Year;
+            if (dob.Value.Date > refDate.AddYears(-age)) age--;
+            return age.ToString();
+        }
+
+        private string EstimateWeeksOrMonths(DateTime? doa, DateTime endDate)
+        {
+            if (!doa.HasValue || endDate <= doa.Value) return "___ weeks/months";
+
+            int totalDays = (endDate - doa.Value).Days;
+            if (totalDays < 30)
+            {
+                int weeks = Math.Max(1, totalDays / 7);
+                return weeks == 1 ? "1 week" : $"{weeks} weeks";
+            }
+
+            int months = Math.Max(1, totalDays / 30);
+            return months == 1 ? "1 month" : $"{months} months";
+        }
+
+        private  string ConvertGradeText(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            string normalized = input.Trim().ToLowerInvariant();
+
+            var numberMap = new Dictionary<string, string>
+    {
+        { "zero", "0" },
+        { "one", "1" },
+        { "two", "2" },
+        { "three", "3" },
+        { "four", "4" },
+        { "five", "5" }
+    };
+
+            var match = Regex.Match(
+                normalized,
+                @"^(zero|one|two|three|four|five|[0-5])\s*(plus|minus|\+|-)?$"
+            );
+
+            if (!match.Success)
+                return input.Trim();
+
+            string numberPart = match.Groups[1].Value;
+            string modifierPart = match.Groups[2].Value;
+
+            if (numberMap.TryGetValue(numberPart, out string digit))
+            {
+                numberPart = digit;
+            }
+
+            string symbol = string.Empty;
+            if (modifierPart == "plus" || modifierPart == "+")
+                symbol = "+";
+            else if (modifierPart == "minus" || modifierPart == "-")
+                symbol = "-";
+
+            return numberPart + symbol;
         }
 
         #endregion
