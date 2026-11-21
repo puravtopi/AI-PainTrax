@@ -318,6 +318,30 @@ namespace PainTrax.Web.Services
             return datalist;
         }
 
+
+        public bool GetInitialIntakeByIEId(int id)
+        {
+            MySqlCommand cm = new MySqlCommand("SELECT IntakeId FROM tbl_patient_ie WHERE id = @id", conn);
+            cm.Parameters.AddWithValue("@id", id);
+
+            DataTable dt = GetData(cm);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                object val = dt.Rows[0]["IntakeId"];
+                return val != DBNull.Value && !string.IsNullOrWhiteSpace(val?.ToString());
+            }
+
+            return false;
+        }
+
+        public void UpdateIntakeId(int ie_id,int intake_id)
+        {
+            MySqlCommand cm = new MySqlCommand(@"Update tbl_patient_ie set IntakeId=@IntakeId where id=@IeId", conn);
+            cm.Parameters.AddWithValue("@IeId", ie_id);
+            cm.Parameters.AddWithValue("@IntakeId", intake_id);
+            Execute(cm);
+        }
+
         public List<InitialIntakeAI>? GetInitialIntakeByLocationId(int locid,int cmpId)
         {
             DataTable dt = new DataTable();

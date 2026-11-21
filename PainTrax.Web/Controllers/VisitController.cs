@@ -1,29 +1,32 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using AutoMapper;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 using HtmlToOpenXml;
+using iText.Signatures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
+using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Data;
-using System.Text;
-using static PainTrax.Web.Helper.EnumHelper;
-using System.Text.RegularExpressions;
-using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using iText.Signatures;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using System.IO.Compression;
 using System.Linq;
-using Org.BouncyCastle.Asn1.Ocsp;
+using System.Management.Automation;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using static PainTrax.Web.Helper.EnumHelper;
 
 namespace PainTrax.Web.Controllers
 {
@@ -64,6 +67,7 @@ namespace PainTrax.Web.Controllers
         string SessionDiffDoc = "true";
         private readonly IEmailService _emailService;
         private readonly CommonService _commons = new CommonService();
+        private readonly IntakeService _intakeService = new IntakeService();
 
         private readonly IWebHostEnvironment _env;
         public VisitController(ILogger<VisitController> logger, IMapper mapper,
@@ -1278,7 +1282,56 @@ namespace PainTrax.Web.Controllers
                     }
                 }
                 else
+                {
                     ie = _ieService.Insert(objIE);
+                }
+
+
+                // Add Data into Intake Form
+
+                var isIntakeExist = _intakeService.GetInitialIntakeByIEId(ie);
+
+                if (!isIntakeExist)
+                {
+                    var patient = new
+                    {
+                        Id = "0",
+                        FN = model.fname,
+                        LN = model.lname,
+                        LocationId = model.locationid,
+                        Age = age,
+                        AccidentType = model.accidentType,
+                        Gender = model.gender == "1" ? "male" : "female",
+                        InjuryType = model.compensation,
+                        DOB = model.dob?.ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                        DOE = model.dos?.ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                        DOA = model.doa?.ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                        ProviderId= model.providerid
+                    };
+                    string jsonOutput = System.Text.Json.JsonSerializer.Serialize(patient);
+
+                    InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
+                    {
+                        Id = 0,
+                        CmpId = cmpid,
+                        Visit_Type = "IE",
+                        DOA = model.doa,
+                        DOB = model.dob,
+                        //DOE = System.DateTime.Now,
+                        DOE = model.dos,
+                        FormData = jsonOutput,
+                        FN = model.fname,
+                        LN = model.lname,
+                        LocationId = model.locationid,
+                        AccidentType = model.accidentType,
+                       
+                    };
+                    var intakeResult = _intakeService.SaveInitialIntakeAI(initialIntakeAI);
+
+                    int intakeId = string.IsNullOrEmpty(intakeResult) ? 0 : Convert.ToInt32(intakeResult);
+
+                   _intakeService.UpdateIntakeId(ie, intakeId);
+                }
 
                 HttpContext.Session.SetInt32(SessionKeys.SessionIEId, ie);
 
