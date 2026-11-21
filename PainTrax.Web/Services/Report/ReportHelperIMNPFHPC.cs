@@ -1575,58 +1575,152 @@ namespace PainTrax.Web.Services.Report
             return "Nerve Provocation:" + Environment.NewLine + string.Join(Environment.NewLine, lines);
         }
 
-        private string GenerateLowerBackNarrative(AIIntakeFormModel model)
+        private string GenerateLowerBackNarrative(IEnumerable<string> lumbarPE,
+    string lumbarPalpation,
+    string lumbarPalpationMidline,
+    IEnumerable<string> peTriggerLumbar,
+    string peMuscleLumbar,
+    string peMuscleLumbarSide,
+    string region = "lumbar")
         {
-            if (model == null) return string.Empty;
-
             var lines = new List<string>();
 
-            // --- 1. Tenderness & Facet Joints ---
-            string position = model.LBTendernessPosition?.Trim() ?? string.Empty;
-            string levels = (model.LBTendernessOptions != null && model.LBTendernessOptions.Any())
-                ? string.Join(", ", model.LBTendernessOptions.Select(x => x.Trim()))
-                : string.Empty;
+            // 1. Inspection (Checkboxes: LUMBARPE)
+            var inspectionItems = lumbarPE?
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .ToList() ?? new List<string>();
 
-            // Combine position and levels with appropriate spacing
-            string targetArea = string.Join(" ", new[] { position, " at ", levels }.Where(s => !string.IsNullOrWhiteSpace(s)));
-            string targetPrefix = !string.IsNullOrWhiteSpace(targetArea) ? $"{targetArea} " : string.Empty;
-
-            if (!string.IsNullOrEmpty(targetPrefix))
-                lines.Add($"Patient has pain and tenderness over the {targetPrefix} facet joints. Facet loading maneuvers are positive.");
-
-            // --- 2. SI Joint & Special Signs ---
-            bool hasSiJoint = !string.IsNullOrWhiteSpace(model.LBOnexam);
-            bool hasSiSigns = model.LBSign != null && model.LBSign.Any();
-
-            if (hasSiJoint || hasSiSigns)
+            if (inspectionItems.Any())
             {
-                var siParts = new List<string>();
-
-                if (hasSiJoint)
-                {
-                    siParts.Add($"On exam, patient has tenderness over the {model.LBOnexam.Trim()} SI joints.");
-                }
-
-                if (hasSiSigns)
-                {
-                    string signs = string.Join(", ", model.LBSign.Select(s => s.Trim()));
-                    siParts.Add($"{signs} sign are positive.");
-                }
-
-                lines.Add(string.Join(" ", siParts));
+                string joined = string.Join(", ", inspectionItems);
+                string formatted = char.ToUpper(joined[0]) + joined.Substring(1);
+                lines.Add($"Inspection: {formatted}.");
             }
 
-            // --- 3. SLR Test ---
-            if (!string.IsNullOrWhiteSpace(model.LBSlrTest))
-            {
-                string slrLine = $"Straight leg raise test is {model.LBSlrTest.Trim().ToLower()}";
+            // 2. Palpation
+            var palpationParts = new List<string>();
 
-                if (!string.IsNullOrWhiteSpace(model.LBSlrTestOther))
+            // 2a. Tenderness (Radios: LUMBARPalpation, LUMBARPalpationmidline)
+            if (!string.IsNullOrWhiteSpace(lumbarPalpation))
+            {
+                string severity = lumbarPalpation.Trim();
+                string regionText = string.IsNullOrWhiteSpace(region) ? string.Empty : $" {region.Trim()}";
+
+                // Omit side if tenderness is "No" or no side is selected
+                string sideText = (!string.Equals(severity, "No", StringComparison.OrdinalIgnoreCase) &&
+                                   !string.IsNullOrWhiteSpace(lumbarPalpationMidline))
+                    ? $" {lumbarPalpationMidline.Trim()}"
+                    : string.Empty;
+
+                palpationParts.Add(
+                    $"{severity} tenderness to palpation of the{regionText} midline and paraspinal muscles{sideText}.");
+            }
+
+            // 2b. Trigger points (Checkboxes: PETriggerLUMBAR)
+            var triggerItems = peTriggerLumbar?
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .ToList() ?? new List<string>();
+
+            if (triggerItems.Any())
+            {
+                palpationParts.Add($"Trigger points noted in {string.Join(", ", triggerItems)}.");
+            }
+
+            // 2c. Muscle spasms (Radios: PEMuscleLUMBAR, PEMuscleLUMBARside)
+            if (!string.IsNullOrWhiteSpace(peMuscleLumbar))
+            {
+                string spasmSeverity = peMuscleLumbar.Trim();
+
+                // Omit side if spasms are "none" or no side is selected
+                string spasmSide = (!string.Equals(spasmSeverity, "none", StringComparison.OrdinalIgnoreCase) &&
+                                    !string.IsNullOrWhiteSpace(peMuscleLumbarSide))
+                    ? $" {peMuscleLumbarSide.Trim()}"
+                    : string.Empty;
+
+                palpationParts.Add($"Muscle spasms are {spasmSeverity}{spasmSide}.");
+            }
+
+            if (palpationParts.Any())
+            {
+                lines.Add($"Palpation: {string.Join(" ", palpationParts)}");
+            }
+
+            return string.Join(Environment.NewLine, lines);
+        }
+
+        private string GenerateLumbarNerveProvocation(
+    string lumbarStraight,
+    IEnumerable<string> lumbarStraightTest,
+    string lumbarStraightRightTxt,
+    string lumbarStraightLeftTxt,
+    string lumbarFacetloading,
+    string lumbarFacetloadingTest)
+        {
+            var lines = new List<string>();
+
+            // 1. Straight-leg raise
+            if (!string.IsNullOrWhiteSpace(lumbarStraight))
+            {
+                string slrResult = lumbarStraight.Trim().ToLower();
+
+                var selectedSides = new HashSet<string>(
+                    lumbarStraightTest?
+                        .Where(x => !string.IsNullOrWhiteSpace(x))
+                        .Select(x => x.Trim()) ?? Enumerable.Empty<string>(),
+                    StringComparer.OrdinalIgnoreCase);
+
+                bool hasRight = selectedSides.Contains("right");
+                bool hasLeft = selectedSides.Contains("left");
+                bool hasBilateral = selectedSides.Contains("bilaterally");
+
+                var sideParts = new List<string>();
+
+                if (hasRight)
                 {
-                    slrLine += $" {model.LBSlrTestOther.Trim()}";
+                    string rightDeg = !string.IsNullOrWhiteSpace(lumbarStraightRightTxt)
+                        ? $" at {lumbarStraightRightTxt.Trim()} degrees"
+                        : string.Empty;
+                    sideParts.Add($"on the right{rightDeg}");
                 }
 
-                lines.Add(slrLine);
+                if (hasLeft)
+                {
+                    string leftPrefix = hasRight ? "left" : "on the left";
+                    string leftDeg = !string.IsNullOrWhiteSpace(lumbarStraightLeftTxt)
+                        ? $" at {lumbarStraightLeftTxt.Trim()} degrees"
+                        : string.Empty;
+                    sideParts.Add($"{leftPrefix}{leftDeg}");
+                }
+
+                if (hasBilateral)
+                {
+                    sideParts.Add("bilaterally");
+                }
+
+                string slrSidesText = sideParts.Any()
+                    ? " " + string.Join(" and ", sideParts)
+                    : string.Empty;
+
+                lines.Add($"Straight-leg raise is {slrResult}{slrSidesText}.");
+            }
+
+            // 2. Facet loading test
+            if (!string.IsNullOrWhiteSpace(lumbarFacetloading))
+            {
+                string facetResult = lumbarFacetloading.Trim().ToLower();
+                string facetSideRaw = lumbarFacetloadingTest?.Trim().ToLower();
+
+                string facetSideText = string.Empty;
+                if (!string.IsNullOrWhiteSpace(facetSideRaw))
+                {
+                    facetSideText = facetSideRaw == "bilaterally"
+                        ? " bilaterally"
+                        : $" on the {facetSideRaw}";
+                }
+
+                lines.Add($"Facet loading test is {facetResult}{facetSideText}.");
             }
 
             return string.Join(Environment.NewLine, lines);
@@ -1743,8 +1837,23 @@ namespace PainTrax.Web.Services.Report
             }
             if (model.Complaints.Contains("lowback", StringComparer.OrdinalIgnoreCase))
             {
-                var topSection = this.GenerateLowerBackNarrative(model);
-                pe = pe + "<br/>" + GetROM(model, "lowback", "Lowback.html", topSection, path);
+                var topSection = this.GenerateLowerBackNarrative(model.LUMBARPE,
+                    model.LUMBARPalpation,
+                    model.LUMBARPalpationmidline,
+                    model.PETriggerLUMBAR,
+                    model.PEMuscleLUMBAR,
+                    model.PEMuscleLUMBARside);
+
+                var nerveSection = this.GenerateLumbarNerveProvocation(
+   model.LumbarStraight,
+    model.LumbarStraightTest,
+    model.LumbarStraightRighttxt,
+    model.LumbarStraightLefttxt,
+    model.LumbarFacetloading,
+    model.LumbarFacetloadingTest
+);
+
+                pe = pe + "<br/>" + GetROM(model, "lowback", "Lowback.html", topSection, path, nerveSection);
             }
             if (model.Complaints.Contains("right shoulder", StringComparer.OrdinalIgnoreCase))
             {
@@ -2229,12 +2338,38 @@ namespace PainTrax.Web.Services.Report
                                            .Replace("#MbExt", model.MbExt);
                     break;
                 case "lowback":
-                    htmlString = htmlString.Replace("#LbFFROM", model.LBFFROM)
-                                           .Replace("#LbFFLeft", model.LBFFLeft)
-                                           .Replace("#LbFFRight", model.LBFFRight)
-                                           .Replace("#LbExt", model.LBExt)
-                                           .Replace("#SLRTest", model.LBSlrTest)
-                                            .Replace("#topSection", topSection);
+                    htmlString = htmlString.Replace("#LUMBARFlexion", model.LUMBARFlexion)
+                                           .Replace("#LUMBARExtension", model.LUMBARExtension)
+                                           .Replace("#LUMBARLeftLateralbending", model.LUMBARLeftLateralbending)
+                                           .Replace("#LUMBARightLateralbending", model.LUMBARightLateralbending)
+                                           .Replace("#LUMBARRightIliopsoas", model.LUMBARRightIliopsoas)
+                                           .Replace("#LUMBARRightQuadriceps", model.LUMBARRightQuadriceps)
+                                           .Replace("#LUMBARRightHamstrings", model.LUMBARRightHamstrings)
+                                           .Replace("#LUMBARRightTibant", model.LUMBARRightTibant)
+                                           .Replace("#LUMBARRightEHL", model.LUMBARRightEHL)
+                                           .Replace("#LUMBARRightGS", model.LUMBARRightGS)
+                                           .Replace("#LUMBARLEFTIliopsoas", model.LUMBARLEFTIliopsoas)
+                                           .Replace("#LUMBARLEFTQuadriceps", model.LUMBARLEFTQuadriceps)
+                                           .Replace("#LUMBARLEFTHamstrings", model.LUMBARLEFTHamstrings)
+                                           .Replace("#LUMBARLEFTTibant", model.LUMBARLEFTTibant)
+                                           .Replace("#LUMBARLEFTEHL", model.LUMBARLEFTEHL)
+                                           .Replace("#LUMBARLEFTGS", model.LUMBARLEFTGS)
+                                           .Replace("#LUMBARRightL2", model.LUMBARRightL2)
+                                           .Replace("#LUMBARRightL3", model.LUMBARRightL3)
+                                           .Replace("#LUMBARRightL4", model.LUMBARRightL4)
+                                           .Replace("#LUMBARRightL5", model.LUMBARRightL5)
+                                           .Replace("#LUMBARRightS1", model.LUMBARRightS1)
+                                           .Replace("#LUMBARLeftL2", model.LUMBARLeftL2)
+                                           .Replace("#LUMBARLeftL3", model.LUMBARLeftL3)
+                                           .Replace("#LUMBARLeftL4", model.LUMBARLeftL4)
+                                           .Replace("#LUMBARLeftL5", model.LUMBARLeftL5)
+                                           .Replace("#LUMBARLeftS1", model.LUMBARLeftS1)
+                                           .Replace("#LUMBARPatellartendonright", this.ConvertGradeText(model.LUMBARPatellartendonright))
+                                           .Replace("#LUMBARPatellartendonleft", this.ConvertGradeText(model.LUMBARPatellartendonleft))
+                                           .Replace("#LUMBARAchillestendonright", this.ConvertGradeText(model.LUMBARAchillestendonright))
+                                           .Replace("#LUMBARAchillestendonleft", this.ConvertGradeText(model.LUMBARAchillestendonleft))
+                                           .Replace("#topSection", topSection)
+                                           .Replace("#nerveSection", nerveSection);
                     break;
                 case "left shoulder":
                     htmlString = htmlString.Replace("#AbductionROM", model.LSHAbductionROM)
@@ -2499,7 +2634,7 @@ namespace PainTrax.Web.Services.Report
             // Uses PhysicalTherapyDuration if provided; otherwise estimates from DOA to DOE/Today
             string ptDuration = !string.IsNullOrWhiteSpace(model.PhysicalTherapyDuration)
                 ? model.PhysicalTherapyDuration.Trim()
-                : EstimateWeeksOrMonths(Convert.ToDateTime(model.DOA), Convert.ToDateTime(model.DOE));
+                : EstimateWeeksOrMonths(string.IsNullOrEmpty(model.DOA) ? null : Convert.ToDateTime(model.DOA), Convert.ToDateTime(model.DOE));
 
             sb.Append($"The patient has been undergoing physical therapy for the past {ptDuration}. ");
 
@@ -2637,6 +2772,7 @@ namespace PainTrax.Web.Services.Report
             return string.Empty;
         }
 
+
         public string GenerateGait(string gaitRadio, List<string> gaitCheckboxes, string gaitOther)
         {
             // 1. Primary gait (defaults to 'Normal' if nothing selected)
@@ -2668,7 +2804,7 @@ namespace PainTrax.Web.Services.Report
 
             if (!string.IsNullOrEmpty(otherDetails))
             {
-                sentenceParts.Add($"{primaryGait} ({otherDetails})");
+                sentenceParts.Add($"{primaryGait} {otherDetails}");
             }
             else
             {
@@ -2681,6 +2817,41 @@ namespace PainTrax.Web.Services.Report
             }
 
             return string.Join(". ", sentenceParts) + ".";
+        }
+
+        public string GenerateGait(string gaitRdo,
+    string gaitOther,
+    string gaitOtherTxt)
+        {
+            var sentences = new List<string>();
+
+            // 1. Gait pattern (Radio: GAITrdo)
+            if (!string.IsNullOrWhiteSpace(gaitRdo))
+            {
+                string gait = gaitRdo.Trim().ToLower();
+                string article = "aeiou".IndexOf(gait[0]) >= 0 ? "an" : "a";
+
+                sentences.Add($"The patient has {article} {gait} gait pattern.");
+            }
+
+            // 2. Ambulates with (Radio: GAITOther + Textbox: GAITOthertxt)
+            string device = gaitOther?.Trim().ToLower();
+            string extra = gaitOtherTxt?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(device) && !string.IsNullOrWhiteSpace(extra))
+            {
+                sentences.Add($"The patient ambulates with a {device} ({extra}).");
+            }
+            else if (!string.IsNullOrWhiteSpace(device))
+            {
+                sentences.Add($"The patient ambulates with a {device}.");
+            }
+            else if (!string.IsNullOrWhiteSpace(extra))
+            {
+                sentences.Add($"The patient ambulates with {extra}.");
+            }
+
+            return string.Join(" ", sentences);
         }
         #endregion
 
@@ -3149,7 +3320,7 @@ namespace PainTrax.Web.Services.Report
             return months == 1 ? "1 month" : $"{months} months";
         }
 
-        private  string ConvertGradeText(string input)
+        private string ConvertGradeText(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return string.Empty;

@@ -1087,9 +1087,9 @@ namespace PainTrax.Web.Controllers
                 if (!string.IsNullOrEmpty(model.Heightft) && !string.IsNullOrEmpty(model.Weight))
                 {
                     if (clientcode == "imnpfhpc")
-                        vital = "H: " + model.Heightft + "’" + model.Heightinch + ", W: " + model.Weight + " lbs, BMI: " + model.BMI + ".";
+                        vital = "H: " + model.Heightft + "’" + model.Heightinch + "\", W: " + model.Weight + " lbs, BMI: " + model.BMI + ".";
                     else
-                        vital = "H: " + model.Heightft + "’" + model.Heightinch + ", W: " + model.Weight + " lbs, SpO2: " + model.SpO + "%, HR: " + model.HR + ", BMI: " + model.BMI + ".";
+                        vital = "H: " + model.Heightft + "’" + model.Heightinch + "\", W: " + model.Weight + " lbs, SpO2: " + model.SpO + "%, HR: " + model.HR + ", BMI: " + model.BMI + ".";
                 }
 
                 if (clientcode == "imnpfhpc")
@@ -1098,9 +1098,13 @@ namespace PainTrax.Web.Controllers
                     model.IsPMH = "Yes";
                     model.IsSMH = "Yes";
                     model.Meds = "Yes";
+                    gait = reportHelper.GenerateGait(model.GAITrdo, model.GAITOther, model.GAITOthertxt);
                 }
                 else
+                {
                     ros = reportHelper.GenerateRos(model.ROS, model.ROSOther);
+                    gait = reportHelper.GenerateGait(model.GAITMultiR, model.GAITMulti, model.GAITOther);
+                }
 
                 pmh = reportHelper.GeneratePmh(model.IsPMH, model.PMH, model.PMHOther);
                 psh = reportHelper.GeneratePsh(model.IsSMH, model.PSH);
@@ -1108,7 +1112,8 @@ namespace PainTrax.Web.Controllers
                 allergy = reportHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
 
                 dd = string.IsNullOrEmpty(model.DisabilityPercentage) ? model.degree : model.DisabilityPercentage + "%";
-                gait = reportHelper.GenerateGait(model.GAITMultiR, model.GAITMulti, model.GAITOther);
+               
+               
 
 
 

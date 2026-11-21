@@ -455,12 +455,15 @@
 
         public string LumbarStraight { get; set; }
         public List<string> LumbarStraightRight { get; set; }
+        public List<string> LumbarStraightTest { get; set; }
         public string LumbarStraightRighttxt { get; set; }
         public string LumbarStraightLefttxt { get; set; }
         public string LumbarStraightbilateraltxt { get; set; }
 
         public string LumbarFacetloading { get; set; }
         public string LumbarFacetloadingRight { get; set; }
+
+        public string LumbarFacetloadingTest { get; set; }
 
         public string LUMBARPatellartendonright { get; set; }
         public string LUMBARPatellartendonleft { get; set; }
@@ -469,6 +472,7 @@
         public string LUMBARAchillestendonleft { get; set; }
         public string GAITrdo { get; set; }
         public string GAITOther { get; set; }
+        public string GAITOthertxt { get; set; }
         public string GAITMultiR { get; set; }
         public List<string> GAITMulti { get; set; } = new List<string>();
         public List<string> ADL { get; set; }
@@ -1079,7 +1083,8 @@
         public string? OtherCollision { get; set; }
         public string? TxtAlcohol { get; set; }
 
-       
+
+
     }
 }
 

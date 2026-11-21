@@ -46,6 +46,9 @@ namespace PainTrax.Web.Services.Report
         string GenerateMeds(string meds, string medsDetails);
         string GenerateAllergy(string allergy, string allergyDetails);
         string GenerateGait(string gaitRadio, List<string> gaitCheckboxes, string gaitOther);
+        string GenerateGait(string gaitRdo,
+    string gaitOther,
+    string gaitOtherTxt);
 
         // ROS, ADL, Occupation & Recommendations
         string GenerateRos(List<string> selectedRos, string rosOther = null);

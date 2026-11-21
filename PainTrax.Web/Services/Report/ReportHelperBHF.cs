@@ -2856,6 +2856,41 @@ namespace PainTrax.Web.Services.Report
 
             return string.Join(". ", sentenceParts) + ".";
         }
+
+        public string GenerateGait(string gaitRdo,
+   string gaitOther,
+   string gaitOtherTxt)
+        {
+            var sentences = new List<string>();
+
+            // 1. Gait pattern (Radio: GAITrdo)
+            if (!string.IsNullOrWhiteSpace(gaitRdo))
+            {
+                string gait = gaitRdo.Trim().ToLower();
+                string article = "aeiou".IndexOf(gait[0]) >= 0 ? "an" : "a";
+
+                sentences.Add($"The patient has {article} {gait} gait pattern.");
+            }
+
+            // 2. Ambulates with (Radio: GAITOther + Textbox: GAITOthertxt)
+            string device = gaitOther?.Trim().ToLower();
+            string extra = gaitOtherTxt?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(device) && !string.IsNullOrWhiteSpace(extra))
+            {
+                sentences.Add($"The patient ambulates with a {device} ({extra}).");
+            }
+            else if (!string.IsNullOrWhiteSpace(device))
+            {
+                sentences.Add($"The patient ambulates with a {device}.");
+            }
+            else if (!string.IsNullOrWhiteSpace(extra))
+            {
+                sentences.Add($"The patient ambulates with {extra}.");
+            }
+
+            return string.Join(" ", sentences);
+        }
         #endregion
 
         #region ROS
