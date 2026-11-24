@@ -92,12 +92,12 @@
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Hip" data-section="lhipSection" data-pe="lhipPE" />  <span class="select-btn">L/Hip</span></label>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Wrist" data-section="rwristSection" data-pe="rwristPE" /> <span class="select-btn">R/Wrist</span></label>
     <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Wrist" data-section="lwristSection" data-pe="lwristPE" />  <span class="select-btn">L/Wrist</span></label>
-    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 1" data-section="o1Section" data-pe="o1PE"  data-btype="other"/>  <span class="select-btn">Other 1</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 1" data-section="o1Section" data-pe="o1PE" data-btype="other" />  <span class="select-btn">Other 1</span></label>
     <input type="text" id="OtherBodyPart1" name="OtherBodyPart1" class="form-control d-inline w-auto d-none" placeholder="other 1" />
-    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 2" data-section="o2Section" data-pe="o2PE" data-btype="other"/>  <span class="select-btn">Other 2</span></label>
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 2" data-section="o2Section" data-pe="o2PE" data-btype="other" />  <span class="select-btn">Other 2</span></label>
     <input type="text" id="OtherBodyPart2" name="OtherBodyPart2" class="form-control d-inline w-auto d-none" placeholder="other 2" />
-    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 3" data-section="o3Section" data-pe="o3PE" data-btype="other"/>  <span class="select-btn">Other 3</span></label>
-    <input type="text" id="OtherBodyPart3" name="OtherBodyPart3" class="form-control d-inline w-auto d-none" placeholder="other 3" /> 
+    <label><input type="checkbox" class="chkMulti" name="Complaints" value="Other 3" data-section="o3Section" data-pe="o3PE" data-btype="other" />  <span class="select-btn">Other 3</span></label>
+    <input type="text" id="OtherBodyPart3" name="OtherBodyPart3" class="form-control d-inline w-auto d-none" placeholder="other 3" />
     <input type="text" id="OtherBodyPart" name="OtherBodyPart" class="form-control d-inline w-auto" placeholder="other" />
 </div>
 <p>
@@ -152,7 +152,7 @@
         @* <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i> *@
     </p>
     <p>
-       @*  Sit <input id="SitHr" class="form-control d-inline" style="width:80px" /> hr.
+        @*  Sit <input id="SitHr" class="form-control d-inline" style="width:80px" /> hr.
 
         Drive <input id="DriveHr" class="form-control d-inline" style="width:80px" /> hr.
 
@@ -162,9 +162,39 @@
 
         Kneel/Stoop <input id="KneelHr" class="form-control d-inline" style="width:80px" /> hr.
 
-        Reach Overhead <input id="ReachOverhead" class="form-control d-inline" style="width:80px" />
 
-        Reach Below Waist <input id="ReachBelowWaist" class="form-control d-inline" style="width:80px" />
+        <div class="select-group mmClass">
+            Reach Overhead:
+            <label>
+                <input type="radio" class="chkMulti" name="ReachOverhead" value="Yes">
+                <span class="select-btn">Yes</span>
+            </label>
+
+            <label>
+                <input type="radio" class="chkMulti" name="ReachOverhead" value="No">
+                <span class="select-btn">No</span>
+            </label>
+
+            Reach Below Waist:
+            <label>
+                <input type="radio" class="chkMulti" name="ReachBelowWaist" value="Yes">
+                <span class="select-btn">Yes</span>
+            </label>
+
+            <label>
+                <input type="radio" class="chkMulti" name="ReachBelowWaist" value="No">
+                <span class="select-btn">No</span>
+            </label>
+
+        </div>
+        @* 
+        
+        <input type="radio" name="ReachOverhead" value="Yes" /> Yes
+        <input type="radio" name="ReachOverhead" value="No" /> No
+
+        Reach Below Waist
+        <input type="radio" name="ReachBelowWaist" value="Yes" /> Yes
+        <input type="radio" name="ReachBelowWaist" value="No" /> No *@
     </p>
     <p>
         On your job how many hours a day do you spend:

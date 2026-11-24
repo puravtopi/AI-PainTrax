@@ -482,6 +482,7 @@ namespace PainTrax.Web.Services.Report
         public string GenerateSocialHistory(AIIntakeFormModel modal)
         {
             var parts = new List<string>();
+            var denials = new List<string>();
 
             // 1. Smoking
             if (string.Equals(modal.Smoke, "Yes", StringComparison.OrdinalIgnoreCase))
@@ -492,7 +493,7 @@ namespace PainTrax.Web.Services.Report
             }
             else
             {
-                parts.Add("The patient is a nonsmoker.");
+                denials.Add("smoking");
             }
 
             // 2. Alcohol
@@ -503,8 +504,6 @@ namespace PainTrax.Web.Services.Report
             {
                 if (!string.IsNullOrWhiteSpace(modal.txtAlcohol))
                 {
-                    // Inserts txtAlcohol into the blank ("The patient ____ drinks alcohol occasionally.")
-                    // Or change to $"The patient drinks alcohol ({txtAlcohol.Trim()})." if txtAlcohol holds quantity/type
                     parts.Add($"The patient {modal.txtAlcohol.Trim()} drinks alcohol occasionally.");
                 }
                 else
@@ -514,7 +513,7 @@ namespace PainTrax.Web.Services.Report
             }
             else
             {
-                parts.Add("The patient does not drink alcohol.");
+                denials.Add("drinking");
             }
 
             // 3. Recreational Drugs
@@ -526,7 +525,21 @@ namespace PainTrax.Web.Services.Report
             }
             else
             {
-                parts.Add("The patient does not use recreational drugs.");
+                denials.Add("drugs");
+            }
+
+            // Combine denials based on selection
+            if (denials.Count == 1)
+            {
+                parts.Add($"The patient denies {denials[0]}.");
+            }
+            else if (denials.Count == 2)
+            {
+                parts.Add($"The patient denies {denials[0]} or {denials[1]}.");
+            }
+            else if (denials.Count == 3)
+            {
+                parts.Add($"The patient denies {denials[0]}, {denials[1]} or {denials[2]}.");
             }
 
             return string.Join(" ", parts);
@@ -1546,7 +1559,7 @@ namespace PainTrax.Web.Services.Report
                 : string.Empty;
 
             // Combine position and levels with appropriate spacing
-            string targetArea = !string.IsNullOrWhiteSpace(levels)? string.Join(" ", new[] { position, " at ", levels }.Where(s => !string.IsNullOrWhiteSpace(s))): string.Empty;
+            string targetArea = !string.IsNullOrWhiteSpace(levels) ? string.Join(" ", new[] { position, " at ", levels }.Where(s => !string.IsNullOrWhiteSpace(s))) : string.Empty;
             string targetPrefix = !string.IsNullOrWhiteSpace(targetArea) ? $"{targetArea} " : string.Empty;
 
             if (!string.IsNullOrEmpty(targetPrefix))
@@ -2636,11 +2649,16 @@ namespace PainTrax.Web.Services.Report
             if (string.Equals(model.IsAccidentPast?.Trim(), "Yes", StringComparison.OrdinalIgnoreCase))
             {
                 string pastDate = !string.IsNullOrWhiteSpace(model.AccidentPast) ? model.AccidentPast.Trim() : "a previous date";
-                string injuredParts = !string.IsNullOrWhiteSpace(model.AccidentBodyPart) ? model.AccidentBodyPart.Trim() : "various body parts";
-                bool recovered = string.Equals(model.IsAccidentRecover?.Trim(), "Yes", StringComparison.OrdinalIgnoreCase);
+                string injuredParts = !string.IsNullOrWhiteSpace(model.AccidentBodyPart) ? model.AccidentBodyPart.Trim() : "";
+                string recovered = model.IsAccidentRecover;
 
-                string recoveryStr = recovered ? "has completely recovered" : "has not completely recovered";
-                sentences.Add($"Patient had a previous accident on {pastDate} and injured {pronounPoss} {injuredParts} and {recoveryStr}.");
+                string recoveryStr = string.IsNullOrWhiteSpace(recovered) ? "" : (recovered.ToLower() == "yes" ? "has completely recovered" : "has not completely recovered");
+                if (!string.IsNullOrEmpty(injuredParts))
+                    sentences.Add($"Patient had a previous accident on {pastDate} and injured {pronounPoss} {injuredParts} and {recoveryStr}.");
+                else if (!string.IsNullOrEmpty(recoveryStr))
+                    sentences.Add($"Patient had a previous accident on {pastDate} and {recoveryStr}.");
+                else
+                    sentences.Add($"Patient had a previous accident on {pastDate}.");
             }
 
             // Complaints (safe if InjuryType or Complaints is null/empty)
@@ -2653,7 +2671,14 @@ namespace PainTrax.Web.Services.Report
                 !string.Equals(model.InjuryType.Trim(), "mm", StringComparison.OrdinalIgnoreCase) &&
                 validComplaints != null && validComplaints.Any())
             {
-                sentences.Add($"During the accident, the patient reports injuries to {string.Join(",", validComplaints).ToLower()}");
+                string complaintsText = (validComplaints.Count switch
+                {
+                    0 => string.Empty,
+                    1 => validComplaints[0],
+                    2 => $"{validComplaints[0]} and {validComplaints[1]}",
+                    _ => $"{string.Join(", ", validComplaints.Take(validComplaints.Count - 1))} and {validComplaints[^1]}"
+                }).ToLower();
+                sentences.Add($"During the accident, the patient reports injuries to {complaintsText}");
             }
 
             // 9. Physical Therapy & Chiropractic Care

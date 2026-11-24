@@ -175,7 +175,7 @@ namespace PainTrax.Web.Services
             return fu_ne;
         }
 
-        public tbl_fu_other? GetOneOther(int ie_id, int cmp_id, int fu_id, int patient_id, int lfu_id = 0,string followup = "")
+        public tbl_fu_other? GetOneOther(int ie_id, int cmp_id, int fu_id, int patient_id, int lfu_id = 0, string followup = "")
         {
             PatientIEService service = new PatientIEService();
 

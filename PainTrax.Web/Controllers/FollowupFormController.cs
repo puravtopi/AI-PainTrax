@@ -68,6 +68,8 @@ namespace PainTrax.Web.Controllers
         {
             return View();
         }
+
+        [HttpGet]
         public IActionResult Create(int? locId, int? id, int? providerId, int patientId = 0, string fType = "FU",
             int ie_id = 0, int fu_id = 0)
         {
@@ -177,11 +179,11 @@ namespace PainTrax.Web.Controllers
                 return PartialView("_IntakeSeldesMDFU");
             else return PartialView("_IntakeHPOSMFU");
         }
-        [HttpPost]
-        public IActionResult Create(FollowupForm model)
-        {
-            return RedirectToAction("Create", "FollowupForm");
-        }
+        //[HttpPost]
+        //public IActionResult Create(FollowupForm model)
+        //{
+        //    return RedirectToAction("Create", "FollowupForm");
+        //}
 
         public IActionResult List(string f = "", string statusFilter = "Active", DateTime? fdate = null, DateTime? tdate = null, int? locid = null)
         {
@@ -589,7 +591,7 @@ namespace PainTrax.Web.Controllers
                         try
                         {
                             var follwup = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
-                            _forwardServices.GetOneOther(objFU.patientIE_ID.Value, newFU, cmpid.Value, objFU.patient_id.Value, lFUId, follwup);
+                            _forwardServices.GetOneOther(objFU.patientIE_ID.Value, cmpid.Value, newFU,objFU.patient_id.Value, lFUId, follwup);
                         }
                         catch (Exception ex)
                         {
@@ -681,6 +683,18 @@ namespace PainTrax.Web.Controllers
                     _ieService.UpdateCompensationFU(objIE);
                     _ieService.UpdateBodyPartFromIntakeFU(string.Join(",", model.Complaints), lFUId);
                     newFU = lFUId;
+
+                    var objOther = new tbl_fu_other()
+                    {
+                        note3 = model.DrNote,
+                        fu_id = newFU,
+                        ie_id = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
+                        followup_duration = string.IsNullOrEmpty(model.FollowUpOther) ? model.FollowUp : model.FollowUpOther,
+                        followup_date = string.IsNullOrEmpty(model.FollowUpDate) ? null : Convert.ToDateTime(model.FollowUpDate),
+                        treatment_details = reportHelper.GenerateRecommandation(model)
+                    };
+
+                    _fuservices.UpdateOtherPageIntake(objOther);
                 }
                 patientId = string.IsNullOrEmpty(model.PatientId) ? 0 : Convert.ToInt32(model.PatientId);
                 _ieService.UpdateHandeness(Handeness, patientId);
@@ -732,17 +746,7 @@ namespace PainTrax.Web.Controllers
                 _fuservices.UpdatePage2Intake(objP2);
 
            
-                var objOther = new tbl_fu_other()
-                {
-                    note3 = model.DrNote,
-                    fu_id = newFU,
-                    ie_id = string.IsNullOrEmpty(model.PatientIEId) ? null : Convert.ToInt32(model.PatientIEId),
-                    followup_duration = string.IsNullOrEmpty(model.FollowUpOther) ? model.FollowUp : model.FollowUpOther,
-                    followup_date = string.IsNullOrEmpty(model.FollowUpDate) ? null : Convert.ToDateTime(model.FollowUpDate),
-                    treatment_details= reportHelper.GenerateRecommandation(model)
-                };
-
-                _fuservices.UpdateOtherPageIntake(objOther);
+             
 
 
             }
