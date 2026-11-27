@@ -469,11 +469,16 @@
                 var isRecording = false;
 
         function fndownloadPDF(){
+
+             var dt="";
+             if ($("#DOE").val() != '')
+                dt = formatDate($("#DOE").val());
+
             var fileName =
             $("#FN").val() + ", " +
             $("#LN").val() + "_" +
-            $("#DOE").val() +
-            "_IE_IntakeForm.pdf";
+            dt +
+            "_FU_IntakeForm.pdf";
             downloadPDF(fileName);
         }
 

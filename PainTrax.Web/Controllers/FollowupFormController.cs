@@ -446,7 +446,8 @@ namespace PainTrax.Web.Controllers
 
                 string path = Environment.WebRootPath;
 
-                string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "", assessment = "";
+                string ccContent = "", peContent = "", dtrContent = "", sensoryContent = "", mmstContent = "", assessment = "",
+                    pmh = "", psh = "", med = "", allergy = "";
                 //var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
                 if (HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "bhfpc" ||
                     HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToLower() == "ipmc")
@@ -461,6 +462,11 @@ namespace PainTrax.Web.Controllers
                 {
                     ccContent = reportHelper.GetCC(model);
                 }
+
+                pmh = reportHelper.GeneratePmh(model.IsPMH, model.PMH, model.PMHOther);
+                psh = reportHelper.GeneratePsh(model.IsSMH, model.PSH);
+                med = reportHelper.GenerateMeds(model.Meds, string.IsNullOrEmpty(model.OtherMeds) ? model.MedsOther : model.OtherMeds);
+                allergy = reportHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
 
                 if (initialIntakeAI.Id == 0)
                 {
@@ -518,6 +524,7 @@ namespace PainTrax.Web.Controllers
                         location_id = string.IsNullOrEmpty(model.LocationId) ? null : Convert.ToInt32(model.LocationId),
                         provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
                         accident_type = model.AccidentType,
+                        
                     };
 
                     var fuData = _ieService.GetLastFU(objFU.patientIE_ID.Value, "FU");
@@ -711,6 +718,10 @@ namespace PainTrax.Web.Controllers
                     id = newFU,
                     cc = ccContent,
                     pe = peContent,
+                    pmh = pmh,
+                    psh = psh,
+                    medication = med,
+                    allergies = allergy,
                     // assessment = string.IsNullOrEmpty(model.Diagnosis) ? assessment : assessment + "<ol>" + model.Diagnosis + "</ol>",
                     assessment = string.IsNullOrEmpty(model.Diagnosis)
                                     ? assessment

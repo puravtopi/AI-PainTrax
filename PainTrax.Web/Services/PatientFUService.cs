@@ -198,7 +198,7 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
     public int UpdatePage1Intake(tbl_ie_page1 data)
     {
         MySqlCommand cm = new MySqlCommand("Update tbl_fu_page1 set cc=@p_cc,pe=@p_pe,bodypart=@p_bodypart," +
-            "assessment=@p_assessment,dd=@p_dd,work_status=@p_work_status where fu_id=@p_fu_id; select 1;", conn);
+            "assessment=@p_assessment,dd=@p_dd,work_status=@p_work_status,pmh=@pmh,psh=@psh,medication=@medication,allergies=@allergies where fu_id=@p_fu_id; select 1;", conn);
 
         cm.Parameters.AddWithValue("@p_fu_id", data.id);
         cm.Parameters.AddWithValue("@p_bodypart", data.bodypart);
@@ -207,6 +207,10 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
         cm.Parameters.AddWithValue("@p_assessment", data.assessment);
         cm.Parameters.AddWithValue("@p_dd", data.dd);
         cm.Parameters.AddWithValue("@p_work_status", data.work_status);
+        cm.Parameters.AddWithValue("@pmh", data.pmh);
+        cm.Parameters.AddWithValue("@psh", data.psh);
+        cm.Parameters.AddWithValue("@medication", data.medication);
+        cm.Parameters.AddWithValue("@allergies", data.allergies);
        
         var result = ExecuteScalar(cm);
         return result;

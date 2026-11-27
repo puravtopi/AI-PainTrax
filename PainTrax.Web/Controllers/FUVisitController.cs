@@ -1346,8 +1346,8 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                //var injurbodyparts = _pocService.GetInjuredParts(patientIEId, patientFUId);
-                var injurbodyparts = _pocService.GetInjuredPartsPOC(patientIEId);
+                var injurbodyparts = _pocService.GetInjuredParts(patientIEId, patientFUId);
+                //var injurbodyparts = _pocService.GetInjuredPartsPOC(patientIEId);
 
 
                 if (injurbodyparts.Any(x => x.Equals("lumbar", StringComparison.OrdinalIgnoreCase)))

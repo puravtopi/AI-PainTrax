@@ -27,7 +27,7 @@ namespace PainTrax.Web.Services.Report
             string restrainedStr = model.SeatBelt == "Yes" ? "restrained" : "unrestrained";
 
             // 2. Accident Type Logic
-            string accidentTypeStr = (model.InjuryType == "WC") ? "work-related accident" : "motor vehicle accident";
+            string accidentTypeStr = (model.InjuryType == "WC") ? "work-related incident" : "motor vehicle accident";
             string doaStr = model.DOA ?? "____";
 
             // 3. Collision Type (Join array)
@@ -543,6 +543,101 @@ namespace PainTrax.Web.Services.Report
             }
 
             return string.Join(" ", parts);
+        }
+
+        public string GenerateJob(AIIntakeFormModel model)
+        {
+            if (model == null) return string.Empty;
+
+            var activities = new List<string>();
+
+            // 1. Standard hour-based activities
+            AddHourActivity(activities, model.JobSitting, "sitting");
+            AddHourActivity(activities, model.JobStanding, "standing");
+            AddHourActivity(activities, model.JobDriving, "driving");
+            AddHourActivity(activities, model.JobBending, "bending");
+            AddHourActivity(activities, model.WalkHr, "walking");
+            AddHourActivity(activities, model.JobKneeling, "kneeling");
+            AddHourActivity(activities, model.KneelHr, "stooping");
+            AddHourActivity(activities, model.JobCrouching, "crouching");
+
+            // 2. Lifting (handles hours, weight checkboxes, or both)
+            string liftingPart = BuildLiftingText(model.JobLifting, model.LiftingWeight);
+            if (!string.IsNullOrEmpty(liftingPart))
+            {
+                activities.Add(liftingPart);
+            }
+
+            // 3. Optional reaching radio buttons (included only when "Yes")
+            if (string.Equals(model.ReachOverhead, "Yes", StringComparison.OrdinalIgnoreCase))
+                activities.Add("reaching overhead");
+
+            if (string.Equals(model.ReachBelowWaist, "Yes", StringComparison.OrdinalIgnoreCase))
+                activities.Add("reaching below waist");
+
+            if (activities.Count == 0)
+                return string.Empty;
+
+            // 4. Join items naturally: "A, B, C and D."
+            string joinedActivities = JoinWithCommaAnd(activities);
+            return $"Patient's job activities included {joinedActivities}.";
+        }
+
+        private void AddHourActivity(List<string> list, string hoursValue, string activityName)
+        {
+            if (IsValidHourValue(hoursValue))
+            {
+                string val = hoursValue.Trim();
+                string unit = val == "1" ? "hour" : "hours";
+                list.Add($"{val} {unit} of {activityName}");
+            }
+        }
+
+        private string BuildLiftingText(string liftingHours, List<string> weights)
+        {
+            bool hasHours = IsValidHourValue(liftingHours);
+            var validWeights = weights?
+                .Where(w => !string.IsNullOrWhiteSpace(w))
+                .Select(w => w.Trim())
+                .ToList() ?? new List<string>();
+
+            if (!hasHours && validWeights.Count == 0)
+                return string.Empty;
+
+            string text = string.Empty;
+
+            if (hasHours)
+            {
+                string val = liftingHours.Trim();
+                string unit = val == "1" ? "hour" : "hours";
+                text = $"{val} {unit} of lifting";
+            }
+            else
+            {
+                text = "lifting";
+            }
+
+            if (validWeights.Count > 0)
+            {
+                text += $" {JoinWithCommaAnd(validWeights)} pounds";
+            }
+
+            return text;
+        }
+
+        private bool IsValidHourValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return false;
+            string trimmed = value.Trim();
+            return trimmed != "0" && trimmed != "0.0";
+        }
+
+        private string JoinWithCommaAnd(List<string> items)
+        {
+            if (items.Count == 1) return items[0];
+            if (items.Count == 2) return $"{items[0]} and {items[1]}";
+
+            return string.Join(", ", items.Take(items.Count - 1)) + " and " + items.Last();
         }
 
         #region Lowback
@@ -3026,21 +3121,21 @@ namespace PainTrax.Web.Services.Report
         {
             if (model == null) return string.Empty;
 
-            var items = new List<(string Activity, string Perform, string Comment)>
+            var items = new List<(string Activity, string Perform, string Comment,string Difficulty)>
         {
-            ("Personal hygiene, grooming, dressing, toileting", model.ADLPersonalHygienePerform, model.ADLPersonalHygieneDifficulty),
-            ("Walking, transferring, ambulating", model.ADLWalkingPerform, model.ADLWalkingDifficulty),
-            ("Eating independently", model.ADLEatingPerform, model.ADLEatingDifficulty),
-            ("Cook, clean, maintain households", model.ADLHouseholdPerform, model.ADLHouseholdDifficulty),
-            ("Shop for food", model.ADLShoppingPerform, model.ADLShoppingDifficulty),
-            ("Sleeping", model.ADLSleepingPerform, model.ADLSleepingDifficulty)
+            ("Personal hygiene, grooming, dressing, toileting", model.ADLPersonalHygienePerform, model.ADLPersonalHygieneDifficulty,model.ADLPersonalHygieneDifficultyRadio),
+            ("Walking, transferring, ambulating", model.ADLWalkingPerform, model.ADLWalkingDifficulty,model.ADLWalkingDifficultyRadio),
+            ("Eating independently", model.ADLEatingPerform, model.ADLEatingDifficulty, model.ADLEatingDifficultyRadio),
+            ("Cook, clean, maintain households", model.ADLHouseholdPerform, model.ADLHouseholdDifficulty,model.ADLHouseholdDifficultyRadio),
+            ("Shop for food", model.ADLShoppingPerform, model.ADLShoppingDifficulty,model.ADLShoppingDifficultyRadio),
+            ("Sleeping", model.ADLSleepingPerform,model.ADLSleepingDifficulty ,model.ADLSleepingDifficultyRadio)
         };
 
             var sb = new StringBuilder();
 
-            foreach (var (activity, perform, comment) in items)
+            foreach (var (activity, perform, comment, difficulty) in items)
             {
-                string line = FormatAdlRow(activity, perform, comment);
+                string line = FormatAdlRow(activity, perform, comment, difficulty);
                 if (!string.IsNullOrEmpty(line))
                 {
                     sb.AppendLine("<p>" + line + "</p>");
@@ -3050,30 +3145,37 @@ namespace PainTrax.Web.Services.Report
             return sb.ToString().TrimEnd();
         }
 
-        private string FormatAdlRow(string activity, string perform, string rawComment)
+        private string FormatAdlRow(string activity, string perform, string rawComment, string difficulty)
         {
             string comment = rawComment?.Trim()?.TrimEnd('.');
+            string strdifficulty = "";
+
+            if (string.Equals(perform, "Yes", StringComparison.OrdinalIgnoreCase))
+            {
+                strdifficulty = "with difficulty";
+            }
+            
 
             // 1. When Perform (Yes) is selected
             if (string.Equals(perform, "Yes", StringComparison.OrdinalIgnoreCase))
             {
                 return !string.IsNullOrEmpty(comment)
-                    ? $"{activity} - able to perform {comment}."
-                    : $"{activity} - able to perform.";
+                    ? $"{activity} - able to perform {strdifficulty} {comment}."
+                    : $"{activity} - able to perform {strdifficulty}.";
             }
 
             // 2. When Not Perform (No) is selected
             if (string.Equals(perform, "No", StringComparison.OrdinalIgnoreCase))
             {
                 return !string.IsNullOrEmpty(comment)
-                    ? $"{activity} - cannot perform {comment}."
-                    : $"{activity} - cannot perform.";
+                    ? $"{activity} - cannot perform {strdifficulty} {comment}."
+                    : $"{activity} - cannot perform {strdifficulty}.";
             }
 
             // 3. Neither radio is checked, but comments exist
             if (!string.IsNullOrEmpty(comment))
             {
-                return $"{activity} - {comment}.";
+                return $"{activity} {strdifficulty}- {comment}.";
             }
 
             return null;
@@ -3102,72 +3204,72 @@ namespace PainTrax.Web.Services.Report
         }
 
 
-        public string GenerateJob(AIIntakeFormModel model)
-        {
-            var activities = new List<string>();
+        //public string GenerateJob(AIIntakeFormModel model)
+        //{
+        //    var activities = new List<string>();
 
-            // Helper local function: only adds if a value exists
-            void AddIfPresent(string? value, string label)
-            {
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    activities.Add($"{label} {value.Trim()} hr.");
-                }
-            }
+        //    // Helper local function: only adds if a value exists
+        //    void AddIfPresent(string? value, string label)
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(value))
+        //        {
+        //            activities.Add($"{label} {value.Trim()} hr.");
+        //        }
+        //    }
 
-            AddIfPresent(model.JobSitting, "Sitting");
-            AddIfPresent(model.JobStanding, "Standing");
-            AddIfPresent(model.JobDriving, "Driving");
-            AddIfPresent(model.JobBending, "Bending");
-            AddIfPresent(model.WalkHr, "Walking");
-            AddIfPresent(model.JobKneeling, "Kneeling");
-            AddIfPresent(model.KneelHr, "Stooping");
-            AddIfPresent(model.JobCrouching, "Crouching");
-            AddIfPresent(model.JobLifting, "Lifting");
+        //    AddIfPresent(model.JobSitting, "Sitting");
+        //    AddIfPresent(model.JobStanding, "Standing");
+        //    AddIfPresent(model.JobDriving, "Driving");
+        //    AddIfPresent(model.JobBending, "Bending");
+        //    AddIfPresent(model.WalkHr, "Walking");
+        //    AddIfPresent(model.JobKneeling, "Kneeling");
+        //    AddIfPresent(model.KneelHr, "Stooping");
+        //    AddIfPresent(model.JobCrouching, "Crouching");
+        //    AddIfPresent(model.JobLifting, "Lifting");
 
-            // Lifting weights (only if any are checked)
-            if (model.LiftingWeight != null)
-            {
-                var validWeights = model.LiftingWeight
-                    .Where(w => !string.IsNullOrWhiteSpace(w))
-                    .Select(w => w.Trim())
-                    .ToList();
+        //    // Lifting weights (only if any are checked)
+        //    if (model.LiftingWeight != null)
+        //    {
+        //        var validWeights = model.LiftingWeight
+        //            .Where(w => !string.IsNullOrWhiteSpace(w))
+        //            .Select(w => w.Trim())
+        //            .ToList();
 
-                if (validWeights.Any())
-                {
-                    activities.Add($"If lifting, how many pounds: {string.Join(", ", validWeights)}");
-                }
-            }
+        //        if (validWeights.Any())
+        //        {
+        //            activities.Add($"If lifting, how many pounds: {string.Join(", ", validWeights)}");
+        //        }
+        //    }
 
-            var lines = new List<string>();
+        //    var lines = new List<string>();
 
-            // Line 1: Only add if at least one activity has a value
-            if (activities.Any())
-            {
-                lines.Add($"On your job how many hours a day do you spend: {string.Join(" ", activities)}");
-            }
+        //    // Line 1: Only add if at least one activity has a value
+        //    if (activities.Any())
+        //    {
+        //        lines.Add($"On your job how many hours a day do you spend: {string.Join(" ", activities)}");
+        //    }
 
-            // Line 2: Reach Overhead / Reach Below Waist
-            var reachParts = new List<string>();
+        //    // Line 2: Reach Overhead / Reach Below Waist
+        //    var reachParts = new List<string>();
 
-            if (!string.IsNullOrWhiteSpace(model.ReachOverhead))
-            {
-                reachParts.Add($"Reach Overhead {model.ReachOverhead.Trim()}");
-            }
+        //    if (!string.IsNullOrWhiteSpace(model.ReachOverhead))
+        //    {
+        //        reachParts.Add($"Reach Overhead {model.ReachOverhead.Trim()}");
+        //    }
 
-            if (!string.IsNullOrWhiteSpace(model.ReachBelowWaist))
-            {
-                reachParts.Add($"Reach Below Waist {model.ReachBelowWaist.Trim()}");
-            }
+        //    if (!string.IsNullOrWhiteSpace(model.ReachBelowWaist))
+        //    {
+        //        reachParts.Add($"Reach Below Waist {model.ReachBelowWaist.Trim()}");
+        //    }
 
-            // Only add if at least one reach value is present
-            if (reachParts.Any())
-            {
-                lines.Add(string.Join("                      ", reachParts));
-            }
+        //    // Only add if at least one reach value is present
+        //    if (reachParts.Any())
+        //    {
+        //        lines.Add(string.Join("                      ", reachParts));
+        //    }
 
-            return string.Join(Environment.NewLine, lines);
-        }
+        //    return string.Join(Environment.NewLine, lines);
+        //}
 
         private string FormatListWithAnd(List<string> items)
         {

@@ -31,7 +31,7 @@ namespace PainTrax.Web.Controllers
         #region Vriables
         private readonly Common _commonservices = new Common();
         private readonly IntakeService service = new IntakeService();
-        private readonly LocationsService _locservices = new LocationsService(); 
+        private readonly LocationsService _locservices = new LocationsService();
         private readonly ProviderService _povservices = new ProviderService();
         private readonly POCServices _pocservices = new POCServices();
         private readonly PatientIEService _ieService = new PatientIEService();
@@ -1112,11 +1112,6 @@ namespace PainTrax.Web.Controllers
                 allergy = reportHelper.GenerateAllergy(model.Allergy, model.AllergyReaction);
 
                 dd = string.IsNullOrEmpty(model.DisabilityPercentage) ? model.degree : model.DisabilityPercentage + "%";
-               
-               
-
-
-
                 adl = reportHelper.GenerateADL(model);
                 occupation = reportHelper.GenerateOccupation(model.Occupation, model.JobTitle);
                 working_desc = reportHelper.GenerateJob(model);
@@ -1177,12 +1172,9 @@ namespace PainTrax.Web.Controllers
                                 accident_type = model.AccidentType,
                                 provider_id = string.IsNullOrEmpty(model.ProviderId) ? null : Convert.ToInt32(model.ProviderId),
                                 intakeid = Convert.ToInt32(result),
-
-
                             };
 
                             var ie = _ieService.Insert(objIE);
-
 
                             if (ie > 0)
                             {
@@ -1206,10 +1198,6 @@ namespace PainTrax.Web.Controllers
 
                                     }
                                 }
-
-
-
-
                                 var objPage1 = new tbl_ie_page1()
                                 {
                                     pmh = string.IsNullOrEmpty(pmh) ? defaultPage1.pmh : pmh,
@@ -1440,7 +1428,7 @@ namespace PainTrax.Web.Controllers
                         dd = dd,
                         history = history,
                         occupation = occupation,
-                        social_history= socialHistory
+                        social_history = socialHistory
                     };
 
                     _ieService.UpdatePage1Intake(objPage1);
@@ -2318,11 +2306,6 @@ namespace PainTrax.Web.Controllers
                 return cc_rsh + "<br/>" + cc_lsh + "<br/>" + cc_rkn + "<br/>" + cc_lkn;
             }
         }
-
-
-
-
-
 
         private bool IsPatientPresent(string fname, string lname, DateTime? doa, DateTime? dob, int Id = 0)
         {

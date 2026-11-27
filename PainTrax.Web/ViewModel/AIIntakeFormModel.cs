@@ -1009,21 +1009,27 @@
 
         public string ADLPersonalHygienePerform { get; set; }
         public string ADLPersonalHygieneDifficulty { get; set; }
+        public string ADLPersonalHygieneDifficultyRadio { get; set; }
 
         public string ADLWalkingPerform { get; set; }
         public string ADLWalkingDifficulty { get; set; }
+        public string ADLWalkingDifficultyRadio { get; set; }
 
         public string ADLEatingPerform { get; set; }
         public string ADLEatingDifficulty { get; set; }
+        public string ADLEatingDifficultyRadio { get; set; }
 
         public string ADLHouseholdPerform { get; set; }
         public string ADLHouseholdDifficulty { get; set; }
+        public string ADLHouseholdDifficultyRadio { get; set; }
 
         public string ADLShoppingPerform { get; set; }
         public string ADLShoppingDifficulty { get; set; }
+        public string ADLShoppingDifficultyRadio { get; set; }
 
         public string ADLSleepingPerform { get; set; }
         public string ADLSleepingDifficulty { get; set; }
+        public string ADLSleepingDifficultyRadio { get; set; }
 
         // JOb Description
 
